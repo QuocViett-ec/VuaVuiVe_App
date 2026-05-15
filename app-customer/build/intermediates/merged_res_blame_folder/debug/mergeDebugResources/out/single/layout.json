@@ -1,0 +1,130 @@
+[
+    {
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-51:/layout/activity_order_detail.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-54:/layout/activity_order_detail.xml"
+    },
+    {
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-51:/layout/activity_chat.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-54:/layout/activity_chat.xml"
+    },
+    {
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-51:/layout/activity_forgot_password.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-54:/layout/activity_forgot_password.xml"
+    },
+    {
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-51:/layout/item_chat_user.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-54:/layout/item_chat_user.xml"
+    },
+    {
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-51:/layout/activity_register.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-54:/layout/activity_register.xml"
+    },
+    {
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-51:/layout/fragment_recipe_list.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-54:/layout/fragment_recipe_list.xml"
+    },
+    {
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-51:/layout/fragment_forgot_step2.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-54:/layout/fragment_forgot_step2.xml"
+    },
+    {
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-51:/layout/item_ingredient.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-54:/layout/item_ingredient.xml"
+    },
+    {
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-51:/layout/item_product.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-54:/layout/item_product.xml"
+    },
+    {
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-51:/layout/item_chat_bot.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-54:/layout/item_chat_bot.xml"
+    },
+    {
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-51:/layout/activity_checkout.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-54:/layout/activity_checkout.xml"
+    },
+    {
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-51:/layout/item_menu_row.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-54:/layout/item_menu_row.xml"
+    },
+    {
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-51:/layout/activity_main.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-54:/layout/activity_main.xml"
+    },
+    {
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-51:/layout/activity_recipe_detail.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-54:/layout/activity_recipe_detail.xml"
+    },
+    {
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-51:/layout/fragment_order_list.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-54:/layout/fragment_order_list.xml"
+    },
+    {
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-51:/layout/activity_edit_profile.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-54:/layout/activity_edit_profile.xml"
+    },
+    {
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-51:/layout/item_order_product.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-54:/layout/item_order_product.xml"
+    },
+    {
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-51:/layout/activity_product_detail.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-54:/layout/activity_product_detail.xml"
+    },
+    {
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-51:/layout/item_recipe.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-54:/layout/item_recipe.xml"
+    },
+    {
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-51:/layout/item_order.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-54:/layout/item_order.xml"
+    },
+    {
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-51:/layout/fragment_forgot_step1.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-54:/layout/fragment_forgot_step1.xml"
+    },
+    {
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-51:/layout/activity_payment_webview.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-54:/layout/activity_payment_webview.xml"
+    },
+    {
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-51:/layout/fragment_home.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-54:/layout/fragment_home.xml"
+    },
+    {
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-51:/layout/fragment_account.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-54:/layout/fragment_account.xml"
+    },
+    {
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-51:/layout/fragment_forgot_step3.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-54:/layout/fragment_forgot_step3.xml"
+    },
+    {
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-51:/layout/activity_login.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-54:/layout/activity_login.xml"
+    },
+    {
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-51:/layout/fragment_cart.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-54:/layout/fragment_cart.xml"
+    },
+    {
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-51:/layout/activity_change_password.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-54:/layout/activity_change_password.xml"
+    },
+    {
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-51:/layout/activity_recipe_list_host.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-54:/layout/activity_recipe_list_host.xml"
+    },
+    {
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-51:/layout/item_review.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-54:/layout/item_review.xml"
+    },
+    {
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-51:/layout/fragment_product_list.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-54:/layout/fragment_product_list.xml"
+    },
+    {
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-51:/layout/item_cart.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-54:/layout/item_cart.xml"
+    }
+]

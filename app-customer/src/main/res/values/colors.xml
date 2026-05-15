@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Primary brand color -->
+    <color name="primary">#2E7D32</color>
+    <color name="primary_dark">#1B5E20</color>
+    <color name="primary_light">#A5D6A7</color>
+    <color name="primary_container">#C8E6C9</color>
+
+    <!-- Accent -->
+    <color name="secondary">#F57F17</color>
+    <color name="secondary_light">#FFE082</color>
+
+    <!-- Background -->
+    <color name="background">#F8F9FA</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="surface_variant">#F1F8E9</color>
+
+    <!-- Text -->
+    <color name="text_primary">#1A1A1A</color>
+    <color name="text_secondary">#616161</color>
+    <color name="text_hint">#9E9E9E</color>
+    <color name="text_on_primary">#FFFFFF</color>
+
+    <!-- Status colors -->
+    <color name="status_pending">#FFC107</color>
+    <color name="status_confirmed">#2196F3</color>
+    <color name="status_shipping">#FF9800</color>
+    <color name="status_delivered">#4CAF50</color>
+    <color name="status_cancelled">#757575</color>
+    <color name="status_return">#9C27B0</color>
+    <color name="status_refunded">#4CAF50</color>
+
+    <!-- Rating -->
+    <color name="star_color">#FFC107</color>
+
+    <!-- Price -->
+    <color name="price_sale">#D32F2F</color>
+    <color name="price_original">#9E9E9E</color>
+
+    <!-- Discount badge -->
+    <color name="badge_discount">#D32F2F</color>
+    <color name="badge_new">#388E3C</color>
+
+    <!-- Divider -->
+    <color name="divider">#E0E0E0</color>
+
+    <!-- Error -->
+    <color name="error">#B00020</color>
+
+    <!-- Cart badge -->
+    <color name="cart_badge">#F44336</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="transparent">#00000000</color>
+</resources>

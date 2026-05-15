@@ -1,0 +1,17 @@
+-- Merging decision tree log ---
+manifest
+ADDED from E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\shared\src\main\AndroidManifest.xml:2:1-4:12
+INJECTED from E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\shared\src\main\AndroidManifest.xml:2:1-4:12
+	package
+		ADDED from E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\shared\src\main\AndroidManifest.xml:3:5-33
+		INJECTED from E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\shared\src\main\AndroidManifest.xml
+	xmlns:android
+		ADDED from E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\shared\src\main\AndroidManifest.xml:2:11-69
+uses-sdk
+INJECTED from E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\shared\src\main\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\shared\src\main\AndroidManifest.xml
+INJECTED from E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\shared\src\main\AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\shared\src\main\AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\shared\src\main\AndroidManifest.xml

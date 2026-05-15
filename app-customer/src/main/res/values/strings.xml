@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Vựa Vui Vẻ</string>
+
+    <!-- Auth -->
+    <string name="login_title">Đăng nhập</string>
+    <string name="register_title">Đăng ký</string>
+    <string name="forgot_password_title">Quên mật khẩu</string>
+    <string name="hint_phone_or_email">Số điện thoại hoặc email</string>
+    <string name="hint_password">Mật khẩu</string>
+    <string name="hint_confirm_password">Xác nhận mật khẩu</string>
+    <string name="hint_name">Họ và tên</string>
+    <string name="hint_email">Email (tùy chọn)</string>
+    <string name="hint_phone">Số điện thoại</string>
+    <string name="hint_address">Địa chỉ (tùy chọn)</string>
+    <string name="btn_login">Đăng nhập</string>
+    <string name="btn_register">Đăng ký</string>
+    <string name="btn_google_login">Đăng nhập với Google</string>
+    <string name="text_no_account">Chưa có tài khoản? </string>
+    <string name="text_has_account">Đã có tài khoản? </string>
+    <string name="text_sign_up_link">Đăng ký</string>
+    <string name="text_sign_in_link">Đăng nhập</string>
+    <string name="text_forgot_password">Quên mật khẩu?</string>
+
+    <!-- Home -->
+    <string name="tab_home">Trang chủ</string>
+    <string name="tab_products">Sản phẩm</string>
+    <string name="tab_cart">Giỏ hàng</string>
+    <string name="tab_orders">Đơn hàng</string>
+    <string name="tab_account">Tài khoản</string>
+
+    <!-- Products -->
+    <string name="hint_search">Tìm kiếm sản phẩm…</string>
+    <string name="btn_add_to_cart">Thêm vào giỏ</string>
+    <string name="label_category_all">Tất cả</string>
+    <string name="label_in_stock">Còn hàng</string>
+    <string name="label_out_of_stock">Hết hàng</string>
+    <string name="label_reviews">đánh giá</string>
+    <string name="label_sold">đã bán</string>
+    <string name="label_similar_products">Sản phẩm tương tự</string>
+    <string name="label_reviews_section">Đánh giá</string>
+
+    <!-- Cart -->
+    <string name="cart_empty">Giỏ hàng trống</string>
+    <string name="cart_empty_hint">Hãy thêm sản phẩm vào giỏ hàng</string>
+    <string name="btn_checkout">Thanh toán</string>
+    <string name="label_total">Tổng tiền</string>
+    <string name="label_saved_for_later">Lưu để mua sau</string>
+    <string name="action_save_later">Lưu lại</string>
+    <string name="action_move_to_cart">Thêm vào giỏ</string>
+
+    <!-- Checkout -->
+    <string name="checkout_title">Thanh toán</string>
+    <string name="hint_receiver_name">Tên người nhận</string>
+    <string name="hint_receiver_phone">Số điện thoại</string>
+    <string name="hint_delivery_address">Địa chỉ giao hàng</string>
+    <string name="hint_note">Ghi chú (tùy chọn)</string>
+    <string name="hint_voucher_code">Nhập mã giảm giá</string>
+    <string name="btn_apply_voucher">Áp dụng</string>
+    <string name="btn_select_voucher">Chọn voucher</string>
+    <string name="btn_use_current_location">Dùng vị trí hiện tại</string>
+    <string name="label_payment_method">Phương thức thanh toán</string>
+    <string name="label_cod">Thanh toán khi nhận hàng (COD)</string>
+    <string name="label_vnpay">VNPay</string>
+    <string name="label_momo">MoMo</string>
+    <string name="label_subtotal">Tạm tính</string>
+    <string name="label_shipping_fee">Phí vận chuyển</string>
+    <string name="label_discount">Giảm giá</string>
+    <string name="btn_place_order">Đặt hàng</string>
+    <string name="label_order_slot">Khung giờ giao hàng</string>
+
+    <!-- Orders -->
+    <string name="order_tab_all">Tất cả</string>
+    <string name="order_tab_pending">Chờ xác nhận</string>
+    <string name="order_tab_shipping">Đang giao</string>
+    <string name="order_tab_delivered">Đã giao</string>
+    <string name="order_tab_cancelled">Đã hủy</string>
+    <string name="btn_cancel_order">Hủy đơn</string>
+    <string name="btn_return_order">Yêu cầu trả hàng</string>
+    <string name="btn_review">Đánh giá</string>
+    <string name="btn_reorder">Mua lại</string>
+    <string name="label_order_detail">Chi tiết đơn hàng</string>
+    <string name="label_delivery_info">Thông tin giao hàng</string>
+    <string name="label_payment_info">Thông tin thanh toán</string>
+    <string name="label_order_summary">Tổng kết</string>
+
+    <!-- Common -->
+    <string name="btn_retry">Thử lại</string>
+    <string name="btn_confirm">Xác nhận</string>
+    <string name="btn_cancel">Hủy</string>
+    <string name="btn_close">Đóng</string>
+    <string name="label_loading">Đang tải…</string>
+    <string name="label_error_network">Không có kết nối mạng</string>
+    <string name="label_error_server">Lỗi máy chủ, vui lòng thử lại</string>
+    <string name="label_empty">Không có dữ liệu</string>
+</resources>
