@@ -19,12 +19,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.android.material.textfield.TextInputEditText;
 import dagger.hilt.android.AndroidEntryPoint;
 import vn.vuavuive.customer.R;
 import vn.vuavuive.customer.data.repository.AuthRepository;
+import vn.vuavuive.customer.ui.search.SearchActivity;
 import vn.vuavuive.customer.viewmodel.ProductViewModel;
-import vn.vuavuive.shared.util.Constants;
 
 @AndroidEntryPoint
 public class ProductListFragment extends Fragment {
@@ -36,6 +37,7 @@ public class ProductListFragment extends Fragment {
     // Debounce search
     private final Handler searchHandler = new Handler();
     private Runnable searchRunnable;
+
 
     @Nullable
     @Override
@@ -58,12 +60,16 @@ public class ProductListFragment extends Fragment {
 
     private void setupSearch(View view) {
         TextInputEditText etSearch = view.findViewById(R.id.et_search);
+        TextInputLayout tilSearch = view.findViewById(R.id.til_search);
+        if (tilSearch != null) {
+            tilSearch.setEndIconOnClickListener(v -> openSearch(getText(etSearch)));
+        }
+
         etSearch.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
             @Override
             public void afterTextChanged(Editable s) {
-                // Debounce 300ms
                 searchHandler.removeCallbacks(searchRunnable);
                 searchRunnable = () -> {
                     productViewModel.setSearch(s.toString().trim());
@@ -72,6 +78,18 @@ public class ProductListFragment extends Fragment {
                 searchHandler.postDelayed(searchRunnable, 300);
             }
         });
+    }
+
+    private void openSearch(String prefillQuery) {
+        Intent intent = new Intent(getContext(), SearchActivity.class);
+        if (prefillQuery != null && !prefillQuery.isEmpty()) {
+            intent.putExtra("prefill_query", prefillQuery);
+        }
+        startActivity(intent);
+    }
+
+    private String getText(TextInputEditText et) {
+        return et.getText() != null ? et.getText().toString().trim() : "";
     }
 
     private void setupCategoryChips(View view) {

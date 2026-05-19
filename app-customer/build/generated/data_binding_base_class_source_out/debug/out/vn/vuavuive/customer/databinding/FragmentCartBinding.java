@@ -31,23 +31,55 @@ public final class FragmentCartBinding implements ViewBinding {
   public final LinearLayout layoutEmptyCart;
 
   @NonNull
+  public final LinearLayout layoutSavedHeader;
+
+  @NonNull
   public final RecyclerView rvCartItems;
 
   @NonNull
+  public final RecyclerView rvSavedItems;
+
+  @NonNull
   public final TextView tvEmptyCart;
+
+  @NonNull
+  public final TextView tvEmptyCartInline;
+
+  @NonNull
+  public final TextView tvSavedCount;
+
+  @NonNull
+  public final TextView tvSavedEmpty;
+
+  @NonNull
+  public final TextView tvSavedTitle;
+
+  @NonNull
+  public final TextView tvSavedToggle;
 
   @NonNull
   public final TextView tvTotal;
 
   private FragmentCartBinding(@NonNull LinearLayout rootView, @NonNull MaterialButton btnCheckout,
       @NonNull LinearLayout layoutCartContent, @NonNull LinearLayout layoutEmptyCart,
-      @NonNull RecyclerView rvCartItems, @NonNull TextView tvEmptyCart, @NonNull TextView tvTotal) {
+      @NonNull LinearLayout layoutSavedHeader, @NonNull RecyclerView rvCartItems,
+      @NonNull RecyclerView rvSavedItems, @NonNull TextView tvEmptyCart,
+      @NonNull TextView tvEmptyCartInline, @NonNull TextView tvSavedCount,
+      @NonNull TextView tvSavedEmpty, @NonNull TextView tvSavedTitle,
+      @NonNull TextView tvSavedToggle, @NonNull TextView tvTotal) {
     this.rootView = rootView;
     this.btnCheckout = btnCheckout;
     this.layoutCartContent = layoutCartContent;
     this.layoutEmptyCart = layoutEmptyCart;
+    this.layoutSavedHeader = layoutSavedHeader;
     this.rvCartItems = rvCartItems;
+    this.rvSavedItems = rvSavedItems;
     this.tvEmptyCart = tvEmptyCart;
+    this.tvEmptyCartInline = tvEmptyCartInline;
+    this.tvSavedCount = tvSavedCount;
+    this.tvSavedEmpty = tvSavedEmpty;
+    this.tvSavedTitle = tvSavedTitle;
+    this.tvSavedToggle = tvSavedToggle;
     this.tvTotal = tvTotal;
   }
 
@@ -96,15 +128,57 @@ public final class FragmentCartBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.layout_saved_header;
+      LinearLayout layoutSavedHeader = ViewBindings.findChildViewById(rootView, id);
+      if (layoutSavedHeader == null) {
+        break missingId;
+      }
+
       id = R.id.rv_cart_items;
       RecyclerView rvCartItems = ViewBindings.findChildViewById(rootView, id);
       if (rvCartItems == null) {
         break missingId;
       }
 
+      id = R.id.rv_saved_items;
+      RecyclerView rvSavedItems = ViewBindings.findChildViewById(rootView, id);
+      if (rvSavedItems == null) {
+        break missingId;
+      }
+
       id = R.id.tv_empty_cart;
       TextView tvEmptyCart = ViewBindings.findChildViewById(rootView, id);
       if (tvEmptyCart == null) {
+        break missingId;
+      }
+
+      id = R.id.tv_empty_cart_inline;
+      TextView tvEmptyCartInline = ViewBindings.findChildViewById(rootView, id);
+      if (tvEmptyCartInline == null) {
+        break missingId;
+      }
+
+      id = R.id.tv_saved_count;
+      TextView tvSavedCount = ViewBindings.findChildViewById(rootView, id);
+      if (tvSavedCount == null) {
+        break missingId;
+      }
+
+      id = R.id.tv_saved_empty;
+      TextView tvSavedEmpty = ViewBindings.findChildViewById(rootView, id);
+      if (tvSavedEmpty == null) {
+        break missingId;
+      }
+
+      id = R.id.tv_saved_title;
+      TextView tvSavedTitle = ViewBindings.findChildViewById(rootView, id);
+      if (tvSavedTitle == null) {
+        break missingId;
+      }
+
+      id = R.id.tv_saved_toggle;
+      TextView tvSavedToggle = ViewBindings.findChildViewById(rootView, id);
+      if (tvSavedToggle == null) {
         break missingId;
       }
 
@@ -115,7 +189,8 @@ public final class FragmentCartBinding implements ViewBinding {
       }
 
       return new FragmentCartBinding((LinearLayout) rootView, btnCheckout, layoutCartContent,
-          layoutEmptyCart, rvCartItems, tvEmptyCart, tvTotal);
+          layoutEmptyCart, layoutSavedHeader, rvCartItems, rvSavedItems, tvEmptyCart,
+          tvEmptyCartInline, tvSavedCount, tvSavedEmpty, tvSavedTitle, tvSavedToggle, tvTotal);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

@@ -4,6 +4,7 @@ package vn.vuavuive.customer.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -36,6 +37,9 @@ public final class FragmentProductListBinding implements ViewBinding {
   public final TextInputEditText etSearch;
 
   @NonNull
+  public final ImageView imgAccount;
+
+  @NonNull
   public final ProgressBar progressBar;
 
   @NonNull
@@ -52,13 +56,15 @@ public final class FragmentProductListBinding implements ViewBinding {
 
   private FragmentProductListBinding(@NonNull LinearLayout rootView,
       @NonNull MaterialButton btnSort, @NonNull ChipGroup chipGroupCategories,
-      @NonNull TextInputEditText etSearch, @NonNull ProgressBar progressBar,
-      @NonNull RecyclerView rvProducts, @NonNull SwipeRefreshLayout swipeRefresh,
-      @NonNull TextInputLayout tilSearch, @NonNull TextView tvEmpty) {
+      @NonNull TextInputEditText etSearch, @NonNull ImageView imgAccount,
+      @NonNull ProgressBar progressBar, @NonNull RecyclerView rvProducts,
+      @NonNull SwipeRefreshLayout swipeRefresh, @NonNull TextInputLayout tilSearch,
+      @NonNull TextView tvEmpty) {
     this.rootView = rootView;
     this.btnSort = btnSort;
     this.chipGroupCategories = chipGroupCategories;
     this.etSearch = etSearch;
+    this.imgAccount = imgAccount;
     this.progressBar = progressBar;
     this.rvProducts = rvProducts;
     this.swipeRefresh = swipeRefresh;
@@ -111,6 +117,12 @@ public final class FragmentProductListBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.img_account;
+      ImageView imgAccount = ViewBindings.findChildViewById(rootView, id);
+      if (imgAccount == null) {
+        break missingId;
+      }
+
       id = R.id.progress_bar;
       ProgressBar progressBar = ViewBindings.findChildViewById(rootView, id);
       if (progressBar == null) {
@@ -142,7 +154,7 @@ public final class FragmentProductListBinding implements ViewBinding {
       }
 
       return new FragmentProductListBinding((LinearLayout) rootView, btnSort, chipGroupCategories,
-          etSearch, progressBar, rvProducts, swipeRefresh, tilSearch, tvEmpty);
+          etSearch, imgAccount, progressBar, rvProducts, swipeRefresh, tilSearch, tvEmpty);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

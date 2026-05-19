@@ -18,13 +18,8 @@
         <!-- Auth -->
         <activity
             android:name=".ui.auth.LoginActivity"
-            android:exported="true"
-            android:theme="@style/Theme.VuaVuiVe.Customer">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:exported="false"
+            android:theme="@style/Theme.VuaVuiVe.Customer" />
 
         <activity
             android:name=".ui.auth.RegisterActivity"
@@ -37,12 +32,22 @@
         <!-- Main -->
         <activity
             android:name=".ui.MainActivity"
-            android:exported="false"
-            android:launchMode="singleTop" />
+            android:exported="true"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
         <!-- Product -->
         <activity
             android:name=".ui.product.ProductDetailActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.MainActivity" />
+
+        <activity
+            android:name=".ui.search.SearchActivity"
             android:exported="false"
             android:parentActivityName=".ui.MainActivity" />
 
@@ -62,6 +67,23 @@
             android:name=".ui.order.OrderDetailActivity"
             android:exported="false"
             android:parentActivityName=".ui.MainActivity" />
+
+        <!-- Reviews -->
+        <activity
+            android:name=".ui.review.MyReviewsActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.MainActivity" />
+
+        <!-- Shipments -->
+        <activity
+            android:name=".ui.shipment.ShipmentListActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.MainActivity" />
+
+        <activity
+            android:name=".ui.shipment.ShipmentDetailActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.shipment.ShipmentListActivity" />
 
         <!-- Account -->
         <activity

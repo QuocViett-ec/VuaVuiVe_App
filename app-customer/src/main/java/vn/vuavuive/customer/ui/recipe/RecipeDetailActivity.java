@@ -17,6 +17,7 @@ import vn.vuavuive.customer.viewmodel.ProductViewModel;
 import vn.vuavuive.customer.viewmodel.RecipeViewModel;
 import vn.vuavuive.shared.data.dto.Product;
 import vn.vuavuive.shared.data.local.CartItemEntity;
+import vn.vuavuive.shared.util.Constants;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +28,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
     private CartViewModel cartViewModel;
     private ProductViewModel productViewModel;
     private Map<String, Object> currentRecipe;
+    private String recipeId;
 
     private ImageView ivRecipe;
     private TextView tvRecipeName, tvDescription;
@@ -44,7 +46,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
 
         initViews();
 
-        String recipeId = getIntent().getStringExtra("recipe_id");
+        recipeId = getIntent().getStringExtra("recipe_id");
         if (recipeId != null) {
             recipeViewModel.loadRecipeDetail(recipeId);
         }
@@ -92,6 +94,11 @@ public class RecipeDetailActivity extends AppCompatActivity {
         if (ingObj instanceof List) {
             ingredientAdapter.setIngredients((List<Map<String, Object>>) ingObj);
         }
+
+        Map<String, Object> meta = new java.util.HashMap<>();
+        meta.put("recipeId", recipeId != null ? recipeId : "");
+        meta.put("recipeName", getString(recipe, "name", ""));
+        productViewModel.sendRecommendEvent(Constants.EVENT_VIEW_RECIPE, "", meta);
     }
 
     private void addIngredientToCart(Map<String, Object> ingredient) {

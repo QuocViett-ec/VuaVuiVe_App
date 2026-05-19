@@ -25,6 +25,7 @@ import vn.vuavuive.customer.viewmodel.ProductViewModel;
 import vn.vuavuive.shared.data.dto.Product;
 import vn.vuavuive.shared.data.local.CartItemEntity;
 import vn.vuavuive.shared.util.CurrencyFormatter;
+import vn.vuavuive.shared.util.Constants;
 
 @AndroidEntryPoint
 public class ProductDetailActivity extends AppCompatActivity {
@@ -138,6 +139,7 @@ public class ProductDetailActivity extends AppCompatActivity {
                 bindProduct(result.data);
                 loadReviews(productId);
                 loadSimilar(productId);
+                productViewModel.sendRecommendEvent(Constants.EVENT_VIEW_PRODUCT, productId, null);
             } else if (result.status == AuthRepository.Result.Status.ERROR) {
                 Toast.makeText(this, "Không tìm thấy sản phẩm", Toast.LENGTH_SHORT).show();
                 finish();
@@ -237,5 +239,9 @@ public class ProductDetailActivity extends AppCompatActivity {
         Toast.makeText(this, "Đã thêm " + quantity + " " +
                 (currentProduct.getUnit() != null ? currentProduct.getUnit() : "sản phẩm") +
                 " vào giỏ hàng", Toast.LENGTH_SHORT).show();
+
+        java.util.Map<String, Object> meta = new java.util.HashMap<>();
+        meta.put("quantity", quantity);
+        productViewModel.sendRecommendEvent(Constants.EVENT_ADD_TO_CART, currentProduct.getId(), meta);
     }
 }

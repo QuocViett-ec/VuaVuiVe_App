@@ -57,6 +57,15 @@ public class OrderViewModel extends ViewModel {
         return orderRepository.getAvailableVouchers();
     }
 
+    public LiveData<AuthRepository.Result<vn.vuavuive.shared.data.dto.Review>> submitReview(
+            String orderId, java.util.List<java.util.Map<String, Object>> reviews) {
+        return orderRepository.submitReview(orderId, reviews);
+    }
+
+    public LiveData<AuthRepository.Result<vn.vuavuive.shared.data.dto.Review>> getMyReview(String orderId) {
+        return orderRepository.getMyReview(orderId);
+    }
+
     public MutableLiveData<Voucher> getSelectedVoucher() { return selectedVoucher; }
     public void setSelectedVoucher(Voucher voucher) { selectedVoucher.setValue(voucher); }
 }

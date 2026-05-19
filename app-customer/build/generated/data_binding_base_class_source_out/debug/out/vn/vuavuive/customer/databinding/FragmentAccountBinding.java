@@ -40,10 +40,19 @@ public final class FragmentAccountBinding implements ViewBinding {
   public final LinearLayout rowMyOrders;
 
   @NonNull
+  public final LinearLayout rowMyReviews;
+
+  @NonNull
   public final LinearLayout rowRecipes;
 
   @NonNull
+  public final LinearLayout rowShipments;
+
+  @NonNull
   public final TextView tvEmail;
+
+  @NonNull
+  public final TextView tvLoginHint;
 
   @NonNull
   public final TextView tvName;
@@ -54,8 +63,10 @@ public final class FragmentAccountBinding implements ViewBinding {
   private FragmentAccountBinding(@NonNull LinearLayout rootView, @NonNull MaterialButton btnLogout,
       @NonNull ImageView ivAvatar, @NonNull LinearLayout rowChangePassword,
       @NonNull LinearLayout rowChat, @NonNull LinearLayout rowEditProfile,
-      @NonNull LinearLayout rowMyOrders, @NonNull LinearLayout rowRecipes,
-      @NonNull TextView tvEmail, @NonNull TextView tvName, @NonNull TextView tvPhone) {
+      @NonNull LinearLayout rowMyOrders, @NonNull LinearLayout rowMyReviews,
+      @NonNull LinearLayout rowRecipes, @NonNull LinearLayout rowShipments,
+      @NonNull TextView tvEmail, @NonNull TextView tvLoginHint, @NonNull TextView tvName,
+      @NonNull TextView tvPhone) {
     this.rootView = rootView;
     this.btnLogout = btnLogout;
     this.ivAvatar = ivAvatar;
@@ -63,8 +74,11 @@ public final class FragmentAccountBinding implements ViewBinding {
     this.rowChat = rowChat;
     this.rowEditProfile = rowEditProfile;
     this.rowMyOrders = rowMyOrders;
+    this.rowMyReviews = rowMyReviews;
     this.rowRecipes = rowRecipes;
+    this.rowShipments = rowShipments;
     this.tvEmail = tvEmail;
+    this.tvLoginHint = tvLoginHint;
     this.tvName = tvName;
     this.tvPhone = tvPhone;
   }
@@ -132,15 +146,33 @@ public final class FragmentAccountBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.row_my_reviews;
+      LinearLayout rowMyReviews = ViewBindings.findChildViewById(rootView, id);
+      if (rowMyReviews == null) {
+        break missingId;
+      }
+
       id = R.id.row_recipes;
       LinearLayout rowRecipes = ViewBindings.findChildViewById(rootView, id);
       if (rowRecipes == null) {
         break missingId;
       }
 
+      id = R.id.row_shipments;
+      LinearLayout rowShipments = ViewBindings.findChildViewById(rootView, id);
+      if (rowShipments == null) {
+        break missingId;
+      }
+
       id = R.id.tv_email;
       TextView tvEmail = ViewBindings.findChildViewById(rootView, id);
       if (tvEmail == null) {
+        break missingId;
+      }
+
+      id = R.id.tv_login_hint;
+      TextView tvLoginHint = ViewBindings.findChildViewById(rootView, id);
+      if (tvLoginHint == null) {
         break missingId;
       }
 
@@ -157,8 +189,8 @@ public final class FragmentAccountBinding implements ViewBinding {
       }
 
       return new FragmentAccountBinding((LinearLayout) rootView, btnLogout, ivAvatar,
-          rowChangePassword, rowChat, rowEditProfile, rowMyOrders, rowRecipes, tvEmail, tvName,
-          tvPhone);
+          rowChangePassword, rowChat, rowEditProfile, rowMyOrders, rowMyReviews, rowRecipes,
+          rowShipments, tvEmail, tvLoginHint, tvName, tvPhone);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

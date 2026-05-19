@@ -58,6 +58,10 @@ import hilt_aggregated_deps._vn_vuavuive_customer_ui_product_ProductListFragment
 import hilt_aggregated_deps._vn_vuavuive_customer_ui_recipe_RecipeDetailActivity_GeneratedInjector;
 import hilt_aggregated_deps._vn_vuavuive_customer_ui_recipe_RecipeListFragmentActivity_GeneratedInjector;
 import hilt_aggregated_deps._vn_vuavuive_customer_ui_recipe_RecipeListFragment_GeneratedInjector;
+import hilt_aggregated_deps._vn_vuavuive_customer_ui_review_MyReviewsActivity_GeneratedInjector;
+import hilt_aggregated_deps._vn_vuavuive_customer_ui_search_SearchActivity_GeneratedInjector;
+import hilt_aggregated_deps._vn_vuavuive_customer_ui_shipment_ShipmentDetailActivity_GeneratedInjector;
+import hilt_aggregated_deps._vn_vuavuive_customer_ui_shipment_ShipmentListActivity_GeneratedInjector;
 import hilt_aggregated_deps._vn_vuavuive_customer_viewmodel_AuthViewModel_HiltModules_BindsModule;
 import hilt_aggregated_deps._vn_vuavuive_customer_viewmodel_AuthViewModel_HiltModules_KeyModule;
 import hilt_aggregated_deps._vn_vuavuive_customer_viewmodel_CartViewModel_HiltModules_BindsModule;
@@ -70,6 +74,8 @@ import hilt_aggregated_deps._vn_vuavuive_customer_viewmodel_ProductViewModel_Hil
 import hilt_aggregated_deps._vn_vuavuive_customer_viewmodel_ProductViewModel_HiltModules_KeyModule;
 import hilt_aggregated_deps._vn_vuavuive_customer_viewmodel_RecipeViewModel_HiltModules_BindsModule;
 import hilt_aggregated_deps._vn_vuavuive_customer_viewmodel_RecipeViewModel_HiltModules_KeyModule;
+import hilt_aggregated_deps._vn_vuavuive_customer_viewmodel_ShipmentViewModel_HiltModules_BindsModule;
+import hilt_aggregated_deps._vn_vuavuive_customer_viewmodel_ShipmentViewModel_HiltModules_KeyModule;
 
 @ComponentTreeDeps(
     rootDeps = _vn_vuavuive_customer_VuaVuiVeApp.class,
@@ -132,6 +138,10 @@ import hilt_aggregated_deps._vn_vuavuive_customer_viewmodel_RecipeViewModel_Hilt
         _vn_vuavuive_customer_ui_recipe_RecipeDetailActivity_GeneratedInjector.class,
         _vn_vuavuive_customer_ui_recipe_RecipeListFragmentActivity_GeneratedInjector.class,
         _vn_vuavuive_customer_ui_recipe_RecipeListFragment_GeneratedInjector.class,
+        _vn_vuavuive_customer_ui_review_MyReviewsActivity_GeneratedInjector.class,
+        _vn_vuavuive_customer_ui_search_SearchActivity_GeneratedInjector.class,
+        _vn_vuavuive_customer_ui_shipment_ShipmentDetailActivity_GeneratedInjector.class,
+        _vn_vuavuive_customer_ui_shipment_ShipmentListActivity_GeneratedInjector.class,
         _vn_vuavuive_customer_viewmodel_AuthViewModel_HiltModules_BindsModule.class,
         _vn_vuavuive_customer_viewmodel_AuthViewModel_HiltModules_KeyModule.class,
         _vn_vuavuive_customer_viewmodel_CartViewModel_HiltModules_BindsModule.class,
@@ -143,7 +153,9 @@ import hilt_aggregated_deps._vn_vuavuive_customer_viewmodel_RecipeViewModel_Hilt
         _vn_vuavuive_customer_viewmodel_ProductViewModel_HiltModules_BindsModule.class,
         _vn_vuavuive_customer_viewmodel_ProductViewModel_HiltModules_KeyModule.class,
         _vn_vuavuive_customer_viewmodel_RecipeViewModel_HiltModules_BindsModule.class,
-        _vn_vuavuive_customer_viewmodel_RecipeViewModel_HiltModules_KeyModule.class
+        _vn_vuavuive_customer_viewmodel_RecipeViewModel_HiltModules_KeyModule.class,
+        _vn_vuavuive_customer_viewmodel_ShipmentViewModel_HiltModules_BindsModule.class,
+        _vn_vuavuive_customer_viewmodel_ShipmentViewModel_HiltModules_KeyModule.class
     }
 )
 public final class VuaVuiVeApp_ComponentTreeDeps {

@@ -34,6 +34,12 @@ public final class ItemCartBinding implements ViewBinding {
   public final ImageView ivProduct;
 
   @NonNull
+  public final TextView tvActionMove;
+
+  @NonNull
+  public final TextView tvActionSave;
+
+  @NonNull
   public final TextView tvPrice;
 
   @NonNull
@@ -47,13 +53,16 @@ public final class ItemCartBinding implements ViewBinding {
 
   private ItemCartBinding(@NonNull CardView rootView, @NonNull ImageButton btnDecrease,
       @NonNull ImageButton btnIncrease, @NonNull ImageButton btnRemove,
-      @NonNull ImageView ivProduct, @NonNull TextView tvPrice, @NonNull TextView tvProductName,
-      @NonNull TextView tvQuantity, @NonNull TextView tvSubtotal) {
+      @NonNull ImageView ivProduct, @NonNull TextView tvActionMove, @NonNull TextView tvActionSave,
+      @NonNull TextView tvPrice, @NonNull TextView tvProductName, @NonNull TextView tvQuantity,
+      @NonNull TextView tvSubtotal) {
     this.rootView = rootView;
     this.btnDecrease = btnDecrease;
     this.btnIncrease = btnIncrease;
     this.btnRemove = btnRemove;
     this.ivProduct = ivProduct;
+    this.tvActionMove = tvActionMove;
+    this.tvActionSave = tvActionSave;
     this.tvPrice = tvPrice;
     this.tvProductName = tvProductName;
     this.tvQuantity = tvQuantity;
@@ -111,6 +120,18 @@ public final class ItemCartBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.tv_action_move;
+      TextView tvActionMove = ViewBindings.findChildViewById(rootView, id);
+      if (tvActionMove == null) {
+        break missingId;
+      }
+
+      id = R.id.tv_action_save;
+      TextView tvActionSave = ViewBindings.findChildViewById(rootView, id);
+      if (tvActionSave == null) {
+        break missingId;
+      }
+
       id = R.id.tv_price;
       TextView tvPrice = ViewBindings.findChildViewById(rootView, id);
       if (tvPrice == null) {
@@ -136,7 +157,7 @@ public final class ItemCartBinding implements ViewBinding {
       }
 
       return new ItemCartBinding((CardView) rootView, btnDecrease, btnIncrease, btnRemove,
-          ivProduct, tvPrice, tvProductName, tvQuantity, tvSubtotal);
+          ivProduct, tvActionMove, tvActionSave, tvPrice, tvProductName, tvQuantity, tvSubtotal);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

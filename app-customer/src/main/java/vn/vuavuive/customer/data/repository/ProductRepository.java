@@ -133,6 +133,60 @@ public class ProductRepository {
         return result;
     }
 
+    // ── Recommendations ───────────────────────────────────────────────────
+    public LiveData<AuthRepository.Result<List<Product>>> getRecommendations(String userId, int n) {
+        MutableLiveData<AuthRepository.Result<List<Product>>> result = new MutableLiveData<>();
+
+        java.util.Map<String, Object> body = new java.util.HashMap<>();
+        if (userId != null && !userId.isEmpty()) {
+            body.put("user_id", userId);
+        }
+        body.put("n", n);
+
+        recommendApi.getRecommendations(body).enqueue(new Callback<ApiResponse<List<Product>>>() {
+            @Override
+            public void onResponse(Call<ApiResponse<List<Product>>> call,
+                                   Response<ApiResponse<List<Product>>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    result.postValue(AuthRepository.Result.success(response.body().getData()));
+                } else {
+                    result.postValue(AuthRepository.Result.success(new ArrayList<>()));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse<List<Product>>> call, Throwable t) {
+                result.postValue(AuthRepository.Result.success(new ArrayList<>()));
+            }
+        });
+        return result;
+    }
+
+    public LiveData<AuthRepository.Result<Void>> sendRecommendEvent(
+            String eventType, String productId, java.util.Map<String, Object> metadata) {
+        MutableLiveData<AuthRepository.Result<Void>> result = new MutableLiveData<>();
+
+        java.util.Map<String, Object> body = new java.util.HashMap<>();
+        body.put("eventType", eventType);
+        body.put("productId", productId);
+        if (metadata != null && !metadata.isEmpty()) {
+            body.put("metadata", metadata);
+        }
+
+        recommendApi.sendEvent(body).enqueue(new Callback<ApiResponse<Void>>() {
+            @Override
+            public void onResponse(Call<ApiResponse<Void>> call, Response<ApiResponse<Void>> response) {
+                result.postValue(AuthRepository.Result.success(null));
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse<Void>> call, Throwable t) {
+                result.postValue(AuthRepository.Result.error(t.getMessage()));
+            }
+        });
+        return result;
+    }
+
     // ── Room Cache Helpers ─────────────────────────────────────────────────
     private void cacheProducts(List<Product> products) {
         executor.execute(() -> {

@@ -49,6 +49,16 @@
             android:text="email@example.com"
             android:textColor="#CCffffff"
             android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/tv_login_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/account_login_hint"
+            android:textColor="#E6ffffff"
+            android:textSize="13sp"
+            android:visibility="gone" />
     </LinearLayout>
 
     <!-- Menu items -->
@@ -104,6 +114,36 @@
                 android:background="?selectableItemBackground">
                 <TextView android:layout_width="0dp" android:layout_height="wrap_content"
                     android:layout_weight="1" android:text="📋  Đơn hàng của tôi"
+                    android:textColor="@color/text_primary" android:textSize="14sp" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="›" android:textColor="@color/text_secondary" android:textSize="20sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/row_shipments"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="20dp"
+                android:background="?selectableItemBackground">
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:text="🚚  Theo dõi vận chuyển"
+                    android:textColor="@color/text_primary" android:textSize="14sp" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="›" android:textColor="@color/text_secondary" android:textSize="20sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/row_my_reviews"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="20dp"
+                android:background="?selectableItemBackground">
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:text="⭐  Đánh giá của tôi"
                     android:textColor="@color/text_primary" android:textSize="14sp" />
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                     android:text="›" android:textColor="@color/text_secondary" android:textSize="20sp" />

@@ -22,6 +22,7 @@ public class HomeFragment extends Fragment {
     private ProductViewModel productViewModel;
     private AuthViewModel authViewModel;
     private ProductAdapter featuredAdapter;
+    private ProductAdapter trendingAdapter;
 
     @Nullable
     @Override
@@ -37,6 +38,7 @@ public class HomeFragment extends Fragment {
         authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
 
         setupFeaturedProducts(view);
+        setupTrendingProducts(view);
         loadData();
     }
 
@@ -55,11 +57,46 @@ public class HomeFragment extends Fragment {
         rvFeatured.setAdapter(featuredAdapter);
     }
 
+    private void setupTrendingProducts(View view) {
+        RecyclerView rvTrending = view.findViewById(R.id.rv_sale_products);
+        trendingAdapter = new ProductAdapter(getContext(), product -> {
+            android.content.Intent intent = new android.content.Intent(
+                    getContext(),
+                    vn.vuavuive.customer.ui.product.ProductDetailActivity.class);
+            intent.putExtra("product_id", product.getId());
+            startActivity(intent);
+        });
+        rvTrending.setLayoutManager(
+                new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        rvTrending.setAdapter(trendingAdapter);
+    }
+
     private void loadData() {
+        String userId = authViewModel.getCurrentUser().getValue() != null
+                ? authViewModel.getCurrentUser().getValue().getId() : null;
+
+        productViewModel.getRecommendations(userId, 10).observe(getViewLifecycleOwner(), result -> {
+            if (result.status == vn.vuavuive.customer.data.repository.AuthRepository.Result.Status.SUCCESS
+                    && result.data != null && !result.data.isEmpty()) {
+                featuredAdapter.setProducts(result.data);
+            } else {
+                loadFallbackFeatured();
+            }
+        });
+
         productViewModel.loadProducts(1).observe(getViewLifecycleOwner(), result -> {
             if (result.status == vn.vuavuive.customer.data.repository.AuthRepository.Result.Status.SUCCESS
                     && result.data != null) {
-                // Show first 10 as featured
+                int size = Math.min(result.data.size(), 10);
+                trendingAdapter.setProducts(result.data.subList(0, size));
+            }
+        });
+    }
+
+    private void loadFallbackFeatured() {
+        productViewModel.loadProducts(1).observe(getViewLifecycleOwner(), result -> {
+            if (result.status == vn.vuavuive.customer.data.repository.AuthRepository.Result.Status.SUCCESS
+                    && result.data != null) {
                 int size = Math.min(result.data.size(), 10);
                 featuredAdapter.setProducts(result.data.subList(0, size));
             }

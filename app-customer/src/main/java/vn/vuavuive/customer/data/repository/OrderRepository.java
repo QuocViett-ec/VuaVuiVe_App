@@ -212,4 +212,57 @@ public class OrderRepository {
         });
         return result;
     }
+
+    // ── Reviews ───────────────────────────────────────────────────────────
+    public LiveData<AuthRepository.Result<vn.vuavuive.shared.data.dto.Review>> submitReview(
+            String orderId, java.util.List<java.util.Map<String, Object>> reviews) {
+        MutableLiveData<AuthRepository.Result<vn.vuavuive.shared.data.dto.Review>> result =
+                new MutableLiveData<>();
+        result.postValue(AuthRepository.Result.loading());
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("reviews", reviews);
+
+        orderApi.submitReview(orderId, body).enqueue(new Callback<ApiResponse<vn.vuavuive.shared.data.dto.Review>>() {
+            @Override
+            public void onResponse(Call<ApiResponse<vn.vuavuive.shared.data.dto.Review>> call,
+                                   Response<ApiResponse<vn.vuavuive.shared.data.dto.Review>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    result.postValue(AuthRepository.Result.success(response.body().getData()));
+                } else {
+                    result.postValue(AuthRepository.Result.error("Khong the gui danh gia"));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse<vn.vuavuive.shared.data.dto.Review>> call, Throwable t) {
+                result.postValue(AuthRepository.Result.error("Loi ket noi: " + t.getMessage()));
+            }
+        });
+        return result;
+    }
+
+    public LiveData<AuthRepository.Result<vn.vuavuive.shared.data.dto.Review>> getMyReview(String orderId) {
+        MutableLiveData<AuthRepository.Result<vn.vuavuive.shared.data.dto.Review>> result =
+                new MutableLiveData<>();
+        result.postValue(AuthRepository.Result.loading());
+
+        orderApi.getMyReview(orderId).enqueue(new Callback<ApiResponse<vn.vuavuive.shared.data.dto.Review>>() {
+            @Override
+            public void onResponse(Call<ApiResponse<vn.vuavuive.shared.data.dto.Review>> call,
+                                   Response<ApiResponse<vn.vuavuive.shared.data.dto.Review>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    result.postValue(AuthRepository.Result.success(response.body().getData()));
+                } else {
+                    result.postValue(AuthRepository.Result.error("Khong the tai danh gia"));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse<vn.vuavuive.shared.data.dto.Review>> call, Throwable t) {
+                result.postValue(AuthRepository.Result.error("Loi ket noi: " + t.getMessage()));
+            }
+        });
+        return result;
+    }
 }

@@ -33,7 +33,7 @@
 20-->[androidx.core:core:1.13.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\d197bf5fa010bfe3b459fcfd8c4d04c8\transformed\core-1.13.0\AndroidManifest.xml:26:22-94
 21
 22    <application
-22-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:9:5-95:19
+22-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:9:5-117:19
 23        android:name="vn.vuavuive.customer.VuaVuiVeApp"
 23-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:10:9-36
 24        android:allowBackup="true"
@@ -48,242 +48,279 @@
 29-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:13:9-69
 30        android:supportsRtl="true"
 30-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:14:9-35
-31        android:theme="@style/Theme.VuaVuiVe.Customer"
-31-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:15:9-55
-32        android:usesCleartextTraffic="true" >
-32-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:16:9-44
-33
-34        <!-- Auth -->
-35        <activity
-35-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:19:9-27:20
-36            android:name="vn.vuavuive.customer.ui.auth.LoginActivity"
-36-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:20:13-50
-37            android:exported="true"
-37-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:21:13-36
-38            android:theme="@style/Theme.VuaVuiVe.Customer" >
-38-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:22:13-59
-39            <intent-filter>
-39-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:23:13-26:29
-40                <action android:name="android.intent.action.MAIN" />
-40-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:24:17-69
-40-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:24:25-66
-41
-42                <category android:name="android.intent.category.LAUNCHER" />
-42-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:25:17-77
-42-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:25:27-74
-43            </intent-filter>
-44        </activity>
-45        <activity
-45-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:29:9-31:40
-46            android:name="vn.vuavuive.customer.ui.auth.RegisterActivity"
-46-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:30:13-53
-47            android:exported="false" />
-47-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:31:13-37
+31        android:testOnly="true"
+32        android:theme="@style/Theme.VuaVuiVe.Customer"
+32-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:15:9-55
+33        android:usesCleartextTraffic="true" >
+33-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:16:9-44
+34
+35        <!-- Auth -->
+36        <activity
+36-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:19:9-22:62
+37            android:name="vn.vuavuive.customer.ui.auth.LoginActivity"
+37-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:20:13-50
+38            android:exported="false"
+38-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:21:13-37
+39            android:theme="@style/Theme.VuaVuiVe.Customer" />
+39-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:22:13-59
+40        <activity
+40-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:24:9-26:40
+41            android:name="vn.vuavuive.customer.ui.auth.RegisterActivity"
+41-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:25:13-53
+42            android:exported="false" />
+42-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:26:13-37
+43        <activity
+43-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:28:9-30:40
+44            android:name="vn.vuavuive.customer.ui.auth.ForgotPasswordActivity"
+44-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:29:13-59
+45            android:exported="false" />
+45-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:30:13-37
+46
+47        <!-- Main -->
 48        <activity
-48-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:33:9-35:40
-49            android:name="vn.vuavuive.customer.ui.auth.ForgotPasswordActivity"
-49-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:34:13-59
-50            android:exported="false" />
-50-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:35:13-37
-51
-52        <!-- Main -->
-53        <activity
-53-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:38:9-41:46
-54            android:name="vn.vuavuive.customer.ui.MainActivity"
-54-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:39:13-44
-55            android:exported="false"
-55-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:40:13-37
-56            android:launchMode="singleTop" />
-56-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:41:13-43
-57
-58        <!-- Product -->
-59        <activity
-59-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:44:9-47:61
-60            android:name="vn.vuavuive.customer.ui.product.ProductDetailActivity"
-60-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:45:13-61
-61            android:exported="false"
-61-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:46:13-37
-62            android:parentActivityName="vn.vuavuive.customer.ui.MainActivity" />
-62-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:47:13-58
-63
-64        <!-- Checkout & Payment -->
-65        <activity
-65-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:50:9-53:61
-66            android:name="vn.vuavuive.customer.ui.checkout.CheckoutActivity"
-66-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:51:13-57
-67            android:exported="false"
-67-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:52:13-37
-68            android:parentActivityName="vn.vuavuive.customer.ui.MainActivity" />
-68-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:53:13-58
-69        <activity
-69-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:55:9-58:74
-70            android:name="vn.vuavuive.customer.ui.checkout.PaymentWebViewActivity"
-70-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:56:13-63
-71            android:exported="false"
-71-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:57:13-37
-72            android:parentActivityName="vn.vuavuive.customer.ui.checkout.CheckoutActivity" />
-72-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:58:13-71
-73
-74        <!-- Order Detail -->
-75        <activity
-75-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:61:9-64:61
-76            android:name="vn.vuavuive.customer.ui.order.OrderDetailActivity"
-76-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:62:13-57
-77            android:exported="false"
-77-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:63:13-37
-78            android:parentActivityName="vn.vuavuive.customer.ui.MainActivity" />
-78-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:64:13-58
-79
-80        <!-- Account -->
-81        <activity
-81-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:67:9-70:61
-82            android:name="vn.vuavuive.customer.ui.account.EditProfileActivity"
-82-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:68:13-59
-83            android:exported="false"
-83-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:69:13-37
-84            android:parentActivityName="vn.vuavuive.customer.ui.MainActivity" />
-84-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:70:13-58
-85        <activity
-85-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:72:9-75:61
-86            android:name="vn.vuavuive.customer.ui.account.ChangePasswordActivity"
-86-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:73:13-62
-87            android:exported="false"
-87-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:74:13-37
-88            android:parentActivityName="vn.vuavuive.customer.ui.MainActivity" />
-88-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:75:13-58
-89
-90        <!-- Chat / Chatbot -->
-91        <activity
-91-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:78:9-82:58
-92            android:name="vn.vuavuive.customer.ui.chat.ChatActivity"
-92-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:79:13-49
-93            android:exported="false"
-93-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:80:13-37
-94            android:parentActivityName="vn.vuavuive.customer.ui.MainActivity"
-94-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:81:13-58
-95            android:windowSoftInputMode="adjustResize" />
-95-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:82:13-55
-96
-97        <!-- Recipes -->
-98        <activity
-98-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:85:9-88:61
-99            android:name="vn.vuavuive.customer.ui.recipe.RecipeListFragmentActivity"
-99-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:86:13-65
-100            android:exported="false"
-100-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:87:13-37
-101            android:parentActivityName="vn.vuavuive.customer.ui.MainActivity" />
-101-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:88:13-58
+48-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:33:9-41:20
+49            android:name="vn.vuavuive.customer.ui.MainActivity"
+49-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:34:13-44
+50            android:exported="true"
+50-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:35:13-36
+51            android:launchMode="singleTop" >
+51-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:36:13-43
+52            <intent-filter>
+52-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:37:13-40:29
+53                <action android:name="android.intent.action.MAIN" />
+53-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:38:17-69
+53-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:38:25-66
+54
+55                <category android:name="android.intent.category.LAUNCHER" />
+55-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:39:17-77
+55-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:39:27-74
+56            </intent-filter>
+57        </activity>
+58
+59        <!-- Product -->
+60        <activity
+60-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:44:9-47:61
+61            android:name="vn.vuavuive.customer.ui.product.ProductDetailActivity"
+61-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:45:13-61
+62            android:exported="false"
+62-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:46:13-37
+63            android:parentActivityName="vn.vuavuive.customer.ui.MainActivity" />
+63-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:47:13-58
+64        <activity
+64-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:49:9-52:61
+65            android:name="vn.vuavuive.customer.ui.search.SearchActivity"
+65-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:50:13-53
+66            android:exported="false"
+66-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:51:13-37
+67            android:parentActivityName="vn.vuavuive.customer.ui.MainActivity" />
+67-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:52:13-58
+68
+69        <!-- Checkout & Payment -->
+70        <activity
+70-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:55:9-58:61
+71            android:name="vn.vuavuive.customer.ui.checkout.CheckoutActivity"
+71-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:56:13-57
+72            android:exported="false"
+72-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:57:13-37
+73            android:parentActivityName="vn.vuavuive.customer.ui.MainActivity" />
+73-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:58:13-58
+74        <activity
+74-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:60:9-63:74
+75            android:name="vn.vuavuive.customer.ui.checkout.PaymentWebViewActivity"
+75-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:61:13-63
+76            android:exported="false"
+76-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:62:13-37
+77            android:parentActivityName="vn.vuavuive.customer.ui.checkout.CheckoutActivity" />
+77-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:63:13-71
+78
+79        <!-- Order Detail -->
+80        <activity
+80-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:66:9-69:61
+81            android:name="vn.vuavuive.customer.ui.order.OrderDetailActivity"
+81-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:67:13-57
+82            android:exported="false"
+82-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:68:13-37
+83            android:parentActivityName="vn.vuavuive.customer.ui.MainActivity" />
+83-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:69:13-58
+84
+85        <!-- Reviews -->
+86        <activity
+86-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:72:9-75:61
+87            android:name="vn.vuavuive.customer.ui.review.MyReviewsActivity"
+87-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:73:13-56
+88            android:exported="false"
+88-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:74:13-37
+89            android:parentActivityName="vn.vuavuive.customer.ui.MainActivity" />
+89-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:75:13-58
+90
+91        <!-- Shipments -->
+92        <activity
+92-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:78:9-81:61
+93            android:name="vn.vuavuive.customer.ui.shipment.ShipmentListActivity"
+93-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:79:13-61
+94            android:exported="false"
+94-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:80:13-37
+95            android:parentActivityName="vn.vuavuive.customer.ui.MainActivity" />
+95-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:81:13-58
+96        <activity
+96-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:83:9-86:78
+97            android:name="vn.vuavuive.customer.ui.shipment.ShipmentDetailActivity"
+97-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:84:13-63
+98            android:exported="false"
+98-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:85:13-37
+99            android:parentActivityName="vn.vuavuive.customer.ui.shipment.ShipmentListActivity" />
+99-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:86:13-75
+100
+101        <!-- Account -->
 102        <activity
-102-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:90:9-93:82
-103            android:name="vn.vuavuive.customer.ui.recipe.RecipeDetailActivity"
-103-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:91:13-59
+102-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:89:9-92:61
+103            android:name="vn.vuavuive.customer.ui.account.EditProfileActivity"
+103-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:90:13-59
 104            android:exported="false"
-104-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:92:13-37
-105            android:parentActivityName="vn.vuavuive.customer.ui.recipe.RecipeListFragmentActivity" />
-105-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:93:13-79
+104-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:91:13-37
+105            android:parentActivityName="vn.vuavuive.customer.ui.MainActivity" />
+105-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:92:13-58
 106        <activity
-106-->[com.google.android.gms:play-services-base:18.5.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\7f7e59a3235f2dbd25e31d7c8c0458e4\transformed\play-services-base-18.5.0\AndroidManifest.xml:5:9-173
-107            android:name="com.google.android.gms.common.api.GoogleApiActivity"
-107-->[com.google.android.gms:play-services-base:18.5.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\7f7e59a3235f2dbd25e31d7c8c0458e4\transformed\play-services-base-18.5.0\AndroidManifest.xml:5:19-85
+106-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:94:9-97:61
+107            android:name="vn.vuavuive.customer.ui.account.ChangePasswordActivity"
+107-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:95:13-62
 108            android:exported="false"
-108-->[com.google.android.gms:play-services-base:18.5.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\7f7e59a3235f2dbd25e31d7c8c0458e4\transformed\play-services-base-18.5.0\AndroidManifest.xml:5:146-170
-109            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-109-->[com.google.android.gms:play-services-base:18.5.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\7f7e59a3235f2dbd25e31d7c8c0458e4\transformed\play-services-base-18.5.0\AndroidManifest.xml:5:86-145
+108-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:96:13-37
+109            android:parentActivityName="vn.vuavuive.customer.ui.MainActivity" />
+109-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:97:13-58
 110
-111        <meta-data
-111-->[com.google.android.gms:play-services-basement:18.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\d795d1f93385c2508e8ca230fa0a238e\transformed\play-services-basement-18.4.0\AndroidManifest.xml:6:9-122
-112            android:name="com.google.android.gms.version"
-112-->[com.google.android.gms:play-services-basement:18.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\d795d1f93385c2508e8ca230fa0a238e\transformed\play-services-basement-18.4.0\AndroidManifest.xml:6:20-65
-113            android:value="@integer/google_play_services_version" />
-113-->[com.google.android.gms:play-services-basement:18.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\d795d1f93385c2508e8ca230fa0a238e\transformed\play-services-basement-18.4.0\AndroidManifest.xml:6:66-119
-114
-115        <provider
-115-->[androidx.emoji2:emoji2:1.3.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\c582c32064dfb9900e179581e30d60ac\transformed\emoji2-1.3.0\AndroidManifest.xml:24:9-32:20
-116            android:name="androidx.startup.InitializationProvider"
-116-->[androidx.emoji2:emoji2:1.3.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\c582c32064dfb9900e179581e30d60ac\transformed\emoji2-1.3.0\AndroidManifest.xml:25:13-67
-117            android:authorities="vn.vuavuive.customer.androidx-startup"
-117-->[androidx.emoji2:emoji2:1.3.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\c582c32064dfb9900e179581e30d60ac\transformed\emoji2-1.3.0\AndroidManifest.xml:26:13-68
-118            android:exported="false" >
-118-->[androidx.emoji2:emoji2:1.3.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\c582c32064dfb9900e179581e30d60ac\transformed\emoji2-1.3.0\AndroidManifest.xml:27:13-37
-119            <meta-data
-119-->[androidx.emoji2:emoji2:1.3.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\c582c32064dfb9900e179581e30d60ac\transformed\emoji2-1.3.0\AndroidManifest.xml:29:13-31:52
-120                android:name="androidx.emoji2.text.EmojiCompatInitializer"
-120-->[androidx.emoji2:emoji2:1.3.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\c582c32064dfb9900e179581e30d60ac\transformed\emoji2-1.3.0\AndroidManifest.xml:30:17-75
-121                android:value="androidx.startup" />
-121-->[androidx.emoji2:emoji2:1.3.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\c582c32064dfb9900e179581e30d60ac\transformed\emoji2-1.3.0\AndroidManifest.xml:31:17-49
-122            <meta-data
-122-->[androidx.lifecycle:lifecycle-process:2.8.7] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\d3372cbd5a22e1dd6de22e9dbfc3a3aa\transformed\lifecycle-process-2.8.7\AndroidManifest.xml:29:13-31:52
-123                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
-123-->[androidx.lifecycle:lifecycle-process:2.8.7] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\d3372cbd5a22e1dd6de22e9dbfc3a3aa\transformed\lifecycle-process-2.8.7\AndroidManifest.xml:30:17-78
-124                android:value="androidx.startup" />
-124-->[androidx.lifecycle:lifecycle-process:2.8.7] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\d3372cbd5a22e1dd6de22e9dbfc3a3aa\transformed\lifecycle-process-2.8.7\AndroidManifest.xml:31:17-49
-125            <meta-data
-125-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:29:13-31:52
-126                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
-126-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:30:17-85
-127                android:value="androidx.startup" />
-127-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:31:17-49
-128        </provider>
-129
-130        <uses-library
-130-->[androidx.window:window:1.0.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e6307dfecb75db2ced2009706a57261c\transformed\window-1.0.0\AndroidManifest.xml:25:9-27:40
-131            android:name="androidx.window.extensions"
-131-->[androidx.window:window:1.0.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e6307dfecb75db2ced2009706a57261c\transformed\window-1.0.0\AndroidManifest.xml:26:13-54
-132            android:required="false" />
-132-->[androidx.window:window:1.0.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e6307dfecb75db2ced2009706a57261c\transformed\window-1.0.0\AndroidManifest.xml:27:13-37
-133        <uses-library
-133-->[androidx.window:window:1.0.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e6307dfecb75db2ced2009706a57261c\transformed\window-1.0.0\AndroidManifest.xml:28:9-30:40
-134            android:name="androidx.window.sidecar"
-134-->[androidx.window:window:1.0.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e6307dfecb75db2ced2009706a57261c\transformed\window-1.0.0\AndroidManifest.xml:29:13-51
-135            android:required="false" />
-135-->[androidx.window:window:1.0.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e6307dfecb75db2ced2009706a57261c\transformed\window-1.0.0\AndroidManifest.xml:30:13-37
-136
-137        <receiver
-137-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:34:9-52:20
-138            android:name="androidx.profileinstaller.ProfileInstallReceiver"
-138-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:35:13-76
-139            android:directBootAware="false"
-139-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:36:13-44
-140            android:enabled="true"
-140-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:37:13-35
-141            android:exported="true"
-141-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:38:13-36
-142            android:permission="android.permission.DUMP" >
-142-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:39:13-57
-143            <intent-filter>
-143-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:40:13-42:29
-144                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
-144-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:41:17-91
-144-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:41:25-88
-145            </intent-filter>
-146            <intent-filter>
-146-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:43:13-45:29
-147                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
-147-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:44:17-85
-147-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:44:25-82
-148            </intent-filter>
-149            <intent-filter>
-149-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:46:13-48:29
-150                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
-150-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:47:17-88
-150-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:47:25-85
-151            </intent-filter>
-152            <intent-filter>
-152-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:49:13-51:29
-153                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
-153-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:50:17-95
-153-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:50:25-92
-154            </intent-filter>
-155        </receiver>
-156
-157        <service
-157-->[androidx.room:room-runtime:2.6.1] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\05a45ed3409f172f97020d0ab043ff05\transformed\room-runtime-2.6.1\AndroidManifest.xml:24:9-28:63
-158            android:name="androidx.room.MultiInstanceInvalidationService"
-158-->[androidx.room:room-runtime:2.6.1] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\05a45ed3409f172f97020d0ab043ff05\transformed\room-runtime-2.6.1\AndroidManifest.xml:25:13-74
-159            android:directBootAware="true"
-159-->[androidx.room:room-runtime:2.6.1] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\05a45ed3409f172f97020d0ab043ff05\transformed\room-runtime-2.6.1\AndroidManifest.xml:26:13-43
-160            android:exported="false" />
-160-->[androidx.room:room-runtime:2.6.1] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\05a45ed3409f172f97020d0ab043ff05\transformed\room-runtime-2.6.1\AndroidManifest.xml:27:13-37
-161    </application>
-162
-163</manifest>
+111        <!-- Chat / Chatbot -->
+112        <activity
+112-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:100:9-104:58
+113            android:name="vn.vuavuive.customer.ui.chat.ChatActivity"
+113-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:101:13-49
+114            android:exported="false"
+114-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:102:13-37
+115            android:parentActivityName="vn.vuavuive.customer.ui.MainActivity"
+115-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:103:13-58
+116            android:windowSoftInputMode="adjustResize" />
+116-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:104:13-55
+117
+118        <!-- Recipes -->
+119        <activity
+119-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:107:9-110:61
+120            android:name="vn.vuavuive.customer.ui.recipe.RecipeListFragmentActivity"
+120-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:108:13-65
+121            android:exported="false"
+121-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:109:13-37
+122            android:parentActivityName="vn.vuavuive.customer.ui.MainActivity" />
+122-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:110:13-58
+123        <activity
+123-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:112:9-115:82
+124            android:name="vn.vuavuive.customer.ui.recipe.RecipeDetailActivity"
+124-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:113:13-59
+125            android:exported="false"
+125-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:114:13-37
+126            android:parentActivityName="vn.vuavuive.customer.ui.recipe.RecipeListFragmentActivity" />
+126-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:115:13-79
+127        <activity
+127-->[com.google.android.gms:play-services-base:18.5.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\7f7e59a3235f2dbd25e31d7c8c0458e4\transformed\play-services-base-18.5.0\AndroidManifest.xml:5:9-173
+128            android:name="com.google.android.gms.common.api.GoogleApiActivity"
+128-->[com.google.android.gms:play-services-base:18.5.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\7f7e59a3235f2dbd25e31d7c8c0458e4\transformed\play-services-base-18.5.0\AndroidManifest.xml:5:19-85
+129            android:exported="false"
+129-->[com.google.android.gms:play-services-base:18.5.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\7f7e59a3235f2dbd25e31d7c8c0458e4\transformed\play-services-base-18.5.0\AndroidManifest.xml:5:146-170
+130            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+130-->[com.google.android.gms:play-services-base:18.5.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\7f7e59a3235f2dbd25e31d7c8c0458e4\transformed\play-services-base-18.5.0\AndroidManifest.xml:5:86-145
+131
+132        <meta-data
+132-->[com.google.android.gms:play-services-basement:18.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\d795d1f93385c2508e8ca230fa0a238e\transformed\play-services-basement-18.4.0\AndroidManifest.xml:6:9-122
+133            android:name="com.google.android.gms.version"
+133-->[com.google.android.gms:play-services-basement:18.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\d795d1f93385c2508e8ca230fa0a238e\transformed\play-services-basement-18.4.0\AndroidManifest.xml:6:20-65
+134            android:value="@integer/google_play_services_version" />
+134-->[com.google.android.gms:play-services-basement:18.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\d795d1f93385c2508e8ca230fa0a238e\transformed\play-services-basement-18.4.0\AndroidManifest.xml:6:66-119
+135
+136        <provider
+136-->[androidx.emoji2:emoji2:1.3.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\c582c32064dfb9900e179581e30d60ac\transformed\emoji2-1.3.0\AndroidManifest.xml:24:9-32:20
+137            android:name="androidx.startup.InitializationProvider"
+137-->[androidx.emoji2:emoji2:1.3.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\c582c32064dfb9900e179581e30d60ac\transformed\emoji2-1.3.0\AndroidManifest.xml:25:13-67
+138            android:authorities="vn.vuavuive.customer.androidx-startup"
+138-->[androidx.emoji2:emoji2:1.3.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\c582c32064dfb9900e179581e30d60ac\transformed\emoji2-1.3.0\AndroidManifest.xml:26:13-68
+139            android:exported="false" >
+139-->[androidx.emoji2:emoji2:1.3.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\c582c32064dfb9900e179581e30d60ac\transformed\emoji2-1.3.0\AndroidManifest.xml:27:13-37
+140            <meta-data
+140-->[androidx.emoji2:emoji2:1.3.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\c582c32064dfb9900e179581e30d60ac\transformed\emoji2-1.3.0\AndroidManifest.xml:29:13-31:52
+141                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+141-->[androidx.emoji2:emoji2:1.3.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\c582c32064dfb9900e179581e30d60ac\transformed\emoji2-1.3.0\AndroidManifest.xml:30:17-75
+142                android:value="androidx.startup" />
+142-->[androidx.emoji2:emoji2:1.3.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\c582c32064dfb9900e179581e30d60ac\transformed\emoji2-1.3.0\AndroidManifest.xml:31:17-49
+143            <meta-data
+143-->[androidx.lifecycle:lifecycle-process:2.8.7] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\d3372cbd5a22e1dd6de22e9dbfc3a3aa\transformed\lifecycle-process-2.8.7\AndroidManifest.xml:29:13-31:52
+144                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+144-->[androidx.lifecycle:lifecycle-process:2.8.7] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\d3372cbd5a22e1dd6de22e9dbfc3a3aa\transformed\lifecycle-process-2.8.7\AndroidManifest.xml:30:17-78
+145                android:value="androidx.startup" />
+145-->[androidx.lifecycle:lifecycle-process:2.8.7] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\d3372cbd5a22e1dd6de22e9dbfc3a3aa\transformed\lifecycle-process-2.8.7\AndroidManifest.xml:31:17-49
+146            <meta-data
+146-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:29:13-31:52
+147                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+147-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:30:17-85
+148                android:value="androidx.startup" />
+148-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:31:17-49
+149        </provider>
+150
+151        <uses-library
+151-->[androidx.window:window:1.0.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e6307dfecb75db2ced2009706a57261c\transformed\window-1.0.0\AndroidManifest.xml:25:9-27:40
+152            android:name="androidx.window.extensions"
+152-->[androidx.window:window:1.0.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e6307dfecb75db2ced2009706a57261c\transformed\window-1.0.0\AndroidManifest.xml:26:13-54
+153            android:required="false" />
+153-->[androidx.window:window:1.0.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e6307dfecb75db2ced2009706a57261c\transformed\window-1.0.0\AndroidManifest.xml:27:13-37
+154        <uses-library
+154-->[androidx.window:window:1.0.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e6307dfecb75db2ced2009706a57261c\transformed\window-1.0.0\AndroidManifest.xml:28:9-30:40
+155            android:name="androidx.window.sidecar"
+155-->[androidx.window:window:1.0.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e6307dfecb75db2ced2009706a57261c\transformed\window-1.0.0\AndroidManifest.xml:29:13-51
+156            android:required="false" />
+156-->[androidx.window:window:1.0.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e6307dfecb75db2ced2009706a57261c\transformed\window-1.0.0\AndroidManifest.xml:30:13-37
+157
+158        <receiver
+158-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:34:9-52:20
+159            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+159-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:35:13-76
+160            android:directBootAware="false"
+160-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:36:13-44
+161            android:enabled="true"
+161-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:37:13-35
+162            android:exported="true"
+162-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:38:13-36
+163            android:permission="android.permission.DUMP" >
+163-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:39:13-57
+164            <intent-filter>
+164-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:40:13-42:29
+165                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+165-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:41:17-91
+165-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:41:25-88
+166            </intent-filter>
+167            <intent-filter>
+167-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:43:13-45:29
+168                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+168-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:44:17-85
+168-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:44:25-82
+169            </intent-filter>
+170            <intent-filter>
+170-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:46:13-48:29
+171                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+171-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:47:17-88
+171-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:47:25-85
+172            </intent-filter>
+173            <intent-filter>
+173-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:49:13-51:29
+174                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+174-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:50:17-95
+174-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:50:25-92
+175            </intent-filter>
+176        </receiver>
+177
+178        <service
+178-->[androidx.room:room-runtime:2.6.1] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\05a45ed3409f172f97020d0ab043ff05\transformed\room-runtime-2.6.1\AndroidManifest.xml:24:9-28:63
+179            android:name="androidx.room.MultiInstanceInvalidationService"
+179-->[androidx.room:room-runtime:2.6.1] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\05a45ed3409f172f97020d0ab043ff05\transformed\room-runtime-2.6.1\AndroidManifest.xml:25:13-74
+180            android:directBootAware="true"
+180-->[androidx.room:room-runtime:2.6.1] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\05a45ed3409f172f97020d0ab043ff05\transformed\room-runtime-2.6.1\AndroidManifest.xml:26:13-43
+181            android:exported="false" />
+181-->[androidx.room:room-runtime:2.6.1] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\05a45ed3409f172f97020d0ab043ff05\transformed\room-runtime-2.6.1\AndroidManifest.xml:27:13-37
+182    </application>
+183
+184</manifest>

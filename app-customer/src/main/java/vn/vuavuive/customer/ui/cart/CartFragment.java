@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -17,7 +18,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import dagger.hilt.android.AndroidEntryPoint;
 import vn.vuavuive.customer.R;
+import vn.vuavuive.customer.ui.auth.LoginActivity;
 import vn.vuavuive.customer.ui.checkout.CheckoutActivity;
+import vn.vuavuive.customer.viewmodel.AuthViewModel;
 import vn.vuavuive.customer.viewmodel.CartViewModel;
 import vn.vuavuive.shared.data.local.CartItemEntity;
 import vn.vuavuive.shared.util.CurrencyFormatter;
@@ -27,10 +30,19 @@ import java.util.List;
 public class CartFragment extends Fragment {
 
     private CartViewModel cartViewModel;
+    private AuthViewModel authViewModel;
     private CartAdapter cartAdapter;
-    private TextView tvTotal, tvEmptyCart;
+    private CartAdapter savedAdapter;
+    private TextView tvTotal, tvEmptyCart, tvEmptyCartInline;
+    private TextView tvSavedCount, tvSavedToggle, tvSavedEmpty;
     private LinearLayout layoutCartContent;
+    private View layoutEmptyCart;
+    private View layoutSavedHeader;
     private Button btnCheckout;
+    private RecyclerView rvSavedItems;
+    private boolean savedExpanded = false;
+    private List<CartItemEntity> cartItems = new java.util.ArrayList<>();
+    private List<CartItemEntity> savedItems = new java.util.ArrayList<>();
 
     @Nullable
     @Override
@@ -43,23 +55,38 @@ public class CartFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         cartViewModel = new ViewModelProvider(requireActivity()).get(CartViewModel.class);
+        authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
 
         tvTotal        = view.findViewById(R.id.tv_total);
         tvEmptyCart    = view.findViewById(R.id.tv_empty_cart);
+        tvEmptyCartInline = view.findViewById(R.id.tv_empty_cart_inline);
         layoutCartContent = view.findViewById(R.id.layout_cart_content);
+        layoutEmptyCart = view.findViewById(R.id.layout_empty_cart);
         btnCheckout    = view.findViewById(R.id.btn_checkout);
+        layoutSavedHeader = view.findViewById(R.id.layout_saved_header);
+        tvSavedCount   = view.findViewById(R.id.tv_saved_count);
+        tvSavedToggle  = view.findViewById(R.id.tv_saved_toggle);
+        tvSavedEmpty   = view.findViewById(R.id.tv_saved_empty);
+        rvSavedItems   = view.findViewById(R.id.rv_saved_items);
 
         setupCartRecyclerView(view);
+        setupSavedRecyclerView();
+        setupSavedHeader();
         observeCart();
 
         btnCheckout.setOnClickListener(v -> {
+            if (!authViewModel.isLoggedIn()) {
+                Toast.makeText(getContext(), R.string.login_required_checkout, Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(getContext(), LoginActivity.class));
+                return;
+            }
             startActivity(new Intent(getContext(), CheckoutActivity.class));
         });
     }
 
     private void setupCartRecyclerView(View view) {
         RecyclerView rv = view.findViewById(R.id.rv_cart_items);
-        cartAdapter = new CartAdapter(getContext(), cartViewModel);
+        cartAdapter = new CartAdapter(getContext(), cartViewModel, false);
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
         rv.setAdapter(cartAdapter);
 
@@ -81,15 +108,34 @@ public class CartFragment extends Fragment {
         new ItemTouchHelper(swipeCallback).attachToRecyclerView(rv);
     }
 
+    private void setupSavedRecyclerView() {
+        savedAdapter = new CartAdapter(getContext(), cartViewModel, true);
+        rvSavedItems.setLayoutManager(new LinearLayoutManager(getContext()));
+        rvSavedItems.setAdapter(savedAdapter);
+    }
+
+    private void setupSavedHeader() {
+        if (layoutSavedHeader == null) return;
+        layoutSavedHeader.setOnClickListener(v -> {
+            savedExpanded = !savedExpanded;
+            updateSavedSection();
+        });
+    }
+
     private void observeCart() {
         cartViewModel.getCartItems().observe(getViewLifecycleOwner(), items -> {
-            if (items == null || items.isEmpty()) {
-                showEmptyState(true);
-            } else {
-                showEmptyState(false);
-                cartAdapter.setItems(items);
-                updateTotal(items);
-            }
+            cartItems = items != null ? items : new java.util.ArrayList<>();
+            cartAdapter.setItems(cartItems);
+            updateTotal(cartItems);
+            updateEmptyState();
+            updateSavedSection();
+        });
+
+        cartViewModel.getSavedItems().observe(getViewLifecycleOwner(), items -> {
+            savedItems = items != null ? items : new java.util.ArrayList<>();
+            savedAdapter.setItems(savedItems);
+            updateEmptyState();
+            updateSavedSection();
         });
     }
 
@@ -99,8 +145,43 @@ public class CartFragment extends Fragment {
         tvTotal.setText(CurrencyFormatter.format(total));
     }
 
-    private void showEmptyState(boolean empty) {
-        tvEmptyCart.setVisibility(empty ? View.VISIBLE : View.GONE);
-        layoutCartContent.setVisibility(empty ? View.GONE : View.VISIBLE);
+    private void updateEmptyState() {
+        boolean cartEmpty = cartItems == null || cartItems.isEmpty();
+        boolean savedEmpty = savedItems == null || savedItems.isEmpty();
+        boolean allEmpty = cartEmpty && savedEmpty;
+
+        if (layoutEmptyCart != null) {
+            layoutEmptyCart.setVisibility(allEmpty ? View.VISIBLE : View.GONE);
+        }
+        layoutCartContent.setVisibility(allEmpty ? View.GONE : View.VISIBLE);
+
+        if (tvEmptyCartInline != null) {
+            tvEmptyCartInline.setVisibility(!allEmpty && cartEmpty ? View.VISIBLE : View.GONE);
+        }
+        if (tvEmptyCart != null) {
+            tvEmptyCart.setVisibility(allEmpty ? View.VISIBLE : View.GONE);
+        }
+    }
+
+    private void updateSavedSection() {
+        boolean hasSaved = savedItems != null && !savedItems.isEmpty();
+        boolean showHeader = hasSaved || (cartItems != null && !cartItems.isEmpty());
+        if (layoutSavedHeader != null) {
+            layoutSavedHeader.setVisibility(showHeader ? View.VISIBLE : View.GONE);
+        }
+        if (tvSavedCount != null) {
+            tvSavedCount.setText("(" + (savedItems != null ? savedItems.size() : 0) + ")");
+        }
+        if (tvSavedToggle != null) {
+            tvSavedToggle.setText(savedExpanded ? "^" : "v");
+            tvSavedToggle.setVisibility(hasSaved ? View.VISIBLE : View.GONE);
+        }
+
+        if (rvSavedItems != null) {
+            rvSavedItems.setVisibility(hasSaved && savedExpanded ? View.VISIBLE : View.GONE);
+        }
+        if (tvSavedEmpty != null) {
+            tvSavedEmpty.setVisibility(!hasSaved && showHeader ? View.VISIBLE : View.GONE);
+        }
     }
 }

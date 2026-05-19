@@ -21,11 +21,13 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 
     private final Context context;
     private final CartViewModel cartViewModel;
+    private final boolean savedMode;
     private List<CartItemEntity> items = new ArrayList<>();
 
-    public CartAdapter(Context context, CartViewModel cartViewModel) {
+    public CartAdapter(Context context, CartViewModel cartViewModel, boolean savedMode) {
         this.context = context;
         this.cartViewModel = cartViewModel;
+        this.savedMode = savedMode;
     }
 
     public void setItems(List<CartItemEntity> items) {
@@ -57,6 +59,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         ImageView ivProduct;
         TextView tvName, tvPrice, tvSubtotal, tvQuantity;
         ImageButton btnDecrease, btnIncrease, btnRemove;
+        TextView tvActionSave, tvActionMove;
 
         CartViewHolder(View itemView) {
             super(itemView);
@@ -68,6 +71,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             btnDecrease = itemView.findViewById(R.id.btn_decrease);
             btnIncrease = itemView.findViewById(R.id.btn_increase);
             btnRemove   = itemView.findViewById(R.id.btn_remove);
+            tvActionSave = itemView.findViewById(R.id.tv_action_save);
+            tvActionMove = itemView.findViewById(R.id.tv_action_move);
         }
 
         void bind(CartItemEntity item) {
@@ -93,6 +98,16 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             btnRemove.setOnClickListener(v -> {
                 cartViewModel.removeItem(item.getProductId());
             });
+
+            if (savedMode) {
+                tvActionSave.setVisibility(View.GONE);
+                tvActionMove.setVisibility(View.VISIBLE);
+                tvActionMove.setOnClickListener(v -> cartViewModel.moveToCart(item.getProductId()));
+            } else {
+                tvActionSave.setVisibility(View.VISIBLE);
+                tvActionMove.setVisibility(View.GONE);
+                tvActionSave.setOnClickListener(v -> cartViewModel.saveForLater(item.getProductId()));
+            }
         }
     }
 }

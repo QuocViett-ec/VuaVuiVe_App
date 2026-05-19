@@ -28,6 +28,10 @@
     <string name="tab_cart">Giỏ hàng</string>
     <string name="tab_orders">Đơn hàng</string>
     <string name="tab_account">Tài khoản</string>
+    <string name="account_guest_name">Khách</string>
+    <string name="account_guest_phone">Chưa có số điện thoại</string>
+    <string name="account_guest_email">Chưa có email</string>
+    <string name="account_login_hint">Chạm vào ảnh để đăng nhập</string>
 
     <!-- Products -->
     <string name="hint_search">Tìm kiếm sản phẩm…</string>
@@ -48,6 +52,7 @@
     <string name="label_saved_for_later">Lưu để mua sau</string>
     <string name="action_save_later">Lưu lại</string>
     <string name="action_move_to_cart">Thêm vào giỏ</string>
+    <string name="login_required_checkout">Vui lòng đăng nhập để thanh toán</string>
 
     <!-- Checkout -->
     <string name="checkout_title">Thanh toán</string>

@@ -13,11 +13,15 @@ import com.google.android.material.textfield.TextInputEditText;
 import dagger.hilt.android.AndroidEntryPoint;
 import vn.vuavuive.customer.R;
 import vn.vuavuive.customer.data.repository.AuthRepository;
+import vn.vuavuive.customer.ui.auth.LoginActivity;
+import vn.vuavuive.customer.viewmodel.AuthViewModel;
 import vn.vuavuive.customer.viewmodel.CartViewModel;
 import vn.vuavuive.customer.viewmodel.OrderViewModel;
+import vn.vuavuive.customer.viewmodel.ProductViewModel;
 import vn.vuavuive.shared.data.dto.DeliveryInfo;
 import vn.vuavuive.shared.data.dto.request.CreateOrderRequest;
 import vn.vuavuive.shared.data.local.CartItemEntity;
+import vn.vuavuive.shared.util.Constants;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +32,8 @@ public class CheckoutActivity extends AppCompatActivity {
 
     private OrderViewModel orderViewModel;
     private CartViewModel cartViewModel;
+    private ProductViewModel productViewModel;
+    private AuthViewModel authViewModel;
 
     private TextInputEditText etName, etPhone, etAddress, etVoucher, etNote;
     private RadioGroup rgPaymentMethod;
@@ -43,6 +49,15 @@ public class CheckoutActivity extends AppCompatActivity {
 
         orderViewModel = new ViewModelProvider(this).get(OrderViewModel.class);
         cartViewModel  = new ViewModelProvider(this).get(CartViewModel.class);
+        productViewModel = new ViewModelProvider(this).get(ProductViewModel.class);
+        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
+
+        if (!authViewModel.isLoggedIn()) {
+            Toast.makeText(this, R.string.login_required_checkout, Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+            return;
+        }
 
         initViews();
         observeCart();
@@ -134,6 +149,7 @@ public class CheckoutActivity extends AppCompatActivity {
             setLoading(false);
             if (result.status == AuthRepository.Result.Status.SUCCESS && result.data != null) {
                 String orderId = result.data.getId();
+                trackPurchaseEvents(orderId);
                 if ("cod".equals(finalMethod)) {
                     // Clear cart & show success
                     cartViewModel.clearCart();
@@ -163,6 +179,16 @@ public class CheckoutActivity extends AppCompatActivity {
                 Toast.makeText(this, result.message, Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    private void trackPurchaseEvents(String orderId) {
+        if (cartItems == null || cartItems.isEmpty()) return;
+        for (CartItemEntity item : cartItems) {
+            java.util.Map<String, Object> meta = new HashMap<>();
+            meta.put("quantity", item.getQuantity());
+            meta.put("orderId", orderId);
+            productViewModel.sendRecommendEvent(Constants.EVENT_PURCHASE, item.getProductId(), meta);
+        }
     }
 
     private String getText(TextInputEditText et) {

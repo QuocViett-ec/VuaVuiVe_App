@@ -21,6 +21,8 @@ import vn.vuavuive.customer.ui.order.OrderListFragment;
 import vn.vuavuive.customer.ui.recipe.RecipeDetailActivity;
 import vn.vuavuive.customer.ui.recipe.RecipeListFragment;
 import vn.vuavuive.customer.ui.recipe.RecipeListFragmentActivity;
+import vn.vuavuive.customer.ui.shipment.ShipmentListActivity;
+import vn.vuavuive.customer.ui.review.MyReviewsActivity;
 import vn.vuavuive.customer.viewmodel.AuthViewModel;
 import vn.vuavuive.shared.data.dto.User;
 
@@ -30,6 +32,7 @@ public class AccountFragment extends Fragment {
     private AuthViewModel authViewModel;
     private ImageView ivAvatar;
     private TextView tvName, tvPhone, tvEmail;
+    private TextView tvLoginHint;
     private MaterialButton btnLogout;
 
     @Nullable @Override
@@ -47,11 +50,27 @@ public class AccountFragment extends Fragment {
         tvName    = view.findViewById(R.id.tv_name);
         tvPhone   = view.findViewById(R.id.tv_phone);
         tvEmail   = view.findViewById(R.id.tv_email);
+        tvLoginHint = view.findViewById(R.id.tv_login_hint);
         btnLogout = view.findViewById(R.id.btn_logout);
 
         setupMenuItems(view);
         observeUser();
         setupLogout();
+
+        if (ivAvatar != null) {
+            ivAvatar.setOnClickListener(v -> {
+                if (!authViewModel.isLoggedIn()) {
+                    startActivity(new Intent(requireContext(), LoginActivity.class));
+                }
+            });
+        }
+        if (tvLoginHint != null) {
+            tvLoginHint.setOnClickListener(v -> {
+                if (!authViewModel.isLoggedIn()) {
+                    startActivity(new Intent(requireContext(), LoginActivity.class));
+                }
+            });
+        }
     }
 
     private void setupMenuItems(View view) {
@@ -59,28 +78,32 @@ public class AccountFragment extends Fragment {
         View rowEditProfile = view.findViewById(R.id.row_edit_profile);
         if (rowEditProfile != null) {
             rowEditProfile.setOnClickListener(v ->
-                    startActivity(new Intent(requireContext(), EditProfileActivity.class)));
+                    navigateIfLoggedIn(() ->
+                            startActivity(new Intent(requireContext(), EditProfileActivity.class))));
         }
 
         // Change password
         View rowChangePass = view.findViewById(R.id.row_change_password);
         if (rowChangePass != null) {
             rowChangePass.setOnClickListener(v ->
-                    startActivity(new Intent(requireContext(), ChangePasswordActivity.class)));
+                    navigateIfLoggedIn(() ->
+                            startActivity(new Intent(requireContext(), ChangePasswordActivity.class))));
         }
 
         // My orders
         View rowOrders = view.findViewById(R.id.row_my_orders);
         if (rowOrders != null) {
             rowOrders.setOnClickListener(v -> {
-                // Navigate to Orders tab via BottomNav (index 2)
-                if (getActivity() != null) {
-                    getActivity().getSupportFragmentManager()
-                            .beginTransaction()
-                            .replace(R.id.nav_host_fragment, new OrderListFragment())
-                            .addToBackStack(null)
-                            .commit();
-                }
+                navigateIfLoggedIn(() -> {
+                    // Navigate to Orders tab via BottomNav (index 2)
+                    if (getActivity() != null) {
+                        getActivity().getSupportFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.nav_host_fragment, new OrderListFragment())
+                                .addToBackStack(null)
+                                .commit();
+                    }
+                });
             });
         }
 
@@ -89,6 +112,22 @@ public class AccountFragment extends Fragment {
         if (rowRecipes != null) {
             rowRecipes.setOnClickListener(v ->
                     startActivity(new Intent(requireContext(), RecipeListFragmentActivity.class)));
+        }
+
+        // Shipments
+        View rowShipments = view.findViewById(R.id.row_shipments);
+        if (rowShipments != null) {
+            rowShipments.setOnClickListener(v ->
+            navigateIfLoggedIn(() ->
+                startActivity(new Intent(requireContext(), ShipmentListActivity.class))));
+        }
+
+        // My reviews
+        View rowMyReviews = view.findViewById(R.id.row_my_reviews);
+        if (rowMyReviews != null) {
+            rowMyReviews.setOnClickListener(v ->
+            navigateIfLoggedIn(() ->
+                startActivity(new Intent(requireContext(), MyReviewsActivity.class))));
         }
 
         // Chat support
@@ -101,7 +140,11 @@ public class AccountFragment extends Fragment {
 
     private void observeUser() {
         authViewModel.getCurrentUser().observe(getViewLifecycleOwner(), user -> {
-            if (user != null) bindUser(user);
+            if (user != null) {
+                bindUser(user);
+            } else {
+                bindGuest();
+            }
         });
     }
 
@@ -109,6 +152,9 @@ public class AccountFragment extends Fragment {
         tvName.setText(user.getName() != null ? user.getName() : "—");
         tvPhone.setText(user.getPhone() != null ? user.getPhone() : "—");
         tvEmail.setText(user.getEmail() != null ? user.getEmail() : "—");
+
+        if (tvLoginHint != null) tvLoginHint.setVisibility(View.GONE);
+        if (btnLogout != null) btnLogout.setVisibility(View.VISIBLE);
 
         // Load avatar if available
         if (user.getAvatar() != null && !user.getAvatar().isEmpty() && ivAvatar != null) {
@@ -118,6 +164,25 @@ public class AccountFragment extends Fragment {
                     .circleCrop()
                     .into(ivAvatar);
         }
+    }
+
+    private void bindGuest() {
+        tvName.setText(getString(R.string.account_guest_name));
+        tvPhone.setText(getString(R.string.account_guest_phone));
+        tvEmail.setText(getString(R.string.account_guest_email));
+        if (ivAvatar != null) {
+            ivAvatar.setImageResource(R.drawable.ic_person_placeholder);
+        }
+        if (tvLoginHint != null) tvLoginHint.setVisibility(View.VISIBLE);
+        if (btnLogout != null) btnLogout.setVisibility(View.GONE);
+    }
+
+    private void navigateIfLoggedIn(Runnable action) {
+        if (!authViewModel.isLoggedIn()) {
+            startActivity(new Intent(requireContext(), LoginActivity.class));
+            return;
+        }
+        action.run();
     }
 
     private void setupLogout() {

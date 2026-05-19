@@ -16,7 +16,9 @@ import dagger.hilt.android.AndroidEntryPoint;
 import vn.vuavuive.customer.R;
 import vn.vuavuive.customer.data.repository.AuthRepository;
 import vn.vuavuive.customer.viewmodel.OrderViewModel;
+import vn.vuavuive.customer.ui.review.ReviewBottomSheetDialogFragment;
 import vn.vuavuive.shared.data.dto.Order;
+import vn.vuavuive.shared.data.dto.OrderItem;
 import vn.vuavuive.shared.util.CurrencyFormatter;
 
 @AndroidEntryPoint
@@ -196,8 +198,39 @@ public class OrderDetailActivity extends AppCompatActivity {
     }
 
     private void showReviewDialog() {
-        // Navigate to review screen or show bottom sheet
-        Toast.makeText(this, "Tính năng đánh giá đang được phát triển", Toast.LENGTH_SHORT).show();
+        if (currentOrder == null || currentOrder.getItems() == null || currentOrder.getItems().isEmpty()) {
+            Toast.makeText(this, "Khong co san pham de danh gia", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        java.util.List<OrderItem> items = currentOrder.getItems();
+        if (items.size() == 1) {
+            openReviewSheet(items.get(0));
+            return;
+        }
+
+        String[] names = new String[items.size()];
+        for (int i = 0; i < items.size(); i++) {
+            names[i] = items.get(i).getName();
+        }
+
+        new AlertDialog.Builder(this)
+                .setTitle("Chon san pham de danh gia")
+                .setItems(names, (d, which) -> openReviewSheet(items.get(which)))
+                .setNegativeButton("Dong", null)
+                .show();
+    }
+
+    private void openReviewSheet(OrderItem item) {
+        ReviewBottomSheetDialogFragment sheet = ReviewBottomSheetDialogFragment.newInstance(
+                currentOrder.getId(),
+                item.getProductId(),
+                item.getName(),
+                item.getImageUrl(),
+                item.getPrice(),
+                item.getUnit()
+        );
+        sheet.show(getSupportFragmentManager(), "review_sheet");
     }
 
     // Helpers

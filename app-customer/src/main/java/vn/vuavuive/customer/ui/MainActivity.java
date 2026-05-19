@@ -2,7 +2,6 @@ package vn.vuavuive.customer.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -11,7 +10,6 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import dagger.hilt.android.AndroidEntryPoint;
 import vn.vuavuive.customer.R;
-import vn.vuavuive.customer.ui.auth.LoginActivity;
 import vn.vuavuive.customer.viewmodel.AuthViewModel;
 import vn.vuavuive.customer.viewmodel.CartViewModel;
 
@@ -31,15 +29,14 @@ public class MainActivity extends AppCompatActivity {
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
         cartViewModel = new ViewModelProvider(this).get(CartViewModel.class);
 
-        // Check session
+        // Check session (guest users are allowed)
         authViewModel.checkSession().observe(this, result -> {
             if (result.status == vn.vuavuive.customer.data.repository.AuthRepository.Result.Status.SUCCESS) {
                 authViewModel.setCurrentUser(result.data);
                 // Sync cart from server
                 cartViewModel.syncFromServer();
             } else if (result.status == vn.vuavuive.customer.data.repository.AuthRepository.Result.Status.ERROR) {
-                // Not logged in — go to login
-                goToLogin();
+                authViewModel.setCurrentUser(null);
             }
         });
 
@@ -51,8 +48,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onNewIntent(Intent intent) {
+    protected void onNewIntent(@androidx.annotation.NonNull Intent intent) {
         super.onNewIntent(intent);
+        setIntent(intent);
         handleNavigateIntent(intent);
     }
 
@@ -84,10 +82,5 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void goToLogin() {
-        Intent intent = new Intent(this, LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-        finish();
-    }
+    // Guest flow: login is triggered only when user chooses it.
 }

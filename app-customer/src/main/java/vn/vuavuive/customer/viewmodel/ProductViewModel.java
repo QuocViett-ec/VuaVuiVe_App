@@ -64,6 +64,15 @@ public class ProductViewModel extends ViewModel {
         return productRepository.getSimilarProducts(productId);
     }
 
+    public LiveData<AuthRepository.Result<List<Product>>> getRecommendations(String userId, int n) {
+        return productRepository.getRecommendations(userId, n);
+    }
+
+    public LiveData<AuthRepository.Result<Void>> sendRecommendEvent(
+            String eventType, String productId, java.util.Map<String, Object> metadata) {
+        return productRepository.sendRecommendEvent(eventType, productId, metadata);
+    }
+
     /** Direct repository call — for one-off searches (e.g., Recipe ingredient lookup) */
     public LiveData<AuthRepository.Result<List<Product>>> getProducts(
             String category, String search, int page, int limit, String sort) {

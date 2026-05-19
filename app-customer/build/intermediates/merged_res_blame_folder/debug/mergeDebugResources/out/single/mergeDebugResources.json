@@ -1,9 +1,5 @@
 [
     {
-        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-debug-52:\\menu_bottom_nav_menu.xml.flat",
-        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-54:\\menu\\bottom_nav_menu.xml"
-    },
-    {
         "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-debug-52:\\layout_activity_chat.xml.flat",
         "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-54:\\layout\\activity_chat.xml"
     },
@@ -28,16 +24,16 @@
         "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-54:\\layout\\activity_order_detail.xml"
     },
     {
-        "merged": "vn.vuavuive.customer.app-customer-debug-52:/xml_network_security_config.xml.flat",
-        "source": "vn.vuavuive.customer.app-customer-main-54:/xml/network_security_config.xml"
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-debug-52:\\layout_activity_shipment_detail.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-54:\\layout\\activity_shipment_detail.xml"
     },
     {
-        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-debug-52:\\layout_item_order_product.xml.flat",
-        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-54:\\layout\\item_order_product.xml"
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-debug-52:\\layout_activity_shipment_list.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-54:\\layout\\activity_shipment_list.xml"
     },
     {
-        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-debug-52:\\layout_fragment_order_list.xml.flat",
-        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-54:\\layout\\fragment_order_list.xml"
+        "merged": "vn.vuavuive.customer.app-customer-debug-52:/layout_fragment_account.xml.flat",
+        "source": "vn.vuavuive.customer.app-customer-main-54:/layout/fragment_account.xml"
     },
     {
         "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-debug-52:\\layout_fragment_product_list.xml.flat",
@@ -48,56 +44,32 @@
         "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-54:\\layout\\fragment_account.xml"
     },
     {
-        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-debug-52:\\layout_item_cart.xml.flat",
-        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-54:\\layout\\item_cart.xml"
-    },
-    {
-        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-debug-52:\\layout_activity_main.xml.flat",
-        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-54:\\layout\\activity_main.xml"
-    },
-    {
         "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-debug-52:\\layout_activity_change_password.xml.flat",
         "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-54:\\layout\\activity_change_password.xml"
-    },
-    {
-        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-debug-52:\\layout_fragment_recipe_list.xml.flat",
-        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-54:\\layout\\fragment_recipe_list.xml"
     },
     {
         "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-debug-52:\\xml_network_security_config.xml.flat",
         "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-54:\\xml\\network_security_config.xml"
     },
     {
-        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-debug-52:\\layout_activity_recipe_list_host.xml.flat",
-        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-54:\\layout\\activity_recipe_list_host.xml"
-    },
-    {
-        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-debug-52:\\layout_activity_recipe_detail.xml.flat",
-        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-54:\\layout\\activity_recipe_detail.xml"
-    },
-    {
-        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-debug-52:\\layout_fragment_forgot_step2.xml.flat",
-        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-54:\\layout\\fragment_forgot_step2.xml"
-    },
-    {
-        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-debug-52:\\layout_activity_forgot_password.xml.flat",
-        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-54:\\layout\\activity_forgot_password.xml"
-    },
-    {
         "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-debug-52:\\layout_item_chat_user.xml.flat",
         "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-54:\\layout\\item_chat_user.xml"
-    },
-    {
-        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-debug-52:\\layout_activity_product_detail.xml.flat",
-        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-54:\\layout\\activity_product_detail.xml"
     },
     {
         "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-debug-52:\\layout_fragment_cart.xml.flat",
         "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-54:\\layout\\fragment_cart.xml"
     },
     {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-debug-52:\\layout_activity_product_detail.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-54:\\layout\\activity_product_detail.xml"
+    },
+    {
         "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-debug-52:\\layout_activity_checkout.xml.flat",
         "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-54:\\layout\\activity_checkout.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-debug-52:\\layout_activity_my_reviews.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-54:\\layout\\activity_my_reviews.xml"
     },
     {
         "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-debug-52:\\navigation_nav_graph.xml.flat",
@@ -108,16 +80,12 @@
         "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-54:\\layout\\activity_payment_webview.xml"
     },
     {
-        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-debug-52:\\drawable_bg_quantity_control.xml.flat",
-        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-54:\\drawable\\bg_quantity_control.xml"
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-debug-52:\\layout_bottom_sheet_review.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-54:\\layout\\bottom_sheet_review.xml"
     },
     {
         "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-debug-52:\\layout_item_product.xml.flat",
         "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-54:\\layout\\item_product.xml"
-    },
-    {
-        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-debug-52:\\layout_activity_edit_profile.xml.flat",
-        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-54:\\layout\\activity_edit_profile.xml"
     },
     {
         "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-debug-52:\\drawable_ic_person_placeholder.xml.flat",
@@ -132,12 +100,16 @@
         "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-54:\\layout\\fragment_forgot_step1.xml"
     },
     {
-        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-debug-52:\\layout_item_recipe.xml.flat",
-        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-54:\\layout\\item_recipe.xml"
-    },
-    {
         "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-debug-52:\\layout_item_chat_bot.xml.flat",
         "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-54:\\layout\\item_chat_bot.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-debug-52:\\layout_activity_search.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-54:\\layout\\activity_search.xml"
+    },
+    {
+        "merged": "vn.vuavuive.customer.app-customer-debug-52:/navigation_nav_graph.xml.flat",
+        "source": "vn.vuavuive.customer.app-customer-main-54:/navigation/nav_graph.xml"
     },
     {
         "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-debug-52:\\layout_item_review.xml.flat",
@@ -146,6 +118,78 @@
     {
         "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-debug-52:\\layout_item_menu_row.xml.flat",
         "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-54:\\layout\\item_menu_row.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-debug-52:\\layout_item_shipment.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-54:\\layout\\item_shipment.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-debug-52:\\layout_item_shipment_status.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-54:\\layout\\item_shipment_status.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-debug-52:\\drawable_bg_history_chip.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-54:\\drawable\\bg_history_chip.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-debug-52:\\menu_bottom_nav_menu.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-54:\\menu\\bottom_nav_menu.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-debug-52:\\drawable_bg_status_dot.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-54:\\drawable\\bg_status_dot.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-debug-52:\\layout_fragment_order_list.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-54:\\layout\\fragment_order_list.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-debug-52:\\layout_item_order_product.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-54:\\layout\\item_order_product.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-debug-52:\\layout_item_cart.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-54:\\layout\\item_cart.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-debug-52:\\layout_activity_main.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-54:\\layout\\activity_main.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-debug-52:\\layout_fragment_recipe_list.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-54:\\layout\\fragment_recipe_list.xml"
+    },
+    {
+        "merged": "vn.vuavuive.customer.app-customer-debug-52:/layout_fragment_product_list.xml.flat",
+        "source": "vn.vuavuive.customer.app-customer-main-54:/layout/fragment_product_list.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-debug-52:\\layout_activity_recipe_list_host.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-54:\\layout\\activity_recipe_list_host.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-debug-52:\\layout_activity_recipe_detail.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-54:\\layout\\activity_recipe_detail.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-debug-52:\\layout_activity_forgot_password.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-54:\\layout\\activity_forgot_password.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-debug-52:\\layout_fragment_forgot_step2.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-54:\\layout\\fragment_forgot_step2.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-debug-52:\\drawable_bg_quantity_control.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-54:\\drawable\\bg_quantity_control.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-debug-52:\\layout_activity_edit_profile.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-54:\\layout\\activity_edit_profile.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-debug-52:\\layout_item_recipe.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-54:\\layout\\item_recipe.xml"
     },
     {
         "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-debug-52:\\drawable_ic_arrow_back.xml.flat",

@@ -17,11 +17,21 @@ import java.util.List;
 
 public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.ItemVH> {
 
+    public interface OnOrderItemClickListener {
+        void onOrderItemClick(OrderItem item);
+    }
+
     private final Context context;
+    private final OnOrderItemClickListener listener;
     private List<OrderItem> items = new ArrayList<>();
 
     public OrderItemAdapter(Context context) {
+        this(context, null);
+    }
+
+    public OrderItemAdapter(Context context, OnOrderItemClickListener listener) {
         this.context = context;
+        this.listener = listener;
     }
 
     public void setItems(List<OrderItem> items) {
@@ -32,7 +42,7 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.Item
     @NonNull @Override
     public ItemVH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(context).inflate(R.layout.item_order_product, parent, false);
-        return new ItemVH(v);
+        return new ItemVH(v, listener);
     }
 
     @Override
@@ -45,9 +55,11 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.Item
     static class ItemVH extends RecyclerView.ViewHolder {
         ImageView ivProduct;
         TextView tvName, tvQtyPrice, tvTotal;
+        private final OnOrderItemClickListener listener;
 
-        ItemVH(View v) {
+        ItemVH(View v, OnOrderItemClickListener listener) {
             super(v);
+            this.listener = listener;
             ivProduct  = v.findViewById(R.id.iv_product);
             tvName     = v.findViewById(R.id.tv_product_name);
             tvQtyPrice = v.findViewById(R.id.tv_qty_price);
@@ -63,6 +75,10 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.Item
             tvName.setText(item.getName());
             tvQtyPrice.setText(item.getQuantity() + " x " + CurrencyFormatter.format(item.getPrice()));
             tvTotal.setText(CurrencyFormatter.format(item.getLineTotal()));
+
+            itemView.setOnClickListener(v -> {
+                if (listener != null) listener.onOrderItemClick(item);
+            });
         }
     }
 }
