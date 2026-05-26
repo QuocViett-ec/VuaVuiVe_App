@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Vua Vui Vẻ Admin</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_orders">Đơn hàng</string>
+    <string name="title_products">Sản phẩm</string>
+    <string name="title_vouchers">Khuyến mãi</string>
+    <string name="title_users">Thành viên</string>
+    <string name="title_shipments">Vận chuyển</string>
+    <string name="title_chatbot">AI Assistant</string>
+    <string name="title_audit">Audit Logs</string>
+</resources>

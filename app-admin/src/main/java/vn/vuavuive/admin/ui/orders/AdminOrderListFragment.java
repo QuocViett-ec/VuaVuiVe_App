@@ -1,0 +1,292 @@
+package vn.vuavuive.admin.ui.orders;
+
+import android.app.AlertDialog;
+import android.content.ContentValues;
+import android.content.DialogInterface;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import com.google.android.material.tabs.TabLayout;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+import vn.vuavuive.admin.R;
+import vn.vuavuive.admin.data.repository.MockRepository;
+import vn.vuavuive.admin.databinding.FragmentAdminOrderListBinding;
+import vn.vuavuive.shared.data.dto.Order;
+import vn.vuavuive.shared.data.dto.User;
+
+public class AdminOrderListFragment extends Fragment implements OrderAdapter.OnOrderClickListener {
+
+    private FragmentAdminOrderListBinding binding;
+    private OrderAdapter adapter;
+    private List<Order> allOrders = new ArrayList<>();
+    private String currentStatusFilter = "all";
+    private String currentSearchQuery = "";
+    private User currentUser;
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        binding = FragmentAdminOrderListBinding.inflate(inflater, container, false);
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        currentUser = MockRepository.getInstance().getCurrentUser();
+        if (currentUser == null) return;
+
+        setupTabs();
+        setupRecyclerView();
+        setupSearchAndActions();
+        loadOrders();
+    }
+
+    private void setupTabs() {
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Tất cả").setTag("all"));
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Chờ duyệt").setTag("pending"));
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Đã xác nhận").setTag("confirmed"));
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Đang giao").setTag("shipping"));
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Đã giao").setTag("delivered"));
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Đã hủy").setTag("cancelled"));
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Trả hàng").setTag("returns"));
+
+        binding.tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                currentStatusFilter = (String) tab.getTag();
+                applyFilters();
+                // Disable bulk mode if status changed to prevent state leakage
+                if (adapter.isMultiSelectMode()) {
+                    adapter.setMultiSelectMode(false);
+                    binding.layoutBulkActions.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {}
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {}
+        });
+    }
+
+    private void setupRecyclerView() {
+        binding.rvOrders.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapter = new OrderAdapter(new ArrayList<>(), this);
+        binding.rvOrders.setAdapter(adapter);
+
+        binding.swipeRefresh.setOnRefreshListener(() -> {
+            loadOrders();
+        });
+    }
+
+    private void setupSearchAndActions() {
+        // Real-time Search
+        binding.etSearchOrder.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                currentSearchQuery = s.toString().trim();
+                applyFilters();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
+        // Export CSV
+        binding.btnExportCsv.setOnClickListener(v -> {
+            if ("audit".equals(currentUser.getRole())) {
+                Toast.makeText(getContext(), "Kiểm toán viên không có quyền xuất dữ liệu hóa đơn", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            exportFilteredOrdersCsv();
+        });
+
+        // Bulk Actions Trigger
+        binding.btnBulkStatus.setOnClickListener(v -> {
+            showBulkUpdateDialog();
+        });
+    }
+
+    private void loadOrders() {
+        allOrders = new ArrayList<>(MockRepository.getInstance().getOrders());
+        applyFilters();
+        binding.swipeRefresh.setRefreshing(false);
+    }
+
+    private void applyFilters() {
+        List<Order> filteredList = new ArrayList<>();
+        for (Order o : allOrders) {
+            // Status check
+            boolean matchesStatus = false;
+            if ("all".equals(currentStatusFilter)) {
+                matchesStatus = true;
+            } else if ("returns".equals(currentStatusFilter)) {
+                matchesStatus = o.getStatus() != null && o.getStatus().startsWith("return");
+            } else if ("shipping".equals(currentStatusFilter)) {
+                matchesStatus = "shipping".equals(o.getStatus()) || "shipped".equals(o.getStatus());
+            } else {
+                matchesStatus = currentStatusFilter.equals(o.getStatus());
+            }
+
+            // Search query check (Order ID or Customer name or phone)
+            boolean matchesQuery = false;
+            if (currentSearchQuery.isEmpty()) {
+                matchesQuery = true;
+            } else {
+                String q = currentSearchQuery.toLowerCase(Locale.getDefault());
+                String id = o.getOrderId() != null ? o.getOrderId().toLowerCase() : o.getId().toLowerCase();
+                String name = o.getDelivery() != null && o.getDelivery().getName() != null ? o.getDelivery().getName().toLowerCase() : "";
+                String phone = o.getDelivery() != null && o.getDelivery().getPhone() != null ? o.getDelivery().getPhone() : "";
+
+                if (id.contains(q) || name.contains(q) || phone.contains(q)) {
+                    matchesQuery = true;
+                }
+            }
+
+            if (matchesStatus && matchesQuery) {
+                filteredList.add(o);
+            }
+        }
+        adapter.updateData(filteredList);
+    }
+
+    // Callbacks from Adapter
+    @Override
+    public void onOrderClick(Order order) {
+        // Let Adapter handle starting detail activity directly, or launch it manually:
+        android.content.Intent intent = new android.content.Intent(getContext(), AdminOrderDetailActivity.class);
+        intent.putExtra("ORDER_ID", order.getId());
+        startActivity(intent);
+    }
+
+    @Override
+    public void onOrderSelectionChanged(int selectedCount) {
+        if (selectedCount > 0) {
+            binding.layoutBulkActions.setVisibility(View.VISIBLE);
+            binding.tvBulkCount.setText("Đã chọn: " + selectedCount + " đơn hàng");
+        } else {
+            binding.layoutBulkActions.setVisibility(View.GONE);
+            adapter.setMultiSelectMode(false);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadOrders(); // Refresh in-memory changes when coming back from Detail
+    }
+
+    private void showBulkUpdateDialog() {
+        if ("audit".equals(currentUser.getRole())) {
+            Toast.makeText(getContext(), "Kiểm toán viên không có quyền cập nhật trạng thái đơn", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        final String[] options = {"Xác nhận đơn hàng (confirmed)", "Bắt đầu giao hàng (shipping)", "Đã giao hàng (delivered)", "Hủy đơn hàng (cancelled)"};
+        final String[] statusCodes = {"confirmed", "shipping", "delivered", "cancelled"};
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Chọn trạng thái cập nhật hàng loạt");
+        builder.setItems(options, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String targetStatus = statusCodes[which];
+                Set<String> selectedIds = adapter.getSelectedOrderIds();
+                
+                MockRepository repo = MockRepository.getInstance();
+                for (String id : selectedIds) {
+                    repo.updateOrderStatus(id, targetStatus);
+                }
+
+                Toast.makeText(getContext(), "Đã cập nhật hàng loạt " + selectedIds.size() + " đơn hàng thành công!", Toast.LENGTH_SHORT).show();
+                
+                // Reset Selection
+                adapter.setMultiSelectMode(false);
+                binding.layoutBulkActions.setVisibility(View.GONE);
+                
+                // Refresh
+                loadOrders();
+            }
+        });
+        builder.show();
+    }
+
+    private void exportFilteredOrdersCsv() {
+        try {
+            StringBuilder csv = new StringBuilder();
+            csv.append("Mã Đơn,Khách Hàng,Số Điện Thoại,Địa Chỉ,Tổng Tiền,Trạng Thái,Ngày Tạo\n");
+            
+            // Build CSV based on currently filtered items
+            List<Order> currentItems = new ArrayList<>();
+            applyFilters(); // Ensure adapter list is correct
+            for (Order o : allOrders) {
+                // Quick filter mirror
+                boolean matchesStatus = "all".equals(currentStatusFilter) || 
+                        ("returns".equals(currentStatusFilter) && o.getStatus() != null && o.getStatus().startsWith("return")) ||
+                        ("shipping".equals(currentStatusFilter) && ("shipping".equals(o.getStatus()) || "shipped".equals(o.getStatus()))) ||
+                        currentStatusFilter.equals(o.getStatus());
+
+                boolean matchesQuery = currentSearchQuery.isEmpty() || 
+                        (o.getOrderId() != null && o.getOrderId().toLowerCase().contains(currentSearchQuery.toLowerCase())) ||
+                        (o.getDelivery() != null && o.getDelivery().getName() != null && o.getDelivery().getName().toLowerCase().contains(currentSearchQuery.toLowerCase()));
+
+                if (matchesStatus && matchesQuery) {
+                    String name = o.getDelivery() != null ? o.getDelivery().getName() : "N/A";
+                    String phone = o.getDelivery() != null ? o.getDelivery().getPhone() : "N/A";
+                    String address = o.getDelivery() != null ? o.getDelivery().getAddress().replace(",", " -") : "N/A";
+                    csv.append(String.format("%s,%s,%s,%s,%.0f,%s,%s\n",
+                            o.getOrderId() != null ? o.getOrderId() : o.getId(),
+                            name, phone, address, o.getTotalAmount(), o.getStatus(), o.getCreatedAt()));
+                }
+            }
+
+            String filename = "orders_filtered_" + System.currentTimeMillis() + ".csv";
+            ContentValues values = new ContentValues();
+            values.put(MediaStore.Downloads.DISPLAY_NAME, filename);
+            values.put(MediaStore.Downloads.MIME_TYPE, "text/csv");
+            values.put(MediaStore.Downloads.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS);
+
+            Uri uri = getContext().getContentResolver().insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values);
+            if (uri != null) {
+                try (OutputStream os = getContext().getContentResolver().openOutputStream(uri)) {
+                    if (os != null) {
+                        os.write(csv.toString().getBytes(StandardCharsets.UTF_8));
+                        os.flush();
+                        Toast.makeText(getContext(), "Đã lưu " + filename + " vào Downloads folder!", Toast.LENGTH_LONG).show();
+                        MockRepository.getInstance().addAuditLog("Xuất báo cáo đơn hàng", filename, "Xuất thành công báo cáo đơn hàng CSV");
+                    }
+                }
+            }
+        } catch (Exception e) {
+            Toast.makeText(getContext(), "Lỗi khi lưu CSV: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+}

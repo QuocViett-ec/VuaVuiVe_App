@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Modern Dark & Vivid Palette -->
+    <color name="primary">#0D9488</color> <!-- Vibrant Teal -->
+    <color name="primary_dark">#115E59</color>
+    <color name="primary_light">#CCFBF1</color>
+    <color name="secondary">#0369A1</color> <!-- Ocean Blue -->
+    <color name="secondary_dark">#0C4A6E</color>
+    <color name="secondary_light">#E0F2FE</color>
+
+    <color name="background">#0F172A</color> <!-- Sleek Slate Blue Dark -->
+    <color name="surface">#1E293B</color> <!-- Soft Dark Slate Card -->
+    <color name="surface_variant">#334155</color>
+    
+    <color name="text_primary">#F8FAFC</color> <!-- Off White -->
+    <color name="text_secondary">#94A3B8</color> <!-- Medium Slate -->
+    <color name="text_hint">#64748B</color>
+
+    <!-- Semantic Colors -->
+    <color name="success">#10B981</color> <!-- Emerald Green -->
+    <color name="warning">#F59E0B</color> <!-- Warm Amber -->
+    <color name="error">#EF4444</color> <!-- Coral Red -->
+    <color name="info">#3B82F6</color> <!-- Sky Blue -->
+    
+    <color name="divider">#1E293B</color>
+    
+    <!-- Transparent helpers -->
+    <color name="primary_translucent">#1A0D9488</color>
+    <color name="success_translucent">#1A10B981</color>
+    <color name="warning_translucent">#1AF59E0B</color>
+    <color name="error_translucent">#1AEF4444</color>
+    <color name="info_translucent">#1A3B82F6</color>
+    
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+</resources>
