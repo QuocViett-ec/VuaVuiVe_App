@@ -28,6 +28,9 @@ public final class FragmentProductListBinding implements ViewBinding {
   private final LinearLayout rootView;
 
   @NonNull
+  public final MaterialButton btnClearFilter;
+
+  @NonNull
   public final MaterialButton btnSort;
 
   @NonNull
@@ -38,6 +41,12 @@ public final class FragmentProductListBinding implements ViewBinding {
 
   @NonNull
   public final ImageView imgAccount;
+
+  @NonNull
+  public final LinearLayout layoutEmpty;
+
+  @NonNull
+  public final LinearLayout layoutLoading;
 
   @NonNull
   public final ProgressBar progressBar;
@@ -55,16 +64,20 @@ public final class FragmentProductListBinding implements ViewBinding {
   public final TextView tvEmpty;
 
   private FragmentProductListBinding(@NonNull LinearLayout rootView,
-      @NonNull MaterialButton btnSort, @NonNull ChipGroup chipGroupCategories,
-      @NonNull TextInputEditText etSearch, @NonNull ImageView imgAccount,
-      @NonNull ProgressBar progressBar, @NonNull RecyclerView rvProducts,
-      @NonNull SwipeRefreshLayout swipeRefresh, @NonNull TextInputLayout tilSearch,
-      @NonNull TextView tvEmpty) {
+      @NonNull MaterialButton btnClearFilter, @NonNull MaterialButton btnSort,
+      @NonNull ChipGroup chipGroupCategories, @NonNull TextInputEditText etSearch,
+      @NonNull ImageView imgAccount, @NonNull LinearLayout layoutEmpty,
+      @NonNull LinearLayout layoutLoading, @NonNull ProgressBar progressBar,
+      @NonNull RecyclerView rvProducts, @NonNull SwipeRefreshLayout swipeRefresh,
+      @NonNull TextInputLayout tilSearch, @NonNull TextView tvEmpty) {
     this.rootView = rootView;
+    this.btnClearFilter = btnClearFilter;
     this.btnSort = btnSort;
     this.chipGroupCategories = chipGroupCategories;
     this.etSearch = etSearch;
     this.imgAccount = imgAccount;
+    this.layoutEmpty = layoutEmpty;
+    this.layoutLoading = layoutLoading;
     this.progressBar = progressBar;
     this.rvProducts = rvProducts;
     this.swipeRefresh = swipeRefresh;
@@ -99,6 +112,12 @@ public final class FragmentProductListBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.btn_clear_filter;
+      MaterialButton btnClearFilter = ViewBindings.findChildViewById(rootView, id);
+      if (btnClearFilter == null) {
+        break missingId;
+      }
+
       id = R.id.btn_sort;
       MaterialButton btnSort = ViewBindings.findChildViewById(rootView, id);
       if (btnSort == null) {
@@ -120,6 +139,18 @@ public final class FragmentProductListBinding implements ViewBinding {
       id = R.id.img_account;
       ImageView imgAccount = ViewBindings.findChildViewById(rootView, id);
       if (imgAccount == null) {
+        break missingId;
+      }
+
+      id = R.id.layout_empty;
+      LinearLayout layoutEmpty = ViewBindings.findChildViewById(rootView, id);
+      if (layoutEmpty == null) {
+        break missingId;
+      }
+
+      id = R.id.layout_loading;
+      LinearLayout layoutLoading = ViewBindings.findChildViewById(rootView, id);
+      if (layoutLoading == null) {
         break missingId;
       }
 
@@ -153,8 +184,9 @@ public final class FragmentProductListBinding implements ViewBinding {
         break missingId;
       }
 
-      return new FragmentProductListBinding((LinearLayout) rootView, btnSort, chipGroupCategories,
-          etSearch, imgAccount, progressBar, rvProducts, swipeRefresh, tilSearch, tvEmpty);
+      return new FragmentProductListBinding((LinearLayout) rootView, btnClearFilter, btnSort,
+          chipGroupCategories, etSearch, imgAccount, layoutEmpty, layoutLoading, progressBar,
+          rvProducts, swipeRefresh, tilSearch, tvEmpty);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

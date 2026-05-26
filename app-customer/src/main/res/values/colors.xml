@@ -1,55 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Primary brand color -->
-    <color name="primary">#2E7D32</color>
-    <color name="primary_dark">#1B5E20</color>
-    <color name="primary_light">#A5D6A7</color>
-    <color name="primary_container">#C8E6C9</color>
+    <!-- ── Primary brand palette ── -->
+    <color name="primary">#1B8A3A</color>
+    <color name="primary_dark">#0F5C26</color>
+    <color name="primary_light">#4CAF71</color>
+    <color name="primary_container">#D0F0DC</color>
+    <color name="primary_gradient_start">#1B8A3A</color>
+    <color name="primary_gradient_end">#0D6B2C</color>
 
-    <!-- Accent -->
-    <color name="secondary">#F57F17</color>
-    <color name="secondary_light">#FFE082</color>
+    <!-- ── Secondary / Accent ── -->
+    <color name="secondary">#FF6B35</color>
+    <color name="secondary_light">#FFAB91</color>
+    <color name="secondary_container">#FFE0D6</color>
 
-    <!-- Background -->
-    <color name="background">#F8F9FA</color>
+    <!-- ── Tertiary (for badges, highlights) ── -->
+    <color name="tertiary">#FFB800</color>
+    <color name="tertiary_light">#FFF3C4</color>
+
+    <!-- ── Background tones ── -->
+    <color name="background">#F4F7F4</color>
+    <color name="background_alt">#ECFAEF</color>
     <color name="surface">#FFFFFF</color>
-    <color name="surface_variant">#F1F8E9</color>
+    <color name="surface_variant">#F0F7F2</color>
+    <color name="surface_tinted">#E8F5ED</color>
 
-    <!-- Text -->
-    <color name="text_primary">#1A1A1A</color>
-    <color name="text_secondary">#616161</color>
-    <color name="text_hint">#9E9E9E</color>
+    <!-- ── Text ── -->
+    <color name="text_primary">#111D13</color>
+    <color name="text_secondary">#4A6150</color>
+    <color name="text_hint">#8CA895</color>
     <color name="text_on_primary">#FFFFFF</color>
+    <color name="text_on_dark">#FFFFFFCC</color>
 
-    <!-- Status colors -->
-    <color name="status_pending">#FFC107</color>
+    <!-- ── Status colors ── -->
+    <color name="status_pending">#FFB800</color>
     <color name="status_confirmed">#2196F3</color>
-    <color name="status_shipping">#FF9800</color>
-    <color name="status_delivered">#4CAF50</color>
+    <color name="status_processing">#9C27B0</color>
+    <color name="status_shipping">#FF6B35</color>
+    <color name="status_delivered">#1B8A3A</color>
     <color name="status_cancelled">#757575</color>
-    <color name="status_return">#9C27B0</color>
-    <color name="status_refunded">#4CAF50</color>
+    <color name="status_return">#7B1FA2</color>
+    <color name="status_refunded">#00897B</color>
 
-    <!-- Rating -->
-    <color name="star_color">#FFC107</color>
+    <!-- ── Rating ── -->
+    <color name="star_color">#FFB800</color>
+    <color name="star_empty">#E0E0E0</color>
 
-    <!-- Price -->
+    <!-- ── Price ── -->
     <color name="price_sale">#D32F2F</color>
     <color name="price_original">#9E9E9E</color>
+    <color name="price_primary">#1B8A3A</color>
 
-    <!-- Discount badge -->
+    <!-- ── Discount / New badge ── -->
     <color name="badge_discount">#D32F2F</color>
-    <color name="badge_new">#388E3C</color>
+    <color name="badge_new">#1B8A3A</color>
+    <color name="badge_hot">#FF6B35</color>
+    <color name="badge_sale">#FF6B35</color>
 
-    <!-- Divider -->
-    <color name="divider">#E0E0E0</color>
+    <!-- ── Divider / Border ── -->
+    <color name="divider">#E8EDE9</color>
+    <color name="border_light">#D4E8D8</color>
+    <color name="outline">#C5D9CA</color>
 
-    <!-- Error -->
-    <color name="error">#B00020</color>
+    <!-- ── Error / Warning ── -->
+    <color name="error">#C62828</color>
+    <color name="error_container">#FDECEA</color>
+    <color name="warning">#E65100</color>
+    <color name="success">#1B8A3A</color>
+    <color name="success_container">#D0F0DC</color>
 
-    <!-- Cart badge -->
-    <color name="cart_badge">#F44336</color>
+    <!-- ── Cart badge ── -->
+    <color name="cart_badge">#D32F2F</color>
+
+    <!-- ── Utility ── -->
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="transparent">#00000000</color>
+    <color name="scrim">#88000000</color>
+    <color name="shadow_light">#1A000000</color>
+
+    <!-- ── Shimmer ── -->
+    <color name="shimmer_base">#E8EDE9</color>
+    <color name="shimmer_highlight">#F5FAF6</color>
 </resources>

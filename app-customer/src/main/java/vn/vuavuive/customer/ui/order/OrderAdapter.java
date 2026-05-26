@@ -4,10 +4,11 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
+import com.bumptech.glide.Glide;
 import vn.vuavuive.customer.R;
 import vn.vuavuive.shared.data.dto.Order;
 import vn.vuavuive.shared.util.CurrencyFormatter;
@@ -46,7 +47,8 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
     @Override public int getItemCount() { return orders.size(); }
 
     class OrderViewHolder extends RecyclerView.ViewHolder {
-        TextView tvOrderId, tvStatus, tvTotal, tvDate, tvItemsSummary;
+        TextView tvOrderId, tvStatus, tvTotal, tvDate, tvItemsSummary, tvItemCount;
+        ImageView ivFirstItem;
 
         OrderViewHolder(View itemView) {
             super(itemView);
@@ -55,25 +57,46 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
             tvTotal        = itemView.findViewById(R.id.tv_total);
             tvDate         = itemView.findViewById(R.id.tv_date);
             tvItemsSummary = itemView.findViewById(R.id.tv_items_summary);
+            tvItemCount    = itemView.findViewById(R.id.tv_item_count);
+            ivFirstItem    = itemView.findViewById(R.id.iv_first_item);
         }
 
         void bind(Order order) {
-            tvOrderId.setText(order.getOrderId() != null ? order.getOrderId() : order.getId());
+            // Order ID
+            String orderId = order.getOrderId() != null ? order.getOrderId() : order.getId();
+            tvOrderId.setText("#" + orderId);
+
+            // Status
             tvStatus.setText(getStatusLabel(order.getStatus()));
+            int statusColor = getStatusColor(order.getStatus());
+            tvStatus.setTextColor(context.getResources().getColor(statusColor, null));
+
+            // Total
             tvTotal.setText(CurrencyFormatter.format(order.getTotalAmount()));
-            tvDate.setText(order.getCreatedAt() != null
-                    ? order.getCreatedAt().substring(0, 10) : "");
+
+            // Date
+            String dateStr = order.getCreatedAt() != null && order.getCreatedAt().length() >= 10
+                    ? order.getCreatedAt().substring(0, 10) : "";
+            tvDate.setText(dateStr);
 
             // Items summary
             if (order.getItems() != null && !order.getItems().isEmpty()) {
-                tvItemsSummary.setText(order.getItems().get(0).getProductName()
-                        + (order.getItems().size() > 1
-                        ? " và " + (order.getItems().size() - 1) + " sản phẩm khác" : ""));
+                String firstName = order.getItems().get(0).getProductName();
+                int extraCount = order.getItems().size() - 1;
+                tvItemsSummary.setText(firstName
+                        + (extraCount > 0 ? " và " + extraCount + " sản phẩm khác" : ""));
+                if (tvItemCount != null) {
+                    tvItemCount.setText(order.getItems().size() + " sản phẩm");
+                }
+                // Load first item image
+                if (ivFirstItem != null && order.getItems().get(0).getImageUrl() != null) {
+                    Glide.with(context)
+                            .load(order.getItems().get(0).getImageUrl())
+                            .placeholder(android.R.drawable.ic_menu_gallery)
+                            .centerCrop()
+                            .into(ivFirstItem);
+                }
             }
-
-            // Status color
-            int statusColor = getStatusColor(order.getStatus());
-            tvStatus.setTextColor(context.getResources().getColor(statusColor, null));
 
             itemView.setOnClickListener(v -> { if (listener != null) listener.onOrderClick(order); });
         }

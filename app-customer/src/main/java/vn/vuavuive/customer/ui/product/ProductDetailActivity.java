@@ -11,21 +11,24 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import dagger.hilt.android.AndroidEntryPoint;
 import vn.vuavuive.customer.R;
+import vn.vuavuive.customer.data.MockDataProvider;
 import vn.vuavuive.customer.data.repository.AuthRepository;
 import vn.vuavuive.customer.ui.review.ReviewAdapter;
 import vn.vuavuive.customer.viewmodel.CartViewModel;
 import vn.vuavuive.customer.viewmodel.ProductViewModel;
 import vn.vuavuive.shared.data.dto.Product;
+import vn.vuavuive.shared.data.dto.Review;
 import vn.vuavuive.shared.data.local.CartItemEntity;
 import vn.vuavuive.shared.util.CurrencyFormatter;
 import vn.vuavuive.shared.util.Constants;
+import java.util.List;
 
 @AndroidEntryPoint
 public class ProductDetailActivity extends AppCompatActivity {
@@ -59,7 +62,17 @@ public class ProductDetailActivity extends AppCompatActivity {
 
         String productId = getIntent().getStringExtra("product_id");
         if (productId != null) {
-            loadProduct(productId);
+            // Load mock data instantly for responsive UX
+            Product mockProduct = MockDataProvider.getMockProductById(productId);
+            if (mockProduct != null) {
+                currentProduct = mockProduct;
+                bindProduct(mockProduct);
+                loadMockReviews(productId);
+                loadMockSimilarProducts(productId);
+            }
+
+            // Then try to load from API (non-blocking)
+            tryLoadFromApi(productId);
         } else {
             finish();
         }
@@ -101,7 +114,6 @@ public class ProductDetailActivity extends AppCompatActivity {
 
         // Similar Products RecyclerView (horizontal)
         similarAdapter = new ProductAdapter(this, product -> {
-            // Navigate to another ProductDetail
             android.content.Intent intent = new android.content.Intent(this, ProductDetailActivity.class);
             intent.putExtra("product_id", product.getId());
             startActivity(intent);
@@ -132,21 +144,57 @@ public class ProductDetailActivity extends AppCompatActivity {
         fabAddToCart.setOnClickListener(v -> addToCart());
     }
 
-    private void loadProduct(String productId) {
-        productViewModel.getProductDetail(productId).observe(this, result -> {
-            if (result.status == AuthRepository.Result.Status.SUCCESS && result.data != null) {
-                currentProduct = result.data;
-                bindProduct(result.data);
-                loadReviews(productId);
-                loadSimilar(productId);
-                productViewModel.sendRecommendEvent(Constants.EVENT_VIEW_PRODUCT, productId, null);
-            } else if (result.status == AuthRepository.Result.Status.ERROR) {
-                Toast.makeText(this, "Không tìm thấy sản phẩm", Toast.LENGTH_SHORT).show();
-                finish();
-            }
-        });
+    // ── Mock data loading ──────────────────────────────────────────────────────
+    private void loadMockReviews(String productId) {
+        List<Review> reviews = MockDataProvider.getMockReviews(productId);
+        if (reviewAdapter != null) reviewAdapter.setReviews(reviews);
     }
 
+    private void loadMockSimilarProducts(String productId) {
+        // Get products from same category as the current product
+        String category = currentProduct != null ? currentProduct.getCategory() : "veg";
+        List<Product> similar = MockDataProvider.getMockProductsByCategory(category);
+        // Remove current product
+        similar.removeIf(p -> p.getId() != null && p.getId().equals(productId));
+        if (similarAdapter != null) similarAdapter.setProducts(similar);
+    }
+
+    // ── API loading (non-blocking, enhances mock if available) ─────────────────
+    private void tryLoadFromApi(String productId) {
+        try {
+            productViewModel.getProductDetail(productId).observe(this, result -> {
+                if (result != null
+                        && result.status == AuthRepository.Result.Status.SUCCESS
+                        && result.data != null) {
+                    currentProduct = result.data;
+                    bindProduct(result.data);
+                    try {
+                        productViewModel.sendRecommendEvent(Constants.EVENT_VIEW_PRODUCT, productId, null);
+                    } catch (Exception ignored) {}
+                }
+            });
+
+            productViewModel.getProductReviews(productId).observe(this, result -> {
+                if (result != null
+                        && result.status == AuthRepository.Result.Status.SUCCESS
+                        && result.data != null && !result.data.isEmpty()) {
+                    reviewAdapter.setReviews(result.data);
+                }
+            });
+
+            productViewModel.getSimilarProducts(productId).observe(this, result -> {
+                if (result != null
+                        && result.status == AuthRepository.Result.Status.SUCCESS
+                        && result.data != null && !result.data.isEmpty()) {
+                    similarAdapter.setProducts(result.data);
+                }
+            });
+        } catch (Exception e) {
+            // API unavailable — mock data already shown
+        }
+    }
+
+    // ── Bind product data to views ─────────────────────────────────────────────
     private void bindProduct(Product product) {
         // Collapsing toolbar title
         com.google.android.material.appbar.CollapsingToolbarLayout ctl =
@@ -157,6 +205,8 @@ public class ProductDetailActivity extends AppCompatActivity {
         Glide.with(this)
                 .load(product.getImageUrl())
                 .placeholder(android.R.drawable.ic_menu_gallery)
+                .error(android.R.drawable.ic_menu_gallery)
+                .transition(DrawableTransitionOptions.withCrossFade(300))
                 .centerCrop()
                 .into(ivProduct);
 
@@ -167,6 +217,7 @@ public class ProductDetailActivity extends AppCompatActivity {
                 + (product.getUnit() != null ? "/" + product.getUnit() : "");
         tvPrice.setText(priceUnit);
 
+        // Original price & discount
         if (product.getOriginalPrice() != null && product.getOriginalPrice() > product.getPrice()) {
             tvOriginalPrice.setText(CurrencyFormatter.format(product.getOriginalPrice()));
             tvOriginalPrice.setPaintFlags(tvOriginalPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
@@ -187,13 +238,17 @@ public class ProductDetailActivity extends AppCompatActivity {
 
         // Sold
         int sold = product.getSoldCount() != null ? product.getSoldCount() : 0;
-        tvSold.setText("• " + sold + " đã bán");
+        tvSold.setText("• " + (sold >= 1000 ? (sold / 1000) + "K" : sold) + " đã bán");
 
-        // Stock
+        // Stock status
         if (product.getStock() > 0) {
-            tvStock.setText("Còn hàng: " + product.getStock() + (product.getUnit() != null ? " " + product.getUnit() : ""));
+            String stockText = product.getStock() >= 1000
+                    ? "Còn hàng: " + (product.getStock() / 1000) + "K+ " + (product.getUnit() != null ? product.getUnit() : "")
+                    : "Còn hàng: " + product.getStock() + (product.getUnit() != null ? " " + product.getUnit() : "");
+            tvStock.setText(stockText);
             tvStock.setTextColor(getResources().getColor(R.color.status_delivered, null));
             fabAddToCart.setEnabled(true);
+            fabAddToCart.setText(getString(R.string.btn_add_to_cart));
         } else {
             tvStock.setText("Hết hàng");
             tvStock.setTextColor(getResources().getColor(R.color.error, null));
@@ -206,26 +261,12 @@ public class ProductDetailActivity extends AppCompatActivity {
                 ? product.getDescription() : "Chưa có mô tả sản phẩm.");
     }
 
-    private void loadReviews(String productId) {
-        productViewModel.getProductReviews(productId).observe(this, result -> {
-            if (result.status == AuthRepository.Result.Status.SUCCESS && result.data != null) {
-                reviewAdapter.setReviews(result.data);
-            }
-        });
-    }
-
-    private void loadSimilar(String productId) {
-        productViewModel.getSimilarProducts(productId).observe(this, result -> {
-            if (result.status == AuthRepository.Result.Status.SUCCESS && result.data != null) {
-                similarAdapter.setProducts(result.data);
-            }
-        });
-    }
-
+    // ── Add to cart ────────────────────────────────────────────────────────────
     private void addToCart() {
         if (currentProduct == null) return;
+
         CartItemEntity item = new CartItemEntity();
-        item.setProductId(currentProduct.getId());
+        item.setProductId(currentProduct.getId() != null ? currentProduct.getId() : "mock_" + System.currentTimeMillis());
         item.setQuantity(quantity);
         item.setProductName(currentProduct.getName());
         item.setProductPrice(currentProduct.getPrice());
@@ -236,12 +277,16 @@ public class ProductDetailActivity extends AppCompatActivity {
         item.setSavedForLater(false);
 
         cartViewModel.addItem(item);
-        Toast.makeText(this, "Đã thêm " + quantity + " " +
-                (currentProduct.getUnit() != null ? currentProduct.getUnit() : "sản phẩm") +
-                " vào giỏ hàng", Toast.LENGTH_SHORT).show();
 
-        java.util.Map<String, Object> meta = new java.util.HashMap<>();
-        meta.put("quantity", quantity);
-        productViewModel.sendRecommendEvent(Constants.EVENT_ADD_TO_CART, currentProduct.getId(), meta);
+        String unit = currentProduct.getUnit() != null ? currentProduct.getUnit() : "sản phẩm";
+        Toast.makeText(this,
+                "✅ Đã thêm " + quantity + " " + unit + " vào giỏ hàng",
+                Toast.LENGTH_SHORT).show();
+
+        try {
+            java.util.Map<String, Object> meta = new java.util.HashMap<>();
+            meta.put("quantity", quantity);
+            productViewModel.sendRecommendEvent(Constants.EVENT_ADD_TO_CART, currentProduct.getId(), meta);
+        } catch (Exception ignored) {}
     }
 }

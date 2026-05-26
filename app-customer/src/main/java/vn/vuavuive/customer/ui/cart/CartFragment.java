@@ -33,7 +33,7 @@ public class CartFragment extends Fragment {
     private AuthViewModel authViewModel;
     private CartAdapter cartAdapter;
     private CartAdapter savedAdapter;
-    private TextView tvTotal, tvEmptyCart, tvEmptyCartInline;
+    private TextView tvTotal, tvEmptyCart, tvEmptyCartInline, tvItemCount, tvSubtotalAmount;
     private TextView tvSavedCount, tvSavedToggle, tvSavedEmpty;
     private LinearLayout layoutCartContent;
     private View layoutEmptyCart;
@@ -60,6 +60,8 @@ public class CartFragment extends Fragment {
         tvTotal        = view.findViewById(R.id.tv_total);
         tvEmptyCart    = view.findViewById(R.id.tv_empty_cart);
         tvEmptyCartInline = view.findViewById(R.id.tv_empty_cart_inline);
+        tvItemCount    = view.findViewById(R.id.tv_item_count);
+        tvSubtotalAmount = view.findViewById(R.id.tv_subtotal_amount);
         layoutCartContent = view.findViewById(R.id.layout_cart_content);
         layoutEmptyCart = view.findViewById(R.id.layout_empty_cart);
         btnCheckout    = view.findViewById(R.id.btn_checkout);
@@ -73,6 +75,18 @@ public class CartFragment extends Fragment {
         setupSavedRecyclerView();
         setupSavedHeader();
         observeCart();
+
+        // Shop now button in empty state
+        View btnShopNow = view.findViewById(R.id.btn_shop_now);
+        if (btnShopNow != null) {
+            btnShopNow.setOnClickListener(v -> {
+                try {
+                    if (getActivity() instanceof vn.vuavuive.customer.ui.MainActivity) {
+                        ((vn.vuavuive.customer.ui.MainActivity) getActivity()).navigateToProducts();
+                    }
+                } catch (Exception ignored) {}
+            });
+        }
 
         btnCheckout.setOnClickListener(v -> {
             if (!authViewModel.isLoggedIn()) {
@@ -142,7 +156,12 @@ public class CartFragment extends Fragment {
     private void updateTotal(List<CartItemEntity> items) {
         double total = 0;
         for (CartItemEntity item : items) total += item.getLineTotal();
-        tvTotal.setText(CurrencyFormatter.format(total));
+        if (tvTotal != null) tvTotal.setText(CurrencyFormatter.format(total));
+        if (tvSubtotalAmount != null) tvSubtotalAmount.setText(CurrencyFormatter.format(total));
+        if (tvItemCount != null) {
+            int count = items != null ? items.size() : 0;
+            tvItemCount.setText(count + " sản phẩm");
+        }
     }
 
     private void updateEmptyState() {

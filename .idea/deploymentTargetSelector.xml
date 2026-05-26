@@ -2,11 +2,11 @@
 <project version="4">
   <component name="deploymentTargetSelector">
     <selectionStates>
-      <SelectionState runConfigName="app-customer">
+      <SelectionState runConfigName="app-admin">
         <option name="selectionMode" value="DROPDOWN" />
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="app-admin">
+      <SelectionState runConfigName="app-customer">
         <option name="selectionMode" value="DROPDOWN" />
         <DialogSelection />
       </SelectionState>

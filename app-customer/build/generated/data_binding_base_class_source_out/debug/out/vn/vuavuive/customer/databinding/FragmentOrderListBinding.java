@@ -24,6 +24,9 @@ public final class FragmentOrderListBinding implements ViewBinding {
   private final LinearLayout rootView;
 
   @NonNull
+  public final LinearLayout layoutEmpty;
+
+  @NonNull
   public final ProgressBar progressBar;
 
   @NonNull
@@ -38,10 +41,12 @@ public final class FragmentOrderListBinding implements ViewBinding {
   @NonNull
   public final TextView tvEmpty;
 
-  private FragmentOrderListBinding(@NonNull LinearLayout rootView, @NonNull ProgressBar progressBar,
+  private FragmentOrderListBinding(@NonNull LinearLayout rootView,
+      @NonNull LinearLayout layoutEmpty, @NonNull ProgressBar progressBar,
       @NonNull RecyclerView rvOrders, @NonNull SwipeRefreshLayout swipeRefresh,
       @NonNull TabLayout tabLayout, @NonNull TextView tvEmpty) {
     this.rootView = rootView;
+    this.layoutEmpty = layoutEmpty;
     this.progressBar = progressBar;
     this.rvOrders = rvOrders;
     this.swipeRefresh = swipeRefresh;
@@ -76,6 +81,12 @@ public final class FragmentOrderListBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.layout_empty;
+      LinearLayout layoutEmpty = ViewBindings.findChildViewById(rootView, id);
+      if (layoutEmpty == null) {
+        break missingId;
+      }
+
       id = R.id.progress_bar;
       ProgressBar progressBar = ViewBindings.findChildViewById(rootView, id);
       if (progressBar == null) {
@@ -106,8 +117,8 @@ public final class FragmentOrderListBinding implements ViewBinding {
         break missingId;
       }
 
-      return new FragmentOrderListBinding((LinearLayout) rootView, progressBar, rvOrders,
-          swipeRefresh, tabLayout, tvEmpty);
+      return new FragmentOrderListBinding((LinearLayout) rootView, layoutEmpty, progressBar,
+          rvOrders, swipeRefresh, tabLayout, tvEmpty);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

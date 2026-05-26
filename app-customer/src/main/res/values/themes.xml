@@ -1,22 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!-- ╔══════════════════════════════════════════════╗
+         ║           Base Application Theme            ║
+         ╚══════════════════════════════════════════════╝ -->
     <style name="Theme.VuaVuiVe.Customer" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Primary -->
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorPrimaryVariant">@color/primary_dark</item>
         <item name="colorAccent">@color/secondary</item>
+        <item name="colorOnPrimary">@color/white</item>
+
+        <!-- Secondary -->
+        <item name="colorSecondary">@color/secondary</item>
+        <item name="colorSecondaryVariant">@color/secondary_light</item>
+        <item name="colorOnSecondary">@color/white</item>
+
+        <!-- Background / Surface -->
         <item name="android:windowBackground">@color/background</item>
         <item name="android:statusBarColor">@color/primary_dark</item>
         <item name="colorSurface">@color/surface</item>
         <item name="colorOnSurface">@color/text_primary</item>
+        <item name="android:colorBackground">@color/background</item>
+        <item name="colorOnBackground">@color/text_primary</item>
+
+        <!-- Error -->
         <item name="colorError">@color/error</item>
+
+        <!-- Ripple -->
+        <item name="android:colorControlHighlight">#1A1B8A3A</item>
+
+        <!-- Shape -->
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.VuaVuiVe.SmallComponent</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.VuaVuiVe.MediumComponent</item>
+        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.VuaVuiVe.LargeComponent</item>
+
+        <!-- Bottom Navigation -->
+        <item name="bottomNavigationStyle">@style/Widget.VuaVuiVe.BottomNavigation</item>
     </style>
 
-    <!-- Auth screens — translucent green background -->
+    <!-- ╔══════════════════════════════════════════════╗
+         ║              Auth Theme                     ║
+         ╚══════════════════════════════════════════════╝ -->
     <style name="Theme.VuaVuiVe.Customer.Auth" parent="Theme.VuaVuiVe.Customer">
         <item name="android:windowBackground">@color/primary</item>
+        <item name="android:statusBarColor">@color/primary_dark</item>
+        <item name="android:windowLightStatusBar">false</item>
     </style>
 
-    <!-- Splash -->
+    <!-- ╔══════════════════════════════════════════════╗
+         ║             Splash Theme                    ║
+         ╚══════════════════════════════════════════════╝ -->
     <style name="Theme.VuaVuiVe.Customer.Splash" parent="Theme.VuaVuiVe.Customer">
         <item name="android:windowBackground">@color/primary</item>
         <item name="android:windowNoTitle">true</item>
@@ -24,44 +59,150 @@
         <item name="android:windowFullscreen">true</item>
     </style>
 
-    <!-- EditText style -->
-    <style name="Widget.VuaVuiVe.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-        <item name="boxStrokeColor">@color/primary</item>
-        <item name="hintTextColor">@color/text_secondary</item>
+    <!-- ╔══════════════════════════════════════════════╗
+         ║           Shape Appearances                 ║
+         ╚══════════════════════════════════════════════╝ -->
+    <style name="ShapeAppearance.VuaVuiVe.SmallComponent" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">8dp</item>
+    </style>
+    <style name="ShapeAppearance.VuaVuiVe.MediumComponent" parent="ShapeAppearance.MaterialComponents.MediumComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">12dp</item>
+    </style>
+    <style name="ShapeAppearance.VuaVuiVe.LargeComponent" parent="ShapeAppearance.MaterialComponents.LargeComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">16dp</item>
     </style>
 
-    <!-- Button primary -->
+    <!-- ╔══════════════════════════════════════════════╗
+         ║           TextInputLayout Styles            ║
+         ╚══════════════════════════════════════════════╝ -->
+    <style name="Widget.VuaVuiVe.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/primary</item>
+        <item name="boxStrokeWidth">1.5dp</item>
+        <item name="boxCornerRadiusTopStart">10dp</item>
+        <item name="boxCornerRadiusTopEnd">10dp</item>
+        <item name="boxCornerRadiusBottomStart">10dp</item>
+        <item name="boxCornerRadiusBottomEnd">10dp</item>
+        <item name="hintTextColor">@color/text_secondary</item>
+        <item name="android:textColorHint">@color/text_hint</item>
+    </style>
+
+    <!-- ╔══════════════════════════════════════════════╗
+         ║              Button Styles                  ║
+         ╚══════════════════════════════════════════════╝ -->
     <style name="Widget.VuaVuiVe.Button.Primary" parent="Widget.MaterialComponents.Button">
         <item name="backgroundTint">@color/primary</item>
         <item name="android:textColor">@color/white</item>
         <item name="cornerRadius">12dp</item>
         <item name="android:paddingTop">14dp</item>
         <item name="android:paddingBottom">14dp</item>
+        <item name="android:letterSpacing">0.02</item>
+        <item name="android:textStyle">bold</item>
+        <item name="elevation">2dp</item>
     </style>
 
-    <!-- Button outlined -->
     <style name="Widget.VuaVuiVe.Button.Outlined" parent="Widget.MaterialComponents.Button.OutlinedButton">
         <item name="strokeColor">@color/primary</item>
+        <item name="strokeWidth">1.5dp</item>
         <item name="android:textColor">@color/primary</item>
         <item name="cornerRadius">12dp</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingBottom">12dp</item>
     </style>
 
-    <!-- Card style -->
+    <style name="Widget.VuaVuiVe.Button.Text" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:textColor">@color/primary</item>
+        <item name="rippleColor">@color/primary_container</item>
+    </style>
+
+    <!-- ╔══════════════════════════════════════════════╗
+         ║               Card Styles                   ║
+         ╚══════════════════════════════════════════════╝ -->
     <style name="Widget.VuaVuiVe.Card" parent="Widget.MaterialComponents.CardView">
-        <item name="cardCornerRadius">12dp</item>
+        <item name="cardCornerRadius">14dp</item>
         <item name="cardElevation">2dp</item>
         <item name="cardBackgroundColor">@color/surface</item>
+        <item name="contentPadding">0dp</item>
     </style>
 
-    <!-- Chip style -->
+    <style name="Widget.VuaVuiVe.Card.Elevated" parent="Widget.VuaVuiVe.Card">
+        <item name="cardElevation">6dp</item>
+    </style>
+
+    <!-- ╔══════════════════════════════════════════════╗
+         ║               Chip Styles                   ║
+         ╚══════════════════════════════════════════════╝ -->
     <style name="Widget.VuaVuiVe.Chip" parent="Widget.MaterialComponents.Chip.Filter">
-        <item name="chipBackgroundColor">@color/primary_container</item>
+        <item name="chipBackgroundColor">@color/surface_variant</item>
         <item name="checkedIconVisible">false</item>
+        <item name="chipStrokeWidth">1dp</item>
+        <item name="chipStrokeColor">@color/outline</item>
+        <item name="android:textColor">@color/text_secondary</item>
     </style>
 
-    <!-- Toolbar -->
+    <style name="Widget.VuaVuiVe.Chip.Selected" parent="Widget.VuaVuiVe.Chip">
+        <item name="chipBackgroundColor">@color/primary</item>
+        <item name="chipStrokeColor">@color/primary</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <!-- ╔══════════════════════════════════════════════╗
+         ║             Toolbar Styles                  ║
+         ╚══════════════════════════════════════════════╝ -->
     <style name="Widget.VuaVuiVe.Toolbar" parent="Widget.MaterialComponents.Toolbar.Primary">
         <item name="android:background">@color/primary</item>
         <item name="titleTextColor">@color/white</item>
+        <item name="subtitleTextColor">#CCffffff</item>
     </style>
+
+    <!-- ╔══════════════════════════════════════════════╗
+         ║          Bottom Navigation Style            ║
+         ╚══════════════════════════════════════════════╝ -->
+    <style name="Widget.VuaVuiVe.BottomNavigation" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="itemIconTint">@color/bottom_nav_color</item>
+        <item name="itemTextColor">@color/bottom_nav_color</item>
+        <item name="labelVisibilityMode">labeled</item>
+        <item name="elevation">12dp</item>
+    </style>
+
+    <!-- ╔══════════════════════════════════════════════╗
+         ║              Text Appearances               ║
+         ╚══════════════════════════════════════════════╝ -->
+    <style name="TextAppearance.VuaVuiVe" parent="TextAppearance.MaterialComponents.Body1" />
+
+    <style name="TextAppearance.VuaVuiVe.HeadlineLarge">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextAppearance.VuaVuiVe.HeadlineMedium">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextAppearance.VuaVuiVe.BodyLarge">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/text_primary</item>
+    </style>
+
+    <style name="TextAppearance.VuaVuiVe.BodyMedium">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/text_secondary</item>
+    </style>
+
+    <style name="TextAppearance.VuaVuiVe.Price">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/primary</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextAppearance.VuaVuiVe.PriceStrike">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/text_hint</item>
+    </style>
+
 </resources>

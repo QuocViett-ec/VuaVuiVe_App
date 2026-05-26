@@ -9,9 +9,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.cardview.widget.CardView;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
+import com.google.android.material.card.MaterialCardView;
 import java.lang.NullPointerException;
 import java.lang.Override;
 import java.lang.String;
@@ -19,7 +19,7 @@ import vn.vuavuive.customer.R;
 
 public final class ItemCartBinding implements ViewBinding {
   @NonNull
-  private final CardView rootView;
+  private final MaterialCardView rootView;
 
   @NonNull
   public final ImageButton btnDecrease;
@@ -51,7 +51,7 @@ public final class ItemCartBinding implements ViewBinding {
   @NonNull
   public final TextView tvSubtotal;
 
-  private ItemCartBinding(@NonNull CardView rootView, @NonNull ImageButton btnDecrease,
+  private ItemCartBinding(@NonNull MaterialCardView rootView, @NonNull ImageButton btnDecrease,
       @NonNull ImageButton btnIncrease, @NonNull ImageButton btnRemove,
       @NonNull ImageView ivProduct, @NonNull TextView tvActionMove, @NonNull TextView tvActionSave,
       @NonNull TextView tvPrice, @NonNull TextView tvProductName, @NonNull TextView tvQuantity,
@@ -71,7 +71,7 @@ public final class ItemCartBinding implements ViewBinding {
 
   @Override
   @NonNull
-  public CardView getRoot() {
+  public MaterialCardView getRoot() {
     return rootView;
   }
 
@@ -156,7 +156,7 @@ public final class ItemCartBinding implements ViewBinding {
         break missingId;
       }
 
-      return new ItemCartBinding((CardView) rootView, btnDecrease, btnIncrease, btnRemove,
+      return new ItemCartBinding((MaterialCardView) rootView, btnDecrease, btnIncrease, btnRemove,
           ivProduct, tvActionMove, tvActionSave, tvPrice, tvProductName, tvQuantity, tvSubtotal);
     }
     String missingId = rootView.getResources().getResourceName(id);

@@ -90,8 +90,15 @@ public class OrderListFragment extends Fragment {
             progressBar.setVisibility(View.GONE);
             if (result.status == AuthRepository.Result.Status.SUCCESS && result.data != null) {
                 orderAdapter.setOrders(result.data);
-                TextView tvEmpty = requireView().findViewById(R.id.tv_empty);
-                tvEmpty.setVisibility(result.data.isEmpty() ? View.VISIBLE : View.GONE);
+                // Show/hide empty state wrapper
+                View layoutEmpty = requireView().findViewById(R.id.layout_empty);
+                if (layoutEmpty != null) {
+                    layoutEmpty.setVisibility(result.data.isEmpty() ? View.VISIBLE : View.GONE);
+                } else {
+                    // Fallback: tv_empty directly
+                    TextView tvEmpty = requireView().findViewById(R.id.tv_empty);
+                    if (tvEmpty != null) tvEmpty.setVisibility(result.data.isEmpty() ? View.VISIBLE : View.GONE);
+                }
             }
         });
     }

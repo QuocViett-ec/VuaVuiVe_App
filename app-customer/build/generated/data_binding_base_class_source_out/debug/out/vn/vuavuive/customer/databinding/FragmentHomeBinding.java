@@ -5,11 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
@@ -21,6 +23,9 @@ import vn.vuavuive.customer.R;
 public final class FragmentHomeBinding implements ViewBinding {
   @NonNull
   private final FrameLayout rootView;
+
+  @NonNull
+  public final ImageView ivAvatarHome;
 
   @NonNull
   public final LinearLayout llQuickCategories;
@@ -35,22 +40,32 @@ public final class FragmentHomeBinding implements ViewBinding {
   public final RecyclerView rvSaleProducts;
 
   @NonNull
+  public final NestedScrollView scrollView;
+
+  @NonNull
   public final TextView tvGreetingName;
 
   @NonNull
   public final TextView tvSeeAll;
 
-  private FragmentHomeBinding(@NonNull FrameLayout rootView,
+  @NonNull
+  public final TextView tvSeeAllSale;
+
+  private FragmentHomeBinding(@NonNull FrameLayout rootView, @NonNull ImageView ivAvatarHome,
       @NonNull LinearLayout llQuickCategories, @NonNull ProgressBar progressBar,
       @NonNull RecyclerView rvFeaturedProducts, @NonNull RecyclerView rvSaleProducts,
-      @NonNull TextView tvGreetingName, @NonNull TextView tvSeeAll) {
+      @NonNull NestedScrollView scrollView, @NonNull TextView tvGreetingName,
+      @NonNull TextView tvSeeAll, @NonNull TextView tvSeeAllSale) {
     this.rootView = rootView;
+    this.ivAvatarHome = ivAvatarHome;
     this.llQuickCategories = llQuickCategories;
     this.progressBar = progressBar;
     this.rvFeaturedProducts = rvFeaturedProducts;
     this.rvSaleProducts = rvSaleProducts;
+    this.scrollView = scrollView;
     this.tvGreetingName = tvGreetingName;
     this.tvSeeAll = tvSeeAll;
+    this.tvSeeAllSale = tvSeeAllSale;
   }
 
   @Override
@@ -80,6 +95,12 @@ public final class FragmentHomeBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.iv_avatar_home;
+      ImageView ivAvatarHome = ViewBindings.findChildViewById(rootView, id);
+      if (ivAvatarHome == null) {
+        break missingId;
+      }
+
       id = R.id.ll_quick_categories;
       LinearLayout llQuickCategories = ViewBindings.findChildViewById(rootView, id);
       if (llQuickCategories == null) {
@@ -104,6 +125,12 @@ public final class FragmentHomeBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.scroll_view;
+      NestedScrollView scrollView = ViewBindings.findChildViewById(rootView, id);
+      if (scrollView == null) {
+        break missingId;
+      }
+
       id = R.id.tv_greeting_name;
       TextView tvGreetingName = ViewBindings.findChildViewById(rootView, id);
       if (tvGreetingName == null) {
@@ -116,8 +143,15 @@ public final class FragmentHomeBinding implements ViewBinding {
         break missingId;
       }
 
-      return new FragmentHomeBinding((FrameLayout) rootView, llQuickCategories, progressBar,
-          rvFeaturedProducts, rvSaleProducts, tvGreetingName, tvSeeAll);
+      id = R.id.tv_see_all_sale;
+      TextView tvSeeAllSale = ViewBindings.findChildViewById(rootView, id);
+      if (tvSeeAllSale == null) {
+        break missingId;
+      }
+
+      return new FragmentHomeBinding((FrameLayout) rootView, ivAvatarHome, llQuickCategories,
+          progressBar, rvFeaturedProducts, rvSaleProducts, scrollView, tvGreetingName, tvSeeAll,
+          tvSeeAllSale);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

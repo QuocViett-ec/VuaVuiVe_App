@@ -5,13 +5,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.cardview.widget.CardView;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.card.MaterialCardView;
 import java.lang.NullPointerException;
 import java.lang.Override;
 import java.lang.String;
@@ -19,10 +21,16 @@ import vn.vuavuive.customer.R;
 
 public final class ItemProductBinding implements ViewBinding {
   @NonNull
-  private final CardView rootView;
+  private final MaterialCardView rootView;
+
+  @NonNull
+  public final MaterialButton btnQuickAdd;
 
   @NonNull
   public final ImageView ivProduct;
+
+  @NonNull
+  public final LinearLayout layoutOutOfStock;
 
   @NonNull
   public final RatingBar ratingBar;
@@ -31,10 +39,10 @@ public final class ItemProductBinding implements ViewBinding {
   public final TextView tvDiscount;
 
   @NonNull
-  public final TextView tvOriginalPrice;
+  public final TextView tvHotBadge;
 
   @NonNull
-  public final TextView tvOutOfStock;
+  public final TextView tvOriginalPrice;
 
   @NonNull
   public final TextView tvPrice;
@@ -46,27 +54,35 @@ public final class ItemProductBinding implements ViewBinding {
   public final TextView tvRatingCount;
 
   @NonNull
+  public final TextView tvSoldCount;
+
+  @NonNull
   public final TextView tvUnit;
 
-  private ItemProductBinding(@NonNull CardView rootView, @NonNull ImageView ivProduct,
-      @NonNull RatingBar ratingBar, @NonNull TextView tvDiscount, @NonNull TextView tvOriginalPrice,
-      @NonNull TextView tvOutOfStock, @NonNull TextView tvPrice, @NonNull TextView tvProductName,
-      @NonNull TextView tvRatingCount, @NonNull TextView tvUnit) {
+  private ItemProductBinding(@NonNull MaterialCardView rootView,
+      @NonNull MaterialButton btnQuickAdd, @NonNull ImageView ivProduct,
+      @NonNull LinearLayout layoutOutOfStock, @NonNull RatingBar ratingBar,
+      @NonNull TextView tvDiscount, @NonNull TextView tvHotBadge, @NonNull TextView tvOriginalPrice,
+      @NonNull TextView tvPrice, @NonNull TextView tvProductName, @NonNull TextView tvRatingCount,
+      @NonNull TextView tvSoldCount, @NonNull TextView tvUnit) {
     this.rootView = rootView;
+    this.btnQuickAdd = btnQuickAdd;
     this.ivProduct = ivProduct;
+    this.layoutOutOfStock = layoutOutOfStock;
     this.ratingBar = ratingBar;
     this.tvDiscount = tvDiscount;
+    this.tvHotBadge = tvHotBadge;
     this.tvOriginalPrice = tvOriginalPrice;
-    this.tvOutOfStock = tvOutOfStock;
     this.tvPrice = tvPrice;
     this.tvProductName = tvProductName;
     this.tvRatingCount = tvRatingCount;
+    this.tvSoldCount = tvSoldCount;
     this.tvUnit = tvUnit;
   }
 
   @Override
   @NonNull
-  public CardView getRoot() {
+  public MaterialCardView getRoot() {
     return rootView;
   }
 
@@ -91,9 +107,21 @@ public final class ItemProductBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.btn_quick_add;
+      MaterialButton btnQuickAdd = ViewBindings.findChildViewById(rootView, id);
+      if (btnQuickAdd == null) {
+        break missingId;
+      }
+
       id = R.id.iv_product;
       ImageView ivProduct = ViewBindings.findChildViewById(rootView, id);
       if (ivProduct == null) {
+        break missingId;
+      }
+
+      id = R.id.layout_out_of_stock;
+      LinearLayout layoutOutOfStock = ViewBindings.findChildViewById(rootView, id);
+      if (layoutOutOfStock == null) {
         break missingId;
       }
 
@@ -109,15 +137,15 @@ public final class ItemProductBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.tv_original_price;
-      TextView tvOriginalPrice = ViewBindings.findChildViewById(rootView, id);
-      if (tvOriginalPrice == null) {
+      id = R.id.tv_hot_badge;
+      TextView tvHotBadge = ViewBindings.findChildViewById(rootView, id);
+      if (tvHotBadge == null) {
         break missingId;
       }
 
-      id = R.id.tv_out_of_stock;
-      TextView tvOutOfStock = ViewBindings.findChildViewById(rootView, id);
-      if (tvOutOfStock == null) {
+      id = R.id.tv_original_price;
+      TextView tvOriginalPrice = ViewBindings.findChildViewById(rootView, id);
+      if (tvOriginalPrice == null) {
         break missingId;
       }
 
@@ -139,14 +167,21 @@ public final class ItemProductBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.tv_sold_count;
+      TextView tvSoldCount = ViewBindings.findChildViewById(rootView, id);
+      if (tvSoldCount == null) {
+        break missingId;
+      }
+
       id = R.id.tv_unit;
       TextView tvUnit = ViewBindings.findChildViewById(rootView, id);
       if (tvUnit == null) {
         break missingId;
       }
 
-      return new ItemProductBinding((CardView) rootView, ivProduct, ratingBar, tvDiscount,
-          tvOriginalPrice, tvOutOfStock, tvPrice, tvProductName, tvRatingCount, tvUnit);
+      return new ItemProductBinding((MaterialCardView) rootView, btnQuickAdd, ivProduct,
+          layoutOutOfStock, ratingBar, tvDiscount, tvHotBadge, tvOriginalPrice, tvPrice,
+          tvProductName, tvRatingCount, tvSoldCount, tvUnit);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

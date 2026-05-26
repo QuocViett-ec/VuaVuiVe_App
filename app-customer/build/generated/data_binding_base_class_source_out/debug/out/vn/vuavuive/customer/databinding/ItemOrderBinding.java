@@ -4,12 +4,13 @@ package vn.vuavuive.customer.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.cardview.widget.CardView;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
+import com.google.android.material.card.MaterialCardView;
 import java.lang.NullPointerException;
 import java.lang.Override;
 import java.lang.String;
@@ -17,10 +18,16 @@ import vn.vuavuive.customer.R;
 
 public final class ItemOrderBinding implements ViewBinding {
   @NonNull
-  private final CardView rootView;
+  private final MaterialCardView rootView;
+
+  @NonNull
+  public final ImageView ivFirstItem;
 
   @NonNull
   public final TextView tvDate;
+
+  @NonNull
+  public final TextView tvItemCount;
 
   @NonNull
   public final TextView tvItemsSummary;
@@ -34,11 +41,13 @@ public final class ItemOrderBinding implements ViewBinding {
   @NonNull
   public final TextView tvTotal;
 
-  private ItemOrderBinding(@NonNull CardView rootView, @NonNull TextView tvDate,
-      @NonNull TextView tvItemsSummary, @NonNull TextView tvOrderId, @NonNull TextView tvStatus,
-      @NonNull TextView tvTotal) {
+  private ItemOrderBinding(@NonNull MaterialCardView rootView, @NonNull ImageView ivFirstItem,
+      @NonNull TextView tvDate, @NonNull TextView tvItemCount, @NonNull TextView tvItemsSummary,
+      @NonNull TextView tvOrderId, @NonNull TextView tvStatus, @NonNull TextView tvTotal) {
     this.rootView = rootView;
+    this.ivFirstItem = ivFirstItem;
     this.tvDate = tvDate;
+    this.tvItemCount = tvItemCount;
     this.tvItemsSummary = tvItemsSummary;
     this.tvOrderId = tvOrderId;
     this.tvStatus = tvStatus;
@@ -47,7 +56,7 @@ public final class ItemOrderBinding implements ViewBinding {
 
   @Override
   @NonNull
-  public CardView getRoot() {
+  public MaterialCardView getRoot() {
     return rootView;
   }
 
@@ -72,9 +81,21 @@ public final class ItemOrderBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.iv_first_item;
+      ImageView ivFirstItem = ViewBindings.findChildViewById(rootView, id);
+      if (ivFirstItem == null) {
+        break missingId;
+      }
+
       id = R.id.tv_date;
       TextView tvDate = ViewBindings.findChildViewById(rootView, id);
       if (tvDate == null) {
+        break missingId;
+      }
+
+      id = R.id.tv_item_count;
+      TextView tvItemCount = ViewBindings.findChildViewById(rootView, id);
+      if (tvItemCount == null) {
         break missingId;
       }
 
@@ -102,8 +123,8 @@ public final class ItemOrderBinding implements ViewBinding {
         break missingId;
       }
 
-      return new ItemOrderBinding((CardView) rootView, tvDate, tvItemsSummary, tvOrderId, tvStatus,
-          tvTotal);
+      return new ItemOrderBinding((MaterialCardView) rootView, ivFirstItem, tvDate, tvItemCount,
+          tvItemsSummary, tvOrderId, tvStatus, tvTotal);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

@@ -4,7 +4,6 @@ package vn.vuavuive.customer.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -34,9 +33,6 @@ public final class ActivityLoginBinding implements ViewBinding {
   public final TextInputEditText etPhoneEmail;
 
   @NonNull
-  public final ImageView ivLogo;
-
-  @NonNull
   public final ProgressBar progressBar;
 
   @NonNull
@@ -59,15 +55,14 @@ public final class ActivityLoginBinding implements ViewBinding {
 
   private ActivityLoginBinding(@NonNull ScrollView rootView, @NonNull MaterialButton btnLogin,
       @NonNull TextInputEditText etPassword, @NonNull TextInputEditText etPhoneEmail,
-      @NonNull ImageView ivLogo, @NonNull ProgressBar progressBar,
-      @NonNull TextInputLayout tilPassword, @NonNull TextInputLayout tilPhoneEmail,
-      @NonNull TextView tvAppName, @NonNull TextView tvError, @NonNull TextView tvForgotPassword,
+      @NonNull ProgressBar progressBar, @NonNull TextInputLayout tilPassword,
+      @NonNull TextInputLayout tilPhoneEmail, @NonNull TextView tvAppName,
+      @NonNull TextView tvError, @NonNull TextView tvForgotPassword,
       @NonNull TextView tvRegisterLink) {
     this.rootView = rootView;
     this.btnLogin = btnLogin;
     this.etPassword = etPassword;
     this.etPhoneEmail = etPhoneEmail;
-    this.ivLogo = ivLogo;
     this.progressBar = progressBar;
     this.tilPassword = tilPassword;
     this.tilPhoneEmail = tilPhoneEmail;
@@ -122,12 +117,6 @@ public final class ActivityLoginBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.iv_logo;
-      ImageView ivLogo = ViewBindings.findChildViewById(rootView, id);
-      if (ivLogo == null) {
-        break missingId;
-      }
-
       id = R.id.progress_bar;
       ProgressBar progressBar = ViewBindings.findChildViewById(rootView, id);
       if (progressBar == null) {
@@ -171,7 +160,7 @@ public final class ActivityLoginBinding implements ViewBinding {
       }
 
       return new ActivityLoginBinding((ScrollView) rootView, btnLogin, etPassword, etPhoneEmail,
-          ivLogo, progressBar, tilPassword, tilPhoneEmail, tvAppName, tvError, tvForgotPassword,
+          progressBar, tilPassword, tilPhoneEmail, tvAppName, tvError, tvForgotPassword,
           tvRegisterLink);
     }
     String missingId = rootView.getResources().getResourceName(id);

@@ -53,12 +53,17 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewVH> 
         }
 
         void bind(Review review) {
-            // Review DTO không có userName, dùng userId rút gọn
-            String uid = review.getUserId();
-            String userDisplay = (uid != null && uid.length() >= 8)
-                    ? "Người dùng " + uid.substring(0, 4).toUpperCase()
-                    : "Khách hàng";
-            tvUserName.setText(userDisplay);
+            // Use userName if available (from mock data), else derive from userId
+            String userName = review.getUserName();
+            if (userName != null && !userName.isEmpty()) {
+                tvUserName.setText(userName);
+            } else {
+                String uid = review.getUserId();
+                String userDisplay = (uid != null && uid.length() >= 8)
+                        ? "Người dùng " + uid.substring(0, 4).toUpperCase()
+                        : "Khách hàng";
+                tvUserName.setText(userDisplay);
+            }
             tvComment.setText(review.getComment() != null ? review.getComment() : "");
             ratingBar.setRating(review.getRating());
             if (review.getCreatedAt() != null && review.getCreatedAt().length() >= 10) {
