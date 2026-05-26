@@ -9,139 +9,185 @@
 9        android:targetSdkVersion="35" />
 10
 11    <uses-permission android:name="android.permission.INTERNET" />
-11-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-admin\src\main\AndroidManifest.xml:4:5-67
-11-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-admin\src\main\AndroidManifest.xml:4:22-64
+11-->D:\VUAVUIVE_APP\VuaVuiVe_App\app-admin\src\main\AndroidManifest.xml:4:5-67
+11-->D:\VUAVUIVE_APP\VuaVuiVe_App\app-admin\src\main\AndroidManifest.xml:4:22-64
 12    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-12-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-admin\src\main\AndroidManifest.xml:5:5-79
-12-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-admin\src\main\AndroidManifest.xml:5:22-76
+12-->D:\VUAVUIVE_APP\VuaVuiVe_App\app-admin\src\main\AndroidManifest.xml:5:5-79
+12-->D:\VUAVUIVE_APP\VuaVuiVe_App\app-admin\src\main\AndroidManifest.xml:5:22-76
 13    <uses-permission android:name="android.permission.CAMERA" />
-13-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-admin\src\main\AndroidManifest.xml:6:5-65
-13-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-admin\src\main\AndroidManifest.xml:6:22-62
+13-->D:\VUAVUIVE_APP\VuaVuiVe_App\app-admin\src\main\AndroidManifest.xml:6:5-65
+13-->D:\VUAVUIVE_APP\VuaVuiVe_App\app-admin\src\main\AndroidManifest.xml:6:22-62
 14    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
-14-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-admin\src\main\AndroidManifest.xml:7:5-76
-14-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-admin\src\main\AndroidManifest.xml:7:22-73
+14-->D:\VUAVUIVE_APP\VuaVuiVe_App\app-admin\src\main\AndroidManifest.xml:7:5-76
+14-->D:\VUAVUIVE_APP\VuaVuiVe_App\app-admin\src\main\AndroidManifest.xml:7:22-73
 15
 16    <permission
-16-->[androidx.core:core:1.13.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\d197bf5fa010bfe3b459fcfd8c4d04c8\transformed\core-1.13.0\AndroidManifest.xml:22:5-24:47
+16-->[androidx.core:core:1.13.0] C:\Users\Thao\.gradle\caches\8.11.1\transforms\d197bf5fa010bfe3b459fcfd8c4d04c8\transformed\core-1.13.0\AndroidManifest.xml:22:5-24:47
 17        android:name="vn.vuavuive.admin.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
-17-->[androidx.core:core:1.13.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\d197bf5fa010bfe3b459fcfd8c4d04c8\transformed\core-1.13.0\AndroidManifest.xml:23:9-81
+17-->[androidx.core:core:1.13.0] C:\Users\Thao\.gradle\caches\8.11.1\transforms\d197bf5fa010bfe3b459fcfd8c4d04c8\transformed\core-1.13.0\AndroidManifest.xml:23:9-81
 18        android:protectionLevel="signature" />
-18-->[androidx.core:core:1.13.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\d197bf5fa010bfe3b459fcfd8c4d04c8\transformed\core-1.13.0\AndroidManifest.xml:24:9-44
+18-->[androidx.core:core:1.13.0] C:\Users\Thao\.gradle\caches\8.11.1\transforms\d197bf5fa010bfe3b459fcfd8c4d04c8\transformed\core-1.13.0\AndroidManifest.xml:24:9-44
 19
 20    <uses-permission android:name="vn.vuavuive.admin.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
-20-->[androidx.core:core:1.13.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\d197bf5fa010bfe3b459fcfd8c4d04c8\transformed\core-1.13.0\AndroidManifest.xml:26:5-97
-20-->[androidx.core:core:1.13.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\d197bf5fa010bfe3b459fcfd8c4d04c8\transformed\core-1.13.0\AndroidManifest.xml:26:22-94
+20-->[androidx.core:core:1.13.0] C:\Users\Thao\.gradle\caches\8.11.1\transforms\d197bf5fa010bfe3b459fcfd8c4d04c8\transformed\core-1.13.0\AndroidManifest.xml:26:5-97
+20-->[androidx.core:core:1.13.0] C:\Users\Thao\.gradle\caches\8.11.1\transforms\d197bf5fa010bfe3b459fcfd8c4d04c8\transformed\core-1.13.0\AndroidManifest.xml:26:22-94
 21
 22    <application
-22-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-admin\src\main\AndroidManifest.xml:9:5-20:19
+22-->D:\VUAVUIVE_APP\VuaVuiVe_App\app-admin\src\main\AndroidManifest.xml:9:5-47:19
 23        android:name="vn.vuavuive.admin.VuaVuiVeAdminApp"
-23-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-admin\src\main\AndroidManifest.xml:10:9-41
+23-->D:\VUAVUIVE_APP\VuaVuiVe_App\app-admin\src\main\AndroidManifest.xml:10:9-41
 24        android:allowBackup="true"
-24-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-admin\src\main\AndroidManifest.xml:11:9-35
+24-->D:\VUAVUIVE_APP\VuaVuiVe_App\app-admin\src\main\AndroidManifest.xml:11:9-35
 25        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
-25-->[androidx.core:core:1.13.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\d197bf5fa010bfe3b459fcfd8c4d04c8\transformed\core-1.13.0\AndroidManifest.xml:28:18-86
+25-->[androidx.core:core:1.13.0] C:\Users\Thao\.gradle\caches\8.11.1\transforms\d197bf5fa010bfe3b459fcfd8c4d04c8\transformed\core-1.13.0\AndroidManifest.xml:28:18-86
 26        android:debuggable="true"
 27        android:extractNativeLibs="false"
 28        android:label="VVV Admin"
-28-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-admin\src\main\AndroidManifest.xml:12:9-34
+28-->D:\VUAVUIVE_APP\VuaVuiVe_App\app-admin\src\main\AndroidManifest.xml:12:9-34
 29        android:networkSecurityConfig="@xml/network_security_config"
-29-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-admin\src\main\AndroidManifest.xml:13:9-69
+29-->D:\VUAVUIVE_APP\VuaVuiVe_App\app-admin\src\main\AndroidManifest.xml:13:9-69
 30        android:supportsRtl="true"
-30-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-admin\src\main\AndroidManifest.xml:14:9-35
-31        android:theme="@style/Theme.VuaVuiVe.Admin"
-31-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-admin\src\main\AndroidManifest.xml:15:9-52
-32        android:usesCleartextTraffic="true" >
-32-->E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-admin\src\main\AndroidManifest.xml:16:9-44
-33
-34        <!-- Activities sẽ khai báo khi triển khai Phase 3 -->
-35
-36        <service
-36-->[androidx.room:room-runtime:2.6.1] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\05a45ed3409f172f97020d0ab043ff05\transformed\room-runtime-2.6.1\AndroidManifest.xml:24:9-28:63
-37            android:name="androidx.room.MultiInstanceInvalidationService"
-37-->[androidx.room:room-runtime:2.6.1] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\05a45ed3409f172f97020d0ab043ff05\transformed\room-runtime-2.6.1\AndroidManifest.xml:25:13-74
-38            android:directBootAware="true"
-38-->[androidx.room:room-runtime:2.6.1] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\05a45ed3409f172f97020d0ab043ff05\transformed\room-runtime-2.6.1\AndroidManifest.xml:26:13-43
-39            android:exported="false" />
-39-->[androidx.room:room-runtime:2.6.1] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\05a45ed3409f172f97020d0ab043ff05\transformed\room-runtime-2.6.1\AndroidManifest.xml:27:13-37
-40
-41        <provider
-41-->[androidx.emoji2:emoji2:1.3.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\c582c32064dfb9900e179581e30d60ac\transformed\emoji2-1.3.0\AndroidManifest.xml:24:9-32:20
-42            android:name="androidx.startup.InitializationProvider"
-42-->[androidx.emoji2:emoji2:1.3.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\c582c32064dfb9900e179581e30d60ac\transformed\emoji2-1.3.0\AndroidManifest.xml:25:13-67
-43            android:authorities="vn.vuavuive.admin.androidx-startup"
-43-->[androidx.emoji2:emoji2:1.3.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\c582c32064dfb9900e179581e30d60ac\transformed\emoji2-1.3.0\AndroidManifest.xml:26:13-68
-44            android:exported="false" >
-44-->[androidx.emoji2:emoji2:1.3.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\c582c32064dfb9900e179581e30d60ac\transformed\emoji2-1.3.0\AndroidManifest.xml:27:13-37
-45            <meta-data
-45-->[androidx.emoji2:emoji2:1.3.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\c582c32064dfb9900e179581e30d60ac\transformed\emoji2-1.3.0\AndroidManifest.xml:29:13-31:52
-46                android:name="androidx.emoji2.text.EmojiCompatInitializer"
-46-->[androidx.emoji2:emoji2:1.3.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\c582c32064dfb9900e179581e30d60ac\transformed\emoji2-1.3.0\AndroidManifest.xml:30:17-75
-47                android:value="androidx.startup" />
-47-->[androidx.emoji2:emoji2:1.3.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\c582c32064dfb9900e179581e30d60ac\transformed\emoji2-1.3.0\AndroidManifest.xml:31:17-49
-48            <meta-data
-48-->[androidx.lifecycle:lifecycle-process:2.8.7] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\d3372cbd5a22e1dd6de22e9dbfc3a3aa\transformed\lifecycle-process-2.8.7\AndroidManifest.xml:29:13-31:52
-49                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
-49-->[androidx.lifecycle:lifecycle-process:2.8.7] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\d3372cbd5a22e1dd6de22e9dbfc3a3aa\transformed\lifecycle-process-2.8.7\AndroidManifest.xml:30:17-78
-50                android:value="androidx.startup" />
-50-->[androidx.lifecycle:lifecycle-process:2.8.7] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\d3372cbd5a22e1dd6de22e9dbfc3a3aa\transformed\lifecycle-process-2.8.7\AndroidManifest.xml:31:17-49
-51            <meta-data
-51-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:29:13-31:52
-52                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
-52-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:30:17-85
-53                android:value="androidx.startup" />
-53-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:31:17-49
-54        </provider>
-55
-56        <uses-library
-56-->[androidx.window:window:1.0.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e6307dfecb75db2ced2009706a57261c\transformed\window-1.0.0\AndroidManifest.xml:25:9-27:40
-57            android:name="androidx.window.extensions"
-57-->[androidx.window:window:1.0.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e6307dfecb75db2ced2009706a57261c\transformed\window-1.0.0\AndroidManifest.xml:26:13-54
-58            android:required="false" />
-58-->[androidx.window:window:1.0.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e6307dfecb75db2ced2009706a57261c\transformed\window-1.0.0\AndroidManifest.xml:27:13-37
-59        <uses-library
-59-->[androidx.window:window:1.0.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e6307dfecb75db2ced2009706a57261c\transformed\window-1.0.0\AndroidManifest.xml:28:9-30:40
-60            android:name="androidx.window.sidecar"
-60-->[androidx.window:window:1.0.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e6307dfecb75db2ced2009706a57261c\transformed\window-1.0.0\AndroidManifest.xml:29:13-51
-61            android:required="false" />
-61-->[androidx.window:window:1.0.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e6307dfecb75db2ced2009706a57261c\transformed\window-1.0.0\AndroidManifest.xml:30:13-37
-62
-63        <receiver
-63-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:34:9-52:20
-64            android:name="androidx.profileinstaller.ProfileInstallReceiver"
-64-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:35:13-76
-65            android:directBootAware="false"
-65-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:36:13-44
-66            android:enabled="true"
-66-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:37:13-35
-67            android:exported="true"
-67-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:38:13-36
-68            android:permission="android.permission.DUMP" >
-68-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:39:13-57
-69            <intent-filter>
-69-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:40:13-42:29
-70                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
-70-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:41:17-91
-70-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:41:25-88
-71            </intent-filter>
-72            <intent-filter>
-72-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:43:13-45:29
-73                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
-73-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:44:17-85
-73-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:44:25-82
-74            </intent-filter>
-75            <intent-filter>
-75-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:46:13-48:29
-76                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
-76-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:47:17-88
-76-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:47:25-85
-77            </intent-filter>
-78            <intent-filter>
-78-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:49:13-51:29
-79                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
-79-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:50:17-95
-79-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:50:25-92
-80            </intent-filter>
-81        </receiver>
-82    </application>
-83
-84</manifest>
+30-->D:\VUAVUIVE_APP\VuaVuiVe_App\app-admin\src\main\AndroidManifest.xml:14:9-35
+31        android:testOnly="true"
+32        android:theme="@style/Theme.VuaVuiVe.Admin"
+32-->D:\VUAVUIVE_APP\VuaVuiVe_App\app-admin\src\main\AndroidManifest.xml:15:9-52
+33        android:usesCleartextTraffic="true" >
+33-->D:\VUAVUIVE_APP\VuaVuiVe_App\app-admin\src\main\AndroidManifest.xml:16:9-44
+34        <activity
+34-->D:\VUAVUIVE_APP\VuaVuiVe_App\app-admin\src\main\AndroidManifest.xml:18:9-25:20
+35            android:name="vn.vuavuive.admin.ui.auth.AdminLoginActivity"
+35-->D:\VUAVUIVE_APP\VuaVuiVe_App\app-admin\src\main\AndroidManifest.xml:19:13-55
+36            android:exported="true" >
+36-->D:\VUAVUIVE_APP\VuaVuiVe_App\app-admin\src\main\AndroidManifest.xml:20:13-36
+37            <intent-filter>
+37-->D:\VUAVUIVE_APP\VuaVuiVe_App\app-admin\src\main\AndroidManifest.xml:21:13-24:29
+38                <action android:name="android.intent.action.MAIN" />
+38-->D:\VUAVUIVE_APP\VuaVuiVe_App\app-admin\src\main\AndroidManifest.xml:22:17-69
+38-->D:\VUAVUIVE_APP\VuaVuiVe_App\app-admin\src\main\AndroidManifest.xml:22:25-66
+39
+40                <category android:name="android.intent.category.LAUNCHER" />
+40-->D:\VUAVUIVE_APP\VuaVuiVe_App\app-admin\src\main\AndroidManifest.xml:23:17-77
+40-->D:\VUAVUIVE_APP\VuaVuiVe_App\app-admin\src\main\AndroidManifest.xml:23:27-74
+41            </intent-filter>
+42        </activity>
+43        <activity
+43-->D:\VUAVUIVE_APP\VuaVuiVe_App\app-admin\src\main\AndroidManifest.xml:27:9-29:40
+44            android:name="vn.vuavuive.admin.ui.main.MainActivity"
+44-->D:\VUAVUIVE_APP\VuaVuiVe_App\app-admin\src\main\AndroidManifest.xml:28:13-49
+45            android:exported="false" />
+45-->D:\VUAVUIVE_APP\VuaVuiVe_App\app-admin\src\main\AndroidManifest.xml:29:13-37
+46        <activity
+46-->D:\VUAVUIVE_APP\VuaVuiVe_App\app-admin\src\main\AndroidManifest.xml:31:9-33:40
+47            android:name="vn.vuavuive.admin.ui.orders.AdminOrderDetailActivity"
+47-->D:\VUAVUIVE_APP\VuaVuiVe_App\app-admin\src\main\AndroidManifest.xml:32:13-63
+48            android:exported="false" />
+48-->D:\VUAVUIVE_APP\VuaVuiVe_App\app-admin\src\main\AndroidManifest.xml:33:13-37
+49        <activity
+49-->D:\VUAVUIVE_APP\VuaVuiVe_App\app-admin\src\main\AndroidManifest.xml:35:9-37:40
+50            android:name="vn.vuavuive.admin.ui.products.ProductEditActivity"
+50-->D:\VUAVUIVE_APP\VuaVuiVe_App\app-admin\src\main\AndroidManifest.xml:36:13-60
+51            android:exported="false" />
+51-->D:\VUAVUIVE_APP\VuaVuiVe_App\app-admin\src\main\AndroidManifest.xml:37:13-37
+52        <activity
+52-->D:\VUAVUIVE_APP\VuaVuiVe_App\app-admin\src\main\AndroidManifest.xml:39:9-41:40
+53            android:name="vn.vuavuive.admin.ui.vouchers.VoucherEditActivity"
+53-->D:\VUAVUIVE_APP\VuaVuiVe_App\app-admin\src\main\AndroidManifest.xml:40:13-60
+54            android:exported="false" />
+54-->D:\VUAVUIVE_APP\VuaVuiVe_App\app-admin\src\main\AndroidManifest.xml:41:13-37
+55        <activity
+55-->D:\VUAVUIVE_APP\VuaVuiVe_App\app-admin\src\main\AndroidManifest.xml:43:9-45:40
+56            android:name="vn.vuavuive.admin.ui.shipments.ShipmentDetailActivity"
+56-->D:\VUAVUIVE_APP\VuaVuiVe_App\app-admin\src\main\AndroidManifest.xml:44:13-64
+57            android:exported="false" />
+57-->D:\VUAVUIVE_APP\VuaVuiVe_App\app-admin\src\main\AndroidManifest.xml:45:13-37
+58
+59        <service
+59-->[androidx.room:room-runtime:2.6.1] C:\Users\Thao\.gradle\caches\8.11.1\transforms\05a45ed3409f172f97020d0ab043ff05\transformed\room-runtime-2.6.1\AndroidManifest.xml:24:9-28:63
+60            android:name="androidx.room.MultiInstanceInvalidationService"
+60-->[androidx.room:room-runtime:2.6.1] C:\Users\Thao\.gradle\caches\8.11.1\transforms\05a45ed3409f172f97020d0ab043ff05\transformed\room-runtime-2.6.1\AndroidManifest.xml:25:13-74
+61            android:directBootAware="true"
+61-->[androidx.room:room-runtime:2.6.1] C:\Users\Thao\.gradle\caches\8.11.1\transforms\05a45ed3409f172f97020d0ab043ff05\transformed\room-runtime-2.6.1\AndroidManifest.xml:26:13-43
+62            android:exported="false" />
+62-->[androidx.room:room-runtime:2.6.1] C:\Users\Thao\.gradle\caches\8.11.1\transforms\05a45ed3409f172f97020d0ab043ff05\transformed\room-runtime-2.6.1\AndroidManifest.xml:27:13-37
+63
+64        <provider
+64-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Thao\.gradle\caches\8.11.1\transforms\c582c32064dfb9900e179581e30d60ac\transformed\emoji2-1.3.0\AndroidManifest.xml:24:9-32:20
+65            android:name="androidx.startup.InitializationProvider"
+65-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Thao\.gradle\caches\8.11.1\transforms\c582c32064dfb9900e179581e30d60ac\transformed\emoji2-1.3.0\AndroidManifest.xml:25:13-67
+66            android:authorities="vn.vuavuive.admin.androidx-startup"
+66-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Thao\.gradle\caches\8.11.1\transforms\c582c32064dfb9900e179581e30d60ac\transformed\emoji2-1.3.0\AndroidManifest.xml:26:13-68
+67            android:exported="false" >
+67-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Thao\.gradle\caches\8.11.1\transforms\c582c32064dfb9900e179581e30d60ac\transformed\emoji2-1.3.0\AndroidManifest.xml:27:13-37
+68            <meta-data
+68-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Thao\.gradle\caches\8.11.1\transforms\c582c32064dfb9900e179581e30d60ac\transformed\emoji2-1.3.0\AndroidManifest.xml:29:13-31:52
+69                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+69-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Thao\.gradle\caches\8.11.1\transforms\c582c32064dfb9900e179581e30d60ac\transformed\emoji2-1.3.0\AndroidManifest.xml:30:17-75
+70                android:value="androidx.startup" />
+70-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Thao\.gradle\caches\8.11.1\transforms\c582c32064dfb9900e179581e30d60ac\transformed\emoji2-1.3.0\AndroidManifest.xml:31:17-49
+71            <meta-data
+71-->[androidx.lifecycle:lifecycle-process:2.8.7] C:\Users\Thao\.gradle\caches\8.11.1\transforms\d3372cbd5a22e1dd6de22e9dbfc3a3aa\transformed\lifecycle-process-2.8.7\AndroidManifest.xml:29:13-31:52
+72                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+72-->[androidx.lifecycle:lifecycle-process:2.8.7] C:\Users\Thao\.gradle\caches\8.11.1\transforms\d3372cbd5a22e1dd6de22e9dbfc3a3aa\transformed\lifecycle-process-2.8.7\AndroidManifest.xml:30:17-78
+73                android:value="androidx.startup" />
+73-->[androidx.lifecycle:lifecycle-process:2.8.7] C:\Users\Thao\.gradle\caches\8.11.1\transforms\d3372cbd5a22e1dd6de22e9dbfc3a3aa\transformed\lifecycle-process-2.8.7\AndroidManifest.xml:31:17-49
+74            <meta-data
+74-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Thao\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:29:13-31:52
+75                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+75-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Thao\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:30:17-85
+76                android:value="androidx.startup" />
+76-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Thao\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:31:17-49
+77        </provider>
+78
+79        <uses-library
+79-->[androidx.window:window:1.0.0] C:\Users\Thao\.gradle\caches\8.11.1\transforms\e6307dfecb75db2ced2009706a57261c\transformed\window-1.0.0\AndroidManifest.xml:25:9-27:40
+80            android:name="androidx.window.extensions"
+80-->[androidx.window:window:1.0.0] C:\Users\Thao\.gradle\caches\8.11.1\transforms\e6307dfecb75db2ced2009706a57261c\transformed\window-1.0.0\AndroidManifest.xml:26:13-54
+81            android:required="false" />
+81-->[androidx.window:window:1.0.0] C:\Users\Thao\.gradle\caches\8.11.1\transforms\e6307dfecb75db2ced2009706a57261c\transformed\window-1.0.0\AndroidManifest.xml:27:13-37
+82        <uses-library
+82-->[androidx.window:window:1.0.0] C:\Users\Thao\.gradle\caches\8.11.1\transforms\e6307dfecb75db2ced2009706a57261c\transformed\window-1.0.0\AndroidManifest.xml:28:9-30:40
+83            android:name="androidx.window.sidecar"
+83-->[androidx.window:window:1.0.0] C:\Users\Thao\.gradle\caches\8.11.1\transforms\e6307dfecb75db2ced2009706a57261c\transformed\window-1.0.0\AndroidManifest.xml:29:13-51
+84            android:required="false" />
+84-->[androidx.window:window:1.0.0] C:\Users\Thao\.gradle\caches\8.11.1\transforms\e6307dfecb75db2ced2009706a57261c\transformed\window-1.0.0\AndroidManifest.xml:30:13-37
+85
+86        <receiver
+86-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Thao\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:34:9-52:20
+87            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+87-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Thao\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:35:13-76
+88            android:directBootAware="false"
+88-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Thao\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:36:13-44
+89            android:enabled="true"
+89-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Thao\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:37:13-35
+90            android:exported="true"
+90-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Thao\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:38:13-36
+91            android:permission="android.permission.DUMP" >
+91-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Thao\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:39:13-57
+92            <intent-filter>
+92-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Thao\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:40:13-42:29
+93                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+93-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Thao\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:41:17-91
+93-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Thao\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:41:25-88
+94            </intent-filter>
+95            <intent-filter>
+95-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Thao\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:43:13-45:29
+96                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+96-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Thao\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:44:17-85
+96-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Thao\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:44:25-82
+97            </intent-filter>
+98            <intent-filter>
+98-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Thao\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:46:13-48:29
+99                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+99-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Thao\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:47:17-88
+99-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Thao\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:47:25-85
+100            </intent-filter>
+101            <intent-filter>
+101-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Thao\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:49:13-51:29
+102                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+102-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Thao\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:50:17-95
+102-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Thao\.gradle\caches\8.11.1\transforms\e2fa34a0af6bfc4ea4b0d1f86df9c350\transformed\profileinstaller-1.4.0\AndroidManifest.xml:50:25-92
+103            </intent-filter>
+104        </receiver>
+105    </application>
+106
+107</manifest>

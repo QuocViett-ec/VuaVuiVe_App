@@ -84,6 +84,12 @@ public class Order {
 
     // Setters
     public void setStatus(String status) { this.status = status; }
+    public void setPaymentStatus(String paymentStatus) {
+        if (payment != null) payment.setStatus(paymentStatus);
+    }
+
+    // Alias: customerId == userId for shipment creation context
+    public String getCustomerId() { return userId; }
 
     // Helper methods
     public boolean isCancellable() {

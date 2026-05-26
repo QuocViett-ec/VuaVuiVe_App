@@ -94,6 +94,7 @@ public class Product {
     public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
     public void setStock(int stock) { this.stock = stock; }
     public void setUnit(String unit) { this.unit = unit; }
+    public void setTags(List<String> tags) { this.tags = tags; }
     public void setActive(boolean active) { isActive = active; }
     public void setRating(Double rating) { this.rating = rating; }
     public void setReviewCount(Integer reviewCount) { this.reviewCount = reviewCount; }

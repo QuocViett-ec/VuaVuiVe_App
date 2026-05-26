@@ -15,7 +15,34 @@
         android:theme="@style/Theme.VuaVuiVe.Admin"
         android:usesCleartextTraffic="true">
 
-        <!-- Activities sẽ khai báo khi triển khai Phase 3 -->
+        <activity
+            android:name=".ui.auth.AdminLoginActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ui.main.MainActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.orders.AdminOrderDetailActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.products.ProductEditActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.vouchers.VoucherEditActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.shipments.ShipmentDetailActivity"
+            android:exported="false" />
 
     </application>
 </manifest>
