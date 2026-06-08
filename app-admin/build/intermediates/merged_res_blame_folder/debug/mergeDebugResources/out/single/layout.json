@@ -1,94 +1,90 @@
 [
     {
-        "merged": "C:\\Users\\Thao\\.gradle\\daemon\\8.11.1\\vn.vuavuive.admin.app-admin-mergeDebugResources-48:\\layout\\activity_shipment_detail.xml",
-        "source": "C:\\Users\\Thao\\.gradle\\daemon\\8.11.1\\vn.vuavuive.admin.app-admin-main-51:\\layout\\activity_shipment_detail.xml"
-    },
-    {
-        "merged": "C:\\Users\\Thao\\.gradle\\daemon\\8.11.1\\vn.vuavuive.admin.app-admin-mergeDebugResources-48:\\layout\\item_order.xml",
-        "source": "C:\\Users\\Thao\\.gradle\\daemon\\8.11.1\\vn.vuavuive.admin.app-admin-main-51:\\layout\\item_order.xml"
-    },
-    {
-        "merged": "C:\\Users\\Thao\\.gradle\\daemon\\8.11.1\\vn.vuavuive.admin.app-admin-mergeDebugResources-48:\\layout\\activity_admin_order_detail.xml",
-        "source": "C:\\Users\\Thao\\.gradle\\daemon\\8.11.1\\vn.vuavuive.admin.app-admin-main-51:\\layout\\activity_admin_order_detail.xml"
+        "merged": "vn.vuavuive.admin.app-admin-mergeDebugResources-48:/layout/activity_shipment_detail.xml",
+        "source": "vn.vuavuive.admin.app-admin-main-51:/layout/activity_shipment_detail.xml"
     },
     {
         "merged": "vn.vuavuive.admin.app-admin-mergeDebugResources-48:/layout/item_chat_bubble_bot.xml",
         "source": "vn.vuavuive.admin.app-admin-main-51:/layout/item_chat_bubble_bot.xml"
     },
     {
-        "merged": "C:\\Users\\Thao\\.gradle\\daemon\\8.11.1\\vn.vuavuive.admin.app-admin-mergeDebugResources-48:\\layout\\fragment_user_list.xml",
-        "source": "C:\\Users\\Thao\\.gradle\\daemon\\8.11.1\\vn.vuavuive.admin.app-admin-main-51:\\layout\\fragment_user_list.xml"
+        "merged": "vn.vuavuive.admin.app-admin-mergeDebugResources-48:/layout/activity_admin_order_detail.xml",
+        "source": "vn.vuavuive.admin.app-admin-main-51:/layout/activity_admin_order_detail.xml"
     },
     {
-        "merged": "C:\\Users\\Thao\\.gradle\\daemon\\8.11.1\\vn.vuavuive.admin.app-admin-mergeDebugResources-48:\\layout\\fragment_admin_order_list.xml",
-        "source": "C:\\Users\\Thao\\.gradle\\daemon\\8.11.1\\vn.vuavuive.admin.app-admin-main-51:\\layout\\fragment_admin_order_list.xml"
+        "merged": "vn.vuavuive.admin.app-admin-mergeDebugResources-48:/layout/fragment_admin_order_list.xml",
+        "source": "vn.vuavuive.admin.app-admin-main-51:/layout/fragment_admin_order_list.xml"
     },
     {
-        "merged": "C:\\Users\\Thao\\.gradle\\daemon\\8.11.1\\vn.vuavuive.admin.app-admin-mergeDebugResources-48:\\layout\\activity_voucher_edit.xml",
-        "source": "C:\\Users\\Thao\\.gradle\\daemon\\8.11.1\\vn.vuavuive.admin.app-admin-main-51:\\layout\\activity_voucher_edit.xml"
+        "merged": "vn.vuavuive.admin.app-admin-mergeDebugResources-48:/layout/fragment_shipment_list.xml",
+        "source": "vn.vuavuive.admin.app-admin-main-51:/layout/fragment_shipment_list.xml"
     },
     {
-        "merged": "C:\\Users\\Thao\\.gradle\\daemon\\8.11.1\\vn.vuavuive.admin.app-admin-mergeDebugResources-48:\\layout\\item_chat_bubble_bot.xml",
-        "source": "C:\\Users\\Thao\\.gradle\\daemon\\8.11.1\\vn.vuavuive.admin.app-admin-main-51:\\layout\\item_chat_bubble_bot.xml"
+        "merged": "vn.vuavuive.admin.app-admin-mergeDebugResources-48:/layout/fragment_voucher_list.xml",
+        "source": "vn.vuavuive.admin.app-admin-main-51:/layout/fragment_voucher_list.xml"
     },
     {
-        "merged": "C:\\Users\\Thao\\.gradle\\daemon\\8.11.1\\vn.vuavuive.admin.app-admin-mergeDebugResources-48:\\layout\\item_shipment.xml",
-        "source": "C:\\Users\\Thao\\.gradle\\daemon\\8.11.1\\vn.vuavuive.admin.app-admin-main-51:\\layout\\item_shipment.xml"
+        "merged": "vn.vuavuive.admin.app-admin-mergeDebugResources-48:/layout/fragment_audit_log.xml",
+        "source": "vn.vuavuive.admin.app-admin-main-51:/layout/fragment_audit_log.xml"
     },
     {
-        "merged": "C:\\Users\\Thao\\.gradle\\daemon\\8.11.1\\vn.vuavuive.admin.app-admin-mergeDebugResources-48:\\layout\\activity_product_edit.xml",
-        "source": "C:\\Users\\Thao\\.gradle\\daemon\\8.11.1\\vn.vuavuive.admin.app-admin-main-51:\\layout\\activity_product_edit.xml"
+        "merged": "vn.vuavuive.admin.app-admin-mergeDebugResources-48:/layout/item_user.xml",
+        "source": "vn.vuavuive.admin.app-admin-main-51:/layout/item_user.xml"
     },
     {
-        "merged": "C:\\Users\\Thao\\.gradle\\daemon\\8.11.1\\vn.vuavuive.admin.app-admin-mergeDebugResources-48:\\layout\\fragment_dashboard.xml",
-        "source": "C:\\Users\\Thao\\.gradle\\daemon\\8.11.1\\vn.vuavuive.admin.app-admin-main-51:\\layout\\fragment_dashboard.xml"
+        "merged": "vn.vuavuive.admin.app-admin-mergeDebugResources-48:/layout/item_product.xml",
+        "source": "vn.vuavuive.admin.app-admin-main-51:/layout/item_product.xml"
     },
     {
-        "merged": "C:\\Users\\Thao\\.gradle\\daemon\\8.11.1\\vn.vuavuive.admin.app-admin-mergeDebugResources-48:\\layout\\fragment_admin_product_list.xml",
-        "source": "C:\\Users\\Thao\\.gradle\\daemon\\8.11.1\\vn.vuavuive.admin.app-admin-main-51:\\layout\\fragment_admin_product_list.xml"
+        "merged": "vn.vuavuive.admin.app-admin-mergeDebugResources-48:/layout/activity_main.xml",
+        "source": "vn.vuavuive.admin.app-admin-main-51:/layout/activity_main.xml"
     },
     {
-        "merged": "C:\\Users\\Thao\\.gradle\\daemon\\8.11.1\\vn.vuavuive.admin.app-admin-mergeDebugResources-48:\\layout\\fragment_audit_log.xml",
-        "source": "C:\\Users\\Thao\\.gradle\\daemon\\8.11.1\\vn.vuavuive.admin.app-admin-main-51:\\layout\\fragment_audit_log.xml"
+        "merged": "vn.vuavuive.admin.app-admin-mergeDebugResources-48:/layout/fragment_admin_product_list.xml",
+        "source": "vn.vuavuive.admin.app-admin-main-51:/layout/fragment_admin_product_list.xml"
     },
     {
-        "merged": "C:\\Users\\Thao\\.gradle\\daemon\\8.11.1\\vn.vuavuive.admin.app-admin-mergeDebugResources-48:\\layout\\item_user.xml",
-        "source": "C:\\Users\\Thao\\.gradle\\daemon\\8.11.1\\vn.vuavuive.admin.app-admin-main-51:\\layout\\item_user.xml"
+        "merged": "vn.vuavuive.admin.app-admin-mergeDebugResources-48:/layout/fragment_user_list.xml",
+        "source": "vn.vuavuive.admin.app-admin-main-51:/layout/fragment_user_list.xml"
     },
     {
-        "merged": "C:\\Users\\Thao\\.gradle\\daemon\\8.11.1\\vn.vuavuive.admin.app-admin-mergeDebugResources-48:\\layout\\item_chat_bubble_user.xml",
-        "source": "C:\\Users\\Thao\\.gradle\\daemon\\8.11.1\\vn.vuavuive.admin.app-admin-main-51:\\layout\\item_chat_bubble_user.xml"
+        "merged": "vn.vuavuive.admin.app-admin-mergeDebugResources-48:/layout/item_order.xml",
+        "source": "vn.vuavuive.admin.app-admin-main-51:/layout/item_order.xml"
     },
     {
-        "merged": "C:\\Users\\Thao\\.gradle\\daemon\\8.11.1\\vn.vuavuive.admin.app-admin-mergeDebugResources-48:\\layout\\activity_admin_login.xml",
-        "source": "C:\\Users\\Thao\\.gradle\\daemon\\8.11.1\\vn.vuavuive.admin.app-admin-main-51:\\layout\\activity_admin_login.xml"
+        "merged": "vn.vuavuive.admin.app-admin-mergeDebugResources-48:/layout/activity_admin_login.xml",
+        "source": "vn.vuavuive.admin.app-admin-main-51:/layout/activity_admin_login.xml"
     },
     {
-        "merged": "C:\\Users\\Thao\\.gradle\\daemon\\8.11.1\\vn.vuavuive.admin.app-admin-mergeDebugResources-48:\\layout\\activity_main.xml",
-        "source": "C:\\Users\\Thao\\.gradle\\daemon\\8.11.1\\vn.vuavuive.admin.app-admin-main-51:\\layout\\activity_main.xml"
+        "merged": "vn.vuavuive.admin.app-admin-mergeDebugResources-48:/layout/fragment_admin_chat.xml",
+        "source": "vn.vuavuive.admin.app-admin-main-51:/layout/fragment_admin_chat.xml"
     },
     {
-        "merged": "C:\\Users\\Thao\\.gradle\\daemon\\8.11.1\\vn.vuavuive.admin.app-admin-mergeDebugResources-48:\\layout\\item_product.xml",
-        "source": "C:\\Users\\Thao\\.gradle\\daemon\\8.11.1\\vn.vuavuive.admin.app-admin-main-51:\\layout\\item_product.xml"
+        "merged": "vn.vuavuive.admin.app-admin-mergeDebugResources-48:/layout/item_shipment.xml",
+        "source": "vn.vuavuive.admin.app-admin-main-51:/layout/item_shipment.xml"
     },
     {
-        "merged": "C:\\Users\\Thao\\.gradle\\daemon\\8.11.1\\vn.vuavuive.admin.app-admin-mergeDebugResources-48:\\layout\\item_audit_log.xml",
-        "source": "C:\\Users\\Thao\\.gradle\\daemon\\8.11.1\\vn.vuavuive.admin.app-admin-main-51:\\layout\\item_audit_log.xml"
+        "merged": "vn.vuavuive.admin.app-admin-mergeDebugResources-48:/layout/item_chat_bubble_user.xml",
+        "source": "vn.vuavuive.admin.app-admin-main-51:/layout/item_chat_bubble_user.xml"
     },
     {
-        "merged": "C:\\Users\\Thao\\.gradle\\daemon\\8.11.1\\vn.vuavuive.admin.app-admin-mergeDebugResources-48:\\layout\\fragment_shipment_list.xml",
-        "source": "C:\\Users\\Thao\\.gradle\\daemon\\8.11.1\\vn.vuavuive.admin.app-admin-main-51:\\layout\\fragment_shipment_list.xml"
+        "merged": "vn.vuavuive.admin.app-admin-mergeDebugResources-48:/layout/fragment_dashboard.xml",
+        "source": "vn.vuavuive.admin.app-admin-main-51:/layout/fragment_dashboard.xml"
     },
     {
-        "merged": "C:\\Users\\Thao\\.gradle\\daemon\\8.11.1\\vn.vuavuive.admin.app-admin-mergeDebugResources-48:\\layout\\fragment_voucher_list.xml",
-        "source": "C:\\Users\\Thao\\.gradle\\daemon\\8.11.1\\vn.vuavuive.admin.app-admin-main-51:\\layout\\fragment_voucher_list.xml"
+        "merged": "vn.vuavuive.admin.app-admin-mergeDebugResources-48:/layout/item_audit_log.xml",
+        "source": "vn.vuavuive.admin.app-admin-main-51:/layout/item_audit_log.xml"
     },
     {
-        "merged": "C:\\Users\\Thao\\.gradle\\daemon\\8.11.1\\vn.vuavuive.admin.app-admin-mergeDebugResources-48:\\layout\\item_voucher.xml",
-        "source": "C:\\Users\\Thao\\.gradle\\daemon\\8.11.1\\vn.vuavuive.admin.app-admin-main-51:\\layout\\item_voucher.xml"
+        "merged": "vn.vuavuive.admin.app-admin-mergeDebugResources-48:/layout/activity_voucher_edit.xml",
+        "source": "vn.vuavuive.admin.app-admin-main-51:/layout/activity_voucher_edit.xml"
     },
     {
-        "merged": "C:\\Users\\Thao\\.gradle\\daemon\\8.11.1\\vn.vuavuive.admin.app-admin-mergeDebugResources-48:\\layout\\fragment_admin_chat.xml",
-        "source": "C:\\Users\\Thao\\.gradle\\daemon\\8.11.1\\vn.vuavuive.admin.app-admin-main-51:\\layout\\fragment_admin_chat.xml"
+        "merged": "vn.vuavuive.admin.app-admin-mergeDebugResources-48:/layout/item_voucher.xml",
+        "source": "vn.vuavuive.admin.app-admin-main-51:/layout/item_voucher.xml"
+    },
+    {
+        "merged": "vn.vuavuive.admin.app-admin-mergeDebugResources-48:/layout/activity_product_edit.xml",
+        "source": "vn.vuavuive.admin.app-admin-main-51:/layout/activity_product_edit.xml"
     }
 ]

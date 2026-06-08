@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             android:hint="Tìm theo tên, email, số điện thoại..."
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-            app:startIconDrawable="@android:drawable/ic_menu_search"
+            app:startIconDrawable="@drawable/ic_search"
             app:startIconTint="@color/text_secondary"
             app:boxStrokeColor="@color/primary"
             app:hintTextColor="@color/primary">

@@ -21,7 +21,7 @@
             android:layout_weight="1"
             android:hint="Tìm kiếm mã đơn, tên khách..."
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-            app:startIconDrawable="@android:drawable/ic_menu_search"
+            app:startIconDrawable="@drawable/ic_search"
             app:startIconTint="@color/text_secondary"
             app:boxStrokeColor="@color/primary"
             app:hintTextColor="@color/primary">

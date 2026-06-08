@@ -204,8 +204,8 @@ public class ProductDetailActivity extends AppCompatActivity {
         // Image
         Glide.with(this)
                 .load(product.getImageUrl())
-                .placeholder(android.R.drawable.ic_menu_gallery)
-                .error(android.R.drawable.ic_menu_gallery)
+                .placeholder(R.drawable.ic_image)
+                .error(R.drawable.ic_image)
                 .transition(DrawableTransitionOptions.withCrossFade(300))
                 .centerCrop()
                 .into(ivProduct);

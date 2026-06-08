@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "vn.vuavuive.customer"
-    compileSdk = 35
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "vn.vuavuive.customer"
@@ -66,8 +66,8 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-livedata:2.8.7")
 
     // Activity + Fragment KTX (for by viewModels() in Java via FragmentFactory)
-    implementation("androidx.activity:activity:1.10.1")
-    implementation("androidx.fragment:fragment:1.8.6")
+    implementation("androidx.activity:activity:1.9.3")
+    implementation("androidx.fragment:fragment:1.8.3")
 
     // Glide (image loading)
     implementation("com.github.bumptech.glide:glide:4.16.0")

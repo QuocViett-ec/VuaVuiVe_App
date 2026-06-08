@@ -69,7 +69,7 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.Item
         void bind(OrderItem item) {
             Glide.with(ivProduct.getContext())
                     .load(item.getImageUrl())
-                    .placeholder(android.R.drawable.ic_menu_gallery)
+                    .placeholder(R.drawable.ic_image)
                     .centerCrop()
                     .into(ivProduct);
             tvName.setText(item.getName());

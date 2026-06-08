@@ -202,7 +202,7 @@
                     android:layout_height="36dp"
                     android:background="@color/surface_variant"
                     android:contentDescription="Giảm"
-                    android:src="@android:drawable/ic_input_delete"
+                    android:src="@drawable/ic_delete"
                     android:tint="@color/primary" />
 
                 <TextView
@@ -221,7 +221,7 @@
                     android:layout_height="36dp"
                     android:background="@color/surface_variant"
                     android:contentDescription="Tăng"
-                    android:src="@android:drawable/ic_input_add"
+                    android:src="@drawable/ic_add"
                     android:tint="@color/primary" />
             </LinearLayout>
 
@@ -274,7 +274,7 @@
         android:layout_margin="16dp"
         android:text="@string/btn_add_to_cart"
         app:backgroundTint="@color/primary"
-        app:icon="@android:drawable/ic_input_add"
+        app:icon="@drawable/ic_add"
         app:iconTint="@color/white" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

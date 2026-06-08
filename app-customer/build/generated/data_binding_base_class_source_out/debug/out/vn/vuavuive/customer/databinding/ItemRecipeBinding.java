@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
+import com.google.android.material.button.MaterialButton;
 import java.lang.NullPointerException;
 import java.lang.Override;
 import java.lang.String;
@@ -21,14 +22,18 @@ public final class ItemRecipeBinding implements ViewBinding {
   private final CardView rootView;
 
   @NonNull
+  public final MaterialButton btnBuyIngredients;
+
+  @NonNull
   public final ImageView ivRecipe;
 
   @NonNull
   public final TextView tvRecipeName;
 
-  private ItemRecipeBinding(@NonNull CardView rootView, @NonNull ImageView ivRecipe,
-      @NonNull TextView tvRecipeName) {
+  private ItemRecipeBinding(@NonNull CardView rootView, @NonNull MaterialButton btnBuyIngredients,
+      @NonNull ImageView ivRecipe, @NonNull TextView tvRecipeName) {
     this.rootView = rootView;
+    this.btnBuyIngredients = btnBuyIngredients;
     this.ivRecipe = ivRecipe;
     this.tvRecipeName = tvRecipeName;
   }
@@ -60,6 +65,12 @@ public final class ItemRecipeBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.btn_buy_ingredients;
+      MaterialButton btnBuyIngredients = ViewBindings.findChildViewById(rootView, id);
+      if (btnBuyIngredients == null) {
+        break missingId;
+      }
+
       id = R.id.iv_recipe;
       ImageView ivRecipe = ViewBindings.findChildViewById(rootView, id);
       if (ivRecipe == null) {
@@ -72,7 +83,7 @@ public final class ItemRecipeBinding implements ViewBinding {
         break missingId;
       }
 
-      return new ItemRecipeBinding((CardView) rootView, ivRecipe, tvRecipeName);
+      return new ItemRecipeBinding((CardView) rootView, btnBuyIngredients, ivRecipe, tvRecipeName);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

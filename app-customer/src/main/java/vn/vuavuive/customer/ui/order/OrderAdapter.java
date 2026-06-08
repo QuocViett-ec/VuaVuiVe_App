@@ -92,7 +92,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
                 if (ivFirstItem != null && order.getItems().get(0).getImageUrl() != null) {
                     Glide.with(context)
                             .load(order.getItems().get(0).getImageUrl())
-                            .placeholder(android.R.drawable.ic_menu_gallery)
+                            .placeholder(R.drawable.ic_image)
                             .centerCrop()
                             .into(ivFirstItem);
                 }

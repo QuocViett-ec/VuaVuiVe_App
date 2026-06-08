@@ -126,8 +126,8 @@ public class ProductEditActivity extends AppCompatActivity {
     private void loadImagePreview(String url) {
         Glide.with(this)
                 .load(url)
-                .placeholder(android.R.drawable.ic_menu_gallery)
-                .error(android.R.drawable.ic_menu_gallery)
+                .placeholder(R.drawable.ic_image)
+                .error(R.drawable.ic_image)
                 .centerCrop()
                 .into(binding.ivProductPreview);
     }

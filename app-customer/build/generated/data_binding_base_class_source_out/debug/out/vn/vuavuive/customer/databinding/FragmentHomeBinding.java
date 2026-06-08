@@ -4,6 +4,7 @@ package vn.vuavuive.customer.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -15,6 +16,7 @@ import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
+import com.google.android.material.chip.ChipGroup;
 import java.lang.NullPointerException;
 import java.lang.Override;
 import java.lang.String;
@@ -25,47 +27,97 @@ public final class FragmentHomeBinding implements ViewBinding {
   private final FrameLayout rootView;
 
   @NonNull
+  public final TextView btnChangeAddress;
+
+  @NonNull
+  public final ImageView btnMenu;
+
+  @NonNull
+  public final ChipGroup cgProductCategories;
+
+  @NonNull
+  public final ChipGroup cgRecipeCategories;
+
+  @NonNull
+  public final EditText etSearchHome;
+
+  @NonNull
   public final ImageView ivAvatarHome;
 
   @NonNull
-  public final LinearLayout llQuickCategories;
+  public final LinearLayout layoutEmptyHome;
 
   @NonNull
-  public final ProgressBar progressBar;
+  public final ProgressBar progressBarHome;
 
   @NonNull
-  public final RecyclerView rvFeaturedProducts;
+  public final RecyclerView rvProductsHome;
 
   @NonNull
-  public final RecyclerView rvSaleProducts;
+  public final RecyclerView rvRecipesHome;
+
+  @NonNull
+  public final LinearLayout scBanhTuoi;
+
+  @NonNull
+  public final LinearLayout scBia;
+
+  @NonNull
+  public final LinearLayout scFlashSale;
+
+  @NonNull
+  public final LinearLayout scMiAnLien;
+
+  @NonNull
+  public final LinearLayout scSuaTuoi;
 
   @NonNull
   public final NestedScrollView scrollView;
 
   @NonNull
+  public final TextView tvDeliveryAddress;
+
+  @NonNull
+  public final TextView tvEmptyHome;
+
+  @NonNull
   public final TextView tvGreetingName;
 
   @NonNull
-  public final TextView tvSeeAll;
+  public final TextView tvRecipeFreeshipBadge;
 
-  @NonNull
-  public final TextView tvSeeAllSale;
-
-  private FragmentHomeBinding(@NonNull FrameLayout rootView, @NonNull ImageView ivAvatarHome,
-      @NonNull LinearLayout llQuickCategories, @NonNull ProgressBar progressBar,
-      @NonNull RecyclerView rvFeaturedProducts, @NonNull RecyclerView rvSaleProducts,
-      @NonNull NestedScrollView scrollView, @NonNull TextView tvGreetingName,
-      @NonNull TextView tvSeeAll, @NonNull TextView tvSeeAllSale) {
+  private FragmentHomeBinding(@NonNull FrameLayout rootView, @NonNull TextView btnChangeAddress,
+      @NonNull ImageView btnMenu, @NonNull ChipGroup cgProductCategories,
+      @NonNull ChipGroup cgRecipeCategories, @NonNull EditText etSearchHome,
+      @NonNull ImageView ivAvatarHome, @NonNull LinearLayout layoutEmptyHome,
+      @NonNull ProgressBar progressBarHome, @NonNull RecyclerView rvProductsHome,
+      @NonNull RecyclerView rvRecipesHome, @NonNull LinearLayout scBanhTuoi,
+      @NonNull LinearLayout scBia, @NonNull LinearLayout scFlashSale,
+      @NonNull LinearLayout scMiAnLien, @NonNull LinearLayout scSuaTuoi,
+      @NonNull NestedScrollView scrollView, @NonNull TextView tvDeliveryAddress,
+      @NonNull TextView tvEmptyHome, @NonNull TextView tvGreetingName,
+      @NonNull TextView tvRecipeFreeshipBadge) {
     this.rootView = rootView;
+    this.btnChangeAddress = btnChangeAddress;
+    this.btnMenu = btnMenu;
+    this.cgProductCategories = cgProductCategories;
+    this.cgRecipeCategories = cgRecipeCategories;
+    this.etSearchHome = etSearchHome;
     this.ivAvatarHome = ivAvatarHome;
-    this.llQuickCategories = llQuickCategories;
-    this.progressBar = progressBar;
-    this.rvFeaturedProducts = rvFeaturedProducts;
-    this.rvSaleProducts = rvSaleProducts;
+    this.layoutEmptyHome = layoutEmptyHome;
+    this.progressBarHome = progressBarHome;
+    this.rvProductsHome = rvProductsHome;
+    this.rvRecipesHome = rvRecipesHome;
+    this.scBanhTuoi = scBanhTuoi;
+    this.scBia = scBia;
+    this.scFlashSale = scFlashSale;
+    this.scMiAnLien = scMiAnLien;
+    this.scSuaTuoi = scSuaTuoi;
     this.scrollView = scrollView;
+    this.tvDeliveryAddress = tvDeliveryAddress;
+    this.tvEmptyHome = tvEmptyHome;
     this.tvGreetingName = tvGreetingName;
-    this.tvSeeAll = tvSeeAll;
-    this.tvSeeAllSale = tvSeeAllSale;
+    this.tvRecipeFreeshipBadge = tvRecipeFreeshipBadge;
   }
 
   @Override
@@ -95,33 +147,93 @@ public final class FragmentHomeBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.btn_change_address;
+      TextView btnChangeAddress = ViewBindings.findChildViewById(rootView, id);
+      if (btnChangeAddress == null) {
+        break missingId;
+      }
+
+      id = R.id.btn_menu;
+      ImageView btnMenu = ViewBindings.findChildViewById(rootView, id);
+      if (btnMenu == null) {
+        break missingId;
+      }
+
+      id = R.id.cg_product_categories;
+      ChipGroup cgProductCategories = ViewBindings.findChildViewById(rootView, id);
+      if (cgProductCategories == null) {
+        break missingId;
+      }
+
+      id = R.id.cg_recipe_categories;
+      ChipGroup cgRecipeCategories = ViewBindings.findChildViewById(rootView, id);
+      if (cgRecipeCategories == null) {
+        break missingId;
+      }
+
+      id = R.id.et_search_home;
+      EditText etSearchHome = ViewBindings.findChildViewById(rootView, id);
+      if (etSearchHome == null) {
+        break missingId;
+      }
+
       id = R.id.iv_avatar_home;
       ImageView ivAvatarHome = ViewBindings.findChildViewById(rootView, id);
       if (ivAvatarHome == null) {
         break missingId;
       }
 
-      id = R.id.ll_quick_categories;
-      LinearLayout llQuickCategories = ViewBindings.findChildViewById(rootView, id);
-      if (llQuickCategories == null) {
+      id = R.id.layout_empty_home;
+      LinearLayout layoutEmptyHome = ViewBindings.findChildViewById(rootView, id);
+      if (layoutEmptyHome == null) {
         break missingId;
       }
 
-      id = R.id.progress_bar;
-      ProgressBar progressBar = ViewBindings.findChildViewById(rootView, id);
-      if (progressBar == null) {
+      id = R.id.progress_bar_home;
+      ProgressBar progressBarHome = ViewBindings.findChildViewById(rootView, id);
+      if (progressBarHome == null) {
         break missingId;
       }
 
-      id = R.id.rv_featured_products;
-      RecyclerView rvFeaturedProducts = ViewBindings.findChildViewById(rootView, id);
-      if (rvFeaturedProducts == null) {
+      id = R.id.rv_products_home;
+      RecyclerView rvProductsHome = ViewBindings.findChildViewById(rootView, id);
+      if (rvProductsHome == null) {
         break missingId;
       }
 
-      id = R.id.rv_sale_products;
-      RecyclerView rvSaleProducts = ViewBindings.findChildViewById(rootView, id);
-      if (rvSaleProducts == null) {
+      id = R.id.rv_recipes_home;
+      RecyclerView rvRecipesHome = ViewBindings.findChildViewById(rootView, id);
+      if (rvRecipesHome == null) {
+        break missingId;
+      }
+
+      id = R.id.sc_banh_tuoi;
+      LinearLayout scBanhTuoi = ViewBindings.findChildViewById(rootView, id);
+      if (scBanhTuoi == null) {
+        break missingId;
+      }
+
+      id = R.id.sc_bia;
+      LinearLayout scBia = ViewBindings.findChildViewById(rootView, id);
+      if (scBia == null) {
+        break missingId;
+      }
+
+      id = R.id.sc_flash_sale;
+      LinearLayout scFlashSale = ViewBindings.findChildViewById(rootView, id);
+      if (scFlashSale == null) {
+        break missingId;
+      }
+
+      id = R.id.sc_mi_an_lien;
+      LinearLayout scMiAnLien = ViewBindings.findChildViewById(rootView, id);
+      if (scMiAnLien == null) {
+        break missingId;
+      }
+
+      id = R.id.sc_sua_tuoi;
+      LinearLayout scSuaTuoi = ViewBindings.findChildViewById(rootView, id);
+      if (scSuaTuoi == null) {
         break missingId;
       }
 
@@ -131,27 +243,35 @@ public final class FragmentHomeBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.tv_delivery_address;
+      TextView tvDeliveryAddress = ViewBindings.findChildViewById(rootView, id);
+      if (tvDeliveryAddress == null) {
+        break missingId;
+      }
+
+      id = R.id.tv_empty_home;
+      TextView tvEmptyHome = ViewBindings.findChildViewById(rootView, id);
+      if (tvEmptyHome == null) {
+        break missingId;
+      }
+
       id = R.id.tv_greeting_name;
       TextView tvGreetingName = ViewBindings.findChildViewById(rootView, id);
       if (tvGreetingName == null) {
         break missingId;
       }
 
-      id = R.id.tv_see_all;
-      TextView tvSeeAll = ViewBindings.findChildViewById(rootView, id);
-      if (tvSeeAll == null) {
+      id = R.id.tv_recipe_freeship_badge;
+      TextView tvRecipeFreeshipBadge = ViewBindings.findChildViewById(rootView, id);
+      if (tvRecipeFreeshipBadge == null) {
         break missingId;
       }
 
-      id = R.id.tv_see_all_sale;
-      TextView tvSeeAllSale = ViewBindings.findChildViewById(rootView, id);
-      if (tvSeeAllSale == null) {
-        break missingId;
-      }
-
-      return new FragmentHomeBinding((FrameLayout) rootView, ivAvatarHome, llQuickCategories,
-          progressBar, rvFeaturedProducts, rvSaleProducts, scrollView, tvGreetingName, tvSeeAll,
-          tvSeeAllSale);
+      return new FragmentHomeBinding((FrameLayout) rootView, btnChangeAddress, btnMenu,
+          cgProductCategories, cgRecipeCategories, etSearchHome, ivAvatarHome, layoutEmptyHome,
+          progressBarHome, rvProductsHome, rvRecipesHome, scBanhTuoi, scBia, scFlashSale,
+          scMiAnLien, scSuaTuoi, scrollView, tvDeliveryAddress, tvEmptyHome, tvGreetingName,
+          tvRecipeFreeshipBadge);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

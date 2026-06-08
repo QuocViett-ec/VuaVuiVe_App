@@ -95,7 +95,7 @@
                         android:layout_height="34dp"
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:contentDescription="Giảm"
-                        android:src="@android:drawable/ic_input_delete"
+                        android:src="@drawable/ic_delete"
                         android:tint="@color/primary" />
 
                     <TextView
@@ -114,7 +114,7 @@
                         android:layout_height="34dp"
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:contentDescription="Tăng"
-                        android:src="@android:drawable/ic_input_add"
+                        android:src="@drawable/ic_add"
                         android:tint="@color/primary" />
                 </LinearLayout>
             </LinearLayout>
@@ -127,7 +127,7 @@
                 android:layout_gravity="top"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="Xóa"
-                android:src="@android:drawable/ic_menu_close_clear_cancel"
+                android:src="@drawable/ic_close"
                 android:tint="@color/text_hint" />
         </LinearLayout>
 

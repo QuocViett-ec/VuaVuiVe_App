@@ -1,8 +1,0 @@
-vn.vuavuive.admin.app-admin-pngs-0 E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-admin\build\generated\res\pngs\debug
-vn.vuavuive.admin.app-admin-resValues-1 E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-admin\build\generated\res\resValues\debug
-vn.vuavuive.admin.app-admin-updated_navigation_xml-2 E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-admin\build\generated\updated_navigation_xml\debug
-vn.vuavuive.admin.app-admin-packageDebugResources-3 E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-admin\build\intermediates\incremental\debug\packageDebugResources\merged.dir
-vn.vuavuive.admin.app-admin-packageDebugResources-4 E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-admin\build\intermediates\incremental\debug\packageDebugResources\stripped.dir
-vn.vuavuive.admin.app-admin-debug-5 E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-admin\build\intermediates\merged_res\debug\mergeDebugResources
-vn.vuavuive.admin.app-admin-debug-6 E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-admin\src\debug\res
-vn.vuavuive.admin.app-admin-main-7 E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-admin\src\main\res

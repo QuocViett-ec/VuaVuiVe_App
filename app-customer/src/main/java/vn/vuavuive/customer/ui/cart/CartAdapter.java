@@ -82,7 +82,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             tvSubtotal.setText(CurrencyFormatter.format(item.getLineTotal()));
 
             Glide.with(context).load(item.getProductImageUrl())
-                    .placeholder(android.R.drawable.ic_menu_gallery).into(ivProduct);
+                    .placeholder(R.drawable.ic_image).into(ivProduct);
 
             btnDecrease.setOnClickListener(v -> {
                 int newQty = item.getQuantity() - 1;

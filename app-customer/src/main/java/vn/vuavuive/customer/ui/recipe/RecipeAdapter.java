@@ -20,14 +20,23 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeVH> 
         void onRecipeClick(Map<String, Object> recipe);
     }
 
+    public interface OnBuyIngredientsClickListener {
+        void onBuyIngredients(Map<String, Object> recipe);
+    }
+
     private final Context context;
     private final OnRecipeClickListener listener;
+    private OnBuyIngredientsClickListener buyListener;
     private List<Map<String, Object>> allRecipes = new ArrayList<>();
     private List<Map<String, Object>> displayRecipes = new ArrayList<>();
 
     public RecipeAdapter(Context context, OnRecipeClickListener listener) {
         this.context  = context;
         this.listener = listener;
+    }
+
+    public void setOnBuyIngredientsClickListener(OnBuyIngredientsClickListener buyListener) {
+        this.buyListener = buyListener;
     }
 
     public void setRecipes(List<Map<String, Object>> recipes) {
@@ -68,13 +77,19 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeVH> 
 
         Glide.with(context)
                 .load(image)
-                .placeholder(android.R.drawable.ic_menu_gallery)
+                .placeholder(R.drawable.ic_image)
                 .centerCrop()
                 .into(holder.ivImage);
 
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) listener.onRecipeClick(recipe);
         });
+
+        if (holder.btnBuy != null) {
+            holder.btnBuy.setOnClickListener(v -> {
+                if (buyListener != null) buyListener.onBuyIngredients(recipe);
+            });
+        }
     }
 
     @Override public int getItemCount() { return displayRecipes.size(); }
@@ -82,11 +97,13 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeVH> 
     static class RecipeVH extends RecyclerView.ViewHolder {
         ImageView ivImage;
         TextView tvName;
+        View btnBuy;
 
         RecipeVH(View v) {
             super(v);
             ivImage = v.findViewById(R.id.iv_recipe);
             tvName  = v.findViewById(R.id.tv_recipe_name);
+            btnBuy  = v.findViewById(R.id.btn_buy_ingredients);
         }
     }
 }

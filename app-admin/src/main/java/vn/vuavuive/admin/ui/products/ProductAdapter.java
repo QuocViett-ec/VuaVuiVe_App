@@ -106,8 +106,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             // Image loading with Glide
             Glide.with(itemView.getContext())
                     .load(product.getImageUrl())
-                    .placeholder(android.R.drawable.ic_menu_gallery)
-                    .error(android.R.drawable.ic_menu_gallery)
+                    .placeholder(R.drawable.ic_image)
+                    .error(R.drawable.ic_image)
                     .centerCrop()
                     .into(binding.ivProductImage);
 

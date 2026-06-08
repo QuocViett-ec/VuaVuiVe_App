@@ -85,7 +85,7 @@
                     android:layout_marginBottom="10dp"
                     android:hint="@string/hint_delivery_address"
                     app:boxStrokeColor="@color/primary"
-                    app:endIconDrawable="@android:drawable/ic_menu_mylocation"
+                    app:endIconDrawable="@drawable/ic_location"
                     app:endIconMode="custom"
                     app:endIconTint="@color/primary">
                     <com.google.android.material.textfield.TextInputEditText
@@ -176,7 +176,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
-                    android:text="💳 @string/label_payment_method"
+                    android:text="@string/label_payment_method"
                     android:textColor="@color/text_primary"
                     android:textSize="15sp"
                     android:textStyle="bold" />

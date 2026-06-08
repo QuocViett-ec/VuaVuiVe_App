@@ -212,7 +212,7 @@
                     android:contentDescription="Thêm vào giỏ"
                     app:backgroundTint="@color/primary"
                     app:cornerRadius="18dp"
-                    app:icon="@android:drawable/ic_input_add"
+                    app:icon="@drawable/ic_add"
                     app:iconSize="18dp"
                     app:iconTint="@color/white" />
             </LinearLayout>

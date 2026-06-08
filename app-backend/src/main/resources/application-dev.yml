@@ -1,0 +1,90 @@
+# ============================================
+#  MÔI TRƯỜNG PHÁT TRIỂN (DEV / SANDBOX)
+#  Dùng để test local với Ngrok + Sandbox VNPay/MoMo
+# ============================================
+spring:
+  session:
+    store-type: none
+  cache:
+    type: simple
+  datasource:
+    url: jdbc:sqlite:vuavuive_v2.db?date_string_format=yyyy-MM-dd%20HH:mm:ss.SSS&date_class=text&busy_timeout=5000
+    driver-class-name: org.sqlite.JDBC
+    username: sa
+    password: sa
+    hikari:
+      connection-init-sql: PRAGMA journal_mode=WAL;
+
+  jpa:
+    hibernate:
+      ddl-auto: update       # Tự tạo/cập nhật bảng khi khởi động
+    show-sql: true           # In câu lệnh SQL ra console để debug
+    properties:
+      hibernate:
+        dialect: org.hibernate.community.dialect.SQLiteDialect
+        format_sql: true
+        jdbc:
+          time_zone: UTC
+
+server:
+  port: 3000
+
+
+# ============================================
+#  CẤU HÌNH JWT
+# ============================================
+app:
+  jwt:
+    secret: "vuavuive-super-secret-key-for-jwt-please-change-in-production-min-256bit"
+    access-token-expiration-ms: 900000       # 15 phút
+    refresh-token-expiration-ms: 2592000000  # 30 ngày
+
+# ============================================
+#  CẤU HÌNH THANH TOÁN (SANDBOX)
+# ============================================
+  payment:
+    vnpay:
+      tmn-code: "TFQUUGXU"        # <<< ĐỔI THÀNH MÃ SANDBOX CỦA BẠN
+      secret-key: "V5IY2EZ98VHA6Q2P39VYMA7VJFK6DR6F"   # <<< ĐỔI THÀNH KEY SANDBOX
+      pay-url: "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"
+      return-url: "https://lowell-intercerebral-monopodially.ngrok-free.app/api/payments/vnpay/return"
+      ipn-url: "https://lowell-intercerebral-monopodially.ngrok-free.app/api/payments/vnpay/ipn"
+
+    momo:
+      partner-code: "MOMO" # <<< ĐỔI THÀNH PARTNER CODE SANDBOX
+      access-key: "F8BBA842ECF85"    # <<< ĐỔI
+      secret-key: "K951B6PE1waDMi640xX08PD3vg6EkVlz"    # <<< ĐỔI
+      endpoint: "https://test-payment.momo.vn/v2/gateway/api/create"
+      return-url: "https://lowell-intercerebral-monopodially.ngrok-free.app/api/payments/momo/return"
+      notify-url: "https://lowell-intercerebral-monopodially.ngrok-free.app/api/payments/momo/ipn"
+
+# ============================================
+#  CẤU HÌNH CLOUDINARY (Lưu trữ ảnh)
+# ============================================
+  cloudinary:
+    cloud-name: "ddj1f931a"    # <<< ĐỔI
+    api-key: "239185989455687"          # <<< ĐỔI
+    api-secret: "M3dSBbSLmEkryTAWEsBOKf0o4zQ"    # <<< ĐỔI
+
+# ============================================
+#  CẤU HÌNH GOOGLE GEMINI AI (Chatbot)
+# ============================================
+  gemini:
+    api-key: "AIzaSyDcxtXgTMoWpOimJWfsPX9l21CrTwXskIk"   # <<< ĐỔI THÀNH API KEY CỦA BẠN
+    model: "gemini-1.5-flash"
+
+# ============================================
+#  CẤU HÌNH TỰ ĐỘNG HỦY ĐƠN (Cron Job)
+# ============================================
+  order:
+    auto-cancel-minutes: 15  # Hủy đơn chưa thanh toán sau 15 phút
+
+logging:
+  level:
+    vn.vuavuive: DEBUG
+    org.springframework.security: INFO
+    org.hibernate.SQL: DEBUG
+    org.hibernate.transaction: DEBUG
+    org.springframework.transaction: DEBUG
+    org.springframework.web: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE

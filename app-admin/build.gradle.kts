@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "vn.vuavuive.admin"
-    compileSdk = 35
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "vn.vuavuive.admin"

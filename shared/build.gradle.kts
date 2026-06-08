@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "vn.vuavuive.shared"
-    compileSdk = 35
+    compileSdk = 34
 
     defaultConfig {
         minSdk = 26
@@ -21,6 +21,7 @@ android {
     buildFeatures {
         buildConfig = true
     }
+    buildToolsVersion = "34.0.0"
 }
 
 dependencies {

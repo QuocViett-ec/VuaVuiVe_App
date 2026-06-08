@@ -2,33 +2,69 @@ package vn.vuavuive.customer.ui.home;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import dagger.hilt.android.AndroidEntryPoint;
 import vn.vuavuive.customer.R;
 import vn.vuavuive.customer.data.MockDataProvider;
+import vn.vuavuive.customer.data.repository.AuthRepository;
 import vn.vuavuive.customer.ui.product.ProductAdapter;
 import vn.vuavuive.customer.ui.product.ProductDetailActivity;
+import vn.vuavuive.customer.ui.recipe.RecipeAdapter;
+import vn.vuavuive.customer.ui.recipe.RecipeDetailActivity;
 import vn.vuavuive.customer.viewmodel.AuthViewModel;
+import vn.vuavuive.customer.viewmodel.CartViewModel;
+import vn.vuavuive.customer.viewmodel.ProductViewModel;
+import vn.vuavuive.customer.viewmodel.RecipeViewModel;
 import vn.vuavuive.shared.data.dto.Product;
+import vn.vuavuive.shared.data.local.CartItemEntity;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @AndroidEntryPoint
 public class HomeFragment extends Fragment {
 
     private AuthViewModel authViewModel;
-    private ProductAdapter featuredAdapter;
-    private ProductAdapter saleAdapter;
+    private ProductViewModel productViewModel;
+    private RecipeViewModel recipeViewModel;
+    private CartViewModel cartViewModel;
+
+    private RecipeAdapter recipeAdapter;
+    private ProductAdapter productAdapter;
+
+    private ChipGroup cgRecipeCategories;
+    private ChipGroup cgProductCategories;
+    private NestedScrollView scrollView;
+
+    private String currentProductCategory = "all";
+    private String currentProductSearch = "";
+    private String currentRecipeCategory = "all";
+
+    private final Handler searchHandler = new Handler();
+    private Runnable searchRunnable;
+    private boolean isProductLoading = false;
+
+    private static boolean hasShownPromoDialog = false;
 
     @Nullable
     @Override
@@ -40,130 +76,354 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
+        productViewModel = new ViewModelProvider(requireActivity()).get(ProductViewModel.class);
+        recipeViewModel = new ViewModelProvider(requireActivity()).get(RecipeViewModel.class);
+        cartViewModel = new ViewModelProvider(requireActivity()).get(CartViewModel.class);
+
+        scrollView = view.findViewById(R.id.scroll_view);
 
         setupGreeting(view);
-        setupQuickCategories(view);
-        setupFeaturedProducts(view);
-        setupSaleProducts(view);
-        loadMockData();
+        setupAddressPicker(view);
+        setupSearch(view);
+        setupShortcuts(view);
+        setupRecipeSection(view);
+        setupProductSection(view);
 
-        // See all click
-        TextView tvSeeAll = view.findViewById(R.id.tv_see_all);
-        if (tvSeeAll != null) {
-            tvSeeAll.setOnClickListener(v -> navigateToProducts());
-        }
-        TextView tvSeeAllSale = view.findViewById(R.id.tv_see_all_sale);
-        if (tvSeeAllSale != null) {
-            tvSeeAllSale.setOnClickListener(v -> navigateToProducts());
+        // Load initially
+        loadRecipes();
+        loadProducts(view);
+
+        if (!hasShownPromoDialog) {
+            hasShownPromoDialog = true;
+            new Handler().postDelayed(this::showPromoPopup, 1000);
         }
     }
 
-    // ── Setup greeting ─────────────────────────────────────────────────────────
+    // ── Greeting Setup ─────────────────────────────────────────────────────────
     private void setupGreeting(View view) {
         TextView tvGreeting = view.findViewById(R.id.tv_greeting_name);
         if (tvGreeting == null) return;
 
         try {
-            String name = authViewModel.getCurrentUser().getValue() != null
-                    ? authViewModel.getCurrentUser().getValue().getName() : null;
-            tvGreeting.setText(name != null && !name.isEmpty() ? name : "Vựa Vui Vẻ");
-        } catch (Exception e) {
-            tvGreeting.setText("Vựa Vui Vẻ");
-        }
-    }
-
-    // ── Setup quick categories ─────────────────────────────────────────────────
-    private void setupQuickCategories(View view) {
-        LinearLayout llCategories = view.findViewById(R.id.ll_quick_categories);
-        if (llCategories == null) return;
-
-        String[][] categories = MockDataProvider.CATEGORIES;
-        for (String[] cat : categories) {
-            TextView chip = (TextView) LayoutInflater.from(requireContext())
-                    .inflate(R.layout.item_category_chip, llCategories, false);
-            chip.setText(cat[1]);
-            chip.setOnClickListener(v -> navigateToProducts());
-            llCategories.addView(chip);
-        }
-    }
-
-    // ── Setup featured products RecyclerView ───────────────────────────────────
-    private void setupFeaturedProducts(View view) {
-        RecyclerView rvFeatured = view.findViewById(R.id.rv_featured_products);
-        if (rvFeatured == null) return;
-
-        featuredAdapter = new ProductAdapter(getContext(), this::openProductDetail);
-        featuredAdapter.setAddToCartListener(this::quickAddToCart);
-        rvFeatured.setLayoutManager(
-                new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        rvFeatured.setAdapter(featuredAdapter);
-    }
-
-    // ── Setup sale products RecyclerView ───────────────────────────────────────
-    private void setupSaleProducts(View view) {
-        RecyclerView rvSale = view.findViewById(R.id.rv_sale_products);
-        if (rvSale == null) return;
-
-        saleAdapter = new ProductAdapter(getContext(), this::openProductDetail);
-        saleAdapter.setAddToCartListener(this::quickAddToCart);
-        rvSale.setLayoutManager(
-                new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        rvSale.setAdapter(saleAdapter);
-    }
-
-    // ── Load mock data ─────────────────────────────────────────────────────────
-    private void loadMockData() {
-        // Featured products
-        List<Product> featured = MockDataProvider.getMockFeaturedProducts();
-        if (featuredAdapter != null) featuredAdapter.setProducts(featured);
-
-        // Sale products
-        List<Product> saleProducts = MockDataProvider.getMockSaleProducts();
-        if (saleAdapter != null) saleAdapter.setProducts(saleProducts);
-
-        // Try API data as well (if available), falls back to mock silently
-        tryLoadFromApi();
-    }
-
-    private void tryLoadFromApi() {
-        try {
-            vn.vuavuive.customer.viewmodel.ProductViewModel productViewModel =
-                    new ViewModelProvider(requireActivity())
-                            .get(vn.vuavuive.customer.viewmodel.ProductViewModel.class);
-
-            productViewModel.loadProducts(1).observe(getViewLifecycleOwner(), result -> {
-                if (result != null
-                        && result.status == vn.vuavuive.customer.data.repository.AuthRepository.Result.Status.SUCCESS
-                        && result.data != null && !result.data.isEmpty()) {
-                    if (featuredAdapter != null) featuredAdapter.setProducts(result.data);
+            authViewModel.getCurrentUser().observe(getViewLifecycleOwner(), user -> {
+                if (user != null && user.getName() != null && !user.getName().isEmpty()) {
+                    tvGreeting.setText(user.getName().toUpperCase());
+                } else {
+                    tvGreeting.setText("VỰA VUI VẺ");
                 }
-                // If error or empty, keep mock data (already loaded)
             });
         } catch (Exception e) {
-            // Network not available — mock data already shown, ignore
+            tvGreeting.setText("VỰA VUI VẺ");
         }
     }
 
-    // ── Navigation helpers ─────────────────────────────────────────────────────
-    private void openProductDetail(Product product) {
-        Intent intent = new Intent(getContext(), ProductDetailActivity.class);
-        intent.putExtra("product_id", product.getId());
-        startActivity(intent);
+    // ── Address Picker Setup ───────────────────────────────────────────────────
+    private void setupAddressPicker(View view) {
+        TextView tvAddress = view.findViewById(R.id.tv_delivery_address);
+        View btnChange = view.findViewById(R.id.btn_change_address);
+        if (btnChange != null && tvAddress != null) {
+            btnChange.setOnClickListener(v -> {
+                EditText input = new EditText(requireContext());
+                input.setText(tvAddress.getText().toString().replace("Giao đến: ", ""));
+                input.setPadding(32, 16, 32, 16);
+
+                new AlertDialog.Builder(requireContext())
+                        .setTitle("Nhập địa chỉ giao hàng mới")
+                        .setView(input)
+                        .setPositiveButton("Cập nhật", (dialog, which) -> {
+                            String newAddress = input.getText().toString().trim();
+                            if (!newAddress.isEmpty()) {
+                                tvAddress.setText("Giao đến: " + newAddress);
+                                Toast.makeText(getContext(), "Cập nhật địa chỉ thành công", Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .setNegativeButton("Hủy", null)
+                        .show();
+            });
+        }
     }
 
-    private void navigateToProducts() {
-        // Navigate to product list tab
-        try {
-            if (getActivity() instanceof vn.vuavuive.customer.ui.MainActivity) {
-                ((vn.vuavuive.customer.ui.MainActivity) getActivity()).navigateToProducts();
+    // ── Search Setup ───────────────────────────────────────────────────────────
+    private void setupSearch(View view) {
+        EditText etSearch = view.findViewById(R.id.et_search_home);
+        View btnMenu = view.findViewById(R.id.btn_menu);
+
+        if (btnMenu != null) {
+            btnMenu.setOnClickListener(v -> {
+                Toast.makeText(getContext(), "Danh mục đang được phát triển thêm", Toast.LENGTH_SHORT).show();
+            });
+        }
+
+        if (etSearch != null) {
+            etSearch.addTextChangedListener(new TextWatcher() {
+                @Override public void beforeTextChanged(CharSequence s, int i, int c, int a) {}
+                @Override public void onTextChanged(CharSequence s, int i, int b, int c) {}
+                @Override
+                public void afterTextChanged(Editable s) {
+                    searchHandler.removeCallbacks(searchRunnable);
+                    searchRunnable = () -> {
+                        currentProductSearch = s.toString().trim();
+                        productViewModel.setSearch(currentProductSearch);
+                        loadProducts(view);
+
+                        // Smooth scroll to product section to show results
+                        if (!currentProductSearch.isEmpty() && scrollView != null) {
+                            View target = view.findViewById(R.id.cg_product_categories);
+                            if (target != null) {
+                                scrollView.smoothScrollTo(0, target.getTop() - 100);
+                            }
+                        }
+                    };
+                    searchHandler.postDelayed(searchRunnable, 400);
+                }
+            });
+        }
+    }
+
+    // ── Shortcuts Setup ────────────────────────────────────────────────────────
+    private void setupShortcuts(View view) {
+        View flashSale = view.findViewById(R.id.sc_flash_sale);
+        View banhTuoi = view.findViewById(R.id.sc_banh_tuoi);
+        View miAnLien = view.findViewById(R.id.sc_mi_an_lien);
+        View bia = view.findViewById(R.id.sc_bia);
+        View suaTuoi = view.findViewById(R.id.sc_sua_tuoi);
+
+        if (flashSale != null) flashSale.setOnClickListener(v -> selectProductCategory("veg"));
+        if (banhTuoi != null) banhTuoi.setOnClickListener(v -> selectProductCategory("sweet"));
+        if (miAnLien != null) miAnLien.setOnClickListener(v -> selectProductCategory("dry"));
+        if (bia != null) bia.setOnClickListener(v -> selectProductCategory("drink"));
+        if (suaTuoi != null) suaTuoi.setOnClickListener(v -> selectProductCategory("drink"));
+    }
+
+    private void selectProductCategory(String catId) {
+        if (cgProductCategories == null) return;
+        currentProductCategory = catId;
+        productViewModel.setCategory(catId);
+        loadProducts(getView());
+
+        // Select chip programmatically
+        for (int i = 0; i < cgProductCategories.getChildCount(); i++) {
+            View child = cgProductCategories.getChildAt(i);
+            if (child instanceof Chip) {
+                Chip chip = (Chip) child;
+                Object tag = chip.getTag();
+                if (tag != null && tag.equals(catId)) {
+                    chip.setChecked(true);
+                    break;
+                }
             }
-        } catch (Exception ignored) {}
+        }
+
+        // Smooth scroll to product grid
+        if (scrollView != null && getView() != null) {
+            View target = getView().findViewById(R.id.cg_product_categories);
+            if (target != null) {
+                scrollView.smoothScrollTo(0, target.getTop() - 100);
+            }
+        }
     }
 
-    private void quickAddToCart(Product product) {
-        Toast.makeText(getContext(),
-                "✅ Đã thêm \"" + product.getName() + "\" vào giỏ hàng",
-                Toast.LENGTH_SHORT).show();
+    // ── Recipes Setup ──────────────────────────────────────────────────────────
+    private void setupRecipeSection(View view) {
+        cgRecipeCategories = view.findViewById(R.id.cg_recipe_categories);
+        RecyclerView rvRecipes = view.findViewById(R.id.rv_recipes_home);
+
+        if (cgRecipeCategories != null) {
+            String[][] recipeCats = {
+                    {"all", "🥗 Tất cả"},
+                    {"Món mặn", "🥩 Món mặn"},
+                    {"Xào, luộc", "🥦 Xào, luộc -46%"},
+                    {"Món canh", "🍲 Món canh -39%"}
+            };
+
+            for (String[] cat : recipeCats) {
+                Chip chip = new Chip(requireContext());
+                chip.setText(cat[1]);
+                chip.setCheckable(true);
+                chip.setChecked("all".equals(cat[0]));
+                chip.setTag(cat[0]);
+                chip.setChipBackgroundColorResource(R.color.surface_variant);
+                chip.setTextColor(getResources().getColorStateList(R.color.bottom_nav_color, null));
+                chip.setChipStrokeColorResource(R.color.outline);
+                chip.setChipStrokeWidth(1f);
+                chip.setOnClickListener(v -> {
+                    currentRecipeCategory = cat[0];
+                    filterRecipes(currentRecipeCategory);
+                });
+                cgRecipeCategories.addView(chip);
+            }
+        }
+
+        if (rvRecipes != null) {
+            recipeAdapter = new RecipeAdapter(requireContext(), recipe -> {
+                Intent intent = new Intent(requireContext(), RecipeDetailActivity.class);
+                intent.putExtra("recipe_id", (String) recipe.get("_id"));
+                startActivity(intent);
+            });
+
+            recipeAdapter.setOnBuyIngredientsClickListener(this::buyRecipeIngredients);
+
+            rvRecipes.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
+            rvRecipes.setAdapter(recipeAdapter);
+        }
+    }
+
+    private void loadRecipes() {
+        if (recipeAdapter != null) {
+            filterRecipes(currentRecipeCategory);
+        }
+    }
+
+    private void filterRecipes(String category) {
+        if (recipeAdapter == null) return;
+        List<Map<String, Object>> all = MockDataProvider.getMockRecipes();
+
+        if ("all".equals(category)) {
+            recipeAdapter.setRecipes(all);
+        } else {
+            List<Map<String, Object>> filtered = new ArrayList<>();
+            for (Map<String, Object> r : all) {
+                if (category.equals(r.get("category"))) {
+                    filtered.add(r);
+                }
+            }
+            recipeAdapter.setRecipes(filtered);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void buyRecipeIngredients(Map<String, Object> recipe) {
+        Object ingObj = recipe.get("ingredients");
+        if (ingObj instanceof List) {
+            for (Object ing : (List<?>) ingObj) {
+                if (ing instanceof Map) {
+                    Map<String, Object> ingredient = (Map<String, Object>) ing;
+                    String name = ingredient.get("name") != null ? ingredient.get("name").toString() : "";
+                    if (!name.isEmpty()) {
+                        productViewModel.getProducts(null, name, 1, 1, null).observe(getViewLifecycleOwner(), result -> {
+                            if (result != null && result.data != null && !result.data.isEmpty()) {
+                                Product p = result.data.get(0);
+                                CartItemEntity item = new CartItemEntity();
+                                item.setProductId(p.getId());
+                                item.setProductName(p.getName());
+                                item.setProductPrice(p.getPrice());
+                                item.setProductImageUrl(p.getImageUrl());
+                                item.setProductUnit(p.getUnit());
+                                item.setProductStock(p.getStock());
+                                item.setQuantity(1);
+                                item.setAddedAt(System.currentTimeMillis());
+                                item.setSavedForLater(false);
+                                cartViewModel.addItem(item);
+                            }
+                        });
+                    }
+                }
+            }
+            Toast.makeText(requireContext(), "✅ Đang thêm nguyên liệu của \"" + recipe.get("name") + "\" vào giỏ hàng", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    // ── Product Section Setup ──────────────────────────────────────────────────
+    private void setupProductSection(View view) {
+        cgProductCategories = view.findViewById(R.id.cg_product_categories);
+        RecyclerView rvProducts = view.findViewById(R.id.rv_products_home);
+
+        if (cgProductCategories != null) {
+            for (String[] cat : MockDataProvider.CATEGORIES) {
+                Chip chip = new Chip(requireContext());
+                chip.setText(cat[1]);
+                chip.setCheckable(true);
+                chip.setChecked("all".equals(cat[0]));
+                chip.setTag(cat[0]);
+                chip.setChipBackgroundColorResource(R.color.surface_variant);
+                chip.setTextColor(getResources().getColorStateList(R.color.bottom_nav_color, null));
+                chip.setChipStrokeColorResource(R.color.outline);
+                chip.setChipStrokeWidth(1f);
+                chip.setOnClickListener(v -> {
+                    currentProductCategory = cat[0];
+                    productViewModel.setCategory(cat[0]);
+                    loadProducts(view);
+                });
+                cgProductCategories.addView(chip);
+            }
+        }
+
+        if (rvProducts != null) {
+            productAdapter = new ProductAdapter(requireContext(), product -> {
+                Intent intent = new Intent(requireContext(), ProductDetailActivity.class);
+                intent.putExtra("product_id", product.getId());
+                startActivity(intent);
+            });
+
+            productAdapter.setAddToCartListener(product -> {
+                CartItemEntity item = new CartItemEntity();
+                item.setProductId(product.getId());
+                item.setProductName(product.getName());
+                item.setProductPrice(product.getPrice());
+                item.setProductImageUrl(product.getImageUrl());
+                item.setProductUnit(product.getUnit());
+                item.setProductStock(product.getStock());
+                item.setQuantity(1);
+                item.setAddedAt(System.currentTimeMillis());
+                item.setSavedForLater(false);
+                cartViewModel.addItem(item);
+                Toast.makeText(requireContext(), "✅ Đã thêm \"" + product.getName() + "\" vào giỏ hàng", Toast.LENGTH_SHORT).show();
+            });
+
+            rvProducts.setLayoutManager(new GridLayoutManager(requireContext(), 2));
+            rvProducts.setAdapter(productAdapter);
+        }
+    }
+
+    private void loadProducts(View view) {
+        // Mock data immediately for instant loading state
+        List<Product> mockProducts = currentProductSearch.isEmpty()
+                ? MockDataProvider.getMockProductsByCategory(currentProductCategory)
+                : MockDataProvider.searchMockProducts(currentProductSearch);
+
+        if (productAdapter != null) {
+            productAdapter.setProducts(mockProducts);
+        }
+        updateEmptyState(view, mockProducts.isEmpty());
+
+        try {
+            isProductLoading = true;
+            productViewModel.loadProducts(1).observe(getViewLifecycleOwner(), result -> {
+                isProductLoading = false;
+                if (result != null
+                        && result.status == AuthRepository.Result.Status.SUCCESS
+                        && result.data != null && !result.data.isEmpty()) {
+                    if (productAdapter != null) {
+                        productAdapter.setProducts(result.data);
+                    }
+                    updateEmptyState(view, false);
+                }
+            });
+        } catch (Exception e) {
+            isProductLoading = false;
+        }
+    }
+
+    private void updateEmptyState(View view, boolean isEmpty) {
+        if (view == null) return;
+        View emptyView = view.findViewById(R.id.layout_empty_home);
+        if (emptyView != null) {
+            emptyView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
+        }
+    }
+
+    // ── Promotion Popup ────────────────────────────────────────────────────────
+    private void showPromoPopup() {
+        if (getContext() == null) return;
+        new AlertDialog.Builder(requireContext())
+                .setTitle("🎉 Vựa Vui Vẻ Khuyến Mãi 🎉")
+                .setMessage("Nhập mã [VUAVUIVE] để được giảm giá 15% cho tất cả đơn hàng rau củ quả tươi sống hôm nay!\n\nĐặc biệt: FREESHIP cho tất cả các đơn hàng tươi sống.")
+                .setPositiveButton("Sao chép mã", (dialog, which) -> {
+                    Toast.makeText(requireContext(), "Đã sao chép mã giảm giá: VUAVUIVE", Toast.LENGTH_SHORT).show();
+                })
+                .setNegativeButton("Đóng", null)
+                .show();
     }
 }

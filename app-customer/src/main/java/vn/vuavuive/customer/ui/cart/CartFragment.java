@@ -96,6 +96,30 @@ public class CartFragment extends Fragment {
             }
             startActivity(new Intent(getContext(), CheckoutActivity.class));
         });
+
+        setupHeaderSearch(view);
+    }
+
+    private void setupHeaderSearch(View view) {
+        View etSearch = view.findViewById(R.id.header_et_search);
+        if (etSearch != null) {
+            etSearch.setFocusable(false);
+            etSearch.setClickable(true);
+            etSearch.setOnClickListener(v -> {
+                Intent intent = new Intent(getContext(), vn.vuavuive.customer.ui.search.SearchActivity.class);
+                startActivity(intent);
+            });
+        }
+        View btnMenu = view.findViewById(R.id.header_btn_menu);
+        if (btnMenu != null) {
+            btnMenu.setOnClickListener(v -> {
+                try {
+                    if (getActivity() instanceof vn.vuavuive.customer.ui.MainActivity) {
+                        ((vn.vuavuive.customer.ui.MainActivity) getActivity()).navigateToProducts();
+                    }
+                } catch (Exception ignored) {}
+            });
+        }
     }
 
     private void setupCartRecyclerView(View view) {

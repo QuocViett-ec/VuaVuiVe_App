@@ -9,33 +9,13 @@
     <!-- ╔══════════════════════════════════════════╗
          ║           Cart Header Bar               ║
          ╚══════════════════════════════════════════╝ -->
-    <LinearLayout
-        android:layout_width="match_parent"
+    <include layout="@layout/layout_common_header_search" />
+
+    <TextView
+        android:id="@+id/tv_item_count"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/surface"
-        android:elevation="2dp"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="14dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="🛒 Giỏ hàng"
-            android:textColor="@color/text_primary"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/tv_item_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="0 sản phẩm"
-            android:textColor="@color/text_secondary"
-            android:textSize="13sp" />
-    </LinearLayout>
+        android:visibility="gone" />
 
     <!-- ╔══════════════════════════════════════════╗
          ║           Empty Cart State              ║
@@ -272,7 +252,7 @@
                     android:textStyle="bold"
                     app:backgroundTint="@color/primary"
                     app:cornerRadius="12dp"
-                    app:icon="@android:drawable/ic_menu_send"
+                    app:icon="@drawable/ic_send"
                     app:iconTint="@color/white" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>

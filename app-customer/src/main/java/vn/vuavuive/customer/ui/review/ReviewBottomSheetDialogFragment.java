@@ -96,7 +96,7 @@ public class ReviewBottomSheetDialogFragment extends BottomSheetDialogFragment {
 
         Glide.with(this)
                 .load(image)
-                .placeholder(android.R.drawable.ic_menu_gallery)
+                .placeholder(R.drawable.ic_image)
                 .centerCrop()
                 .into(ivProduct);
     }

@@ -84,12 +84,26 @@ public class OrderRepository {
                 if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
                     result.postValue(AuthRepository.Result.success(response.body().getData()));
                 } else {
-                    result.postValue(AuthRepository.Result.error("Đặt hàng thất bại"));
+                    String msg = "Đặt hàng thất bại";
+                    if (response.body() != null && response.body().getMessage() != null) {
+                        msg = response.body().getMessage();
+                    } else if (response.errorBody() != null) {
+                        try {
+                            String err = response.errorBody().string();
+                            // Try parse JSON message field
+                            if (err.contains("\"message\"")) {
+                                int s = err.indexOf("\"message\":\"") + 11;
+                                int e = err.indexOf("\"", s);
+                                if (s > 10 && e > s) msg = err.substring(s, e);
+                            }
+                        } catch (Exception ignored) {}
+                    }
+                    result.postValue(AuthRepository.Result.error("Lỗi HTTP " + response.code() + ": " + msg));
                 }
             }
             @Override
             public void onFailure(Call<ApiResponse<Order>> call, Throwable t) {
-                result.postValue(AuthRepository.Result.error("Lỗi kết nối"));
+                result.postValue(AuthRepository.Result.error("Lỗi kết nối: " + t.getMessage()));
             }
         });
         return result;

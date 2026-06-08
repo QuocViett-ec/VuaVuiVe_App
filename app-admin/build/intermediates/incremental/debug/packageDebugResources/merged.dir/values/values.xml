@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="background">#0F172A</color>
+    <color name="black">#000000</color>
+    <color name="divider">#1E293B</color>
+    <color name="error">#EF4444</color>
+    <color name="error_translucent">#1AEF4444</color>
+    <color name="info">#3B82F6</color>
+    <color name="info_translucent">#1A3B82F6</color>
+    <color name="primary">#0D9488</color>
+    <color name="primary_dark">#115E59</color>
+    <color name="primary_light">#CCFBF1</color>
+    <color name="primary_translucent">#1A0D9488</color>
+    <color name="secondary">#0369A1</color>
+    <color name="secondary_dark">#0C4A6E</color>
+    <color name="secondary_light">#E0F2FE</color>
+    <color name="success">#10B981</color>
+    <color name="success_translucent">#1A10B981</color>
+    <color name="surface">#1E293B</color>
+    <color name="surface_variant">#334155</color>
+    <color name="text_hint">#64748B</color>
+    <color name="text_primary">#F8FAFC</color>
+    <color name="text_secondary">#94A3B8</color>
+    <color name="warning">#F59E0B</color>
+    <color name="warning_translucent">#1AF59E0B</color>
+    <color name="white">#FFFFFF</color>
+    <dimen name="card_corner_radius">16dp</dimen>
+    <dimen name="card_elevation">4dp</dimen>
+    <dimen name="spacing_large">24dp</dimen>
+    <dimen name="spacing_normal">16dp</dimen>
+    <dimen name="spacing_small">8dp</dimen>
+    <dimen name="spacing_xlarge">32dp</dimen>
+    <dimen name="text_size_large">20sp</dimen>
+    <dimen name="text_size_medium">16sp</dimen>
+    <dimen name="text_size_normal">14sp</dimen>
+    <dimen name="text_size_small">12sp</dimen>
+    <dimen name="text_size_xlarge">24sp</dimen>
+    <string name="app_name">Vua Vui Vẻ Admin</string>
+    <string name="title_audit">Audit Logs</string>
+    <string name="title_chatbot">AI Assistant</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_orders">Đơn hàng</string>
+    <string name="title_products">Sản phẩm</string>
+    <string name="title_shipments">Vận chuyển</string>
+    <string name="title_users">Thành viên</string>
+    <string name="title_vouchers">Khuyến mãi</string>
+    <style name="Theme.VuaVuiVe.Admin" parent="Theme.Material3.DayNight.NoActionBar">
+        
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorSecondary">@color/secondary</item>
+        
+        
+        <item name="android:windowBackground">@color/background</item>
+        <item name="colorSurface">@color/surface</item>
+        <item name="colorSurfaceVariant">@color/surface_variant</item>
+        
+        
+        <item name="android:textColorPrimary">@color/text_primary</item>
+        <item name="android:textColorSecondary">@color/text_secondary</item>
+        <item name="android:textColorHint">@color/text_hint</item>
+
+        
+        <item name="android:statusBarColor">@color/background</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+</resources>

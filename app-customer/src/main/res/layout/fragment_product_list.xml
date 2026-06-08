@@ -78,7 +78,7 @@
             app:boxCornerRadiusTopStart="28dp"
             app:boxStrokeColor="@color/primary"
             app:boxStrokeWidth="1.5dp"
-            app:endIconDrawable="@android:drawable/ic_menu_search"
+            app:endIconDrawable="@drawable/ic_search"
             app:endIconMode="custom"
             app:endIconTint="@color/primary"
             app:hintTextColor="@color/text_hint">

@@ -48,7 +48,7 @@
         app:boxCornerRadiusTopEnd="24dp"
         app:boxCornerRadiusTopStart="24dp"
         app:boxStrokeColor="@color/primary"
-        app:endIconDrawable="@android:drawable/ic_menu_search"
+        app:endIconDrawable="@drawable/ic_search"
         app:endIconMode="custom"
         app:endIconTint="@color/primary">
 

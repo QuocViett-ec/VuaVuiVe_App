@@ -86,7 +86,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
 
         Glide.with(this)
                 .load(recipe.get("image"))
-                .placeholder(android.R.drawable.ic_menu_gallery)
+                .placeholder(R.drawable.ic_image)
                 .centerCrop()
                 .into(ivRecipe);
 

@@ -22,6 +22,7 @@ import vn.vuavuive.shared.data.dto.DeliveryInfo;
 import vn.vuavuive.shared.data.dto.request.CreateOrderRequest;
 import vn.vuavuive.shared.data.local.CartItemEntity;
 import vn.vuavuive.shared.util.Constants;
+import vn.vuavuive.shared.util.CurrencyFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,6 +40,8 @@ public class CheckoutActivity extends AppCompatActivity {
     private RadioGroup rgPaymentMethod;
     private MaterialButton btnPlaceOrder;
     private ProgressBar progressBar;
+    private android.widget.TextView tvSubtotal, tvShippingFee, tvDiscount, tvTotal;
+    private android.widget.LinearLayout layoutDiscount;
 
     private List<CartItemEntity> cartItems = new ArrayList<>();
 
@@ -73,12 +76,44 @@ public class CheckoutActivity extends AppCompatActivity {
         rgPaymentMethod = findViewById(R.id.rg_payment_method);
         btnPlaceOrder = findViewById(R.id.btn_place_order);
         progressBar  = findViewById(R.id.progress_bar);
+        tvSubtotal    = findViewById(R.id.tv_subtotal);
+        tvShippingFee = findViewById(R.id.tv_shipping_fee);
+        tvDiscount    = findViewById(R.id.tv_discount);
+        tvTotal       = findViewById(R.id.tv_total);
+        layoutDiscount = findViewById(R.id.layout_discount);
     }
 
     private void observeCart() {
         cartViewModel.getCartItems().observe(this, items -> {
             cartItems = items != null ? items : new ArrayList<>();
+            updatePriceSummary();
         });
+    }
+
+    private void updatePriceSummary() {
+        double subtotal = 0;
+        for (CartItemEntity ci : cartItems) {
+            subtotal += ci.getLineTotal();
+        }
+        double shippingFee = 30000; // default 30k
+        double discount = 0;
+        double total = subtotal + shippingFee - discount;
+
+        if (tvSubtotal != null) {
+            tvSubtotal.setText(CurrencyFormatter.format(subtotal));
+        }
+        if (tvShippingFee != null) {
+            tvShippingFee.setText(CurrencyFormatter.format(shippingFee));
+        }
+        if (tvDiscount != null) {
+            tvDiscount.setText("-" + CurrencyFormatter.format(discount));
+            if (layoutDiscount != null) {
+                layoutDiscount.setVisibility(discount > 0 ? View.VISIBLE : View.GONE);
+            }
+        }
+        if (tvTotal != null) {
+            tvTotal.setText(CurrencyFormatter.format(total));
+        }
     }
 
     private void setupPlaceOrder() {

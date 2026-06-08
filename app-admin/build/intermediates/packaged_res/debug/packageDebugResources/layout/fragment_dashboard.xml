@@ -239,7 +239,7 @@
                         android:padding="12dp"
                         android:background="@drawable/bg_card_dark"
                         android:backgroundTint="@color/primary_translucent"
-                        android:src="@android:drawable/ic_menu_myplaces"
+                        android:src="@drawable/ic_account"
                         app:tint="@color/primary" />
                     <TextView
                         android:layout_width="wrap_content"
@@ -295,7 +295,7 @@
                         android:padding="12dp"
                         android:background="@drawable/bg_card_dark"
                         android:backgroundTint="@color/warning_translucent"
-                        android:src="@android:drawable/ic_menu_info_details"
+                        android:src="@drawable/ic_info"
                         app:tint="@color/warning" />
                     <TextView
                         android:layout_width="wrap_content"

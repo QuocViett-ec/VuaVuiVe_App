@@ -24,6 +24,7 @@
 
     <!-- Home -->
     <string name="tab_home">Trang chủ</string>
+    <string name="tab_recipe">Công thức</string>
     <string name="tab_products">Sản phẩm</string>
     <string name="tab_cart">Giỏ hàng</string>
     <string name="tab_orders">Đơn hàng</string>
@@ -64,7 +65,7 @@
     <string name="btn_apply_voucher">Áp dụng</string>
     <string name="btn_select_voucher">Chọn voucher</string>
     <string name="btn_use_current_location">Dùng vị trí hiện tại</string>
-    <string name="label_payment_method">Phương thức thanh toán</string>
+    <string name="label_payment_method">💳 Phương thức thanh toán</string>
     <string name="label_cod">Thanh toán khi nhận hàng (COD)</string>
     <string name="label_vnpay">VNPay</string>
     <string name="label_momo">MoMo</string>

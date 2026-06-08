@@ -110,7 +110,7 @@
     <string name="label_order_summary">Tổng kết</string>
     <string name="label_out_of_stock">Hết hàng</string>
     <string name="label_payment_info">Thông tin thanh toán</string>
-    <string name="label_payment_method">Phương thức thanh toán</string>
+    <string name="label_payment_method">💳 Phương thức thanh toán</string>
     <string name="label_reviews">đánh giá</string>
     <string name="label_reviews_section">Đánh giá</string>
     <string name="label_saved_for_later">Lưu để mua sau</string>
@@ -133,6 +133,7 @@
     <string name="tab_home">Trang chủ</string>
     <string name="tab_orders">Đơn hàng</string>
     <string name="tab_products">Sản phẩm</string>
+    <string name="tab_recipe">Công thức</string>
     <string name="text_forgot_password">Quên mật khẩu?</string>
     <string name="text_has_account">Đã có tài khoản? </string>
     <string name="text_no_account">Chưa có tài khoản? </string>

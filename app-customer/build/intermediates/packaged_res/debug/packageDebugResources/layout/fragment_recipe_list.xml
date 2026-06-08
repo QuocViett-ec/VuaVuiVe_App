@@ -38,7 +38,7 @@
         android:layout_height="48dp"
         android:layout_margin="12dp"
         android:hint="Tìm công thức..."
-        android:drawableStart="@android:drawable/ic_menu_search"
+        android:drawableStart="@drawable/ic_search"
         android:drawablePadding="8dp"
         android:paddingHorizontal="12dp"
         android:background="@color/surface_variant"
