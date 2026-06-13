@@ -31,6 +31,7 @@ vn\vuavuive\backend\modules\category\CategoryController.class
 vn\vuavuive\backend\modules\ai\GeminiService.class
 vn\vuavuive\backend\modules\category\CategoryRepository.class
 vn\vuavuive\backend\modules\product\dto\ProductRequest.class
+vn\vuavuive\backend\modules\recipe\RecipeController.class
 vn\vuavuive\backend\config\SecurityConfig.class
 vn\vuavuive\backend\modules\auth\AuthService.class
 vn\vuavuive\backend\modules\product\dto\PagedResponse.class

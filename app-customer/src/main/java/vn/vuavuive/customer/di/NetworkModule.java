@@ -30,6 +30,7 @@ import vn.vuavuive.shared.data.api.ProductApi;
 import vn.vuavuive.shared.data.api.RecommendApi;
 import vn.vuavuive.shared.data.api.RecipeApi;
 import vn.vuavuive.shared.data.api.ShipmentApi;
+import vn.vuavuive.shared.data.api.ShipperOrderApi;
 import vn.vuavuive.shared.util.CsrfInterceptor;
 import vn.vuavuive.shared.util.PersistentCookieJar;
 import vn.vuavuive.shared.util.PortalScopeInterceptor;
@@ -114,4 +115,7 @@ public class NetworkModule {
 
     @Provides @Singleton
     public ChatbotApi provideChatbotApi(Retrofit retrofit) { return retrofit.create(ChatbotApi.class); }
+
+    @Provides @Singleton
+    public ShipperOrderApi provideShipperOrderApi(Retrofit retrofit) { return retrofit.create(ShipperOrderApi.class); }
 }

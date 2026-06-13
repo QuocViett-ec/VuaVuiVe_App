@@ -4,175 +4,179 @@
         "source": "vn.vuavuive.customer.app-customer-main-53:/layout/fragment_order_list.xml"
     },
     {
-        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-mergeDebugResources-50:\\layout\\item_chat_bot.xml",
-        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-53:\\layout\\item_chat_bot.xml"
-    },
-    {
         "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-50:/layout/layout_common_header_search.xml",
         "source": "vn.vuavuive.customer.app-customer-main-53:/layout/layout_common_header_search.xml"
     },
     {
-        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-mergeDebugResources-50:\\layout\\fragment_account.xml",
-        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-53:\\layout\\fragment_account.xml"
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-50:/layout/item_menu_row.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-53:/layout/item_menu_row.xml"
+    },
+    {
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-50:/layout/fragment_shipper_order_list.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-53:/layout/fragment_shipper_order_list.xml"
     },
     {
         "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-50:/layout/fragment_cart.xml",
         "source": "vn.vuavuive.customer.app-customer-main-53:/layout/fragment_cart.xml"
     },
     {
-        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-mergeDebugResources-50:\\layout\\activity_order_detail.xml",
-        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-53:\\layout\\activity_order_detail.xml"
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-50:/layout/bottom_sheet_review.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-53:/layout/bottom_sheet_review.xml"
     },
     {
-        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-mergeDebugResources-50:\\layout\\fragment_forgot_step2.xml",
-        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-53:\\layout\\fragment_forgot_step2.xml"
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-50:/layout/activity_search.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-53:/layout/activity_search.xml"
     },
     {
-        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-mergeDebugResources-50:\\layout\\activity_forgot_password.xml",
-        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-53:\\layout\\activity_forgot_password.xml"
-    },
-    {
-        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-mergeDebugResources-50:\\layout\\activity_recipe_detail.xml",
-        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-53:\\layout\\activity_recipe_detail.xml"
-    },
-    {
-        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-mergeDebugResources-50:\\layout\\item_chat_user.xml",
-        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-53:\\layout\\item_chat_user.xml"
-    },
-    {
-        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-mergeDebugResources-50:\\layout\\activity_main.xml",
-        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-53:\\layout\\activity_main.xml"
-    },
-    {
-        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-mergeDebugResources-50:\\layout\\activity_product_detail.xml",
-        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-53:\\layout\\activity_product_detail.xml"
-    },
-    {
-        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-mergeDebugResources-50:\\layout\\activity_edit_profile.xml",
-        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-53:\\layout\\activity_edit_profile.xml"
-    },
-    {
-        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-mergeDebugResources-50:\\layout\\fragment_cart.xml",
-        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-53:\\layout\\fragment_cart.xml"
-    },
-    {
-        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-mergeDebugResources-50:\\layout\\activity_my_reviews.xml",
-        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-53:\\layout\\activity_my_reviews.xml"
-    },
-    {
-        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-mergeDebugResources-50:\\layout\\item_menu_row.xml",
-        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-53:\\layout\\item_menu_row.xml"
-    },
-    {
-        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-mergeDebugResources-50:\\layout\\fragment_product_list.xml",
-        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-53:\\layout\\fragment_product_list.xml"
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-50:/layout/activity_forgot_password.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-53:/layout/activity_forgot_password.xml"
     },
     {
         "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-50:/layout/fragment_account.xml",
         "source": "vn.vuavuive.customer.app-customer-main-53:/layout/fragment_account.xml"
     },
     {
-        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-mergeDebugResources-50:\\layout\\activity_chat.xml",
-        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-53:\\layout\\activity_chat.xml"
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-50:/layout/item_order.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-53:/layout/item_order.xml"
     },
     {
-        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-mergeDebugResources-50:\\layout\\fragment_forgot_step3.xml",
-        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-53:\\layout\\fragment_forgot_step3.xml"
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-50:/layout/item_shipper_order.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-53:/layout/item_shipper_order.xml"
     },
     {
-        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-mergeDebugResources-50:\\layout\\activity_change_password.xml",
-        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-53:\\layout\\activity_change_password.xml"
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-50:/layout/fragment_forgot_step3.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-53:/layout/fragment_forgot_step3.xml"
     },
     {
-        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-mergeDebugResources-50:\\layout\\activity_register.xml",
-        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-53:\\layout\\activity_register.xml"
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-50:/layout/activity_recipe_detail.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-53:/layout/activity_recipe_detail.xml"
     },
     {
-        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-mergeDebugResources-50:\\layout\\activity_payment_webview.xml",
-        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-53:\\layout\\activity_payment_webview.xml"
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-50:/layout/item_product.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-53:/layout/item_product.xml"
     },
     {
-        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-mergeDebugResources-50:\\layout\\item_product.xml",
-        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-53:\\layout\\item_product.xml"
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-50:/layout/item_recipe.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-53:/layout/item_recipe.xml"
     },
     {
-        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-mergeDebugResources-50:\\layout\\fragment_home.xml",
-        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-53:\\layout\\fragment_home.xml"
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-50:/layout/item_cart.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-53:/layout/item_cart.xml"
     },
     {
-        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-mergeDebugResources-50:\\layout\\item_ingredient.xml",
-        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-53:\\layout\\item_ingredient.xml"
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-50:/layout/activity_chat.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-53:/layout/activity_chat.xml"
     },
     {
-        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-mergeDebugResources-50:\\layout\\item_shipment.xml",
-        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-53:\\layout\\item_shipment.xml"
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-50:/layout/item_chat_user.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-53:/layout/item_chat_user.xml"
     },
     {
-        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-mergeDebugResources-50:\\layout\\activity_login.xml",
-        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-53:\\layout\\activity_login.xml"
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-50:/layout/item_chat_bot.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-53:/layout/item_chat_bot.xml"
     },
     {
-        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-mergeDebugResources-50:\\layout\\fragment_order_list.xml",
-        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-53:\\layout\\fragment_order_list.xml"
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-50:/layout/activity_main.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-53:/layout/activity_main.xml"
     },
     {
-        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-mergeDebugResources-50:\\layout\\item_cart.xml",
-        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-53:\\layout\\item_cart.xml"
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-50:/layout/fragment_product_list.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-53:/layout/fragment_product_list.xml"
     },
     {
-        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-mergeDebugResources-50:\\layout\\item_recipe.xml",
-        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-53:\\layout\\item_recipe.xml"
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-50:/layout/item_ingredient.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-53:/layout/item_ingredient.xml"
     },
     {
-        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-mergeDebugResources-50:\\layout\\bottom_sheet_review.xml",
-        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-53:\\layout\\bottom_sheet_review.xml"
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-50:/layout/activity_shipper_order_detail.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-53:/layout/activity_shipper_order_detail.xml"
     },
     {
-        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-mergeDebugResources-50:\\layout\\item_review.xml",
-        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-53:\\layout\\item_review.xml"
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-50:/layout/activity_login.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-53:/layout/activity_login.xml"
     },
     {
-        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-mergeDebugResources-50:\\layout\\item_shipment_status.xml",
-        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-53:\\layout\\item_shipment_status.xml"
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-50:/layout/activity_my_reviews.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-53:/layout/activity_my_reviews.xml"
     },
     {
-        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-mergeDebugResources-50:\\layout\\fragment_forgot_step1.xml",
-        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-53:\\layout\\fragment_forgot_step1.xml"
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-50:/layout/activity_product_detail.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-53:/layout/activity_product_detail.xml"
     },
     {
-        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-mergeDebugResources-50:\\layout\\activity_shipment_detail.xml",
-        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-53:\\layout\\activity_shipment_detail.xml"
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-50:/layout/activity_shipment_list.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-53:/layout/activity_shipment_list.xml"
     },
     {
-        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-mergeDebugResources-50:\\layout\\item_order_product.xml",
-        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-53:\\layout\\item_order_product.xml"
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-50:/layout/fragment_recipe_list.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-53:/layout/fragment_recipe_list.xml"
     },
     {
-        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-mergeDebugResources-50:\\layout\\activity_search.xml",
-        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-53:\\layout\\activity_search.xml"
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-50:/layout/item_review.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-53:/layout/item_review.xml"
     },
     {
-        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-mergeDebugResources-50:\\layout\\activity_shipment_list.xml",
-        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-53:\\layout\\activity_shipment_list.xml"
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-50:/layout/activity_checkout.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-53:/layout/activity_checkout.xml"
     },
     {
-        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-mergeDebugResources-50:\\layout\\activity_checkout.xml",
-        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-53:\\layout\\activity_checkout.xml"
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-50:/layout/activity_shipment_detail.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-53:/layout/activity_shipment_detail.xml"
     },
     {
-        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-mergeDebugResources-50:\\layout\\item_category_chip.xml",
-        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-53:\\layout\\item_category_chip.xml"
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-50:/layout/activity_order_detail.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-53:/layout/activity_order_detail.xml"
     },
     {
-        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-mergeDebugResources-50:\\layout\\item_order.xml",
-        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-53:\\layout\\item_order.xml"
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-50:/layout/activity_payment_webview.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-53:/layout/activity_payment_webview.xml"
     },
     {
-        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-mergeDebugResources-50:\\layout\\fragment_recipe_list.xml",
-        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-53:\\layout\\fragment_recipe_list.xml"
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-50:/layout/item_category_chip.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-53:/layout/item_category_chip.xml"
     },
     {
-        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-mergeDebugResources-50:\\layout\\activity_recipe_list_host.xml",
-        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.11.1\\vn.vuavuive.customer.app-customer-main-53:\\layout\\activity_recipe_list_host.xml"
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-50:/layout/fragment_forgot_step2.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-53:/layout/fragment_forgot_step2.xml"
+    },
+    {
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-50:/layout/item_shipment.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-53:/layout/item_shipment.xml"
+    },
+    {
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-50:/layout/activity_shipper_main.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-53:/layout/activity_shipper_main.xml"
+    },
+    {
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-50:/layout/item_order_product.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-53:/layout/item_order_product.xml"
+    },
+    {
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-50:/layout/activity_change_password.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-53:/layout/activity_change_password.xml"
+    },
+    {
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-50:/layout/activity_recipe_list_host.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-53:/layout/activity_recipe_list_host.xml"
+    },
+    {
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-50:/layout/activity_register.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-53:/layout/activity_register.xml"
+    },
+    {
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-50:/layout/activity_edit_profile.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-53:/layout/activity_edit_profile.xml"
+    },
+    {
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-50:/layout/fragment_home.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-53:/layout/fragment_home.xml"
+    },
+    {
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-50:/layout/item_shipment_status.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-53:/layout/item_shipment_status.xml"
+    },
+    {
+        "merged": "vn.vuavuive.customer.app-customer-mergeDebugResources-50:/layout/fragment_forgot_step1.xml",
+        "source": "vn.vuavuive.customer.app-customer-main-53:/layout/fragment_forgot_step1.xml"
     }
 ]

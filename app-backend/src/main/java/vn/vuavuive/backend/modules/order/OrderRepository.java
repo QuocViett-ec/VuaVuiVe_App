@@ -23,6 +23,9 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
     /** Lấy đơn được giao bởi một Shipper cụ thể */
     Page<Order> findByShipperIdOrderByCreatedAtDesc(UUID shipperId, Pageable pageable);
 
+    /** Lấy đơn được giao bởi Shipper cụ thể, lọc theo trạng thái */
+    Page<Order> findByShipperIdAndStatusOrderByCreatedAtDesc(UUID shipperId, Order.OrderStatus status, Pageable pageable);
+
     /**
      * Tìm các đơn VNPAY/MOMO đã PENDING quá lâu để tự động hủy (Cron Job).
      * Đây là query phục vụ tính năng auto-cancel đơn chưa thanh toán sau 15 phút.

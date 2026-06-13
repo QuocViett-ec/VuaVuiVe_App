@@ -6,6 +6,7 @@ import android.view.View;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.SavedStateHandle;
 import androidx.lifecycle.ViewModel;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.gson.Gson;
 import dagger.hilt.android.ActivityRetainedLifecycle;
 import dagger.hilt.android.ViewModelLifecycle;
@@ -58,12 +59,14 @@ import vn.vuavuive.customer.di.NetworkModule_ProvideRecommendApiFactory;
 import vn.vuavuive.customer.di.NetworkModule_ProvideRetrofitFactory;
 import vn.vuavuive.customer.di.NetworkModule_ProvideSessionManagerFactory;
 import vn.vuavuive.customer.di.NetworkModule_ProvideShipmentApiFactory;
+import vn.vuavuive.customer.di.NetworkModule_ProvideShipperOrderApiFactory;
 import vn.vuavuive.customer.ui.MainActivity;
 import vn.vuavuive.customer.ui.account.AccountFragment;
 import vn.vuavuive.customer.ui.account.ChangePasswordActivity;
 import vn.vuavuive.customer.ui.account.EditProfileActivity;
 import vn.vuavuive.customer.ui.auth.ForgotPasswordActivity;
 import vn.vuavuive.customer.ui.auth.LoginActivity;
+import vn.vuavuive.customer.ui.auth.LoginActivity_MembersInjector;
 import vn.vuavuive.customer.ui.auth.RegisterActivity;
 import vn.vuavuive.customer.ui.cart.CartFragment;
 import vn.vuavuive.customer.ui.chat.ChatActivity;
@@ -81,6 +84,12 @@ import vn.vuavuive.customer.ui.review.MyReviewsActivity;
 import vn.vuavuive.customer.ui.search.SearchActivity;
 import vn.vuavuive.customer.ui.shipment.ShipmentDetailActivity;
 import vn.vuavuive.customer.ui.shipment.ShipmentListActivity;
+import vn.vuavuive.customer.ui.shipper.ShipperMainActivity;
+import vn.vuavuive.customer.ui.shipper.ShipperMainActivity_MembersInjector;
+import vn.vuavuive.customer.ui.shipper.ShipperOrderDetailActivity;
+import vn.vuavuive.customer.ui.shipper.ShipperOrderDetailActivity_MembersInjector;
+import vn.vuavuive.customer.ui.shipper.ShipperOrderListFragment;
+import vn.vuavuive.customer.ui.shipper.ShipperOrderListFragment_MembersInjector;
 import vn.vuavuive.customer.viewmodel.AuthViewModel;
 import vn.vuavuive.customer.viewmodel.AuthViewModel_HiltModules;
 import vn.vuavuive.customer.viewmodel.AuthViewModel_HiltModules_BindsModule_Binds_LazyMapKey;
@@ -118,6 +127,7 @@ import vn.vuavuive.shared.data.api.ProductApi;
 import vn.vuavuive.shared.data.api.RecipeApi;
 import vn.vuavuive.shared.data.api.RecommendApi;
 import vn.vuavuive.shared.data.api.ShipmentApi;
+import vn.vuavuive.shared.data.api.ShipperOrderApi;
 import vn.vuavuive.shared.data.local.AppDatabase;
 import vn.vuavuive.shared.data.local.CartDao;
 import vn.vuavuive.shared.data.local.ProductDao;
@@ -454,6 +464,18 @@ public final class DaggerVuaVuiVeApp_HiltComponents_SingletonC {
     @Override
     public void injectRecipeListFragment(RecipeListFragment arg0) {
     }
+
+    @Override
+    public void injectShipperOrderListFragment(ShipperOrderListFragment arg0) {
+      injectShipperOrderListFragment2(arg0);
+    }
+
+    @CanIgnoreReturnValue
+    private ShipperOrderListFragment injectShipperOrderListFragment2(
+        ShipperOrderListFragment instance) {
+      ShipperOrderListFragment_MembersInjector.injectShipperOrderApi(instance, singletonCImpl.provideShipperOrderApiProvider.get());
+      return instance;
+    }
   }
 
   private static final class ViewCImpl extends VuaVuiVeApp_HiltComponents.ViewC {
@@ -533,6 +555,7 @@ public final class DaggerVuaVuiVeApp_HiltComponents_SingletonC {
 
     @Override
     public void injectLoginActivity(LoginActivity arg0) {
+      injectLoginActivity2(arg0);
     }
 
     @Override
@@ -581,6 +604,38 @@ public final class DaggerVuaVuiVeApp_HiltComponents_SingletonC {
 
     @Override
     public void injectShipmentListActivity(ShipmentListActivity arg0) {
+    }
+
+    @Override
+    public void injectShipperMainActivity(ShipperMainActivity arg0) {
+      injectShipperMainActivity2(arg0);
+    }
+
+    @Override
+    public void injectShipperOrderDetailActivity(ShipperOrderDetailActivity arg0) {
+      injectShipperOrderDetailActivity2(arg0);
+    }
+
+    @CanIgnoreReturnValue
+    private LoginActivity injectLoginActivity2(LoginActivity instance) {
+      LoginActivity_MembersInjector.injectSessionManager(instance, singletonCImpl.provideSessionManagerProvider.get());
+      return instance;
+    }
+
+    @CanIgnoreReturnValue
+    private ShipperMainActivity injectShipperMainActivity2(ShipperMainActivity instance2) {
+      ShipperMainActivity_MembersInjector.injectSessionManager(instance2, singletonCImpl.provideSessionManagerProvider.get());
+      ShipperMainActivity_MembersInjector.injectShipperOrderApi(instance2, singletonCImpl.provideShipperOrderApiProvider.get());
+      return instance2;
+    }
+
+    @CanIgnoreReturnValue
+    private ShipperOrderDetailActivity injectShipperOrderDetailActivity2(
+        ShipperOrderDetailActivity instance3) {
+      ShipperOrderDetailActivity_MembersInjector.injectShipperOrderApi(instance3, singletonCImpl.provideShipperOrderApiProvider.get());
+      ShipperOrderDetailActivity_MembersInjector.injectOrderApi(instance3, singletonCImpl.provideOrderApiProvider.get());
+      ShipperOrderDetailActivity_MembersInjector.injectSessionManager(instance3, singletonCImpl.provideSessionManagerProvider.get());
+      return instance3;
     }
   }
 
@@ -762,6 +817,8 @@ public final class DaggerVuaVuiVeApp_HiltComponents_SingletonC {
 
     private final SingletonCImpl singletonCImpl = this;
 
+    Provider<SessionManager> provideSessionManagerProvider;
+
     Provider<PersistentCookieJar> provideCookieJarProvider;
 
     Provider<OkHttpClient> provideOkHttpClientProvider;
@@ -770,9 +827,11 @@ public final class DaggerVuaVuiVeApp_HiltComponents_SingletonC {
 
     Provider<Retrofit> provideRetrofitProvider;
 
-    Provider<AuthApi> provideAuthApiProvider;
+    Provider<ShipperOrderApi> provideShipperOrderApiProvider;
 
-    Provider<SessionManager> provideSessionManagerProvider;
+    Provider<OrderApi> provideOrderApiProvider;
+
+    Provider<AuthApi> provideAuthApiProvider;
 
     Provider<AuthRepository> authRepositoryProvider;
 
@@ -785,8 +844,6 @@ public final class DaggerVuaVuiVeApp_HiltComponents_SingletonC {
     Provider<CartRepository> cartRepositoryProvider;
 
     Provider<ChatbotApi> provideChatbotApiProvider;
-
-    Provider<OrderApi> provideOrderApiProvider;
 
     Provider<PaymentApi> providePaymentApiProvider;
 
@@ -818,28 +875,29 @@ public final class DaggerVuaVuiVeApp_HiltComponents_SingletonC {
     @SuppressWarnings("unchecked")
     private void initialize(final ApplicationContextModule applicationContextModuleParam,
         final DatabaseModule databaseModuleParam, final NetworkModule networkModuleParam) {
+      this.provideSessionManagerProvider = DoubleCheck.provider(new SwitchingProvider<SessionManager>(singletonCImpl, 0));
       this.provideCookieJarProvider = DoubleCheck.provider(new SwitchingProvider<PersistentCookieJar>(singletonCImpl, 4));
       this.provideOkHttpClientProvider = DoubleCheck.provider(new SwitchingProvider<OkHttpClient>(singletonCImpl, 3));
       this.provideGsonProvider = DoubleCheck.provider(new SwitchingProvider<Gson>(singletonCImpl, 5));
       this.provideRetrofitProvider = DoubleCheck.provider(new SwitchingProvider<Retrofit>(singletonCImpl, 2));
-      this.provideAuthApiProvider = DoubleCheck.provider(new SwitchingProvider<AuthApi>(singletonCImpl, 1));
-      this.provideSessionManagerProvider = DoubleCheck.provider(new SwitchingProvider<SessionManager>(singletonCImpl, 6));
-      this.authRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<AuthRepository>(singletonCImpl, 0));
-      this.provideCartApiProvider = DoubleCheck.provider(new SwitchingProvider<CartApi>(singletonCImpl, 8));
-      this.provideDatabaseProvider = DoubleCheck.provider(new SwitchingProvider<AppDatabase>(singletonCImpl, 10));
-      this.provideCartDaoProvider = DoubleCheck.provider(new SwitchingProvider<CartDao>(singletonCImpl, 9));
-      this.cartRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<CartRepository>(singletonCImpl, 7));
-      this.provideChatbotApiProvider = DoubleCheck.provider(new SwitchingProvider<ChatbotApi>(singletonCImpl, 11));
-      this.provideOrderApiProvider = DoubleCheck.provider(new SwitchingProvider<OrderApi>(singletonCImpl, 13));
-      this.providePaymentApiProvider = DoubleCheck.provider(new SwitchingProvider<PaymentApi>(singletonCImpl, 14));
-      this.orderRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<OrderRepository>(singletonCImpl, 12));
-      this.provideProductApiProvider = DoubleCheck.provider(new SwitchingProvider<ProductApi>(singletonCImpl, 16));
-      this.provideRecommendApiProvider = DoubleCheck.provider(new SwitchingProvider<RecommendApi>(singletonCImpl, 17));
-      this.provideProductDaoProvider = DoubleCheck.provider(new SwitchingProvider<ProductDao>(singletonCImpl, 18));
-      this.productRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<ProductRepository>(singletonCImpl, 15));
-      this.provideRecipeApiProvider = DoubleCheck.provider(new SwitchingProvider<RecipeApi>(singletonCImpl, 19));
-      this.provideShipmentApiProvider = DoubleCheck.provider(new SwitchingProvider<ShipmentApi>(singletonCImpl, 21));
-      this.shipmentRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<ShipmentRepository>(singletonCImpl, 20));
+      this.provideShipperOrderApiProvider = DoubleCheck.provider(new SwitchingProvider<ShipperOrderApi>(singletonCImpl, 1));
+      this.provideOrderApiProvider = DoubleCheck.provider(new SwitchingProvider<OrderApi>(singletonCImpl, 6));
+      this.provideAuthApiProvider = DoubleCheck.provider(new SwitchingProvider<AuthApi>(singletonCImpl, 8));
+      this.authRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<AuthRepository>(singletonCImpl, 7));
+      this.provideCartApiProvider = DoubleCheck.provider(new SwitchingProvider<CartApi>(singletonCImpl, 10));
+      this.provideDatabaseProvider = DoubleCheck.provider(new SwitchingProvider<AppDatabase>(singletonCImpl, 12));
+      this.provideCartDaoProvider = DoubleCheck.provider(new SwitchingProvider<CartDao>(singletonCImpl, 11));
+      this.cartRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<CartRepository>(singletonCImpl, 9));
+      this.provideChatbotApiProvider = DoubleCheck.provider(new SwitchingProvider<ChatbotApi>(singletonCImpl, 13));
+      this.providePaymentApiProvider = DoubleCheck.provider(new SwitchingProvider<PaymentApi>(singletonCImpl, 15));
+      this.orderRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<OrderRepository>(singletonCImpl, 14));
+      this.provideProductApiProvider = DoubleCheck.provider(new SwitchingProvider<ProductApi>(singletonCImpl, 17));
+      this.provideRecommendApiProvider = DoubleCheck.provider(new SwitchingProvider<RecommendApi>(singletonCImpl, 18));
+      this.provideProductDaoProvider = DoubleCheck.provider(new SwitchingProvider<ProductDao>(singletonCImpl, 19));
+      this.productRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<ProductRepository>(singletonCImpl, 16));
+      this.provideRecipeApiProvider = DoubleCheck.provider(new SwitchingProvider<RecipeApi>(singletonCImpl, 20));
+      this.provideShipmentApiProvider = DoubleCheck.provider(new SwitchingProvider<ShipmentApi>(singletonCImpl, 22));
+      this.shipmentRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<ShipmentRepository>(singletonCImpl, 21));
     }
 
     @Override
@@ -858,7 +916,7 @@ public final class DaggerVuaVuiVeApp_HiltComponents_SingletonC {
     }
 
     @Override
-    public void injectVuaVuiVeApp(VuaVuiVeApp vuaVuiVeApp) {
+    public void injectVuaVuiVeApp(VuaVuiVeApp arg0) {
     }
 
     private static final class SwitchingProvider<T> implements Provider<T> {
@@ -875,11 +933,11 @@ public final class DaggerVuaVuiVeApp_HiltComponents_SingletonC {
       @Override
       public T get() {
         switch (id) {
-          case 0: // vn.vuavuive.customer.data.repository.AuthRepository
-          return (T) new AuthRepository(singletonCImpl.provideAuthApiProvider.get(), singletonCImpl.provideSessionManagerProvider.get());
+          case 0: // vn.vuavuive.shared.util.SessionManager
+          return (T) NetworkModule_ProvideSessionManagerFactory.provideSessionManager(singletonCImpl.networkModule, ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
 
-          case 1: // vn.vuavuive.shared.data.api.AuthApi
-          return (T) NetworkModule_ProvideAuthApiFactory.provideAuthApi(singletonCImpl.networkModule, singletonCImpl.provideRetrofitProvider.get());
+          case 1: // vn.vuavuive.shared.data.api.ShipperOrderApi
+          return (T) NetworkModule_ProvideShipperOrderApiFactory.provideShipperOrderApi(singletonCImpl.networkModule, singletonCImpl.provideRetrofitProvider.get());
 
           case 2: // retrofit2.Retrofit
           return (T) NetworkModule_ProvideRetrofitFactory.provideRetrofit(singletonCImpl.networkModule, singletonCImpl.provideOkHttpClientProvider.get(), singletonCImpl.provideGsonProvider.get());
@@ -893,52 +951,55 @@ public final class DaggerVuaVuiVeApp_HiltComponents_SingletonC {
           case 5: // com.google.gson.Gson
           return (T) NetworkModule_ProvideGsonFactory.provideGson(singletonCImpl.networkModule);
 
-          case 6: // vn.vuavuive.shared.util.SessionManager
-          return (T) NetworkModule_ProvideSessionManagerFactory.provideSessionManager(singletonCImpl.networkModule, ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
-
-          case 7: // vn.vuavuive.customer.data.repository.CartRepository
-          return (T) new CartRepository(singletonCImpl.provideCartApiProvider.get(), singletonCImpl.provideCartDaoProvider.get(), singletonCImpl.provideSessionManagerProvider.get());
-
-          case 8: // vn.vuavuive.shared.data.api.CartApi
-          return (T) NetworkModule_ProvideCartApiFactory.provideCartApi(singletonCImpl.networkModule, singletonCImpl.provideRetrofitProvider.get());
-
-          case 9: // vn.vuavuive.shared.data.local.CartDao
-          return (T) DatabaseModule_ProvideCartDaoFactory.provideCartDao(singletonCImpl.databaseModule, singletonCImpl.provideDatabaseProvider.get());
-
-          case 10: // vn.vuavuive.shared.data.local.AppDatabase
-          return (T) DatabaseModule_ProvideDatabaseFactory.provideDatabase(singletonCImpl.databaseModule, ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
-
-          case 11: // vn.vuavuive.shared.data.api.ChatbotApi
-          return (T) NetworkModule_ProvideChatbotApiFactory.provideChatbotApi(singletonCImpl.networkModule, singletonCImpl.provideRetrofitProvider.get());
-
-          case 12: // vn.vuavuive.customer.data.repository.OrderRepository
-          return (T) new OrderRepository(singletonCImpl.provideOrderApiProvider.get(), singletonCImpl.providePaymentApiProvider.get());
-
-          case 13: // vn.vuavuive.shared.data.api.OrderApi
+          case 6: // vn.vuavuive.shared.data.api.OrderApi
           return (T) NetworkModule_ProvideOrderApiFactory.provideOrderApi(singletonCImpl.networkModule, singletonCImpl.provideRetrofitProvider.get());
 
-          case 14: // vn.vuavuive.shared.data.api.PaymentApi
+          case 7: // vn.vuavuive.customer.data.repository.AuthRepository
+          return (T) new AuthRepository(singletonCImpl.provideAuthApiProvider.get(), singletonCImpl.provideSessionManagerProvider.get());
+
+          case 8: // vn.vuavuive.shared.data.api.AuthApi
+          return (T) NetworkModule_ProvideAuthApiFactory.provideAuthApi(singletonCImpl.networkModule, singletonCImpl.provideRetrofitProvider.get());
+
+          case 9: // vn.vuavuive.customer.data.repository.CartRepository
+          return (T) new CartRepository(singletonCImpl.provideCartApiProvider.get(), singletonCImpl.provideCartDaoProvider.get(), singletonCImpl.provideSessionManagerProvider.get());
+
+          case 10: // vn.vuavuive.shared.data.api.CartApi
+          return (T) NetworkModule_ProvideCartApiFactory.provideCartApi(singletonCImpl.networkModule, singletonCImpl.provideRetrofitProvider.get());
+
+          case 11: // vn.vuavuive.shared.data.local.CartDao
+          return (T) DatabaseModule_ProvideCartDaoFactory.provideCartDao(singletonCImpl.databaseModule, singletonCImpl.provideDatabaseProvider.get());
+
+          case 12: // vn.vuavuive.shared.data.local.AppDatabase
+          return (T) DatabaseModule_ProvideDatabaseFactory.provideDatabase(singletonCImpl.databaseModule, ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
+
+          case 13: // vn.vuavuive.shared.data.api.ChatbotApi
+          return (T) NetworkModule_ProvideChatbotApiFactory.provideChatbotApi(singletonCImpl.networkModule, singletonCImpl.provideRetrofitProvider.get());
+
+          case 14: // vn.vuavuive.customer.data.repository.OrderRepository
+          return (T) new OrderRepository(singletonCImpl.provideOrderApiProvider.get(), singletonCImpl.providePaymentApiProvider.get());
+
+          case 15: // vn.vuavuive.shared.data.api.PaymentApi
           return (T) NetworkModule_ProvidePaymentApiFactory.providePaymentApi(singletonCImpl.networkModule, singletonCImpl.provideRetrofitProvider.get());
 
-          case 15: // vn.vuavuive.customer.data.repository.ProductRepository
+          case 16: // vn.vuavuive.customer.data.repository.ProductRepository
           return (T) new ProductRepository(singletonCImpl.provideProductApiProvider.get(), singletonCImpl.provideRecommendApiProvider.get(), singletonCImpl.provideProductDaoProvider.get());
 
-          case 16: // vn.vuavuive.shared.data.api.ProductApi
+          case 17: // vn.vuavuive.shared.data.api.ProductApi
           return (T) NetworkModule_ProvideProductApiFactory.provideProductApi(singletonCImpl.networkModule, singletonCImpl.provideRetrofitProvider.get());
 
-          case 17: // vn.vuavuive.shared.data.api.RecommendApi
+          case 18: // vn.vuavuive.shared.data.api.RecommendApi
           return (T) NetworkModule_ProvideRecommendApiFactory.provideRecommendApi(singletonCImpl.networkModule, singletonCImpl.provideRetrofitProvider.get());
 
-          case 18: // vn.vuavuive.shared.data.local.ProductDao
+          case 19: // vn.vuavuive.shared.data.local.ProductDao
           return (T) DatabaseModule_ProvideProductDaoFactory.provideProductDao(singletonCImpl.databaseModule, singletonCImpl.provideDatabaseProvider.get());
 
-          case 19: // vn.vuavuive.shared.data.api.RecipeApi
+          case 20: // vn.vuavuive.shared.data.api.RecipeApi
           return (T) NetworkModule_ProvideRecipeApiFactory.provideRecipeApi(singletonCImpl.networkModule, singletonCImpl.provideRetrofitProvider.get());
 
-          case 20: // vn.vuavuive.customer.data.repository.ShipmentRepository
+          case 21: // vn.vuavuive.customer.data.repository.ShipmentRepository
           return (T) new ShipmentRepository(singletonCImpl.provideShipmentApiProvider.get());
 
-          case 21: // vn.vuavuive.shared.data.api.ShipmentApi
+          case 22: // vn.vuavuive.shared.data.api.ShipmentApi
           return (T) NetworkModule_ProvideShipmentApiFactory.provideShipmentApi(singletonCImpl.networkModule, singletonCImpl.provideRetrofitProvider.get());
 
           default: throw new AssertionError(id);

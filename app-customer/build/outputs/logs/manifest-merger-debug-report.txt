@@ -1,9 +1,9 @@
 -- Merging decision tree log ---
 manifest
-ADDED from E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:2:1-118:12
-INJECTED from E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:2:1-118:12
-INJECTED from E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:2:1-118:12
-INJECTED from E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:2:1-118:12
+ADDED from E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:2:1-130:12
+INJECTED from E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:2:1-130:12
+INJECTED from E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:2:1-130:12
+INJECTED from E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:2:1-130:12
 MERGED from [androidx.databinding:viewbinding:8.9.2] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\abf215bc2a0fa83d36727906d268e1b9\transformed\viewbinding-8.9.2\AndroidManifest.xml:2:1-7:12
 MERGED from [:shared] E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\shared\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:2:1-7:12
 MERGED from [com.google.dagger:hilt-android:2.56.2] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\16c368e525cc7060786f0925c942b335\transformed\hilt-android-2.56.2\AndroidManifest.xml:16:1-19:12
@@ -99,8 +99,8 @@ ADDED from E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManif
 	android:name
 		ADDED from E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:7:22-78
 application
-ADDED from E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:9:5-117:19
-INJECTED from E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:9:5-117:19
+ADDED from E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:9:5-129:19
+INJECTED from E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:9:5-129:19
 MERGED from [com.google.android.material:material:1.12.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\1a8fd93fa238543224246829a501d759\transformed\material-1.12.0\AndroidManifest.xml:22:5-20
 MERGED from [com.google.android.material:material:1.12.0] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\1a8fd93fa238543224246829a501d759\transformed\material-1.12.0\AndroidManifest.xml:22:5-20
 MERGED from [androidx.constraintlayout:constraintlayout:2.2.1] C:\Users\ADMIN\.gradle\caches\8.11.1\transforms\30df1356a2609e4aa77e4b44ef4e1084\transformed\constraintlayout-2.2.1\AndroidManifest.xml:7:5-20
@@ -291,6 +291,24 @@ ADDED from E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManif
 		ADDED from E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:114:13-37
 	android:name
 		ADDED from E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:113:13-59
+activity#vn.vuavuive.customer.ui.shipper.ShipperMainActivity
+ADDED from E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:118:9-122:57
+	android:launchMode
+		ADDED from E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:121:13-43
+	android:windowSoftInputMode
+		ADDED from E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:122:13-54
+	android:exported
+		ADDED from E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:120:13-37
+	android:name
+		ADDED from E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:119:13-59
+activity#vn.vuavuive.customer.ui.shipper.ShipperOrderDetailActivity
+ADDED from E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:124:9-127:76
+	android:parentActivityName
+		ADDED from E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:127:13-73
+	android:exported
+		ADDED from E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:126:13-37
+	android:name
+		ADDED from E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml:125:13-66
 uses-sdk
 INJECTED from E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-customer\src\main\AndroidManifest.xml

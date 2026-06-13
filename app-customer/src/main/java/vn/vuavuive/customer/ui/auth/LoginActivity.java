@@ -14,11 +14,15 @@ import com.google.android.material.textfield.TextInputLayout;
 import dagger.hilt.android.AndroidEntryPoint;
 import vn.vuavuive.customer.R;
 import vn.vuavuive.customer.ui.MainActivity;
+import vn.vuavuive.customer.ui.shipper.ShipperMainActivity;
 import vn.vuavuive.customer.viewmodel.AuthViewModel;
+import vn.vuavuive.shared.util.SessionManager;
+import javax.inject.Inject;
 
 @AndroidEntryPoint
 public class LoginActivity extends AppCompatActivity {
 
+    @Inject SessionManager sessionManager;
     private AuthViewModel authViewModel;
 
     private TextInputLayout tilPhoneEmail;
@@ -126,7 +130,13 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void goToMain() {
-        Intent intent = new Intent(this, MainActivity.class);
+        // Route based on user role
+        Intent intent;
+        if (sessionManager.isShipper()) {
+            intent = new Intent(this, ShipperMainActivity.class);
+        } else {
+            intent = new Intent(this, MainActivity.class);
+        }
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();

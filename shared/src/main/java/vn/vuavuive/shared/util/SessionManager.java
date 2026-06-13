@@ -66,4 +66,9 @@ public class SessionManager {
         String role = getUserRole();
         return "admin".equals(role) || "staff".equals(role) || "audit".equals(role);
     }
+
+    public boolean isShipper() {
+        String role = getUserRole();
+        return "SHIPPER".equalsIgnoreCase(role);
+    }
 }

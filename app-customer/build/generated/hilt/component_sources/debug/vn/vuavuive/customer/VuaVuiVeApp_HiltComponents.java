@@ -71,6 +71,9 @@ import vn.vuavuive.customer.ui.review.MyReviewsActivity_GeneratedInjector;
 import vn.vuavuive.customer.ui.search.SearchActivity_GeneratedInjector;
 import vn.vuavuive.customer.ui.shipment.ShipmentDetailActivity_GeneratedInjector;
 import vn.vuavuive.customer.ui.shipment.ShipmentListActivity_GeneratedInjector;
+import vn.vuavuive.customer.ui.shipper.ShipperMainActivity_GeneratedInjector;
+import vn.vuavuive.customer.ui.shipper.ShipperOrderDetailActivity_GeneratedInjector;
+import vn.vuavuive.customer.ui.shipper.ShipperOrderListFragment_GeneratedInjector;
 import vn.vuavuive.customer.viewmodel.AuthViewModel_HiltModules;
 import vn.vuavuive.customer.viewmodel.CartViewModel_HiltModules;
 import vn.vuavuive.customer.viewmodel.ChatViewModel_HiltModules;
@@ -238,7 +241,9 @@ public final class VuaVuiVeApp_HiltComponents {
       MyReviewsActivity_GeneratedInjector,
       SearchActivity_GeneratedInjector,
       ShipmentDetailActivity_GeneratedInjector,
-      ShipmentListActivity_GeneratedInjector {
+      ShipmentListActivity_GeneratedInjector,
+      ShipperMainActivity_GeneratedInjector,
+      ShipperOrderDetailActivity_GeneratedInjector {
     @Subcomponent.Builder
     abstract interface Builder extends ActivityComponentBuilder {
     }
@@ -287,7 +292,8 @@ public final class VuaVuiVeApp_HiltComponents {
       HomeFragment_GeneratedInjector,
       OrderListFragment_GeneratedInjector,
       ProductListFragment_GeneratedInjector,
-      RecipeListFragment_GeneratedInjector {
+      RecipeListFragment_GeneratedInjector,
+      ShipperOrderListFragment_GeneratedInjector {
     @Subcomponent.Builder
     abstract interface Builder extends FragmentComponentBuilder {
     }

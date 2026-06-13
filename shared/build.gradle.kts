@@ -21,7 +21,6 @@ android {
     buildFeatures {
         buildConfig = true
     }
-    buildToolsVersion = "34.0.0"
 }
 
 dependencies {

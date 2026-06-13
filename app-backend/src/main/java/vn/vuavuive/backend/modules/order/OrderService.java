@@ -15,6 +15,8 @@ import vn.vuavuive.backend.modules.payment.VNPayService;
 import vn.vuavuive.backend.modules.product.Product;
 import vn.vuavuive.backend.modules.product.ProductRepository;
 import vn.vuavuive.backend.modules.product.dto.PagedResponse;
+import vn.vuavuive.backend.modules.shipper.Shipper;
+import vn.vuavuive.backend.modules.shipper.ShipperRepository;
 import vn.vuavuive.backend.modules.user.User;
 import vn.vuavuive.backend.modules.user.UserRepository;
 
@@ -40,6 +42,7 @@ public class OrderService {
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
     private final OrderStatusLogRepository statusLogRepository;
+    private final ShipperRepository shipperRepository;
     private final VNPayService vnPayService;
     private final MoMoService moMoService;
 
@@ -162,6 +165,37 @@ public class OrderService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> AppException.notFound("Đơn hàng"));
         return toResponse(order, null);
+    }
+
+    /**
+     * [SHIPPER] Lấy danh sách đơn hàng được gán cho Shipper hiện tại.
+     * Tìm Shipper qua SĐT của User đang đăng nhập, sau đó truy vấn các đơn có shipperId tương ứng.
+     */
+    public PagedResponse<OrderResponse> getShipperOrders(String statusStr, int page, int size) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> AppException.notFound("User"));
+
+        // Tìm Shipper entity qua số điện thoại của User SHIPPER
+        Shipper shipper = shipperRepository.findByPhone(user.getPhone())
+                .orElseThrow(() -> AppException.notFound("Thông tin tài xế chưa được thiết lập"));
+
+        PageRequest pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+
+        Page<Order> orders;
+        if (statusStr == null || statusStr.isBlank()) {
+            orders = orderRepository.findByShipperIdOrderByCreatedAtDesc(shipper.getId(), pageable);
+        } else {
+            Order.OrderStatus status = Order.OrderStatus.valueOf(statusStr.toUpperCase());
+            orders = orderRepository.findByShipperIdAndStatusOrderByCreatedAtDesc(
+                    shipper.getId(), status, pageable);
+        }
+
+        return new PagedResponse<>(
+                orders.getContent().stream().map(o -> toResponse(o, null)).toList(),
+                orders.getNumber(), orders.getTotalPages(),
+                orders.getTotalElements(), orders.isFirst(), orders.isLast()
+        );
     }
 
     /**
@@ -348,6 +382,9 @@ public class OrderService {
                 order.getTotalAmount(),
                 order.getFinalAmount(),
                 order.getDeliveryAddress(),
+                // Tên và SĐT của người nhận hàng (từ entity User)
+                order.getUser() != null ? order.getUser().getFullName() : null,
+                order.getUser() != null ? order.getUser().getPhone() : null,
                 order.getNote(),
                 itemResponses,
                 logResponses,

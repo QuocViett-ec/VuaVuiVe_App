@@ -25,6 +25,9 @@ import java.util.UUID;
  *   GET    /api/orders/{id}                    — Chi tiết đơn
  *   PATCH  /api/orders/{id}/cancel             — Hủy đơn
  *
+ * SHIPPER:
+ *   GET    /api/orders/shipper                 — Đơn hàng được gán cho tôi
+ *
  * ADMIN/STAFF:
  *   GET    /api/orders                         — Tất cả đơn (có lọc)
  *   PATCH  /api/orders/{id}/status             — Cập nhật trạng thái
@@ -42,7 +45,6 @@ public class OrderController {
     public ResponseEntity<OrderResponse> createOrder(
             @Valid @RequestBody CreateOrderRequest request,
             HttpServletRequest httpRequest) {
-        // Lấy IP khách hàng để truyền vào VNPay
         String clientIp = httpRequest.getHeader("X-Forwarded-For");
         if (clientIp == null) clientIp = httpRequest.getRemoteAddr();
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -55,6 +57,16 @@ public class OrderController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
         return ResponseEntity.ok(orderService.getMyOrders(page, size));
+    }
+
+    @Operation(summary = "[SHIPPER] Lấy danh sách đơn hàng được gán cho Shipper hiện tại")
+    @GetMapping("/shipper")
+    @PreAuthorize("hasAnyRole('SHIPPER', 'ADMIN')")
+    public ResponseEntity<PagedResponse<OrderResponse>> getShipperOrders(
+            @RequestParam(defaultValue = "") String status,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+        return ResponseEntity.ok(orderService.getShipperOrders(status, page, size));
     }
 
     @Operation(summary = "Xem chi tiết đơn hàng kèm Timeline trạng thái")
@@ -75,9 +87,9 @@ public class OrderController {
     public ResponseEntity<OrderResponse> updateStatus(
             @PathVariable UUID id,
             @RequestBody Map<String, String> body) {
-        String newStatus   = body.get("status");
-        String note        = body.getOrDefault("note", "");
-        String updatedBy   = body.getOrDefault("updatedBy", "Admin");
+        String newStatus = body.get("status");
+        String note      = body.getOrDefault("note", "");
+        String updatedBy = body.getOrDefault("updatedBy", "Admin");
         return ResponseEntity.ok(orderService.updateOrderStatus(id, newStatus, note, updatedBy));
     }
 }

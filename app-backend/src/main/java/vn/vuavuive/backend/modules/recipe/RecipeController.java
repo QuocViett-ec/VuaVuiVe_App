@@ -126,6 +126,6 @@ public class RecipeController {
                 return ApiResponse.success(r);
             }
         }
-        return ApiResponse.error(404, "Không tìm thấy công thức");
+        return ApiResponse.error("Không tìm thấy công thức");
     }
 }

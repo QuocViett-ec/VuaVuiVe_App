@@ -55,6 +55,16 @@ public class Order {
     @SerializedName("note")
     private String note;
 
+    /** Flat fields từ backend OrderResponse — Shipper App sử dụng để hiển thị thông tin giao hàng */
+    @SerializedName("deliveryAddress")
+    private String deliveryAddress;
+
+    @SerializedName("deliveryName")
+    private String deliveryName;
+
+    @SerializedName("deliveryPhone")
+    private String deliveryPhone;
+
     @SerializedName("createdAt")
     private String createdAt;
 
@@ -81,6 +91,35 @@ public class Order {
     public String getNote() { return note; }
     public String getCreatedAt() { return createdAt; }
     public String getUpdatedAt() { return updatedAt; }
+
+    /**
+     * Lấy tên người nhận hàng.
+     * Ưu tiên field phẳng deliveryName (từ backend OrderResponse mới),
+     * fallback sang DeliveryInfo.getName() nếu có.
+     */
+    public String getRecipientName() {
+        if (deliveryName != null && !deliveryName.isEmpty()) return deliveryName;
+        return (delivery != null) ? delivery.getName() : null;
+    }
+
+    /**
+     * Lấy SĐT người nhận hàng.
+     * Ưu tiên field phẳng deliveryPhone (từ backend OrderResponse mới),
+     * fallback sang DeliveryInfo.getPhone() nếu có.
+     */
+    public String getRecipientPhone() {
+        if (deliveryPhone != null && !deliveryPhone.isEmpty()) return deliveryPhone;
+        return (delivery != null) ? delivery.getPhone() : null;
+    }
+
+    /**
+     * Lấy địa chỉ giao hàng.
+     * Ưu tiên DeliveryInfo.getAddress() nếu có, fallback sang field phẳng deliveryAddress.
+     */
+    public String getRecipientAddress() {
+        if (delivery != null && delivery.getAddress() != null) return delivery.getAddress();
+        return deliveryAddress;
+    }
 
     // Setters
     public void setStatus(String status) { this.status = status; }
