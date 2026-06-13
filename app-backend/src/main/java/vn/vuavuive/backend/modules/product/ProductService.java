@@ -1,5 +1,7 @@
 package vn.vuavuive.backend.modules.product;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -9,6 +11,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import vn.vuavuive.backend.core.ApiResponse;
+import vn.vuavuive.backend.core.Pagination;
 import vn.vuavuive.backend.exception.AppException;
 import vn.vuavuive.backend.modules.category.Category;
 import vn.vuavuive.backend.modules.category.CategoryRepository;
@@ -18,22 +22,59 @@ import vn.vuavuive.backend.modules.product.dto.ProductResponse;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class ProductService {
 
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
 
-    // =================== PUBLIC APIs (Có Cache) ===================
+    public ApiResponse<List<ProductResponse>> getProductsForApp(
+            String category,
+            String search,
+            int page,
+            Integer limit,
+            Integer size,
+            String sort
+    ) {
+        int pageNumber = Math.max(1, page);
+        int pageSize = Math.max(1, Math.min(100, limit != null ? limit : (size != null ? size : 20)));
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, sortForApp(sort));
+        Page<Product> products = productRepository.searchCatalogForApp(normalizeFilter(category), normalizeFilter(search), pageable);
 
-    /**
-     * Lấy tất cả sản phẩm available, có phân trang.
-     * Cache key bao gồm page và size để mỗi trang có cache riêng.
-     * App Android gọi API này khi cuộn xuống (Infinite Scroll / Load More).
-     */
+        return ApiResponse.<List<ProductResponse>>builder()
+                .success(true)
+                .message("Thao tác thành công")
+                .data(products.getContent().stream().map(this::toResponse).toList())
+                .pagination(new Pagination(
+                        Math.toIntExact(products.getTotalElements()),
+                        pageNumber,
+                        pageSize,
+                        products.getTotalPages()
+                ))
+                .build();
+    }
+
+    public ApiResponse<ProductResponse> getProductForApp(String id) {
+        Product product = findProductByAnyId(id);
+        return ApiResponse.success(toResponse(product));
+    }
+
+    public ApiResponse<List<String>> getCategorySlugsForApp() {
+        List<String> categories = categoryRepository.findAllRootCategories()
+                .stream()
+                .map(Category::getSlug)
+                .filter(slug -> slug != null && !slug.isBlank())
+                .toList();
+        return ApiResponse.success(categories);
+    }
+
     @Cacheable(value = "product-page", key = "'page-' + #page + '-size-' + #size")
     public PagedResponse<ProductResponse> getAvailableProducts(int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
@@ -41,10 +82,6 @@ public class ProductService {
         return toPagedResponse(products);
     }
 
-    /**
-     * Tìm kiếm sản phẩm theo tên (Search bar).
-     * Không cache vì keyword rất đa dạng.
-     */
     public PagedResponse<ProductResponse> searchProducts(String keyword, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
         Page<Product> products = productRepository
@@ -52,10 +89,6 @@ public class ProductService {
         return toPagedResponse(products);
     }
 
-    /**
-     * Lấy sản phẩm theo danh mục.
-     * Cache theo categoryId để không phải query DB mỗi lần.
-     */
     @Cacheable(value = "product-page", key = "'cat-' + #categoryId + '-page-' + #page")
     public PagedResponse<ProductResponse> getProductsByCategory(UUID categoryId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
@@ -64,26 +97,16 @@ public class ProductService {
         return toPagedResponse(products);
     }
 
-    /**
-     * Lấy chi tiết một sản phẩm theo ID.
-     * Cache riêng từng sản phẩm theo ID.
-     */
     @Cacheable(value = "products", key = "#id")
     public ProductResponse getProductById(UUID id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> AppException.notFound("Sản phẩm"));
-        if (!product.getIsActive()) {
+        if (!Boolean.TRUE.equals(product.getIsActive())) {
             throw AppException.notFound("Sản phẩm");
         }
         return toResponse(product);
     }
 
-    // =================== ADMIN APIs (Xóa Cache khi thay đổi) ===================
-
-    /**
-     * Tạo sản phẩm mới (Admin).
-     * Xóa toàn bộ cache product-page sau khi tạo.
-     */
     @Transactional
     @CacheEvict(value = {"products", "product-page"}, allEntries = true)
     public ProductResponse createProduct(ProductRequest request) {
@@ -104,10 +127,6 @@ public class ProductService {
         return toResponse(productRepository.save(product));
     }
 
-    /**
-     * Cập nhật sản phẩm (Admin).
-     * Xóa cache của sản phẩm cụ thể đó + tất cả product-page.
-     */
     @Transactional
     @CacheEvict(value = {"products", "product-page"}, allEntries = true)
     public ProductResponse updateProduct(UUID id, ProductRequest request) {
@@ -129,9 +148,6 @@ public class ProductService {
         return toResponse(productRepository.save(product));
     }
 
-    /**
-     * Cập nhật số lượng tồn kho nhanh (Admin/Staff).
-     */
     @Transactional
     @CacheEvict(value = {"products", "product-page"}, allEntries = true)
     public ProductResponse updateStock(UUID id, int newQuantity) {
@@ -141,9 +157,6 @@ public class ProductService {
         return toResponse(productRepository.save(product));
     }
 
-    /**
-     * Xóa mềm sản phẩm (Admin).
-     */
     @Transactional
     @CacheEvict(value = {"products", "product-page"}, allEntries = true)
     public void deleteProduct(UUID id) {
@@ -153,7 +166,22 @@ public class ProductService {
         productRepository.save(product);
     }
 
-    // =================== Helpers ===================
+    private Product findProductByAnyId(String id) {
+        if (id == null || id.isBlank()) {
+            throw AppException.notFound("Sản phẩm");
+        }
+
+        try {
+            UUID uuid = UUID.fromString(id);
+            return productRepository.findById(uuid)
+                    .filter(product -> Boolean.TRUE.equals(product.getIsActive()))
+                    .orElseThrow(() -> AppException.notFound("Sản phẩm"));
+        } catch (IllegalArgumentException ignored) {
+            return productRepository.findByExternalIdAndIsActiveTrue(id)
+                    .or(() -> productRepository.findBySlugAndIsActiveTrue(id))
+                    .orElseThrow(() -> AppException.notFound("Sản phẩm"));
+        }
+    }
 
     private PagedResponse<ProductResponse> toPagedResponse(Page<Product> page) {
         return new PagedResponse<>(
@@ -168,7 +196,7 @@ public class ProductService {
 
     ProductResponse toResponse(Product p) {
         int discountPercent = 0;
-        if (p.getOriginalPrice().compareTo(BigDecimal.ZERO) > 0) {
+        if (p.getOriginalPrice() != null && p.getOriginalPrice().compareTo(BigDecimal.ZERO) > 0) {
             discountPercent = p.getOriginalPrice()
                     .subtract(p.getSellingPrice())
                     .multiply(BigDecimal.valueOf(100))
@@ -176,9 +204,13 @@ public class ProductService {
                     .intValue();
         }
 
+        String externalId = p.getExternalId();
+        Double rating = fallbackRating(externalId != null ? externalId : String.valueOf(p.getId()));
+
         return new ProductResponse(
                 p.getId(),
                 p.getName(),
+                p.getSlug(),
                 p.getDescription(),
                 p.getOriginalPrice(),
                 p.getSellingPrice(),
@@ -188,7 +220,57 @@ public class ProductService {
                 p.getIsActive(),
                 p.getCategory().getId(),
                 p.getCategory().getName(),
+                p.getCategory().getSlug(),
+                p.getSubCategory(),
+                parseTags(p.getTags()),
+                externalId,
+                rating,
+                0,
+                0,
                 Math.max(0, discountPercent)
         );
+    }
+
+    private List<String> parseTags(String raw) {
+        if (raw == null || raw.isBlank()) {
+            return Collections.emptyList();
+        }
+        try {
+            return OBJECT_MAPPER.readValue(raw, new TypeReference<List<String>>() {});
+        } catch (Exception ignored) {
+            return List.of(raw);
+        }
+    }
+
+    private Sort sortForApp(String sort) {
+        if (sort == null || sort.isBlank() || "newest".equalsIgnoreCase(sort)) {
+            return Sort.by("createdAt").descending();
+        }
+        if ("price_asc".equalsIgnoreCase(sort)) {
+            return Sort.by("sellingPrice").ascending();
+        }
+        if ("price_desc".equalsIgnoreCase(sort)) {
+            return Sort.by("sellingPrice").descending();
+        }
+        if ("name".equalsIgnoreCase(sort)) {
+            return Sort.by("name").ascending();
+        }
+        return Sort.by("createdAt").descending();
+    }
+
+    private String normalizeFilter(String value) {
+        return value == null || value.isBlank() ? null : value.trim();
+    }
+
+    private Double fallbackRating(String key) {
+        if (key == null || key.isBlank()) {
+            return 4.5;
+        }
+        int sum = 0;
+        for (int i = 0; i < key.length(); i++) {
+            sum += key.charAt(i);
+        }
+        int score = 42 + (sum % 8);
+        return score / 10.0;
     }
 }

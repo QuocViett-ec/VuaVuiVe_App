@@ -9,28 +9,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import vn.vuavuive.backend.core.ApiResponse;
 import vn.vuavuive.backend.modules.product.dto.PagedResponse;
 import vn.vuavuive.backend.modules.product.dto.ProductRequest;
 import vn.vuavuive.backend.modules.product.dto.ProductResponse;
 
+import java.util.List;
 import java.util.UUID;
 
-/**
- * ProductController — API quản lý sản phẩm thực phẩm tươi sống.
- *
- * PUBLIC (Không cần token):
- *   GET /api/products                         — Danh sách (có phân trang, có Cache Redis)
- *   GET /api/products/{id}                    — Chi tiết sản phẩm
- *   GET /api/products/search?keyword=...      — Tìm kiếm
- *   GET /api/products/by-category/{catId}     — Lọc theo danh mục
- *
- * ADMIN/STAFF (Cần token):
- *   POST   /api/products                      — Tạo sản phẩm mới
- *   PUT    /api/products/{id}                 — Cập nhật sản phẩm
- *   PATCH  /api/products/{id}/stock           — Cập nhật tồn kho nhanh
- *   DELETE /api/products/{id}                 — Xóa mềm
- */
-@Tag(name = "Products", description = "API quản lý sản phẩm thực phẩm tươi sống")
+@Tag(name = "Products", description = "Product catalog APIs")
 @RestController
 @RequestMapping("/api/products")
 @RequiredArgsConstructor
@@ -38,23 +25,26 @@ public class ProductController {
 
     private final ProductService productService;
 
-    // ===== PUBLIC ENDPOINTS =====
-
-    @Operation(summary = "Lấy danh sách sản phẩm còn hàng (Có Cache, Phân trang)")
+    @Operation(summary = "Android-compatible product list")
     @GetMapping
-    public ResponseEntity<PagedResponse<ProductResponse>> getProducts(
-            @Parameter(description = "Số trang (bắt đầu từ 0)") @RequestParam(defaultValue = "0") int page,
-            @Parameter(description = "Số SP mỗi trang") @RequestParam(defaultValue = "20") int size) {
-        return ResponseEntity.ok(productService.getAvailableProducts(page, size));
+    public ResponseEntity<ApiResponse<List<ProductResponse>>> getProducts(
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) String search,
+            @Parameter(description = "1-based page for Android compatibility") @RequestParam(defaultValue = "1") int page,
+            @RequestParam(required = false) Integer limit,
+            @RequestParam(required = false) Integer size,
+            @RequestParam(required = false) String sort
+    ) {
+        return ResponseEntity.ok(productService.getProductsForApp(category, search, page, limit, size, sort));
     }
 
-    @Operation(summary = "Lấy chi tiết sản phẩm theo ID")
-    @GetMapping("/{id}")
-    public ResponseEntity<ProductResponse> getProductById(@PathVariable UUID id) {
-        return ResponseEntity.ok(productService.getProductById(id));
+    @Operation(summary = "Android-compatible category slugs")
+    @GetMapping("/categories")
+    public ResponseEntity<ApiResponse<List<String>>> getCategories() {
+        return ResponseEntity.ok(productService.getCategorySlugsForApp());
     }
 
-    @Operation(summary = "Tìm kiếm sản phẩm theo tên")
+    @Operation(summary = "Search products by name")
     @GetMapping("/search")
     public ResponseEntity<PagedResponse<ProductResponse>> searchProducts(
             @RequestParam String keyword,
@@ -63,7 +53,7 @@ public class ProductController {
         return ResponseEntity.ok(productService.searchProducts(keyword, page, size));
     }
 
-    @Operation(summary = "Lấy sản phẩm theo danh mục (Có Cache)")
+    @Operation(summary = "Get products by category UUID")
     @GetMapping("/by-category/{categoryId}")
     public ResponseEntity<PagedResponse<ProductResponse>> getByCategory(
             @PathVariable UUID categoryId,
@@ -72,9 +62,13 @@ public class ProductController {
         return ResponseEntity.ok(productService.getProductsByCategory(categoryId, page, size));
     }
 
-    // ===== ADMIN / STAFF ENDPOINTS =====
+    @Operation(summary = "Android-compatible product detail by UUID, externalId, or slug")
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<ProductResponse>> getProductById(@PathVariable String id) {
+        return ResponseEntity.ok(productService.getProductForApp(id));
+    }
 
-    @Operation(summary = "[ADMIN] Tạo sản phẩm mới")
+    @Operation(summary = "[ADMIN] Create product")
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
     public ResponseEntity<ProductResponse> createProduct(
@@ -83,7 +77,7 @@ public class ProductController {
                 .body(productService.createProduct(request));
     }
 
-    @Operation(summary = "[ADMIN] Cập nhật toàn bộ thông tin sản phẩm")
+    @Operation(summary = "[ADMIN] Update product")
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
     public ResponseEntity<ProductResponse> updateProduct(
@@ -92,7 +86,7 @@ public class ProductController {
         return ResponseEntity.ok(productService.updateProduct(id, request));
     }
 
-    @Operation(summary = "[STAFF] Cập nhật nhanh số lượng tồn kho")
+    @Operation(summary = "[STAFF] Update product stock")
     @PatchMapping("/{id}/stock")
     @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
     public ResponseEntity<ProductResponse> updateStock(
@@ -101,7 +95,7 @@ public class ProductController {
         return ResponseEntity.ok(productService.updateStock(id, quantity));
     }
 
-    @Operation(summary = "[ADMIN] Xóa mềm sản phẩm (Ẩn khỏi danh sách)")
+    @Operation(summary = "[ADMIN] Soft-delete product")
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteProduct(@PathVariable UUID id) {

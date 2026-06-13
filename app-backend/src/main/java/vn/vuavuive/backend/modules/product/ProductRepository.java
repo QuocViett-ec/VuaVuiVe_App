@@ -7,18 +7,38 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, UUID> {
 
-    /** Tìm kiếm sản phẩm theo tên (không phân biệt hoa thường) — Phục vụ tính năng Search */
     Page<Product> findByNameContainingIgnoreCaseAndIsActiveTrue(String name, Pageable pageable);
 
-    /** Lấy sản phẩm theo danh mục — Phục vụ tính năng Browse theo Category */
     Page<Product> findByCategoryIdAndIsActiveTrue(UUID categoryId, Pageable pageable);
 
-    /** Tìm sản phẩm còn hàng và đang active */
     @Query("SELECT p FROM Product p WHERE p.isActive = true AND p.stockQuantity > 0")
     Page<Product> findAvailableProducts(Pageable pageable);
+
+    @Query("""
+            SELECT p FROM Product p JOIN p.category c
+            WHERE p.isActive = true
+              AND p.stockQuantity > 0
+              AND (:category IS NULL OR :category = '' OR :category = 'all' OR c.slug = :category)
+              AND (
+                    :search IS NULL OR :search = ''
+                    OR lower(p.name) LIKE lower(concat('%', :search, '%'))
+                    OR lower(coalesce(p.tags, '')) LIKE lower(concat('%', :search, '%'))
+                    OR lower(coalesce(p.subCategory, '')) LIKE lower(concat('%', :search, '%'))
+                  )
+            """)
+    Page<Product> searchCatalogForApp(
+            @Param("category") String category,
+            @Param("search") String search,
+            Pageable pageable
+    );
+
+    Optional<Product> findByExternalIdAndIsActiveTrue(String externalId);
+
+    Optional<Product> findBySlugAndIsActiveTrue(String slug);
 }
