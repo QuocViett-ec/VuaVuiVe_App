@@ -15,14 +15,16 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
 
     Page<Product> findByNameContainingIgnoreCaseAndIsActiveTrue(String name, Pageable pageable);
 
-    Page<Product> findByCategoryIdAndIsActiveTrue(UUID categoryId, Pageable pageable);
+    @Query("SELECT p FROM Product p JOIN p.category c WHERE c.id = :categoryId AND p.isActive = true AND c.isActive = true")
+    Page<Product> findByCategoryIdAndIsActiveTrue(@Param("categoryId") UUID categoryId, Pageable pageable);
 
-    @Query("SELECT p FROM Product p WHERE p.isActive = true AND p.stockQuantity > 0")
+    @Query("SELECT p FROM Product p JOIN p.category c WHERE p.isActive = true AND p.stockQuantity > 0 AND c.isActive = true")
     Page<Product> findAvailableProducts(Pageable pageable);
 
     @Query("""
             SELECT p FROM Product p JOIN p.category c
             WHERE p.isActive = true
+              AND c.isActive = true
               AND p.stockQuantity > 0
               AND (:category IS NULL OR :category = '' OR :category = 'all' OR c.slug = :category)
               AND (
