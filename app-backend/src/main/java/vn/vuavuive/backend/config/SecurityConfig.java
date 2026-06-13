@@ -62,6 +62,7 @@ public class SecurityConfig {
                 .requestMatchers("/swagger-ui/**", "/api-docs/**", "/swagger-ui.html").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/recipes/**").permitAll()
                 // Webhook thanh toán từ VNPay/MoMo phải public (họ gọi vào, không có token)
                 .requestMatchers("/api/payments/**").permitAll()
 

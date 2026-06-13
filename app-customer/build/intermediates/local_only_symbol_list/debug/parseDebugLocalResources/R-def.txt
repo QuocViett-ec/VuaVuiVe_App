@@ -180,6 +180,7 @@ id layout_note
 id layout_out_of_stock
 id layout_saved_header
 id ll_history
+id ll_steps
 id nav_graph
 id nav_host_fragment
 id navigation_account
@@ -251,12 +252,14 @@ id tv_app_name
 id tv_carrier
 id tv_clear_history
 id tv_comment
+id tv_cook_time
 id tv_created_at
 id tv_customer_name
 id tv_date
 id tv_delivered_at
 id tv_delivery_address
 id tv_description
+id tv_difficulty
 id tv_discount
 id tv_done_label
 id tv_email
@@ -290,6 +293,7 @@ id tv_order_title
 id tv_original_price
 id tv_payment_method
 id tv_phone
+id tv_prep_time
 id tv_price
 id tv_product_name
 id tv_qty

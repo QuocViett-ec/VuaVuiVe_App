@@ -3,6 +3,7 @@ package vn.vuavuive.customer.ui.recipe;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,8 +33,10 @@ public class RecipeDetailActivity extends AppCompatActivity {
 
     private ImageView ivRecipe;
     private TextView tvRecipeName, tvDescription;
+    private TextView tvPrepTime, tvCookTime, tvDifficulty;
     private RecyclerView rvIngredients;
     private IngredientAdapter ingredientAdapter;
+    private LinearLayout llSteps;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +60,12 @@ public class RecipeDetailActivity extends AppCompatActivity {
                 bindRecipe(recipe);
             }
         });
+
+        recipeViewModel.getErrorMessage().observe(this, error -> {
+            if (error != null) {
+                Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     private void initViews() {
@@ -66,7 +75,11 @@ public class RecipeDetailActivity extends AppCompatActivity {
         ivRecipe      = findViewById(R.id.iv_recipe);
         tvRecipeName  = findViewById(R.id.tv_recipe_name);
         tvDescription = findViewById(R.id.tv_description);
+        tvPrepTime    = findViewById(R.id.tv_prep_time);
+        tvCookTime    = findViewById(R.id.tv_cook_time);
+        tvDifficulty  = findViewById(R.id.tv_difficulty);
         rvIngredients = findViewById(R.id.rv_ingredients);
+        llSteps       = findViewById(R.id.ll_steps);
 
         ingredientAdapter = new IngredientAdapter(this, ingredient -> addIngredientToCart(ingredient));
         rvIngredients.setLayoutManager(new LinearLayoutManager(this));
@@ -83,6 +96,10 @@ public class RecipeDetailActivity extends AppCompatActivity {
     private void bindRecipe(Map<String, Object> recipe) {
         tvRecipeName.setText(getString(recipe, "name", "Công thức"));
         tvDescription.setText(getString(recipe, "description", ""));
+        
+        tvPrepTime.setText("Chuẩn bị: " + getString(recipe, "prepTime", "--"));
+        tvCookTime.setText("Nấu: " + getString(recipe, "cookTime", "--"));
+        tvDifficulty.setText("Độ khó: " + getString(recipe, "difficulty", "--"));
 
         Glide.with(this)
                 .load(recipe.get("image"))
@@ -93,6 +110,21 @@ public class RecipeDetailActivity extends AppCompatActivity {
         Object ingObj = recipe.get("ingredients");
         if (ingObj instanceof List) {
             ingredientAdapter.setIngredients((List<Map<String, Object>>) ingObj);
+        }
+
+        llSteps.removeAllViews();
+        Object stepsObj = recipe.get("steps");
+        if (stepsObj instanceof List) {
+            List<String> steps = (List<String>) stepsObj;
+            for (int i = 0; i < steps.size(); i++) {
+                TextView tvStep = new TextView(this);
+                tvStep.setText("Bước " + (i + 1) + ": " + steps.get(i));
+                tvStep.setTextColor(getResources().getColor(R.color.text_primary));
+                tvStep.setTextSize(15);
+                tvStep.setPadding(0, 0, 0, 16);
+                tvStep.setLineSpacing(3, 1.2f);
+                llSteps.addView(tvStep);
+            }
         }
 
         Map<String, Object> meta = new java.util.HashMap<>();
@@ -143,3 +175,4 @@ public class RecipeDetailActivity extends AppCompatActivity {
         return val != null ? val.toString() : def;
     }
 }
+

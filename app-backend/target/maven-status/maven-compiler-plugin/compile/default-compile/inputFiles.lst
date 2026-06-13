@@ -48,7 +48,10 @@ D:\VuaVuiVe_App\app-backend\src\main\java\vn\vuavuive\backend\modules\product\Pr
 D:\VuaVuiVe_App\app-backend\src\main\java\vn\vuavuive\backend\modules\product\ProductController.java
 D:\VuaVuiVe_App\app-backend\src\main\java\vn\vuavuive\backend\modules\product\ProductRepository.java
 D:\VuaVuiVe_App\app-backend\src\main\java\vn\vuavuive\backend\modules\product\ProductService.java
+D:\VuaVuiVe_App\app-backend\src\main\java\vn\vuavuive\backend\modules\recipe\Recipe.java
 D:\VuaVuiVe_App\app-backend\src\main\java\vn\vuavuive\backend\modules\recipe\RecipeController.java
+D:\VuaVuiVe_App\app-backend\src\main\java\vn\vuavuive\backend\modules\recipe\RecipeRepository.java
+D:\VuaVuiVe_App\app-backend\src\main\java\vn\vuavuive\backend\modules\recipe\RecipeSeeder.java
 D:\VuaVuiVe_App\app-backend\src\main\java\vn\vuavuive\backend\modules\shipper\dto\ShipperRequest.java
 D:\VuaVuiVe_App\app-backend\src\main\java\vn\vuavuive\backend\modules\shipper\dto\ShipperResponse.java
 D:\VuaVuiVe_App\app-backend\src\main\java\vn\vuavuive\backend\modules\shipper\Shipper.java

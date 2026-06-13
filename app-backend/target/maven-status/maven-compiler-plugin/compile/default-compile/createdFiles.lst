@@ -5,6 +5,7 @@ vn\vuavuive\backend\modules\category\dto\CategoryRequest.class
 vn\vuavuive\backend\modules\order\dto\OrderResponse.class
 vn\vuavuive\backend\modules\order\OrderStatusLog.class
 vn\vuavuive\backend\modules\order\Order.class
+vn\vuavuive\backend\modules\recipe\RecipeSeeder.class
 vn\vuavuive\backend\modules\ai\ChatController$ChatRequest.class
 vn\vuavuive\backend\security\JwtAuthFilter.class
 vn\vuavuive\backend\modules\order\OrderController.class
@@ -31,6 +32,7 @@ vn\vuavuive\backend\modules\category\CategoryController.class
 vn\vuavuive\backend\modules\ai\GeminiService.class
 vn\vuavuive\backend\modules\category\CategoryRepository.class
 vn\vuavuive\backend\modules\product\dto\ProductRequest.class
+vn\vuavuive\backend\modules\recipe\RecipeController$2.class
 vn\vuavuive\backend\modules\recipe\RecipeController.class
 vn\vuavuive\backend\config\SecurityConfig.class
 vn\vuavuive\backend\modules\auth\AuthService.class
@@ -47,6 +49,7 @@ vn\vuavuive\backend\modules\product\ProductService$1.class
 vn\vuavuive\backend\modules\shipper\ShipperController.class
 vn\vuavuive\backend\modules\payment\VNPayService.class
 vn\vuavuive\backend\core\ResponseWrapperAdvice.class
+vn\vuavuive\backend\modules\recipe\RecipeController$1.class
 vn\vuavuive\backend\modules\auth\dto\RefreshTokenRequest.class
 vn\vuavuive\backend\config\AppConfig.class
 vn\vuavuive\backend\config\CacheConfig.class
@@ -58,6 +61,7 @@ vn\vuavuive\backend\modules\category\CategoryService.class
 vn\vuavuive\backend\exception\GlobalExceptionHandler.class
 vn\vuavuive\backend\modules\order\dto\OrderItemRequest.class
 vn\vuavuive\backend\modules\order\OrderRepository.class
+vn\vuavuive\backend\modules\recipe\RecipeRepository.class
 vn\vuavuive\backend\modules\user\User$Role.class
 vn\vuavuive\backend\core\Pagination.class
 vn\vuavuive\backend\modules\product\dto\ProductResponse.class
@@ -71,6 +75,7 @@ vn\vuavuive\backend\modules\shipper\ShipperRepository.class
 vn\vuavuive\backend\modules\product\Product.class
 vn\vuavuive\backend\security\JwtUtils.class
 vn\vuavuive\backend\modules\order\OrderStatusLog$OrderStatusLogBuilder.class
+vn\vuavuive\backend\modules\recipe\Recipe.class
 vn\vuavuive\backend\modules\payment\MoMoService.class
 vn\vuavuive\backend\exception\AppException.class
 vn\vuavuive\backend\modules\order\Order$OrderBuilder.class

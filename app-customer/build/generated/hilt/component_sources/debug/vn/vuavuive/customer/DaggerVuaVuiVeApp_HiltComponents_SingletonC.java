@@ -916,7 +916,7 @@ public final class DaggerVuaVuiVeApp_HiltComponents_SingletonC {
     }
 
     @Override
-    public void injectVuaVuiVeApp(VuaVuiVeApp arg0) {
+    public void injectVuaVuiVeApp(VuaVuiVeApp vuaVuiVeApp) {
     }
 
     private static final class SwitchingProvider<T> implements Provider<T> {

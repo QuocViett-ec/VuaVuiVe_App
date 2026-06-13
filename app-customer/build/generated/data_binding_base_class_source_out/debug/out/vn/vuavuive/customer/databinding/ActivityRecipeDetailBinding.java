@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -33,24 +34,41 @@ public final class ActivityRecipeDetailBinding implements ViewBinding {
   public final ImageView ivRecipe;
 
   @NonNull
+  public final LinearLayout llSteps;
+
+  @NonNull
   public final RecyclerView rvIngredients;
 
   @NonNull
+  public final TextView tvCookTime;
+
+  @NonNull
   public final TextView tvDescription;
+
+  @NonNull
+  public final TextView tvDifficulty;
+
+  @NonNull
+  public final TextView tvPrepTime;
 
   @NonNull
   public final TextView tvRecipeName;
 
   private ActivityRecipeDetailBinding(@NonNull ScrollView rootView,
       @NonNull MaterialButton btnAddAll, @NonNull ImageButton btnBack, @NonNull ImageView ivRecipe,
-      @NonNull RecyclerView rvIngredients, @NonNull TextView tvDescription,
-      @NonNull TextView tvRecipeName) {
+      @NonNull LinearLayout llSteps, @NonNull RecyclerView rvIngredients,
+      @NonNull TextView tvCookTime, @NonNull TextView tvDescription, @NonNull TextView tvDifficulty,
+      @NonNull TextView tvPrepTime, @NonNull TextView tvRecipeName) {
     this.rootView = rootView;
     this.btnAddAll = btnAddAll;
     this.btnBack = btnBack;
     this.ivRecipe = ivRecipe;
+    this.llSteps = llSteps;
     this.rvIngredients = rvIngredients;
+    this.tvCookTime = tvCookTime;
     this.tvDescription = tvDescription;
+    this.tvDifficulty = tvDifficulty;
+    this.tvPrepTime = tvPrepTime;
     this.tvRecipeName = tvRecipeName;
   }
 
@@ -99,15 +117,39 @@ public final class ActivityRecipeDetailBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.ll_steps;
+      LinearLayout llSteps = ViewBindings.findChildViewById(rootView, id);
+      if (llSteps == null) {
+        break missingId;
+      }
+
       id = R.id.rv_ingredients;
       RecyclerView rvIngredients = ViewBindings.findChildViewById(rootView, id);
       if (rvIngredients == null) {
         break missingId;
       }
 
+      id = R.id.tv_cook_time;
+      TextView tvCookTime = ViewBindings.findChildViewById(rootView, id);
+      if (tvCookTime == null) {
+        break missingId;
+      }
+
       id = R.id.tv_description;
       TextView tvDescription = ViewBindings.findChildViewById(rootView, id);
       if (tvDescription == null) {
+        break missingId;
+      }
+
+      id = R.id.tv_difficulty;
+      TextView tvDifficulty = ViewBindings.findChildViewById(rootView, id);
+      if (tvDifficulty == null) {
+        break missingId;
+      }
+
+      id = R.id.tv_prep_time;
+      TextView tvPrepTime = ViewBindings.findChildViewById(rootView, id);
+      if (tvPrepTime == null) {
         break missingId;
       }
 
@@ -118,7 +160,8 @@ public final class ActivityRecipeDetailBinding implements ViewBinding {
       }
 
       return new ActivityRecipeDetailBinding((ScrollView) rootView, btnAddAll, btnBack, ivRecipe,
-          rvIngredients, tvDescription, tvRecipeName);
+          llSteps, rvIngredients, tvCookTime, tvDescription, tvDifficulty, tvPrepTime,
+          tvRecipeName);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

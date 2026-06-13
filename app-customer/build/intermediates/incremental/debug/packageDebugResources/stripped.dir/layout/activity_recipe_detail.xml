@@ -24,7 +24,7 @@
                 android:layout_height="40dp"
                 android:src="@drawable/ic_arrow_back"
                 android:background="?selectableItemBackgroundBorderless"
-                android:tint="@color/white" />
+                app:tint="@color/white" xmlns:app="http://schemas.android.com/apk/res-auto" />
 
             <TextView
                 android:id="@+id/tv_recipe_name"
@@ -45,6 +45,63 @@
             android:scaleType="centerCrop"
             android:background="@color/surface_variant" />
 
+        <!-- Description and Stats Block with light background -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:background="#F0F8EC">
+
+            <TextView
+                android:id="@+id/tv_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:textColor="@color/text_primary"
+                android:textSize="15sp"
+                android:lineSpacingExtra="4dp" />
+
+            <!-- Stats row -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="#E1F0D7"
+                android:padding="12dp"
+                android:weightSum="3">
+
+                <TextView
+                    android:id="@+id/tv_prep_time"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Chuẩn bị: --"
+                    android:textColor="@color/text_primary"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/tv_cook_time"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Nấu: --"
+                    android:textColor="@color/text_primary"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/tv_difficulty"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Độ khó: --"
+                    android:textColor="@color/text_primary"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Content -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -52,22 +109,13 @@
             android:padding="16dp">
 
             <TextView
-                android:id="@+id/tv_description"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:textColor="@color/text_secondary"
-                android:textSize="14sp"
-                android:lineSpacingExtra="3dp" />
-
-            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Nguyên liệu"
                 android:textColor="@color/text_primary"
-                android:textSize="16sp"
+                android:textSize="18sp"
                 android:textStyle="bold"
-                android:layout_marginBottom="8dp" />
+                android:layout_marginBottom="12dp" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_ingredients"
@@ -78,10 +126,31 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_add_all"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:layout_marginTop="16dp"
-                android:text="🛒 Thêm tất cả vào giỏ hàng"
-                android:backgroundTint="@color/primary" />
+                android:layout_marginBottom="24dp"
+                android:text="🛒 THÊM TẤT CẢ VÀO GIỎ HÀNG"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                app:backgroundTint="@color/primary" xmlns:app="http://schemas.android.com/apk/res-auto"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Các bước thực hiện"
+                android:textColor="@color/text_primary"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="12dp" />
+
+            <!-- Using a LinearLayout to dynamically add step TextViews -->
+            <LinearLayout
+                android:id="@+id/ll_steps"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="32dp" />
+                
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

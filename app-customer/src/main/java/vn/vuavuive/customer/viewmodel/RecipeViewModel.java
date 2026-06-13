@@ -19,6 +19,7 @@ public class RecipeViewModel extends ViewModel {
     private final RecipeApi recipeApi;
     private final MutableLiveData<List<Map<String, Object>>> recipes = new MutableLiveData<>();
     private final MutableLiveData<Map<String, Object>> currentRecipe = new MutableLiveData<>();
+    private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
 
     @Inject
     public RecipeViewModel(RecipeApi recipeApi) {
@@ -27,6 +28,7 @@ public class RecipeViewModel extends ViewModel {
 
     public LiveData<List<Map<String, Object>>> getRecipes() { return recipes; }
     public LiveData<Map<String, Object>> getCurrentRecipe() { return currentRecipe; }
+    public LiveData<String> getErrorMessage() { return errorMessage; }
 
     public void loadRecipes() {
         recipeApi.getRecipes().enqueue(new Callback<ApiResponse<List<Map<String, Object>>>>() {
@@ -35,10 +37,14 @@ public class RecipeViewModel extends ViewModel {
                                    Response<ApiResponse<List<Map<String, Object>>>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     recipes.postValue(response.body().getData());
+                } else {
+                    errorMessage.postValue("Lỗi lấy danh sách công thức: " + response.code());
                 }
             }
             @Override
-            public void onFailure(Call<ApiResponse<List<Map<String, Object>>>> call, Throwable t) {}
+            public void onFailure(Call<ApiResponse<List<Map<String, Object>>>> call, Throwable t) {
+                errorMessage.postValue("Lỗi kết nối mạng: " + t.getMessage());
+            }
         });
     }
 
@@ -49,10 +55,14 @@ public class RecipeViewModel extends ViewModel {
                                    Response<ApiResponse<Map<String, Object>>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     currentRecipe.postValue(response.body().getData());
+                } else {
+                    errorMessage.postValue("Lỗi tải chi tiết: Không tìm thấy món ăn này (Mã lỗi " + response.code() + ")");
                 }
             }
             @Override
-            public void onFailure(Call<ApiResponse<Map<String, Object>>> call, Throwable t) {}
+            public void onFailure(Call<ApiResponse<Map<String, Object>>> call, Throwable t) {
+                errorMessage.postValue("Không thể kết nối Backend. Vui lòng bật Server! Lỗi: " + t.getMessage());
+            }
         });
     }
 }
