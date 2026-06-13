@@ -21,7 +21,7 @@ public record ProductResponse(
         String category,
         String subCategory,
         List<String> tags,
-        String externalId,
+        Integer externalId,
         Double rating,
         Integer reviewCount,
         Integer soldCount,

@@ -223,12 +223,23 @@ public class ProductService {
                 p.getCategory().getSlug(),
                 p.getSubCategory(),
                 parseTags(p.getTags()),
-                externalId,
+                parseExternalId(externalId),
                 rating,
                 0,
                 0,
                 Math.max(0, discountPercent)
         );
+    }
+
+    private Integer parseExternalId(String raw) {
+        if (raw == null || raw.isBlank()) {
+            return null;
+        }
+        try {
+            return Integer.valueOf(raw);
+        } catch (NumberFormatException ignored) {
+            return null;
+        }
     }
 
     private List<String> parseTags(String raw) {

@@ -1,0 +1,1553 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------------------< vn.vuavuive:backend >-------------------------
+[INFO] Building V?a Vui V? Backend 1.0.0
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] >>> spring-boot:3.3.0:run (default-cli) > test-compile @ backend >>>
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ backend ---
+[INFO] Copying 2 resources from src\main\resources to target\classes
+[INFO] Copying 0 resource from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ backend ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ backend ---
+[INFO] skip non existing resourceDirectory D:\VuaVuiVe_App\app-backend\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ backend ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] <<< spring-boot:3.3.0:run (default-cli) < test-compile @ backend <<<
+[INFO] 
+[INFO] 
+[INFO] --- spring-boot:3.3.0:run (default-cli) @ backend ---
+[INFO] Attaching agents: []
+Standard Commons Logging discovery in action with spring-jcl: please remove commons-logging.jar from classpath in order to avoid potential conflicts
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.3.0)
+
+2026-06-13T19:50:04.573+07:00  INFO 13640 --- [           main] v.v.backend.VuaVuiVeBackendApplication   : Starting VuaVuiVeBackendApplication using Java 21.0.11 with PID 13640 (D:\VuaVuiVe_App\app-backend\target\classes started by ADMIN in D:\VuaVuiVe_App\app-backend)
+2026-06-13T19:50:04.574+07:00 DEBUG 13640 --- [           main] v.v.backend.VuaVuiVeBackendApplication   : Running with Spring Boot v3.3.0, Spring v6.1.8
+2026-06-13T19:50:04.575+07:00  INFO 13640 --- [           main] v.v.backend.VuaVuiVeBackendApplication   : The following 1 profile is active: "dev"
+2026-06-13T19:50:05.267+07:00  INFO 13640 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-06-13T19:50:05.327+07:00  INFO 13640 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 51 ms. Found 6 JPA repository interfaces.
+2026-06-13T19:50:05.866+07:00  INFO 13640 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 3000 (http)
+2026-06-13T19:50:05.878+07:00  INFO 13640 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-06-13T19:50:05.878+07:00  INFO 13640 --- [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.24]
+2026-06-13T19:50:05.928+07:00  INFO 13640 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-06-13T19:50:05.929+07:00  INFO 13640 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1317 ms
+Standard Commons Logging discovery in action with spring-jcl: please remove commons-logging.jar from classpath in order to avoid potential conflicts
+2026-06-13T19:50:06.066+07:00  INFO 13640 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-06-13T19:50:06.112+07:00  INFO 13640 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.5.2.Final
+2026-06-13T19:50:06.139+07:00  INFO 13640 --- [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-06-13T19:50:06.358+07:00  INFO 13640 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-06-13T19:50:06.394+07:00  INFO 13640 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-06-13T19:50:06.650+07:00  INFO 13640 --- [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.sqlite.jdbc4.JDBC4Connection@e0847a9
+2026-06-13T19:50:06.653+07:00  INFO 13640 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-06-13T19:50:08.268+07:00  INFO 13640 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-06-13T19:50:08.348+07:00  INFO 13640 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-06-13T19:50:08.919+07:00 DEBUG 13640 --- [           main] v.v.backend.security.JwtAuthFilter       : Filter 'jwtAuthFilter' configured for use
+2026-06-13T19:50:09.083+07:00  INFO 13640 --- [           main] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-06-13T19:50:10.640+07:00  INFO 13640 --- [           main] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-06-13T19:50:10.645+07:00  WARN 13640 --- [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
+2026-06-13T19:50:11.415+07:00  WARN 13640 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-06-13T19:50:11.613+07:00 DEBUG 13640 --- [           main] o.s.w.s.s.s.WebSocketHandlerMapping      : Patterns [/ws, /ws/**] in 'stompWebSocketHandlerMapping'
+2026-06-13T19:50:11.838+07:00 DEBUG 13640 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : 45 mappings in 'requestMappingHandlerMapping'
+2026-06-13T19:50:11.923+07:00 DEBUG 13640 --- [           main] o.s.w.s.handler.SimpleUrlHandlerMapping  : Patterns [/webjars/**, /**, /swagger-ui*/*swagger-initializer.js, /swagger-ui*/**] in 'resourceHandlerMapping'
+2026-06-13T19:50:12.046+07:00  INFO 13640 --- [           main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@62b0059, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@264129aa, org.springframework.security.web.context.SecurityContextHolderFilter@424ddcb0, org.springframework.security.web.header.HeaderWriterFilter@35f03e9d, org.springframework.web.filter.CorsFilter@59af828a, org.springframework.security.web.authentication.logout.LogoutFilter@76ccefaf, vn.vuavuive.backend.security.JwtAuthFilter@1b1d93e9, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@60ce71c8, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@1227013b, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@2177809a, org.springframework.security.web.session.SessionManagementFilter@682c0560, org.springframework.security.web.access.ExceptionTranslationFilter@10378c35, org.springframework.security.web.access.intercept.AuthorizationFilter@2610cb55]
+2026-06-13T19:50:12.266+07:00 DEBUG 13640 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
+	v.v.b.m.a.ChatController:
+	
+2026-06-13T19:50:12.271+07:00 DEBUG 13640 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
+	v.v.b.m.a.AuthController:
+	
+2026-06-13T19:50:12.272+07:00 DEBUG 13640 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
+	v.v.b.m.c.CategoryController:
+	
+2026-06-13T19:50:12.272+07:00 DEBUG 13640 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
+	v.v.b.m.o.OrderController:
+	
+2026-06-13T19:50:12.275+07:00 DEBUG 13640 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
+	v.v.b.m.p.PaymentController:
+	
+2026-06-13T19:50:12.276+07:00 DEBUG 13640 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
+	v.v.b.m.p.ProductController:
+	
+2026-06-13T19:50:12.277+07:00 DEBUG 13640 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
+	v.v.b.m.r.RecipeController:
+	
+2026-06-13T19:50:12.278+07:00 DEBUG 13640 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
+	v.v.b.m.s.ShipperController:
+	
+2026-06-13T19:50:12.279+07:00 DEBUG 13640 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
+	o.s.b.a.w.s.e.BasicErrorController:
+	
+2026-06-13T19:50:12.282+07:00 DEBUG 13640 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
+	o.s.w.a.OpenApiWebMvcResource:
+	
+2026-06-13T19:50:12.282+07:00 DEBUG 13640 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
+	o.s.w.u.SwaggerWelcomeWebMvc:
+	
+2026-06-13T19:50:12.283+07:00 DEBUG 13640 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
+	o.s.w.u.SwaggerConfigResource:
+	
+2026-06-13T19:50:12.404+07:00 DEBUG 13640 --- [           main] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 2 ResponseBodyAdvice
+2026-06-13T19:50:12.458+07:00 DEBUG 13640 --- [           main] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 2 @ExceptionHandler, 2 ResponseBodyAdvice
+2026-06-13T19:50:12.665+07:00  INFO 13640 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 3000 (http) with context path '/'
+2026-06-13T19:50:12.669+07:00 DEBUG 13640 --- [           main] org.springframework.web.SimpLogging      : clientOutboundChannel added SubProtocolWebSocketHandler[StompSubProtocolHandler[v10.stomp, v11.stomp, v12.stomp]]
+2026-06-13T19:50:12.670+07:00 DEBUG 13640 --- [           main] org.springframework.web.SimpLogging      : clientInboundChannel added WebSocketAnnotationMethodMessageHandler[prefixes=[/app/]]
+2026-06-13T19:50:12.671+07:00  INFO 13640 --- [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Starting...
+2026-06-13T19:50:12.672+07:00 DEBUG 13640 --- [           main] org.springframework.web.SimpLogging      : clientInboundChannel added SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@590e0275]
+2026-06-13T19:50:12.673+07:00 DEBUG 13640 --- [           main] org.springframework.web.SimpLogging      : brokerChannel added SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@590e0275]
+2026-06-13T19:50:12.673+07:00  INFO 13640 --- [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@590e0275]]
+2026-06-13T19:50:12.673+07:00  INFO 13640 --- [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Started.
+2026-06-13T19:50:12.673+07:00 DEBUG 13640 --- [           main] org.springframework.web.SimpLogging      : clientInboundChannel added UserDestinationMessageHandler[DefaultUserDestinationResolver[prefix=/user/]]
+2026-06-13T19:50:12.673+07:00 DEBUG 13640 --- [           main] org.springframework.web.SimpLogging      : brokerChannel added UserDestinationMessageHandler[DefaultUserDestinationResolver[prefix=/user/]]
+2026-06-13T19:50:12.695+07:00  INFO 13640 --- [           main] v.v.backend.VuaVuiVeBackendApplication   : Started VuaVuiVeBackendApplication in 8.425 seconds (process running for 8.658)
+2026-06-13T19:50:12.857+07:00 DEBUG 13640 --- [           main] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.avatar_url,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.full_name,
+        u1_0.is_active,
+        u1_0.password_hash,
+        u1_0.phone,
+        u1_0.role,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+2026-06-13T19:50:12.858+07:00 DEBUG 13640 --- [MessageBroker-1] org.hibernate.SQL                        : 
+    select
+        o1_0.id,
+        o1_0.created_at,
+        o1_0.delivery_address,
+        o1_0.final_amount,
+        o1_0.note,
+        o1_0.payment_method,
+        o1_0.payment_status,
+        o1_0.shipper_id,
+        o1_0.status,
+        o1_0.total_amount,
+        o1_0.updated_at,
+        o1_0.user_id 
+    from
+        orders o1_0 
+    where
+        o1_0.status='PENDING' 
+        and o1_0.payment_method in ('VNPAY', 'MOMO') 
+        and o1_0.payment_status='UNPAID' 
+        and o1_0.created_at<?
+Hibernate: 
+    select
+        o1_0.id,
+        o1_0.created_at,
+        o1_0.delivery_address,
+        o1_0.final_amount,
+        o1_0.note,
+        o1_0.payment_method,
+        o1_0.payment_status,
+        o1_0.shipper_id,
+        o1_0.status,
+        o1_0.total_amount,
+        o1_0.updated_at,
+        o1_0.user_id 
+    from
+        orders o1_0 
+    where
+        o1_0.status='PENDING' 
+        and o1_0.payment_method in ('VNPAY', 'MOMO') 
+        and o1_0.payment_status='UNPAID' 
+        and o1_0.created_at<?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.avatar_url,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.full_name,
+        u1_0.is_active,
+        u1_0.password_hash,
+        u1_0.phone,
+        u1_0.role,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+2026-06-13T19:50:12.896+07:00 DEBUG 13640 --- [           main] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.avatar_url,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.full_name,
+        u1_0.is_active,
+        u1_0.password_hash,
+        u1_0.phone,
+        u1_0.role,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.avatar_url,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.full_name,
+        u1_0.is_active,
+        u1_0.password_hash,
+        u1_0.phone,
+        u1_0.role,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+2026-06-13T19:50:12.902+07:00 DEBUG 13640 --- [           main] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.avatar_url,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.full_name,
+        u1_0.is_active,
+        u1_0.password_hash,
+        u1_0.phone,
+        u1_0.role,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.avatar_url,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.full_name,
+        u1_0.is_active,
+        u1_0.password_hash,
+        u1_0.phone,
+        u1_0.role,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+2026-06-13T19:50:12.920+07:00 DEBUG 13640 --- [           main] org.hibernate.SQL                        : 
+    select
+        count(*) 
+    from
+        categories c1_0
+Hibernate: 
+    select
+        count(*) 
+    from
+        categories c1_0
+2026-06-13T19:50:12.926+07:00 DEBUG 13640 --- [           main] org.hibernate.SQL                        : 
+    select
+        count(*) 
+    from
+        products p1_0
+Hibernate: 
+    select
+        count(*) 
+    from
+        products p1_0
+2026-06-13T19:50:53.347+07:00  INFO 13640 --- [nio-3000-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-06-13T19:50:53.348+07:00  INFO 13640 --- [nio-3000-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-06-13T19:50:53.348+07:00 DEBUG 13640 --- [nio-3000-exec-2] o.s.web.servlet.DispatcherServlet        : Detected StandardServletMultipartResolver
+2026-06-13T19:50:53.349+07:00 DEBUG 13640 --- [nio-3000-exec-2] o.s.web.servlet.DispatcherServlet        : Detected AcceptHeaderLocaleResolver
+2026-06-13T19:50:53.349+07:00 DEBUG 13640 --- [nio-3000-exec-2] o.s.web.servlet.DispatcherServlet        : Detected FixedThemeResolver
+2026-06-13T19:50:53.350+07:00 DEBUG 13640 --- [nio-3000-exec-2] o.s.web.servlet.DispatcherServlet        : Detected org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator@10b51115
+2026-06-13T19:50:53.350+07:00 DEBUG 13640 --- [nio-3000-exec-2] o.s.web.servlet.DispatcherServlet        : Detected org.springframework.web.servlet.support.SessionFlashMapManager@13d72307
+2026-06-13T19:50:53.351+07:00 DEBUG 13640 --- [nio-3000-exec-2] o.s.web.servlet.DispatcherServlet        : enableLoggingRequestDetails='false': request parameters and headers will be masked to prevent unsafe logging of potentially sensitive data
+2026-06-13T19:50:53.351+07:00  INFO 13640 --- [nio-3000-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 3 ms
+2026-06-13T19:50:53.370+07:00 DEBUG 13640 --- [nio-3000-exec-1] o.s.web.servlet.DispatcherServlet        : GET "/api/products/100", parameters={}
+2026-06-13T19:50:53.370+07:00 DEBUG 13640 --- [nio-3000-exec-3] o.s.web.servlet.DispatcherServlet        : GET "/api/products?limit=3", parameters={masked}
+2026-06-13T19:50:53.370+07:00 DEBUG 13640 --- [nio-3000-exec-4] o.s.web.servlet.DispatcherServlet        : GET "/api/products?category=veg&limit=50", parameters={masked}
+2026-06-13T19:50:53.370+07:00 DEBUG 13640 --- [nio-3000-exec-2] o.s.web.servlet.DispatcherServlet        : GET "/api/products?search=Rau%20mu%E1%BB%91ng&limit=5", parameters={masked}
+2026-06-13T19:50:53.372+07:00 DEBUG 13640 --- [nio-3000-exec-4] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.product.ProductController#getProducts(String, String, int, Integer, Integer, String)
+2026-06-13T19:50:53.372+07:00 DEBUG 13640 --- [nio-3000-exec-2] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.product.ProductController#getProducts(String, String, int, Integer, Integer, String)
+2026-06-13T19:50:53.372+07:00 DEBUG 13640 --- [nio-3000-exec-3] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.product.ProductController#getProducts(String, String, int, Integer, Integer, String)
+2026-06-13T19:50:53.372+07:00 DEBUG 13640 --- [nio-3000-exec-1] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.product.ProductController#getProductById(String)
+2026-06-13T19:50:53.389+07:00 DEBUG 13640 --- [nio-3000-exec-1] org.hibernate.SQL                        : 
+    select
+        p1_0.id,
+        p1_0.category_id,
+        p1_0.created_at,
+        p1_0.description,
+        p1_0.external_id,
+        p1_0.image_url,
+        p1_0.is_active,
+        p1_0.name,
+        p1_0.original_price,
+        p1_0.selling_price,
+        p1_0.slug,
+        p1_0.stock_quantity,
+        p1_0.sub_category,
+        p1_0.tags,
+        p1_0.unit,
+        p1_0.updated_at 
+    from
+        products p1_0 
+    where
+        p1_0.external_id=? 
+        and p1_0.is_active=1
+Hibernate: 
+    select
+        p1_0.id,
+        p1_0.category_id,
+        p1_0.created_at,
+        p1_0.description,
+        p1_0.external_id,
+        p1_0.image_url,
+        p1_0.is_active,
+        p1_0.name,
+        p1_0.original_price,
+        p1_0.selling_price,
+        p1_0.slug,
+        p1_0.stock_quantity,
+        p1_0.sub_category,
+        p1_0.tags,
+        p1_0.unit,
+        p1_0.updated_at 
+    from
+        products p1_0 
+    where
+        p1_0.external_id=? 
+        and p1_0.is_active=1
+2026-06-13T19:50:53.399+07:00 DEBUG 13640 --- [nio-3000-exec-4] org.hibernate.SQL                        : 
+    select
+        p1_0.id,
+        p1_0.category_id,
+        p1_0.created_at,
+        p1_0.description,
+        p1_0.external_id,
+        p1_0.image_url,
+        p1_0.is_active,
+        p1_0.name,
+        p1_0.original_price,
+        p1_0.selling_price,
+        p1_0.slug,
+        p1_0.stock_quantity,
+        p1_0.sub_category,
+        p1_0.tags,
+        p1_0.unit,
+        p1_0.updated_at 
+    from
+        products p1_0 
+    join
+        categories c1_0 
+            on c1_0.id=p1_0.category_id 
+    where
+        p1_0.is_active=1 
+        and c1_0.is_active=1 
+        and p1_0.stock_quantity>0 
+        and (
+            ? is null 
+            or ?='' 
+            or ?='all' 
+            or c1_0.slug=?
+        ) 
+        and (
+            ? is null 
+            or ?='' 
+            or lower(p1_0.name) like lower(('%'||?||'%')) 
+            or lower(coalesce(p1_0.tags, '')) like lower(('%'||?||'%')) 
+            or lower(coalesce(p1_0.sub_category, '')) like lower(('%'||?||'%'))
+        ) 
+    order by
+        p1_0.created_at desc 
+    limit
+        ? 
+    offset
+        ?
+Hibernate: 
+    select
+        p1_0.id,
+        p1_0.category_id,
+        p1_0.created_at,
+        p1_0.description,
+        p1_0.external_id,
+        p1_0.image_url,
+        p1_0.is_active,
+        p1_0.name,
+        p1_0.original_price,
+        p1_0.selling_price,
+        p1_0.slug,
+        p1_0.stock_quantity,
+        p1_0.sub_category,
+        p1_0.tags,
+        p1_0.unit,
+        p1_0.updated_at 
+    from
+        products p1_0 
+    join
+        categories c1_0 
+            on c1_0.id=p1_0.category_id 
+    where
+        p1_0.is_active=1 
+        and c1_0.is_active=1 
+        and p1_0.stock_quantity>0 
+        and (
+            ? is null 
+            or ?='' 
+            or ?='all' 
+            or c1_0.slug=?
+        ) 
+        and (
+            ? is null 
+            or ?='' 
+            or lower(p1_0.name) like lower(('%'||?||'%')) 
+            or lower(coalesce(p1_0.tags, '')) like lower(('%'||?||'%')) 
+            or lower(coalesce(p1_0.sub_category, '')) like lower(('%'||?||'%'))
+        ) 
+    order by
+        p1_0.created_at desc 
+    limit
+        ? 
+    offset
+        ?
+2026-06-13T19:50:53.399+07:00 DEBUG 13640 --- [nio-3000-exec-3] org.hibernate.SQL                        : 
+    select
+        p1_0.id,
+        p1_0.category_id,
+        p1_0.created_at,
+        p1_0.description,
+        p1_0.external_id,
+        p1_0.image_url,
+        p1_0.is_active,
+        p1_0.name,
+        p1_0.original_price,
+        p1_0.selling_price,
+        p1_0.slug,
+        p1_0.stock_quantity,
+        p1_0.sub_category,
+        p1_0.tags,
+        p1_0.unit,
+        p1_0.updated_at 
+    from
+        products p1_0 
+    join
+        categories c1_0 
+            on c1_0.id=p1_0.category_id 
+    where
+        p1_0.is_active=1 
+        and c1_0.is_active=1 
+        and p1_0.stock_quantity>0 
+        and (
+            ? is null 
+            or ?='' 
+            or ?='all' 
+            or c1_0.slug=?
+        ) 
+        and (
+            ? is null 
+            or ?='' 
+            or lower(p1_0.name) like lower(('%'||?||'%')) 
+            or lower(coalesce(p1_0.tags, '')) like lower(('%'||?||'%')) 
+            or lower(coalesce(p1_0.sub_category, '')) like lower(('%'||?||'%'))
+        ) 
+    order by
+        p1_0.created_at desc 
+    limit
+        ? 
+    offset
+        ?
+Hibernate: 
+    select
+        p1_0.id,
+        p1_0.category_id,
+        p1_0.created_at,
+        p1_0.description,
+        p1_0.external_id,
+        p1_0.image_url,
+        p1_0.is_active,
+        p1_0.name,
+        p1_0.original_price,
+        p1_0.selling_price,
+        p1_0.slug,
+        p1_0.stock_quantity,
+        p1_0.sub_category,
+        p1_0.tags,
+        p1_0.unit,
+        p1_0.updated_at 
+    from
+        products p1_0 
+    join
+        categories c1_0 
+            on c1_0.id=p1_0.category_id 
+    where
+        p1_0.is_active=1 
+        and c1_0.is_active=1 
+        and p1_0.stock_quantity>0 
+        and (
+            ? is null 
+            or ?='' 
+            or ?='all' 
+            or c1_0.slug=?
+        ) 
+        and (
+            ? is null 
+            or ?='' 
+            or lower(p1_0.name) like lower(('%'||?||'%')) 
+            or lower(coalesce(p1_0.tags, '')) like lower(('%'||?||'%')) 
+            or lower(coalesce(p1_0.sub_category, '')) like lower(('%'||?||'%'))
+        ) 
+    order by
+        p1_0.created_at desc 
+    limit
+        ? 
+    offset
+        ?
+2026-06-13T19:50:53.399+07:00 DEBUG 13640 --- [nio-3000-exec-2] org.hibernate.SQL                        : 
+    select
+        p1_0.id,
+        p1_0.category_id,
+        p1_0.created_at,
+        p1_0.description,
+        p1_0.external_id,
+        p1_0.image_url,
+        p1_0.is_active,
+        p1_0.name,
+        p1_0.original_price,
+        p1_0.selling_price,
+        p1_0.slug,
+        p1_0.stock_quantity,
+        p1_0.sub_category,
+        p1_0.tags,
+        p1_0.unit,
+        p1_0.updated_at 
+    from
+        products p1_0 
+    join
+        categories c1_0 
+            on c1_0.id=p1_0.category_id 
+    where
+        p1_0.is_active=1 
+        and c1_0.is_active=1 
+        and p1_0.stock_quantity>0 
+        and (
+            ? is null 
+            or ?='' 
+            or ?='all' 
+            or c1_0.slug=?
+        ) 
+        and (
+            ? is null 
+            or ?='' 
+            or lower(p1_0.name) like lower(('%'||?||'%')) 
+            or lower(coalesce(p1_0.tags, '')) like lower(('%'||?||'%')) 
+            or lower(coalesce(p1_0.sub_category, '')) like lower(('%'||?||'%'))
+        ) 
+    order by
+        p1_0.created_at desc 
+    limit
+        ? 
+    offset
+        ?
+Hibernate: 
+    select
+        p1_0.id,
+        p1_0.category_id,
+        p1_0.created_at,
+        p1_0.description,
+        p1_0.external_id,
+        p1_0.image_url,
+        p1_0.is_active,
+        p1_0.name,
+        p1_0.original_price,
+        p1_0.selling_price,
+        p1_0.slug,
+        p1_0.stock_quantity,
+        p1_0.sub_category,
+        p1_0.tags,
+        p1_0.unit,
+        p1_0.updated_at 
+    from
+        products p1_0 
+    join
+        categories c1_0 
+            on c1_0.id=p1_0.category_id 
+    where
+        p1_0.is_active=1 
+        and c1_0.is_active=1 
+        and p1_0.stock_quantity>0 
+        and (
+            ? is null 
+            or ?='' 
+            or ?='all' 
+            or c1_0.slug=?
+        ) 
+        and (
+            ? is null 
+            or ?='' 
+            or lower(p1_0.name) like lower(('%'||?||'%')) 
+            or lower(coalesce(p1_0.tags, '')) like lower(('%'||?||'%')) 
+            or lower(coalesce(p1_0.sub_category, '')) like lower(('%'||?||'%'))
+        ) 
+    order by
+        p1_0.created_at desc 
+    limit
+        ? 
+    offset
+        ?
+2026-06-13T19:50:53.400+07:00 DEBUG 13640 --- [nio-3000-exec-1] org.hibernate.SQL                        : 
+    select
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.image_url,
+        c1_0.is_active,
+        c1_0.name,
+        c1_0.parent_id,
+        c1_0.slug,
+        c1_0.updated_at 
+    from
+        categories c1_0 
+    where
+        c1_0.id=?
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.image_url,
+        c1_0.is_active,
+        c1_0.name,
+        c1_0.parent_id,
+        c1_0.slug,
+        c1_0.updated_at 
+    from
+        categories c1_0 
+    where
+        c1_0.id=?
+2026-06-13T19:50:53.404+07:00 DEBUG 13640 --- [nio-3000-exec-3] org.hibernate.SQL                        : 
+    select
+        count(p1_0.id) 
+    from
+        products p1_0 
+    join
+        categories c1_0 
+            on c1_0.id=p1_0.category_id 
+    where
+        p1_0.is_active=1 
+        and c1_0.is_active=1 
+        and p1_0.stock_quantity>0 
+        and (
+            ? is null 
+            or ?='' 
+            or ?='all' 
+            or c1_0.slug=?
+        ) 
+        and (
+            ? is null 
+            or ?='' 
+            or lower(p1_0.name) like lower(('%'||?||'%')) 
+            or lower(coalesce(p1_0.tags, '')) like lower(('%'||?||'%')) 
+            or lower(coalesce(p1_0.sub_category, '')) like lower(('%'||?||'%'))
+        )
+Hibernate: 
+    select
+        count(p1_0.id) 
+    from
+        products p1_0 
+    join
+        categories c1_0 
+            on c1_0.id=p1_0.category_id 
+    where
+        p1_0.is_active=1 
+        and c1_0.is_active=1 
+        and p1_0.stock_quantity>0 
+        and (
+            ? is null 
+            or ?='' 
+            or ?='all' 
+            or c1_0.slug=?
+        ) 
+        and (
+            ? is null 
+            or ?='' 
+            or lower(p1_0.name) like lower(('%'||?||'%')) 
+            or lower(coalesce(p1_0.tags, '')) like lower(('%'||?||'%')) 
+            or lower(coalesce(p1_0.sub_category, '')) like lower(('%'||?||'%'))
+        )
+2026-06-13T19:50:53.405+07:00 DEBUG 13640 --- [nio-3000-exec-2] org.hibernate.SQL                        : 
+    select
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.image_url,
+        c1_0.is_active,
+        c1_0.name,
+        c1_0.parent_id,
+        c1_0.slug,
+        c1_0.updated_at 
+    from
+        categories c1_0 
+    where
+        c1_0.id=?
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.image_url,
+        c1_0.is_active,
+        c1_0.name,
+        c1_0.parent_id,
+        c1_0.slug,
+        c1_0.updated_at 
+    from
+        categories c1_0 
+    where
+        c1_0.id=?
+2026-06-13T19:50:53.405+07:00 DEBUG 13640 --- [nio-3000-exec-3] org.hibernate.SQL                        : 
+    select
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.image_url,
+        c1_0.is_active,
+        c1_0.name,
+        c1_0.parent_id,
+        c1_0.slug,
+        c1_0.updated_at 
+    from
+        categories c1_0 
+    where
+        c1_0.id=?
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.image_url,
+        c1_0.is_active,
+        c1_0.name,
+        c1_0.parent_id,
+        c1_0.slug,
+        c1_0.updated_at 
+    from
+        categories c1_0 
+    where
+        c1_0.id=?
+2026-06-13T19:50:53.407+07:00 DEBUG 13640 --- [nio-3000-exec-4] org.hibernate.SQL                        : 
+    select
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.image_url,
+        c1_0.is_active,
+        c1_0.name,
+        c1_0.parent_id,
+        c1_0.slug,
+        c1_0.updated_at 
+    from
+        categories c1_0 
+    where
+        c1_0.id=?
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.image_url,
+        c1_0.is_active,
+        c1_0.name,
+        c1_0.parent_id,
+        c1_0.slug,
+        c1_0.updated_at 
+    from
+        categories c1_0 
+    where
+        c1_0.id=?
+2026-06-13T19:50:53.450+07:00 DEBUG 13640 --- [nio-3000-exec-3] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-06-13T19:50:53.450+07:00 DEBUG 13640 --- [nio-3000-exec-4] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-06-13T19:50:53.450+07:00 DEBUG 13640 --- [nio-3000-exec-1] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-06-13T19:50:53.450+07:00 DEBUG 13640 --- [nio-3000-exec-2] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-06-13T19:50:53.462+07:00 DEBUG 13640 --- [nio-3000-exec-4] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[ProductResponse[id=90000000-0000-0000-0 (truncated)...]
+2026-06-13T19:50:53.462+07:00 DEBUG 13640 --- [nio-3000-exec-2] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[ProductResponse[id=90000000-0000-0000-0 (truncated)...]
+2026-06-13T19:50:53.462+07:00 DEBUG 13640 --- [nio-3000-exec-3] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[ProductResponse[id=90000000-0000-0000-0 (truncated)...]
+2026-06-13T19:50:53.462+07:00 DEBUG 13640 --- [nio-3000-exec-1] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=ProductResponse[id=90000000-0000-0000-00 (truncated)...]
+2026-06-13T19:50:53.481+07:00 DEBUG 13640 --- [nio-3000-exec-2] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-06-13T19:50:53.481+07:00 DEBUG 13640 --- [nio-3000-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-06-13T19:50:53.481+07:00 DEBUG 13640 --- [nio-3000-exec-3] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-06-13T19:50:53.481+07:00 DEBUG 13640 --- [nio-3000-exec-4] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-06-13T19:51:04.707+07:00 DEBUG 13640 --- [nio-3000-exec-6] o.s.web.servlet.DispatcherServlet        : GET "/api/categories", parameters={}
+2026-06-13T19:51:04.707+07:00 DEBUG 13640 --- [nio-3000-exec-6] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.category.CategoryController#getAllRootCategories()
+2026-06-13T19:51:04.714+07:00 DEBUG 13640 --- [nio-3000-exec-6] org.hibernate.SQL                        : 
+    select
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.image_url,
+        c1_0.is_active,
+        c1_0.name,
+        c1_0.parent_id,
+        c1_0.slug,
+        c1_0.updated_at 
+    from
+        categories c1_0 
+    where
+        c1_0.parent_id is null 
+        and c1_0.is_active=1 
+    order by
+        c1_0.name
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.image_url,
+        c1_0.is_active,
+        c1_0.name,
+        c1_0.parent_id,
+        c1_0.slug,
+        c1_0.updated_at 
+    from
+        categories c1_0 
+    where
+        c1_0.parent_id is null 
+        and c1_0.is_active=1 
+    order by
+        c1_0.name
+2026-06-13T19:51:04.718+07:00 DEBUG 13640 --- [nio-3000-exec-6] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-06-13T19:51:04.721+07:00 DEBUG 13640 --- [nio-3000-exec-6] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[CategoryResponse[id=80000000-0000-0000- (truncated)...]
+2026-06-13T19:51:04.724+07:00 DEBUG 13640 --- [nio-3000-exec-6] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-06-13T19:51:04.726+07:00 DEBUG 13640 --- [io-3000-exec-10] o.s.web.servlet.DispatcherServlet        : GET "/api/products/categories", parameters={}
+2026-06-13T19:51:04.727+07:00 DEBUG 13640 --- [io-3000-exec-10] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.product.ProductController#getCategories()
+2026-06-13T19:51:04.728+07:00 DEBUG 13640 --- [io-3000-exec-10] org.hibernate.SQL                        : 
+    select
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.image_url,
+        c1_0.is_active,
+        c1_0.name,
+        c1_0.parent_id,
+        c1_0.slug,
+        c1_0.updated_at 
+    from
+        categories c1_0 
+    where
+        c1_0.parent_id is null 
+        and c1_0.is_active=1 
+    order by
+        c1_0.name
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.image_url,
+        c1_0.is_active,
+        c1_0.name,
+        c1_0.parent_id,
+        c1_0.slug,
+        c1_0.updated_at 
+    from
+        categories c1_0 
+    where
+        c1_0.parent_id is null 
+        and c1_0.is_active=1 
+    order by
+        c1_0.name
+2026-06-13T19:51:04.732+07:00 DEBUG 13640 --- [io-3000-exec-10] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-06-13T19:51:04.732+07:00 DEBUG 13640 --- [io-3000-exec-10] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[sweet, spice, veg, meat, fruit, househo (truncated)...]
+2026-06-13T19:51:04.734+07:00 DEBUG 13640 --- [io-3000-exec-10] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-06-13T19:51:12.633+07:00  INFO 13640 --- [MessageBroker-2] o.s.w.s.c.WebSocketMessageBrokerStats    : WebSocketSession[0 current WS(0)-HttpStream(0)-HttpPoll(0), 0 total, 0 closed abnormally (0 connect failure, 0 send limit, 0 transport error)], stompSubProtocol[processed CONNECT(0)-CONNECTED(0)-DISCONNECT(0)], stompBrokerRelay[null], inboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], outboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], sockJsScheduler[pool size = 3, active threads = 1, queued tasks = 1, completed tasks = 1]
+2026-06-13T19:51:12.891+07:00 DEBUG 13640 --- [MessageBroker-1] org.hibernate.SQL                        : 
+    select
+        o1_0.id,
+        o1_0.created_at,
+        o1_0.delivery_address,
+        o1_0.final_amount,
+        o1_0.note,
+        o1_0.payment_method,
+        o1_0.payment_status,
+        o1_0.shipper_id,
+        o1_0.status,
+        o1_0.total_amount,
+        o1_0.updated_at,
+        o1_0.user_id 
+    from
+        orders o1_0 
+    where
+        o1_0.status='PENDING' 
+        and o1_0.payment_method in ('VNPAY', 'MOMO') 
+        and o1_0.payment_status='UNPAID' 
+        and o1_0.created_at<?
+Hibernate: 
+    select
+        o1_0.id,
+        o1_0.created_at,
+        o1_0.delivery_address,
+        o1_0.final_amount,
+        o1_0.note,
+        o1_0.payment_method,
+        o1_0.payment_status,
+        o1_0.shipper_id,
+        o1_0.status,
+        o1_0.total_amount,
+        o1_0.updated_at,
+        o1_0.user_id 
+    from
+        orders o1_0 
+    where
+        o1_0.status='PENDING' 
+        and o1_0.payment_method in ('VNPAY', 'MOMO') 
+        and o1_0.payment_status='UNPAID' 
+        and o1_0.created_at<?
+2026-06-13T19:52:12.901+07:00 DEBUG 13640 --- [MessageBroker-2] org.hibernate.SQL                        : 
+    select
+        o1_0.id,
+        o1_0.created_at,
+        o1_0.delivery_address,
+        o1_0.final_amount,
+        o1_0.note,
+        o1_0.payment_method,
+        o1_0.payment_status,
+        o1_0.shipper_id,
+        o1_0.status,
+        o1_0.total_amount,
+        o1_0.updated_at,
+        o1_0.user_id 
+    from
+        orders o1_0 
+    where
+        o1_0.status='PENDING' 
+        and o1_0.payment_method in ('VNPAY', 'MOMO') 
+        and o1_0.payment_status='UNPAID' 
+        and o1_0.created_at<?
+Hibernate: 
+    select
+        o1_0.id,
+        o1_0.created_at,
+        o1_0.delivery_address,
+        o1_0.final_amount,
+        o1_0.note,
+        o1_0.payment_method,
+        o1_0.payment_status,
+        o1_0.shipper_id,
+        o1_0.status,
+        o1_0.total_amount,
+        o1_0.updated_at,
+        o1_0.user_id 
+    from
+        orders o1_0 
+    where
+        o1_0.status='PENDING' 
+        and o1_0.payment_method in ('VNPAY', 'MOMO') 
+        and o1_0.payment_status='UNPAID' 
+        and o1_0.created_at<?
+2026-06-13T19:53:12.916+07:00 DEBUG 13640 --- [MessageBroker-3] org.hibernate.SQL                        : 
+    select
+        o1_0.id,
+        o1_0.created_at,
+        o1_0.delivery_address,
+        o1_0.final_amount,
+        o1_0.note,
+        o1_0.payment_method,
+        o1_0.payment_status,
+        o1_0.shipper_id,
+        o1_0.status,
+        o1_0.total_amount,
+        o1_0.updated_at,
+        o1_0.user_id 
+    from
+        orders o1_0 
+    where
+        o1_0.status='PENDING' 
+        and o1_0.payment_method in ('VNPAY', 'MOMO') 
+        and o1_0.payment_status='UNPAID' 
+        and o1_0.created_at<?
+Hibernate: 
+    select
+        o1_0.id,
+        o1_0.created_at,
+        o1_0.delivery_address,
+        o1_0.final_amount,
+        o1_0.note,
+        o1_0.payment_method,
+        o1_0.payment_status,
+        o1_0.shipper_id,
+        o1_0.status,
+        o1_0.total_amount,
+        o1_0.updated_at,
+        o1_0.user_id 
+    from
+        orders o1_0 
+    where
+        o1_0.status='PENDING' 
+        and o1_0.payment_method in ('VNPAY', 'MOMO') 
+        and o1_0.payment_status='UNPAID' 
+        and o1_0.created_at<?
+2026-06-13T19:54:12.925+07:00 DEBUG 13640 --- [MessageBroker-5] org.hibernate.SQL                        : 
+    select
+        o1_0.id,
+        o1_0.created_at,
+        o1_0.delivery_address,
+        o1_0.final_amount,
+        o1_0.note,
+        o1_0.payment_method,
+        o1_0.payment_status,
+        o1_0.shipper_id,
+        o1_0.status,
+        o1_0.total_amount,
+        o1_0.updated_at,
+        o1_0.user_id 
+    from
+        orders o1_0 
+    where
+        o1_0.status='PENDING' 
+        and o1_0.payment_method in ('VNPAY', 'MOMO') 
+        and o1_0.payment_status='UNPAID' 
+        and o1_0.created_at<?
+Hibernate: 
+    select
+        o1_0.id,
+        o1_0.created_at,
+        o1_0.delivery_address,
+        o1_0.final_amount,
+        o1_0.note,
+        o1_0.payment_method,
+        o1_0.payment_status,
+        o1_0.shipper_id,
+        o1_0.status,
+        o1_0.total_amount,
+        o1_0.updated_at,
+        o1_0.user_id 
+    from
+        orders o1_0 
+    where
+        o1_0.status='PENDING' 
+        and o1_0.payment_method in ('VNPAY', 'MOMO') 
+        and o1_0.payment_status='UNPAID' 
+        and o1_0.created_at<?
+2026-06-13T19:54:49.951+07:00 DEBUG 13640 --- [nio-3000-exec-9] o.s.web.servlet.DispatcherServlet        : GET "/api/products?limit=1", parameters={masked}
+2026-06-13T19:54:49.955+07:00 DEBUG 13640 --- [nio-3000-exec-9] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.product.ProductController#getProducts(String, String, int, Integer, Integer, String)
+2026-06-13T19:54:49.960+07:00 DEBUG 13640 --- [nio-3000-exec-9] org.hibernate.SQL                        : 
+    select
+        p1_0.id,
+        p1_0.category_id,
+        p1_0.created_at,
+        p1_0.description,
+        p1_0.external_id,
+        p1_0.image_url,
+        p1_0.is_active,
+        p1_0.name,
+        p1_0.original_price,
+        p1_0.selling_price,
+        p1_0.slug,
+        p1_0.stock_quantity,
+        p1_0.sub_category,
+        p1_0.tags,
+        p1_0.unit,
+        p1_0.updated_at 
+    from
+        products p1_0 
+    join
+        categories c1_0 
+            on c1_0.id=p1_0.category_id 
+    where
+        p1_0.is_active=1 
+        and c1_0.is_active=1 
+        and p1_0.stock_quantity>0 
+        and (
+            ? is null 
+            or ?='' 
+            or ?='all' 
+            or c1_0.slug=?
+        ) 
+        and (
+            ? is null 
+            or ?='' 
+            or lower(p1_0.name) like lower(('%'||?||'%')) 
+            or lower(coalesce(p1_0.tags, '')) like lower(('%'||?||'%')) 
+            or lower(coalesce(p1_0.sub_category, '')) like lower(('%'||?||'%'))
+        ) 
+    order by
+        p1_0.created_at desc 
+    limit
+        ? 
+    offset
+        ?
+Hibernate: 
+    select
+        p1_0.id,
+        p1_0.category_id,
+        p1_0.created_at,
+        p1_0.description,
+        p1_0.external_id,
+        p1_0.image_url,
+        p1_0.is_active,
+        p1_0.name,
+        p1_0.original_price,
+        p1_0.selling_price,
+        p1_0.slug,
+        p1_0.stock_quantity,
+        p1_0.sub_category,
+        p1_0.tags,
+        p1_0.unit,
+        p1_0.updated_at 
+    from
+        products p1_0 
+    join
+        categories c1_0 
+            on c1_0.id=p1_0.category_id 
+    where
+        p1_0.is_active=1 
+        and c1_0.is_active=1 
+        and p1_0.stock_quantity>0 
+        and (
+            ? is null 
+            or ?='' 
+            or ?='all' 
+            or c1_0.slug=?
+        ) 
+        and (
+            ? is null 
+            or ?='' 
+            or lower(p1_0.name) like lower(('%'||?||'%')) 
+            or lower(coalesce(p1_0.tags, '')) like lower(('%'||?||'%')) 
+            or lower(coalesce(p1_0.sub_category, '')) like lower(('%'||?||'%'))
+        ) 
+    order by
+        p1_0.created_at desc 
+    limit
+        ? 
+    offset
+        ?
+2026-06-13T19:54:49.962+07:00 DEBUG 13640 --- [nio-3000-exec-9] org.hibernate.SQL                        : 
+    select
+        count(p1_0.id) 
+    from
+        products p1_0 
+    join
+        categories c1_0 
+            on c1_0.id=p1_0.category_id 
+    where
+        p1_0.is_active=1 
+        and c1_0.is_active=1 
+        and p1_0.stock_quantity>0 
+        and (
+            ? is null 
+            or ?='' 
+            or ?='all' 
+            or c1_0.slug=?
+        ) 
+        and (
+            ? is null 
+            or ?='' 
+            or lower(p1_0.name) like lower(('%'||?||'%')) 
+            or lower(coalesce(p1_0.tags, '')) like lower(('%'||?||'%')) 
+            or lower(coalesce(p1_0.sub_category, '')) like lower(('%'||?||'%'))
+        )
+Hibernate: 
+    select
+        count(p1_0.id) 
+    from
+        products p1_0 
+    join
+        categories c1_0 
+            on c1_0.id=p1_0.category_id 
+    where
+        p1_0.is_active=1 
+        and c1_0.is_active=1 
+        and p1_0.stock_quantity>0 
+        and (
+            ? is null 
+            or ?='' 
+            or ?='all' 
+            or c1_0.slug=?
+        ) 
+        and (
+            ? is null 
+            or ?='' 
+            or lower(p1_0.name) like lower(('%'||?||'%')) 
+            or lower(coalesce(p1_0.tags, '')) like lower(('%'||?||'%')) 
+            or lower(coalesce(p1_0.sub_category, '')) like lower(('%'||?||'%'))
+        )
+2026-06-13T19:54:49.964+07:00 DEBUG 13640 --- [nio-3000-exec-9] org.hibernate.SQL                        : 
+    select
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.image_url,
+        c1_0.is_active,
+        c1_0.name,
+        c1_0.parent_id,
+        c1_0.slug,
+        c1_0.updated_at 
+    from
+        categories c1_0 
+    where
+        c1_0.id=?
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.image_url,
+        c1_0.is_active,
+        c1_0.name,
+        c1_0.parent_id,
+        c1_0.slug,
+        c1_0.updated_at 
+    from
+        categories c1_0 
+    where
+        c1_0.id=?
+2026-06-13T19:54:49.965+07:00 DEBUG 13640 --- [nio-3000-exec-9] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-06-13T19:54:49.966+07:00 DEBUG 13640 --- [nio-3000-exec-9] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[ProductResponse[id=90000000-0000-0000-0 (truncated)...]
+2026-06-13T19:54:49.967+07:00 DEBUG 13640 --- [nio-3000-exec-9] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-06-13T19:55:12.933+07:00 DEBUG 13640 --- [MessageBroker-2] org.hibernate.SQL                        : 
+    select
+        o1_0.id,
+        o1_0.created_at,
+        o1_0.delivery_address,
+        o1_0.final_amount,
+        o1_0.note,
+        o1_0.payment_method,
+        o1_0.payment_status,
+        o1_0.shipper_id,
+        o1_0.status,
+        o1_0.total_amount,
+        o1_0.updated_at,
+        o1_0.user_id 
+    from
+        orders o1_0 
+    where
+        o1_0.status='PENDING' 
+        and o1_0.payment_method in ('VNPAY', 'MOMO') 
+        and o1_0.payment_status='UNPAID' 
+        and o1_0.created_at<?
+Hibernate: 
+    select
+        o1_0.id,
+        o1_0.created_at,
+        o1_0.delivery_address,
+        o1_0.final_amount,
+        o1_0.note,
+        o1_0.payment_method,
+        o1_0.payment_status,
+        o1_0.shipper_id,
+        o1_0.status,
+        o1_0.total_amount,
+        o1_0.updated_at,
+        o1_0.user_id 
+    from
+        orders o1_0 
+    where
+        o1_0.status='PENDING' 
+        and o1_0.payment_method in ('VNPAY', 'MOMO') 
+        and o1_0.payment_status='UNPAID' 
+        and o1_0.created_at<?
+2026-06-13T19:55:17.279+07:00 DEBUG 13640 --- [io-3000-exec-10] o.s.web.servlet.DispatcherServlet        : GET "/api/products?limit=3%0Ahttp://localhost:3000/api/products?category=veg&limit=50%0Ahttp://localhost:3000/api/products?search=Rau%20mu%E1%BB%91ng&limit=5%0Ahttp://localhost:3000/api/products/100%0Ahttp://localhost:3000/api/products/categories", parameters={masked}
+2026-06-13T19:55:17.286+07:00 DEBUG 13640 --- [io-3000-exec-10] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.product.ProductController#getProducts(String, String, int, Integer, Integer, String)
+2026-06-13T19:55:17.289+07:00 DEBUG 13640 --- [io-3000-exec-10] o.s.web.method.HandlerMethod             : Could not resolve parameter [3] in public org.springframework.http.ResponseEntity<vn.vuavuive.backend.core.ApiResponse<java.util.List<vn.vuavuive.backend.modules.product.dto.ProductResponse>>> vn.vuavuive.backend.modules.product.ProductController.getProducts(java.lang.String,java.lang.String,int,java.lang.Integer,java.lang.Integer,java.lang.String): Failed to convert value of type 'java.lang.String[]' to required type 'java.lang.Integer'; For input string: "3http://localhost:3000/api/products?category=veg,50http://localhost:3000/api/products?search=Raumuống,5http://localhost:3000/api/products/100http://localhost:3000/api/products/categories"
+2026-06-13T19:55:17.289+07:00 DEBUG 13640 --- [io-3000-exec-10] .m.m.a.ExceptionHandlerExceptionResolver : Using @ExceptionHandler vn.vuavuive.backend.exception.GlobalExceptionHandler#handleGenericException(Exception)
+2026-06-13T19:55:17.289+07:00 ERROR 13640 --- [io-3000-exec-10] v.v.b.exception.GlobalExceptionHandler   : Lỗi không xác định: 
+
+org.springframework.web.method.annotation.MethodArgumentTypeMismatchException: Failed to convert value of type 'java.lang.String[]' to required type 'java.lang.Integer'; For input string: "3http://localhost:3000/api/products?category=veg,50http://localhost:3000/api/products?search=Raumuống,5http://localhost:3000/api/products/100http://localhost:3000/api/products/categories"
+	at org.springframework.web.method.annotation.AbstractNamedValueMethodArgumentResolver.convertIfNecessary(AbstractNamedValueMethodArgumentResolver.java:302) ~[spring-web-6.1.8.jar:6.1.8]
+	at org.springframework.web.method.annotation.AbstractNamedValueMethodArgumentResolver.resolveArgument(AbstractNamedValueMethodArgumentResolver.java:137) ~[spring-web-6.1.8.jar:6.1.8]
+	at org.springframework.web.method.support.HandlerMethodArgumentResolverComposite.resolveArgument(HandlerMethodArgumentResolverComposite.java:122) ~[spring-web-6.1.8.jar:6.1.8]
+	at org.springframework.web.method.support.InvocableHandlerMethod.getMethodArgumentValues(InvocableHandlerMethod.java:224) ~[spring-web-6.1.8.jar:6.1.8]
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:178) ~[spring-web-6.1.8.jar:6.1.8]
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118) ~[spring-webmvc-6.1.8.jar:6.1.8]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:926) ~[spring-webmvc-6.1.8.jar:6.1.8]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:831) ~[spring-webmvc-6.1.8.jar:6.1.8]
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87) ~[spring-webmvc-6.1.8.jar:6.1.8]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089) ~[spring-webmvc-6.1.8.jar:6.1.8]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979) ~[spring-webmvc-6.1.8.jar:6.1.8]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014) ~[spring-webmvc-6.1.8.jar:6.1.8]
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903) ~[spring-webmvc-6.1.8.jar:6.1.8]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564) ~[tomcat-embed-core-10.1.24.jar:6.0]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885) ~[spring-webmvc-6.1.8.jar:6.1.8]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658) ~[tomcat-embed-core-10.1.24.jar:6.0]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51) ~[tomcat-embed-websocket-10.1.24.jar:10.1.24]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:110) ~[spring-web-6.1.8.jar:6.1.8]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:108) ~[spring-web-6.1.8.jar:6.1.8]
+	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$3(FilterChainProxy.java:231) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:365) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.security.web.access.intercept.AuthorizationFilter.doFilter(AuthorizationFilter.java:100) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:126) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:120) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:131) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:85) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:179) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at vn.vuavuive.backend.security.JwtAuthFilter.doFilterInternal(JwtAuthFilter.java:60) ~[classes/:na]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.8.jar:6.1.8]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.web.filter.CorsFilter.doFilterInternal(CorsFilter.java:91) ~[spring-web-6.1.8.jar:6.1.8]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.8.jar:6.1.8]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.8.jar:6.1.8]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.8.jar:6.1.8]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.8.jar:6.1.8]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113) ~[spring-web-6.1.8.jar:6.1.8]
+	at org.springframework.web.servlet.handler.HandlerMappingIntrospector.lambda$createCacheFilter$3(HandlerMappingIntrospector.java:195) ~[spring-webmvc-6.1.8.jar:6.1.8]
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113) ~[spring-web-6.1.8.jar:6.1.8]
+	at org.springframework.web.filter.CompositeFilter.doFilter(CompositeFilter.java:74) ~[spring-web-6.1.8.jar:6.1.8]
+	at org.springframework.security.config.annotation.web.configuration.WebMvcSecurityConfiguration$CompositeFilterChainProxy.doFilter(WebMvcSecurityConfiguration.java:230) ~[spring-security-config-6.3.0.jar:6.3.0]
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:352) ~[spring-web-6.1.8.jar:6.1.8]
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:268) ~[spring-web-6.1.8.jar:6.1.8]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[spring-web-6.1.8.jar:6.1.8]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.8.jar:6.1.8]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[spring-web-6.1.8.jar:6.1.8]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.8.jar:6.1.8]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[spring-web-6.1.8.jar:6.1.8]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.8.jar:6.1.8]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:389) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:896) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at java.base/java.lang.Thread.run(Thread.java:1583) ~[na:na]
+Caused by: java.lang.NumberFormatException: For input string: "3http://localhost:3000/api/products?category=veg,50http://localhost:3000/api/products?search=Raumuống,5http://localhost:3000/api/products/100http://localhost:3000/api/products/categories"
+	at java.base/java.lang.NumberFormatException.forInputString(NumberFormatException.java:67) ~[na:na]
+	at java.base/java.lang.Integer.parseInt(Integer.java:662) ~[na:na]
+	at java.base/java.lang.Integer.valueOf(Integer.java:989) ~[na:na]
+	at org.springframework.util.NumberUtils.parseNumber(NumberUtils.java:203) ~[spring-core-6.1.8.jar:6.1.8]
+	at org.springframework.beans.propertyeditors.CustomNumberEditor.setAsText(CustomNumberEditor.java:115) ~[spring-beans-6.1.8.jar:6.1.8]
+	at org.springframework.beans.TypeConverterDelegate.doConvertTextValue(TypeConverterDelegate.java:439) ~[spring-beans-6.1.8.jar:6.1.8]
+	at org.springframework.beans.TypeConverterDelegate.doConvertValue(TypeConverterDelegate.java:412) ~[spring-beans-6.1.8.jar:6.1.8]
+	at org.springframework.beans.TypeConverterDelegate.convertIfNecessary(TypeConverterDelegate.java:161) ~[spring-beans-6.1.8.jar:6.1.8]
+	at org.springframework.beans.TypeConverterSupport.convertIfNecessary(TypeConverterSupport.java:80) ~[spring-beans-6.1.8.jar:6.1.8]
+	at org.springframework.beans.TypeConverterSupport.convertIfNecessary(TypeConverterSupport.java:53) ~[spring-beans-6.1.8.jar:6.1.8]
+	at org.springframework.validation.DataBinder.convertIfNecessary(DataBinder.java:860) ~[spring-context-6.1.8.jar:6.1.8]
+	at org.springframework.web.method.annotation.AbstractNamedValueMethodArgumentResolver.convertIfNecessary(AbstractNamedValueMethodArgumentResolver.java:294) ~[spring-web-6.1.8.jar:6.1.8]
+	... 101 common frames omitted
+
+2026-06-13T19:55:17.297+07:00 DEBUG 13640 --- [io-3000-exec-10] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-06-13T19:55:17.297+07:00 DEBUG 13640 --- [io-3000-exec-10] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ErrorResponse[status=500, message=Lỗi máy chủ nội bộ, vui lòng thử lại sau, errors=null, timestamp=2 (truncated)...]
+2026-06-13T19:55:17.302+07:00 DEBUG 13640 --- [io-3000-exec-10] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.web.method.annotation.MethodArgumentTypeMismatchException: Failed to convert value of type 'java.lang.String[]' to required type 'java.lang.Integer'; For input string: "3http://localhost:3000/api/products?category=veg,50http://localhost:3000/api/products?search=Raumuống,5http://localhost:3000/api/products/100http://localhost:3000/api/products/categories"]
+2026-06-13T19:55:17.302+07:00 DEBUG 13640 --- [io-3000-exec-10] o.s.web.servlet.DispatcherServlet        : Completed 500 INTERNAL_SERVER_ERROR
+2026-06-13T19:55:28.433+07:00 DEBUG 13640 --- [nio-3000-exec-1] o.s.web.servlet.DispatcherServlet        : GET "/api/products?limit=3%0A", parameters={masked}
+2026-06-13T19:55:28.438+07:00 DEBUG 13640 --- [nio-3000-exec-1] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.product.ProductController#getProducts(String, String, int, Integer, Integer, String)
+2026-06-13T19:55:28.440+07:00 DEBUG 13640 --- [nio-3000-exec-1] org.hibernate.SQL                        : 
+    select
+        p1_0.id,
+        p1_0.category_id,
+        p1_0.created_at,
+        p1_0.description,
+        p1_0.external_id,
+        p1_0.image_url,
+        p1_0.is_active,
+        p1_0.name,
+        p1_0.original_price,
+        p1_0.selling_price,
+        p1_0.slug,
+        p1_0.stock_quantity,
+        p1_0.sub_category,
+        p1_0.tags,
+        p1_0.unit,
+        p1_0.updated_at 
+    from
+        products p1_0 
+    join
+        categories c1_0 
+            on c1_0.id=p1_0.category_id 
+    where
+        p1_0.is_active=1 
+        and c1_0.is_active=1 
+        and p1_0.stock_quantity>0 
+        and (
+            ? is null 
+            or ?='' 
+            or ?='all' 
+            or c1_0.slug=?
+        ) 
+        and (
+            ? is null 
+            or ?='' 
+            or lower(p1_0.name) like lower(('%'||?||'%')) 
+            or lower(coalesce(p1_0.tags, '')) like lower(('%'||?||'%')) 
+            or lower(coalesce(p1_0.sub_category, '')) like lower(('%'||?||'%'))
+        ) 
+    order by
+        p1_0.created_at desc 
+    limit
+        ? 
+    offset
+        ?
+Hibernate: 
+    select
+        p1_0.id,
+        p1_0.category_id,
+        p1_0.created_at,
+        p1_0.description,
+        p1_0.external_id,
+        p1_0.image_url,
+        p1_0.is_active,
+        p1_0.name,
+        p1_0.original_price,
+        p1_0.selling_price,
+        p1_0.slug,
+        p1_0.stock_quantity,
+        p1_0.sub_category,
+        p1_0.tags,
+        p1_0.unit,
+        p1_0.updated_at 
+    from
+        products p1_0 
+    join
+        categories c1_0 
+            on c1_0.id=p1_0.category_id 
+    where
+        p1_0.is_active=1 
+        and c1_0.is_active=1 
+        and p1_0.stock_quantity>0 
+        and (
+            ? is null 
+            or ?='' 
+            or ?='all' 
+            or c1_0.slug=?
+        ) 
+        and (
+            ? is null 
+            or ?='' 
+            or lower(p1_0.name) like lower(('%'||?||'%')) 
+            or lower(coalesce(p1_0.tags, '')) like lower(('%'||?||'%')) 
+            or lower(coalesce(p1_0.sub_category, '')) like lower(('%'||?||'%'))
+        ) 
+    order by
+        p1_0.created_at desc 
+    limit
+        ? 
+    offset
+        ?
+2026-06-13T19:55:28.440+07:00 DEBUG 13640 --- [nio-3000-exec-1] org.hibernate.SQL                        : 
+    select
+        count(p1_0.id) 
+    from
+        products p1_0 
+    join
+        categories c1_0 
+            on c1_0.id=p1_0.category_id 
+    where
+        p1_0.is_active=1 
+        and c1_0.is_active=1 
+        and p1_0.stock_quantity>0 
+        and (
+            ? is null 
+            or ?='' 
+            or ?='all' 
+            or c1_0.slug=?
+        ) 
+        and (
+            ? is null 
+            or ?='' 
+            or lower(p1_0.name) like lower(('%'||?||'%')) 
+            or lower(coalesce(p1_0.tags, '')) like lower(('%'||?||'%')) 
+            or lower(coalesce(p1_0.sub_category, '')) like lower(('%'||?||'%'))
+        )
+Hibernate: 
+    select
+        count(p1_0.id) 
+    from
+        products p1_0 
+    join
+        categories c1_0 
+            on c1_0.id=p1_0.category_id 
+    where
+        p1_0.is_active=1 
+        and c1_0.is_active=1 
+        and p1_0.stock_quantity>0 
+        and (
+            ? is null 
+            or ?='' 
+            or ?='all' 
+            or c1_0.slug=?
+        ) 
+        and (
+            ? is null 
+            or ?='' 
+            or lower(p1_0.name) like lower(('%'||?||'%')) 
+            or lower(coalesce(p1_0.tags, '')) like lower(('%'||?||'%')) 
+            or lower(coalesce(p1_0.sub_category, '')) like lower(('%'||?||'%'))
+        )
+2026-06-13T19:55:28.443+07:00 DEBUG 13640 --- [nio-3000-exec-1] org.hibernate.SQL                        : 
+    select
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.image_url,
+        c1_0.is_active,
+        c1_0.name,
+        c1_0.parent_id,
+        c1_0.slug,
+        c1_0.updated_at 
+    from
+        categories c1_0 
+    where
+        c1_0.id=?
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.created_at,
+        c1_0.image_url,
+        c1_0.is_active,
+        c1_0.name,
+        c1_0.parent_id,
+        c1_0.slug,
+        c1_0.updated_at 
+    from
+        categories c1_0 
+    where
+        c1_0.id=?
+2026-06-13T19:55:28.443+07:00 DEBUG 13640 --- [nio-3000-exec-1] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-06-13T19:55:28.443+07:00 DEBUG 13640 --- [nio-3000-exec-1] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[ProductResponse[id=90000000-0000-0000-0 (truncated)...]
+2026-06-13T19:55:28.443+07:00 DEBUG 13640 --- [nio-3000-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 200 OK

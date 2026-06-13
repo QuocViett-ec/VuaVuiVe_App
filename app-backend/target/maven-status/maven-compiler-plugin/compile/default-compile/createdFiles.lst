@@ -43,6 +43,7 @@ vn\vuavuive\backend\modules\order\dto\CreateOrderRequest$DeliveryInfo.class
 vn\vuavuive\backend\modules\product\ProductRepository.class
 vn\vuavuive\backend\modules\order\dto\OrderStatusLogResponse.class
 vn\vuavuive\backend\modules\auth\dto\LoginRequest.class
+vn\vuavuive\backend\modules\product\ProductService$1.class
 vn\vuavuive\backend\modules\shipper\ShipperController.class
 vn\vuavuive\backend\modules\payment\VNPayService.class
 vn\vuavuive\backend\core\ResponseWrapperAdvice.class
