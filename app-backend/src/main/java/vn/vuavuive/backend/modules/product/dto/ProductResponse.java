@@ -2,12 +2,13 @@ package vn.vuavuive.backend.modules.product.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
-/** DTO hiển thị thông tin sản phẩm — Dùng cho danh sách và chi tiết */
 public record ProductResponse(
         UUID id,
         String name,
+        String slug,
         String description,
         BigDecimal originalPrice,
         BigDecimal sellingPrice,
@@ -17,10 +18,20 @@ public record ProductResponse(
         Boolean isActive,
         UUID categoryId,
         String categoryName,
-        /** % giảm giá tính toán từ original/selling price */
+        String category,
+        String subCategory,
+        List<String> tags,
+        Integer externalId,
+        Double rating,
+        Integer reviewCount,
+        Integer soldCount,
         Integer discountPercent
 ) {
-    /** Alias getters for app compatibility */
+    @JsonProperty("_id")
+    public UUID legacyId() {
+        return id;
+    }
+
     @JsonProperty("price")
     public BigDecimal price() {
         return sellingPrice;
