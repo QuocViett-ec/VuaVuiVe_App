@@ -17,3 +17,9 @@ target/
 .externalNativeBuild
 .cxx
 local.properties
+
+# Maven binary (don't commit the Maven installation)
+app-backend/apache-maven-*/
+
+# Backend runtime logs
+app-backend/target/backend-run.*.log
