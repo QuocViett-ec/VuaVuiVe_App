@@ -51,7 +51,7 @@
     <string name="btn_checkout">Thanh toán</string>
     <string name="label_total">Tổng tiền</string>
     <string name="label_saved_for_later">Lưu để mua sau</string>
-    <string name="action_save_later">Lưu lại</string>
+    <string name="action_save_later">Lưu để mua sau</string>
     <string name="action_move_to_cart">Thêm vào giỏ</string>
     <string name="login_required_checkout">Vui lòng đăng nhập để thanh toán</string>
 

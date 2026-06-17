@@ -1,5 +1,6 @@
 package vn.vuavuive.customer.ui.home;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -59,12 +60,15 @@ public class HomeFragment extends Fragment {
     private String currentProductCategory = "all";
     private String currentProductSearch = "";
     private String currentRecipeCategory = "all";
+    private String[] currentShortcutKeywords = null;
+    private boolean currentShortcutSaleOnly = false;
 
     private final Handler searchHandler = new Handler();
     private Runnable searchRunnable;
     private boolean isProductLoading = false;
 
-    private static boolean hasShownPromoDialog = false;
+    private static final String PREFS_HOME = "vvv_home";
+    private static final String KEY_PROMO_SHOWN = "promo_shown";
 
     @Nullable
     @Override
@@ -95,8 +99,8 @@ public class HomeFragment extends Fragment {
         loadRecipes();
         loadProducts(view);
 
-        if (!hasShownPromoDialog) {
-            hasShownPromoDialog = true;
+        if (!hasShownPromoDialog()) {
+            markPromoDialogShown();
             new Handler().postDelayed(this::showPromoPopup, 1000);
         }
     }
@@ -190,11 +194,23 @@ public class HomeFragment extends Fragment {
         View bia = view.findViewById(R.id.sc_bia);
         View suaTuoi = view.findViewById(R.id.sc_sua_tuoi);
 
-        if (flashSale != null) flashSale.setOnClickListener(v -> selectProductCategory("veg"));
-        if (banhTuoi != null) banhTuoi.setOnClickListener(v -> selectProductCategory("sweet"));
-        if (miAnLien != null) miAnLien.setOnClickListener(v -> selectProductCategory("dry"));
-        if (bia != null) bia.setOnClickListener(v -> selectProductCategory("drink"));
-        if (suaTuoi != null) suaTuoi.setOnClickListener(v -> selectProductCategory("drink"));
+        if (flashSale != null) flashSale.setOnClickListener(v -> selectShortcut(true));
+        if (banhTuoi != null) banhTuoi.setOnClickListener(v -> selectShortcut("bánh", "banh", "cake", "bread", "sweet"));
+        if (miAnLien != null) miAnLien.setOnClickListener(v -> selectShortcut("mì", "mi", "noodle", "dry"));
+        if (bia != null) bia.setOnClickListener(v -> selectShortcut("bia", "beer", "drink"));
+        if (suaTuoi != null) suaTuoi.setOnClickListener(v -> selectShortcut("sữa", "sua", "milk", "drink"));
+    }
+
+    private void selectShortcut(String... keywords) {
+        currentShortcutSaleOnly = false;
+        currentShortcutKeywords = keywords;
+        selectProductCategory("all");
+    }
+
+    private void selectShortcut(boolean saleOnly) {
+        currentShortcutSaleOnly = saleOnly;
+        currentShortcutKeywords = null;
+        selectProductCategory("all");
     }
 
     private void selectProductCategory(String catId) {
@@ -343,6 +359,8 @@ public class HomeFragment extends Fragment {
                 chip.setChipStrokeWidth(1f);
                 chip.setOnClickListener(v -> {
                     currentProductCategory = cat[0];
+                    currentShortcutKeywords = null;
+                    currentShortcutSaleOnly = false;
                     productViewModel.setCategory(cat[0]);
                     loadProducts(view);
                 });
@@ -382,6 +400,7 @@ public class HomeFragment extends Fragment {
         List<Product> mockProducts = currentProductSearch.isEmpty()
                 ? MockDataProvider.getMockProductsByCategory(currentProductCategory)
                 : MockDataProvider.searchMockProducts(currentProductSearch);
+        mockProducts = applyShortcutFilter(mockProducts);
 
         if (productAdapter != null) {
             productAdapter.setProducts(mockProducts);
@@ -395,10 +414,11 @@ public class HomeFragment extends Fragment {
                 if (result != null
                         && result.status == AuthRepository.Result.Status.SUCCESS
                         && result.data != null && !result.data.isEmpty()) {
+                    List<Product> products = applyShortcutFilter(result.data);
                     if (productAdapter != null) {
-                        productAdapter.setProducts(result.data);
+                        productAdapter.setProducts(products);
                     }
-                    updateEmptyState(view, false);
+                    updateEmptyState(view, products.isEmpty());
                 }
             });
         } catch (Exception e) {
@@ -415,6 +435,46 @@ public class HomeFragment extends Fragment {
     }
 
     // ── Promotion Popup ────────────────────────────────────────────────────────
+    private List<Product> applyShortcutFilter(List<Product> products) {
+        if (products == null || products.isEmpty() || (!currentShortcutSaleOnly && currentShortcutKeywords == null)) {
+            return products;
+        }
+        List<Product> filtered = new ArrayList<>();
+        for (Product product : products) {
+            if (currentShortcutSaleOnly ? isSaleProduct(product) : matchesKeywords(product, currentShortcutKeywords)) {
+                filtered.add(product);
+            }
+        }
+        return filtered;
+    }
+
+    private boolean isSaleProduct(Product product) {
+        return product != null && (product.getDiscountPercent() > 0
+                || (product.getOriginalPrice() != null && product.getOriginalPrice() > product.getPrice()));
+    }
+
+    private boolean matchesKeywords(Product product, String[] keywords) {
+        if (product == null || keywords == null) return false;
+        StringBuilder text = new StringBuilder();
+        append(text, product.getName());
+        append(text, product.getCategory());
+        append(text, product.getSubCategory());
+        if (product.getTags() != null) {
+            for (String tag : product.getTags()) append(text, tag);
+        }
+        String haystack = text.toString().toLowerCase(java.util.Locale.ROOT);
+        for (String keyword : keywords) {
+            if (haystack.contains(keyword.toLowerCase(java.util.Locale.ROOT))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void append(StringBuilder builder, String value) {
+        if (value != null) builder.append(' ').append(value);
+    }
+
     private void showPromoPopup() {
         if (getContext() == null) return;
         new AlertDialog.Builder(requireContext())
@@ -425,5 +485,19 @@ public class HomeFragment extends Fragment {
                 })
                 .setNegativeButton("Đóng", null)
                 .show();
+    }
+
+    private boolean hasShownPromoDialog() {
+        return requireContext()
+                .getSharedPreferences(PREFS_HOME, Context.MODE_PRIVATE)
+                .getBoolean(KEY_PROMO_SHOWN, false);
+    }
+
+    private void markPromoDialogShown() {
+        requireContext()
+                .getSharedPreferences(PREFS_HOME, Context.MODE_PRIVATE)
+                .edit()
+                .putBoolean(KEY_PROMO_SHOWN, true)
+                .apply();
     }
 }
