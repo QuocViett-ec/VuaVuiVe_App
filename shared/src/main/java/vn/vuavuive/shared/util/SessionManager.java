@@ -14,6 +14,8 @@ public class SessionManager {
     private static final String PREFS_NAME = "vvv_session";
     private static final String KEY_USER = "current_user";
     private static final String KEY_IS_LOGGED_IN = "is_logged_in";
+    private static final String KEY_ACCESS_TOKEN = "access_token";
+    private static final String KEY_REFRESH_TOKEN = "refresh_token";
 
     private final SharedPreferences prefs;
     private final Gson gson;
@@ -30,6 +32,17 @@ public class SessionManager {
                 .apply();
     }
 
+    public void saveTokens(String accessToken, String refreshToken) {
+        SharedPreferences.Editor editor = prefs.edit();
+        if (accessToken != null && !accessToken.isEmpty()) {
+            editor.putString(KEY_ACCESS_TOKEN, accessToken);
+        }
+        if (refreshToken != null && !refreshToken.isEmpty()) {
+            editor.putString(KEY_REFRESH_TOKEN, refreshToken);
+        }
+        editor.apply();
+    }
+
     public User getUser() {
         String userJson = prefs.getString(KEY_USER, null);
         if (userJson == null) return null;
@@ -43,8 +56,18 @@ public class SessionManager {
     public void clearSession() {
         prefs.edit()
                 .remove(KEY_USER)
+                .remove(KEY_ACCESS_TOKEN)
+                .remove(KEY_REFRESH_TOKEN)
                 .putBoolean(KEY_IS_LOGGED_IN, false)
                 .apply();
+    }
+
+    public String getAccessToken() {
+        return prefs.getString(KEY_ACCESS_TOKEN, null);
+    }
+
+    public String getRefreshToken() {
+        return prefs.getString(KEY_REFRESH_TOKEN, null);
     }
 
     public String getUserId() {

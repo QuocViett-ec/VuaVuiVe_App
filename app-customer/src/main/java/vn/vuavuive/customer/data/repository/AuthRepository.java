@@ -40,8 +40,10 @@ public class AuthRepository {
             @Override
             public void onResponse(Call<ApiResponse<User>> call, Response<ApiResponse<User>> response) {
                 if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
-                    User user = response.body().getData();
+                    ApiResponse<User> body = response.body();
+                    User user = body.getData();
                     sessionManager.saveUser(user);
+                    sessionManager.saveTokens(body.getAccessToken(), body.getRefreshToken());
                     result.postValue(Result.success(user));
                 } else {
                     String msg = extractError(response);
@@ -65,8 +67,10 @@ public class AuthRepository {
             @Override
             public void onResponse(Call<ApiResponse<User>> call, Response<ApiResponse<User>> response) {
                 if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
-                    User user = response.body().getData();
+                    ApiResponse<User> body = response.body();
+                    User user = body.getData();
                     sessionManager.saveUser(user);
+                    sessionManager.saveTokens(body.getAccessToken(), body.getRefreshToken());
                     result.postValue(Result.success(user));
                 } else {
                     result.postValue(Result.error(extractError(response)));

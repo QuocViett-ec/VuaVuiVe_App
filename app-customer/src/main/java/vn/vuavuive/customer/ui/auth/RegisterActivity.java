@@ -3,6 +3,7 @@ package vn.vuavuive.customer.ui.auth;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -91,6 +92,13 @@ public class RegisterActivity extends AppCompatActivity {
             tilPhone.setError("Số điện thoại không hợp lệ (VD: 0912345678)");
             valid = false;
         }
+        if (TextUtils.isEmpty(email)) {
+            tilEmail.setError("Vui long nhap email");
+            valid = false;
+        } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            tilEmail.setError("Email khong hop le");
+            valid = false;
+        }
         if (pass.length() < 6) {
             tilPassword.setError("Mật khẩu phải có ít nhất 6 ký tự");
             valid = false;
@@ -107,7 +115,7 @@ public class RegisterActivity extends AppCompatActivity {
         RegisterRequest request = new RegisterRequest();
         request.setName(name);
         request.setPhone(phone);
-        request.setEmail(email.isEmpty() ? null : email);
+        request.setEmail(email);
         request.setPassword(pass);
         request.setAddress(address.isEmpty() ? null : address);
 
