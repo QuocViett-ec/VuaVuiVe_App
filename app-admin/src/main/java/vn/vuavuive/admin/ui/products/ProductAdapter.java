@@ -32,7 +32,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     }
 
     public void updateData(List<Product> newProducts) {
-        this.products = newProducts;
+        this.products = newProducts != null ? newProducts : java.util.Collections.emptyList();
         notifyDataSetChanged();
     }
 
@@ -51,7 +51,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
     @Override
     public int getItemCount() {
-        return products.size();
+        return products != null ? products.size() : 0;
     }
 
     class ProductViewHolder extends RecyclerView.ViewHolder {
@@ -63,7 +63,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         }
 
         public void bind(Product product) {
-            binding.tvProductName.setText(product.getName());
+            if (product == null) return;
+            binding.tvProductName.setText(product.getName() != null ? product.getName() : "San pham");
             binding.tvCategory.setText(product.getSubCategory() != null ? product.getSubCategory() : product.getCategory());
             binding.tvPrice.setText(CurrencyFormatter.formatVnd(product.getPrice()));
             binding.tvUnit.setText(product.getUnit() != null ? " / " + product.getUnit() : "");
@@ -116,6 +117,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
                 if (listener != null) {
                     listener.onProductClick(product);
                 } else {
+                    if (product.getId() == null || product.getId().isEmpty()) return;
                     // Default behavior: launch edit
                     Intent intent = new Intent(itemView.getContext(), ProductEditActivity.class);
                     intent.putExtra("PRODUCT_ID", product.getId());

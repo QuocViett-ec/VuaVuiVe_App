@@ -63,6 +63,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/recipes/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()
                 // Webhook thanh toán từ VNPay/MoMo phải public (họ gọi vào, không có token)
                 .requestMatchers("/api/payments/vnpay/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/payments/momo/ipn").permitAll()
@@ -76,6 +77,7 @@ public class SecurityConfig {
                 // ===== ADMIN / STAFF ENDPOINTS =====
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.POST, "/api/products/**").hasAnyRole("ADMIN", "STAFF")
+                .requestMatchers(HttpMethod.POST, "/api/uploads/**").hasAnyRole("ADMIN", "STAFF")
                 .requestMatchers(HttpMethod.PUT, "/api/products/**").hasAnyRole("ADMIN", "STAFF")
                 .requestMatchers(HttpMethod.DELETE, "/api/products/**").hasRole("ADMIN")
 

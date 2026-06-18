@@ -3,9 +3,9 @@ package vn.vuavuive.shared.data.api;
 import java.util.List;
 import java.util.Map;
 import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
@@ -16,11 +16,13 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 import retrofit2.http.Streaming;
 import vn.vuavuive.shared.data.dto.ApiResponse;
+import vn.vuavuive.shared.data.dto.CategoryResponse;
 import vn.vuavuive.shared.data.dto.Product;
+import vn.vuavuive.shared.data.dto.UploadResponse;
 
 public interface AdminProductApi {
 
-    @GET("api/admin/products")
+    @GET("api/products")
     Call<ApiResponse<List<Product>>> getAllProducts(
             @Query("page") int page,
             @Query("limit") int limit,
@@ -28,33 +30,24 @@ public interface AdminProductApi {
             @Query("category") String category
     );
 
-    @Multipart
     @POST("api/products")
-    Call<ApiResponse<Product>> createProduct(
-            @Part("name") RequestBody name,
-            @Part("price") RequestBody price,
-            @Part("category") RequestBody category,
-            @Part("description") RequestBody description,
-            @Part("stock") RequestBody stock,
-            @Part("unit") RequestBody unit,
-            @Part MultipartBody.Part image
-    );
+    Call<Product> createProduct(@Body Map<String, Object> body);
 
-    @Multipart
     @PUT("api/products/{id}")
-    Call<ApiResponse<Product>> updateProduct(
+    Call<Product> updateProduct(
             @Path("id") String id,
-            @Part("name") RequestBody name,
-            @Part("price") RequestBody price,
-            @Part("category") RequestBody category,
-            @Part("description") RequestBody description,
-            @Part("stock") RequestBody stock,
-            @Part("unit") RequestBody unit,
-            @Part MultipartBody.Part image
+            @Body Map<String, Object> body
     );
 
     @DELETE("api/products/{id}")
-    Call<ApiResponse<Void>> deleteProduct(@Path("id") String id);
+    Call<Void> deleteProduct(@Path("id") String id);
+
+    @Multipart
+    @POST("api/uploads/images")
+    Call<ApiResponse<UploadResponse>> uploadImage(@Part MultipartBody.Part file);
+
+    @GET("api/categories")
+    Call<ApiResponse<List<CategoryResponse>>> getCategories();
 
     @GET("api/admin/products/export")
     @Streaming

@@ -3,12 +3,13 @@ package vn.vuavuive.admin.ui.main;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import com.google.android.material.navigation.NavigationBarView;
+import dagger.hilt.android.AndroidEntryPoint;
+import javax.inject.Inject;
 import vn.vuavuive.admin.R;
 import vn.vuavuive.admin.data.repository.MockRepository;
 import vn.vuavuive.admin.databinding.ActivityMainBinding;
@@ -19,8 +20,12 @@ import vn.vuavuive.admin.ui.orders.AdminOrderListFragment;
 import vn.vuavuive.admin.ui.products.AdminProductListFragment;
 import vn.vuavuive.admin.ui.vouchers.VoucherListFragment;
 import vn.vuavuive.shared.data.dto.User;
+import vn.vuavuive.shared.util.SessionManager;
 
+@AndroidEntryPoint
 public class MainActivity extends AppCompatActivity {
+    @Inject SessionManager sessionManager;
+
     private ActivityMainBinding binding;
     private User currentUser;
 
@@ -30,35 +35,26 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        currentUser = MockRepository.getInstance().getCurrentUser();
-        if (currentUser == null) {
-            // Force login if session is empty
+        currentUser = sessionManager.getUser();
+        if (currentUser != null && currentUser.getRole() != null) {
+            currentUser.setRole(currentUser.getRole().toLowerCase());
+        }
+        if (currentUser == null || !sessionManager.isLoggedIn() || !currentUser.isBackoffice()) {
             logout();
             return;
         }
-
+        MockRepository.getInstance().setCurrentUser(currentUser);
         setupUI();
     }
 
     private void setupUI() {
-        // Setup Toolbar
         binding.tvRoleBadge.setText(currentUser.getRole().toUpperCase());
-        binding.ivLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                logout();
-            }
-        });
-
-        // Hide menus based on roles (if needed, but default bottom nav items fit staff/admin/audit well)
-        // Audit role: can read products & orders but cannot modify.
-        // Let's configure bottom nav actions
+        binding.ivLogout.setOnClickListener(v -> logout());
         binding.bottomNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
                 Fragment fragment = null;
-
                 if (id == R.id.nav_dashboard) {
                     fragment = new DashboardFragment();
                 } else if (id == R.id.nav_orders) {
@@ -70,16 +66,11 @@ public class MainActivity extends AppCompatActivity {
                 } else if (id == R.id.nav_chatbot) {
                     fragment = new AdminChatFragment();
                 }
-
-                if (fragment != null) {
-                    replaceFragment(fragment);
-                    return true;
-                }
-                return false;
+                if (fragment == null) return false;
+                replaceFragment(fragment);
+                return true;
             }
         });
-
-        // Set default fragment
         binding.bottomNav.setSelectedItemId(R.id.nav_dashboard);
     }
 
@@ -96,7 +87,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void logout() {
         MockRepository.getInstance().setCurrentUser(null);
-        Toast.makeText(this, "Đã đăng xuất hệ thống", Toast.LENGTH_SHORT).show();
+        sessionManager.clearSession();
+        Toast.makeText(this, "Da dang xuat", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, AdminLoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);

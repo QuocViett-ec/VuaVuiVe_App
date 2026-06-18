@@ -36,11 +36,13 @@ import vn.vuavuive.shared.data.api.AdminOrderApi;
 import vn.vuavuive.shared.data.dto.ApiResponse;
 import vn.vuavuive.shared.data.dto.Order;
 import vn.vuavuive.shared.data.dto.User;
+import vn.vuavuive.shared.util.SessionManager;
 
 @AndroidEntryPoint
 public class AdminOrderListFragment extends Fragment implements OrderAdapter.OnOrderClickListener {
 
     @Inject AdminOrderApi adminOrderApi;
+    @Inject SessionManager sessionManager;
 
     private FragmentAdminOrderListBinding binding;
     private OrderAdapter adapter;
@@ -60,8 +62,9 @@ public class AdminOrderListFragment extends Fragment implements OrderAdapter.OnO
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        currentUser = MockRepository.getInstance().getCurrentUser();
+        currentUser = sessionManager.getUser();
         if (currentUser == null) return;
+        if (currentUser.getRole() != null) currentUser.setRole(currentUser.getRole().toLowerCase(Locale.getDefault()));
 
         setupTabs();
         setupRecyclerView();
@@ -148,7 +151,8 @@ public class AdminOrderListFragment extends Fragment implements OrderAdapter.OnO
                         && response.body().getData() != null) {
                     allOrders = new ArrayList<>(response.body().getData());
                 } else {
-                    allOrders = new ArrayList<>(MockRepository.getInstance().getOrders());
+                    allOrders = new ArrayList<>();
+                    Toast.makeText(getContext(), "Khong tai duoc don hang", Toast.LENGTH_SHORT).show();
                 }
                 applyFilters();
                 binding.swipeRefresh.setRefreshing(false);
@@ -156,7 +160,8 @@ public class AdminOrderListFragment extends Fragment implements OrderAdapter.OnO
 
             @Override
             public void onFailure(@NonNull Call<ApiResponse<List<Order>>> call, @NonNull Throwable t) {
-                allOrders = new ArrayList<>(MockRepository.getInstance().getOrders());
+                allOrders = new ArrayList<>();
+                Toast.makeText(getContext(), "Loi ket noi: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                 applyFilters();
                 binding.swipeRefresh.setRefreshing(false);
             }

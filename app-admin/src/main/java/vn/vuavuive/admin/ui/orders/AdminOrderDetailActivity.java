@@ -18,7 +18,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.vuavuive.admin.R;
-import vn.vuavuive.admin.data.repository.MockRepository;
 import vn.vuavuive.admin.databinding.ActivityAdminOrderDetailBinding;
 import vn.vuavuive.shared.data.api.AdminOrderApi;
 import vn.vuavuive.shared.data.api.OrderApi;
@@ -27,16 +26,17 @@ import vn.vuavuive.shared.data.dto.Order;
 import vn.vuavuive.shared.data.dto.OrderItem;
 import vn.vuavuive.shared.data.dto.User;
 import vn.vuavuive.shared.util.CurrencyFormatter;
+import vn.vuavuive.shared.util.SessionManager;
 
 @AndroidEntryPoint
 public class AdminOrderDetailActivity extends AppCompatActivity {
 
     @Inject OrderApi orderApi;
     @Inject AdminOrderApi adminOrderApi;
+    @Inject SessionManager sessionManager;
 
     private ActivityAdminOrderDetailBinding binding;
     private Order order;
-    private MockRepository repo;
     private User currentUser;
     private boolean isInitialSpinnerLoad = true;
 
@@ -57,8 +57,10 @@ public class AdminOrderDetailActivity extends AppCompatActivity {
         binding = ActivityAdminOrderDetailBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        repo = MockRepository.getInstance();
-        currentUser = repo.getCurrentUser();
+        currentUser = sessionManager.getUser();
+        if (currentUser != null && currentUser.getRole() != null) {
+            currentUser.setRole(currentUser.getRole().toLowerCase());
+        }
         if (currentUser == null) {
             finish();
             return;
@@ -77,15 +79,7 @@ public class AdminOrderDetailActivity extends AppCompatActivity {
     }
 
     private void loadOrderDetails(String orderId) {
-        order = null;
-        for (Order o : repo.getOrders()) {
-            if (o.getId().equals(orderId)) {
-                order = o;
-                break;
-            }
-        }
-
-        if (order == null) {
+        if (orderId != null) {
             orderApi.getOrderDetail(orderId).enqueue(new Callback<ApiResponse<Order>>() {
                 @Override
                 public void onResponse(@NonNull Call<ApiResponse<Order>> call,
@@ -302,18 +296,40 @@ public class AdminOrderDetailActivity extends AppCompatActivity {
             }
 
             binding.btnApproveReturn.setOnClickListener(v -> {
-                repo.approveReturn(order.getId(), true, "Chấp nhận trả hàng hoàn tiền từ admin");
+                updateReturnStatus("returned");
                 Toast.makeText(this, "Đã CHẤP THUẬN yêu cầu trả hàng", Toast.LENGTH_SHORT).show();
-                loadOrderDetails(order.getId());
             });
 
             binding.btnRejectReturn.setOnClickListener(v -> {
-                repo.approveReturn(order.getId(), false, "Từ chối trả hàng từ admin");
+                updateReturnStatus("delivered");
                 Toast.makeText(this, "Đã TỪ CHỐI yêu cầu trả hàng", Toast.LENGTH_SHORT).show();
-                loadOrderDetails(order.getId());
             });
         } else {
             binding.layoutReturnReview.setVisibility(View.GONE);
         }
+    }
+
+    private void updateReturnStatus(String status) {
+        java.util.Map<String, String> body = new java.util.HashMap<>();
+        body.put("status", status);
+        body.put("updatedBy", currentUser.getName() != null ? currentUser.getName() : "Admin");
+        adminOrderApi.updateOrderStatus(order.getId(), body).enqueue(new Callback<ApiResponse<Order>>() {
+            @Override
+            public void onResponse(@NonNull Call<ApiResponse<Order>> call,
+                                   @NonNull Response<ApiResponse<Order>> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()
+                        && response.body().getData() != null) {
+                    order = response.body().getData();
+                    renderOrderDetails(order.getId());
+                } else {
+                    Toast.makeText(AdminOrderDetailActivity.this, "Khong cap nhat duoc tra hang", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ApiResponse<Order>> call, @NonNull Throwable t) {
+                Toast.makeText(AdminOrderDetailActivity.this, "Loi ket noi: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

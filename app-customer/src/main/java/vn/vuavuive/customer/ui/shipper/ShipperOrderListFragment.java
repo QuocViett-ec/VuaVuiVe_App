@@ -18,8 +18,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import vn.vuavuive.customer.R;
 import vn.vuavuive.shared.data.api.ShipperOrderApi;
-import vn.vuavuive.shared.data.dto.ApiResponse;
 import vn.vuavuive.shared.data.dto.Order;
+import vn.vuavuive.shared.data.dto.PagedResponse;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
@@ -104,15 +104,15 @@ public class ShipperOrderListFragment extends Fragment {
         // Quyết định filter status theo tab
         // Tab Active: lấy cả PREPARING và IN_TRANSIT (không lọc status → backend trả tất cả đơn của Shipper)
         // Tab History: lọc DELIVERED
-        String statusFilter = isHistory ? "DELIVERED" : "";
+        String statusFilter = "";
 
-        shipperOrderApi.getMyShipperOrders(statusFilter).enqueue(new Callback<ApiResponse<List<Order>>>() {
+        shipperOrderApi.getMyShipperOrders(statusFilter).enqueue(new Callback<PagedResponse<Order>>() {
             @Override
-            public void onResponse(@NonNull Call<ApiResponse<List<Order>>> call,
-                                   @NonNull Response<ApiResponse<List<Order>>> response) {
+            public void onResponse(@NonNull Call<PagedResponse<Order>> call,
+                                   @NonNull Response<PagedResponse<Order>> response) {
                 showLoading(false);
-                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
-                    List<Order> allOrders = response.body().getData();
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Order> allOrders = response.body().getContent();
 
                     // For active tab: also filter PREPARING + IN_TRANSIT from the full list
                     List<Order> filtered = new ArrayList<>();
@@ -148,7 +148,7 @@ public class ShipperOrderListFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(@NonNull Call<ApiResponse<List<Order>>> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<PagedResponse<Order>> call, @NonNull Throwable t) {
                 showLoading(false);
                 showError("Lỗi kết nối: " + t.getMessage());
             }
