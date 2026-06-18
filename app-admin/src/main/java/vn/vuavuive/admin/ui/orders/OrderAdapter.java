@@ -71,7 +71,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         selectedOrderIds.clear();
         if (select) {
             for (Order o : orders) {
-                selectedOrderIds.add(o.getId());
+                if (o.getId() != null) selectedOrderIds.add(o.getId());
             }
         }
         notifyDataSetChanged();
@@ -110,19 +110,22 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
             binding.tvOrderId.setText(order.getOrderId() != null ? order.getOrderId() : order.getId());
             binding.tvOrderDate.setText(order.getCreatedAt() != null ? order.getCreatedAt().replace("T", " ").replace("Z", "") : "");
             
-            if (order.getDelivery() != null) {
-                binding.tvCustomerName.setText(order.getDelivery().getName());
-                binding.tvCustomerPhone.setText("SĐT: " + order.getDelivery().getPhone());
+            if (order.getRecipientName() != null || order.getRecipientPhone() != null) {
+                binding.tvCustomerName.setText(order.getRecipientName() != null ? order.getRecipientName() : "Khách hàng VVV");
+                binding.tvCustomerPhone.setText("SĐT: " + (order.getRecipientPhone() != null ? order.getRecipientPhone() : "N/A"));
             } else {
                 binding.tvCustomerName.setText("Khách hàng VVV");
                 binding.tvCustomerPhone.setText("SĐT: N/A");
             }
 
-            binding.tvOrderAmount.setText(CurrencyFormatter.formatVnd(order.getTotalAmount()));
+            binding.tvOrderAmount.setText(CurrencyFormatter.formatVnd(order.getFinalAmount()));
 
             String method = "COD";
             if (order.getPayment() != null && order.getPayment().getMethod() != null) {
                 method = order.getPayment().getMethod().toUpperCase();
+                if (order.getPayment().getStatus() != null) {
+                    method += " " + order.getPayment().getStatus().toUpperCase();
+                }
             }
             binding.tvPaymentBadge.setText(method);
 
@@ -165,7 +168,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
             int bgTint, textColor;
             String statusText;
 
-            switch (status != null ? status : "") {
+            switch (status != null ? status.toLowerCase() : "") {
                 case "pending":
                     bgTint = Color.parseColor("#33FF9800"); // Warning translucent
                     textColor = Color.parseColor("#FF9800");

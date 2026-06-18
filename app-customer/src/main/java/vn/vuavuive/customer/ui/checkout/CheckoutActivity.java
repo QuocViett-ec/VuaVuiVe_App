@@ -183,7 +183,7 @@ public class CheckoutActivity extends AppCompatActivity {
         orderViewModel.createOrder(request).observe(this, result -> {
             setLoading(false);
             if (result.status == AuthRepository.Result.Status.SUCCESS && result.data != null) {
-                String orderId = result.data.getId();
+                String orderId = result.data.getId() != null ? result.data.getId() : result.data.getOrderId();
                 trackPurchaseEvents(orderId);
                 if ("cod".equals(finalMethod)) {
                     // Clear cart & show success
@@ -201,12 +201,18 @@ public class CheckoutActivity extends AppCompatActivity {
                         }
                     });
                 } else if ("momo".equals(finalMethod)) {
-                    orderViewModel.getMomoUrl(orderId).observe(this, urlResult -> {
-                        if (urlResult.status == AuthRepository.Result.Status.SUCCESS) {
-                            Intent intent = new Intent(this, PaymentWebViewActivity.class);
-                            intent.putExtra("payment_url", urlResult.data);
+                    setLoading(true);
+                    orderViewModel.createMomoPayment(
+                            orderId, result.data.getFinalAmount(), result.data.getUserId()).observe(this, momoResult -> {
+                        setLoading(false);
+                        if (momoResult.status == AuthRepository.Result.Status.SUCCESS && momoResult.data != null) {
+                            Intent intent = new Intent(this, PaymentResultActivity.class);
+                            intent.putExtra("payment_url", momoResult.data.getPayUrl());
+                            intent.putExtra("deeplink", momoResult.data.getDeeplink());
                             intent.putExtra("order_id", orderId);
                             startActivity(intent);
+                        } else if (momoResult.status == AuthRepository.Result.Status.ERROR) {
+                            Toast.makeText(this, momoResult.message, Toast.LENGTH_LONG).show();
                         }
                     });
                 }

@@ -7,12 +7,14 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.activity.OnBackPressedCallback;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -59,6 +61,7 @@ public class SearchActivity extends AppCompatActivity {
         initViews();
         setupRecycler();
         setupSearch();
+        setupBackHandling();
         renderHistory(loadHistory());
 
         String prefill = getIntent().getStringExtra("prefill_query");
@@ -122,6 +125,32 @@ public class SearchActivity extends AppCompatActivity {
                 searchHandler.postDelayed(searchRunnable, 300);
             }
         });
+    }
+
+    private void setupBackHandling() {
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (clearSearch()) return;
+                setEnabled(false);
+                getOnBackPressedDispatcher().onBackPressed();
+            }
+        });
+    }
+
+    private boolean clearSearch() {
+        if (etSearch == null || (!etSearch.hasFocus() && getQuery().isEmpty())) return false;
+        searchHandler.removeCallbacks(searchRunnable);
+        if (!getQuery().isEmpty()) {
+            etSearch.setText("");
+            adapter.setProducts(new ArrayList<>());
+            tvEmpty.setVisibility(View.GONE);
+            renderHistory(loadHistory());
+        }
+        etSearch.clearFocus();
+        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        if (imm != null) imm.hideSoftInputFromWindow(etSearch.getWindowToken(), 0);
+        return true;
     }
 
     private void performSearch(String query, boolean fromAction) {

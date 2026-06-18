@@ -35,6 +35,12 @@ public class ResponseWrapperAdvice implements ResponseBodyAdvice<Object> {
                                   Class<? extends HttpMessageConverter<?>> selectedConverterType,
                                   ServerHttpRequest request, ServerHttpResponse response) {
 
+        String path = request.getURI().getPath();
+        if (path.startsWith("/api/momo/mock") || path.startsWith("/api/momo/return")) {
+            response.getHeaders().setContentType(MediaType.TEXT_HTML);
+            return body;
+        }
+
         // If it's already an ApiResponse or an ErrorResponse, don't wrap it
         if (body instanceof ApiResponse || body instanceof GlobalExceptionHandler.ErrorResponse) {
             return body;

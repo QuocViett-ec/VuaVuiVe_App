@@ -87,6 +87,7 @@ public class Order extends BaseEntity {
     public enum OrderStatus {
         PENDING,
         CONFIRMED,
+        SHIPPING,
         PREPARING,
         READY_FOR_PICKUP,
         IN_TRANSIT,
@@ -97,6 +98,6 @@ public class Order extends BaseEntity {
     }
 
     public enum PaymentStatus {
-        UNPAID, PAID, REFUNDED
+        UNPAID, PENDING, PAID, FAILED, CANCELLED, REFUNDED
     }
 }

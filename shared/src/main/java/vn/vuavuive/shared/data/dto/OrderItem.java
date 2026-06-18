@@ -6,13 +6,13 @@ public class OrderItem {
     @SerializedName("productId")
     private String productId;
 
-    @SerializedName("name")
+    @SerializedName(value = "name", alternate = {"productName"})
     private String name;
 
-    @SerializedName("imageUrl")
+    @SerializedName(value = "imageUrl", alternate = {"productImageUrl"})
     private String imageUrl;
 
-    @SerializedName("price")
+    @SerializedName(value = "price", alternate = {"unitPrice"})
     private double price;
 
     @SerializedName("quantity")
@@ -20,6 +20,9 @@ public class OrderItem {
 
     @SerializedName("unit")
     private String unit;
+
+    @SerializedName("subtotal")
+    private Double subtotal;
 
     public String getProductId() { return productId; }
     public String getName() { return name; }
@@ -29,5 +32,5 @@ public class OrderItem {
     public double getPrice() { return price; }
     public int getQuantity() { return quantity; }
     public String getUnit() { return unit; }
-    public double getLineTotal() { return price * quantity; }
+    public double getLineTotal() { return subtotal != null ? subtotal : price * quantity; }
 }

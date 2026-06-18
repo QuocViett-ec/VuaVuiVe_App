@@ -6,7 +6,9 @@ import androidx.lifecycle.ViewModel;
 import dagger.hilt.android.lifecycle.HiltViewModel;
 import vn.vuavuive.customer.data.repository.AuthRepository;
 import vn.vuavuive.customer.data.repository.OrderRepository;
+import vn.vuavuive.shared.data.dto.CreateMomoPaymentResponse;
 import vn.vuavuive.shared.data.dto.Order;
+import vn.vuavuive.shared.data.dto.PaymentStatusResponse;
 import vn.vuavuive.shared.data.dto.Voucher;
 import vn.vuavuive.shared.data.dto.request.CreateOrderRequest;
 import java.util.List;
@@ -51,6 +53,15 @@ public class OrderViewModel extends ViewModel {
 
     public LiveData<AuthRepository.Result<String>> getMomoUrl(String orderId) {
         return orderRepository.getMomoUrl(orderId);
+    }
+
+    public LiveData<AuthRepository.Result<CreateMomoPaymentResponse>> createMomoPayment(
+            String orderId, double amount, String userId) {
+        return orderRepository.createMomoPayment(orderId, amount, userId);
+    }
+
+    public LiveData<AuthRepository.Result<PaymentStatusResponse>> getPaymentStatus(String orderId) {
+        return orderRepository.getPaymentStatus(orderId);
     }
 
     public LiveData<AuthRepository.Result<List<Voucher>>> getAvailableVouchers() {

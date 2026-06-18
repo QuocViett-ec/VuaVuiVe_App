@@ -8,9 +8,11 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -38,6 +40,7 @@ public class ProductListFragment extends Fragment {
     private boolean isLoading = false;
     private String currentCategory = "all";
     private String currentSearch = "";
+    private TextInputEditText etSearch;
 
     // Debounce search
     private final Handler searchHandler = new Handler();
@@ -64,7 +67,7 @@ public class ProductListFragment extends Fragment {
 
     // ── Search setup ───────────────────────────────────────────────────────────
     private void setupSearch(View view) {
-        TextInputEditText etSearch = view.findViewById(R.id.et_search);
+        etSearch = view.findViewById(R.id.et_search);
         TextInputLayout tilSearch = view.findViewById(R.id.til_search);
 
         if (tilSearch != null) {
@@ -91,6 +94,30 @@ public class ProductListFragment extends Fragment {
                 }
             });
         }
+
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (clearSearch(view)) return;
+                setEnabled(false);
+                requireActivity().getOnBackPressedDispatcher().onBackPressed();
+            }
+        });
+    }
+
+    private boolean clearSearch(View view) {
+        if (etSearch == null || (!etSearch.hasFocus() && currentSearch.isEmpty())) return false;
+        searchHandler.removeCallbacks(searchRunnable);
+        if (etSearch.getText() != null && etSearch.getText().length() > 0) {
+            etSearch.setText("");
+            currentSearch = "";
+            productViewModel.setSearch("");
+            loadProducts(view);
+        }
+        etSearch.clearFocus();
+        InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(android.content.Context.INPUT_METHOD_SERVICE);
+        if (imm != null) imm.hideSoftInputFromWindow(etSearch.getWindowToken(), 0);
+        return true;
     }
 
     // ── Category chips ─────────────────────────────────────────────────────────

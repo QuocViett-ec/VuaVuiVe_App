@@ -1,0 +1,29 @@
+package vn.vuavuive.backend.config;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Component;
+
+@Component
+@RequiredArgsConstructor
+public class SchemaConstraintFixer implements ApplicationRunner {
+    private final JdbcTemplate jdbcTemplate;
+
+    @Override
+    public void run(ApplicationArguments args) {
+        // ponytail: Hibernate update does not refresh old enum check constraints in Postgres.
+        fix("orders", "orders_payment_status_check",
+                "payment_status in ('UNPAID','PENDING','PAID','FAILED','CANCELLED','REFUNDED')");
+        fix("orders", "orders_status_check",
+                "status in ('PENDING','CONFIRMED','SHIPPING','PREPARING','READY_FOR_PICKUP','IN_TRANSIT','DELIVERED','FAILED','RETURNED','CANCELLED')");
+        fix("payment_transactions", "payment_transactions_status_check",
+                "status in ('PENDING','PAID','FAILED','CANCELLED')");
+    }
+
+    private void fix(String table, String constraint, String check) {
+        jdbcTemplate.execute("alter table if exists " + table + " drop constraint if exists " + constraint);
+        jdbcTemplate.execute("alter table if exists " + table + " add constraint " + constraint + " check (" + check + ")");
+    }
+}

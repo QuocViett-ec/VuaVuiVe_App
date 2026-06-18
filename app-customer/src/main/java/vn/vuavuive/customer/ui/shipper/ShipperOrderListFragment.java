@@ -118,18 +118,21 @@ public class ShipperOrderListFragment extends Fragment {
                     List<Order> filtered = new ArrayList<>();
                     if (allOrders != null) {
                         for (Order order : allOrders) {
+                            String status = order.getStatus() == null ? "" : order.getStatus().toUpperCase();
                             if (!isHistory) {
                                 // Show PREPARING and IN_TRANSIT in active tab
-                                if ("PREPARING".equals(order.getStatus()) ||
-                                    "IN_TRANSIT".equals(order.getStatus()) ||
-                                    "READY_FOR_PICKUP".equals(order.getStatus())) {
+                                if ("CONFIRMED".equals(status) ||
+                                    "SHIPPING".equals(status) ||
+                                    "PREPARING".equals(status) ||
+                                    "IN_TRANSIT".equals(status) ||
+                                    "READY_FOR_PICKUP".equals(status)) {
                                     filtered.add(order);
                                 }
                             } else {
                                 // Show DELIVERED, FAILED, RETURNED in history tab
-                                if ("DELIVERED".equals(order.getStatus()) ||
-                                    "FAILED".equals(order.getStatus()) ||
-                                    "RETURNED".equals(order.getStatus())) {
+                                if ("DELIVERED".equals(status) ||
+                                    "FAILED".equals(status) ||
+                                    "RETURNED".equals(status)) {
                                     filtered.add(order);
                                 }
                             }

@@ -93,12 +93,16 @@ public class ShipperService {
             throw AppException.badRequest("Shipper này hiện đang bị khóa tài khoản");
         }
 
+        if (order.getPaymentStatus() != Order.PaymentStatus.PAID) {
+            throw AppException.badRequest("Chi gan shipper cho don hang da thanh toan");
+        }
+
         order.setShipper(shipper);
-        order.setStatus(Order.OrderStatus.PREPARING); // Chuyển sang trạng thái chuẩn bị / chuẩn bị giao
+        order.setStatus(Order.OrderStatus.SHIPPING); // Chuyển sang trạng thái chuẩn bị / chuẩn bị giao
         orderRepository.save(order);
 
         // Lưu log lịch sử trạng thái
-        appendStatusLog(order, Order.OrderStatus.PREPARING, 
+        appendStatusLog(order, Order.OrderStatus.SHIPPING, 
                 "Admin gán đơn hàng cho tài xế: " + shipper.getFullName(), 
                 "ADMIN", "Hệ thống");
 
@@ -205,3 +209,4 @@ public class ShipperService {
         );
     }
 }
+

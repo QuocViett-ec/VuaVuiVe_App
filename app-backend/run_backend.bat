@@ -3,5 +3,33 @@ title VuaVuiVe Backend Server
 echo Dang khoi dong Backend Server (Cong 3000)...
 echo.
 set JAVA_HOME=C:\Program Files\Android\Android Studio\jbr
+
+rem MoMo sandbox test keys. Keep these in backend only, never Android.
+set MOMO_PARTNER_CODE=MOMO
+set MOMO_ACCESS_KEY=F8BBA842ECF85
+set MOMO_SECRET_KEY=K951B6PE1waDMi640xX08PD3vg6EkVlz
+set MOMO_ENDPOINT=https://test-payment.momo.vn/v2/gateway/api/create
+set MOMO_REQUEST_TYPE=captureWallet
+set MOMO_LANG=vi
+
+rem Set MOMO_PUBLIC_BASE_URL to your current ngrok URL for real sandbox IPN.
+rem Example: set MOMO_PUBLIC_BASE_URL=https://abc-123.ngrok-free.app
+if "%MOMO_PUBLIC_BASE_URL%"=="" (
+  for /f "usebackq delims=" %%u in (`powershell -NoProfile -Command "try { (Invoke-RestMethod http://127.0.0.1:4040/api/tunnels).tunnels | Where-Object proto -eq 'https' | Select-Object -First 1 -ExpandProperty public_url } catch { '' }"`) do set MOMO_PUBLIC_BASE_URL=%%u
+)
+
+if "%MOMO_PUBLIC_BASE_URL%"=="" (
+  set MOCK_MOMO_MODE=true
+  set MOMO_REDIRECT_URL=http://10.0.2.2:3000/api/momo/return
+  set MOMO_IPN_URL=http://10.0.2.2:3000/api/momo/ipn
+) else (
+  set MOCK_MOMO_MODE=false
+  set MOMO_REDIRECT_URL=%MOMO_PUBLIC_BASE_URL%/api/momo/return
+  set MOMO_IPN_URL=%MOMO_PUBLIC_BASE_URL%/api/momo/ipn
+)
+
+echo MoMo public base URL: %MOMO_PUBLIC_BASE_URL%
+echo MoMo mock mode: %MOCK_MOMO_MODE%
+
 call apache-maven-3.9.6\bin\mvn.cmd spring-boot:run
 pause

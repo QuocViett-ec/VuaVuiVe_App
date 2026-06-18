@@ -4,9 +4,9 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
@@ -58,7 +58,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     class CartViewHolder extends RecyclerView.ViewHolder {
         ImageView ivProduct;
         TextView tvName, tvPrice, tvSubtotal, tvQuantity;
-        ImageButton btnDecrease, btnIncrease, btnRemove;
+        TextView btnDecrease, btnIncrease, btnRemove;
         TextView tvActionSave, tvActionMove;
 
         CartViewHolder(View itemView) {
@@ -85,8 +85,11 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
                     .placeholder(R.drawable.ic_image).into(ivProduct);
 
             btnDecrease.setOnClickListener(v -> {
-                int newQty = item.getQuantity() - 1;
-                cartViewModel.updateQuantity(item.getProductId(), newQty);
+                if (item.getQuantity() <= 1) {
+                    Toast.makeText(context, "Số lượng tối thiểu là 1", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                cartViewModel.updateQuantity(item.getProductId(), item.getQuantity() - 1);
             });
 
             btnIncrease.setOnClickListener(v -> {

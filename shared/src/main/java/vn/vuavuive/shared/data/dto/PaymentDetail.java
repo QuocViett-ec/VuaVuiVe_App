@@ -29,6 +29,7 @@ public class PaymentDetail {
     public String getTransactionId() { return transactionId; }
     public String getTransactionTime() { return transactionTime; }
     public double getAmount() { return amount; }
+    public void setAmount(double amount) { this.amount = amount; }
 
     public boolean isPaid() { return "paid".equals(status); }
     public boolean isCOD() { return "cod".equals(method); }

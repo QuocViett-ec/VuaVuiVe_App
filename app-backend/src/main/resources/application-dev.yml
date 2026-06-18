@@ -52,12 +52,15 @@ app:
       ipn-url: "https://lowell-intercerebral-monopodially.ngrok-free.app/api/payments/vnpay/ipn"
 
     momo:
-      partner-code: "MOMO" # <<< ĐỔI THÀNH PARTNER CODE SANDBOX
-      access-key: "F8BBA842ECF85"    # <<< ĐỔI
-      secret-key: "K951B6PE1waDMi640xX08PD3vg6EkVlz"    # <<< ĐỔI
-      endpoint: "https://test-payment.momo.vn/v2/gateway/api/create"
-      return-url: "https://lowell-intercerebral-monopodially.ngrok-free.app/api/payments/momo/return"
-      notify-url: "https://lowell-intercerebral-monopodially.ngrok-free.app/api/payments/momo/ipn"
+      partner-code: "${MOMO_PARTNER_CODE:MOMO}"
+      access-key: "${MOMO_ACCESS_KEY:}"
+      secret-key: "${MOMO_SECRET_KEY:}"
+      endpoint: "${MOMO_ENDPOINT:https://test-payment.momo.vn/v2/gateway/api/create}"
+      redirect-url: "${MOMO_REDIRECT_URL:http://10.0.2.2:3000/api/momo/return}"
+      ipn-url: "${MOMO_IPN_URL:http://10.0.2.2:3000/api/momo/ipn}"
+      request-type: "${MOMO_REQUEST_TYPE:captureWallet}"
+      lang: "${MOMO_LANG:vi}"
+      mock-mode: "${MOCK_MOMO_MODE:true}"
 
 # ============================================
 #  CẤU HÌNH CLOUDINARY (Lưu trữ ảnh)

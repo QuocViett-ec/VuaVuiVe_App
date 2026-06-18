@@ -7,19 +7,32 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import dagger.hilt.android.AndroidEntryPoint;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import javax.inject.Inject;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import vn.vuavuive.admin.R;
 import vn.vuavuive.admin.data.repository.MockRepository;
 import vn.vuavuive.admin.databinding.ActivityAdminOrderDetailBinding;
+import vn.vuavuive.shared.data.api.AdminOrderApi;
+import vn.vuavuive.shared.data.api.OrderApi;
+import vn.vuavuive.shared.data.dto.ApiResponse;
 import vn.vuavuive.shared.data.dto.Order;
 import vn.vuavuive.shared.data.dto.OrderItem;
 import vn.vuavuive.shared.data.dto.User;
 import vn.vuavuive.shared.util.CurrencyFormatter;
 
+@AndroidEntryPoint
 public class AdminOrderDetailActivity extends AppCompatActivity {
+
+    @Inject OrderApi orderApi;
+    @Inject AdminOrderApi adminOrderApi;
 
     private ActivityAdminOrderDetailBinding binding;
     private Order order;
@@ -73,20 +86,41 @@ public class AdminOrderDetailActivity extends AppCompatActivity {
         }
 
         if (order == null) {
-            Toast.makeText(this, "Đơn hàng không tồn tại", Toast.LENGTH_SHORT).show();
-            finish();
+            orderApi.getOrderDetail(orderId).enqueue(new Callback<ApiResponse<Order>>() {
+                @Override
+                public void onResponse(@NonNull Call<ApiResponse<Order>> call,
+                                       @NonNull Response<ApiResponse<Order>> response) {
+                    if (response.isSuccessful() && response.body() != null && response.body().isSuccess()
+                            && response.body().getData() != null) {
+                        order = response.body().getData();
+                        renderOrderDetails(orderId);
+                    } else {
+                        Toast.makeText(AdminOrderDetailActivity.this, "Đơn hàng không tồn tại", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<ApiResponse<Order>> call, @NonNull Throwable t) {
+                    Toast.makeText(AdminOrderDetailActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+            });
             return;
         }
+        renderOrderDetails(orderId);
+    }
 
+    private void renderOrderDetails(String orderId) {
         // 1. Core Header & IDs
         binding.tvOrderIdTitle.setText("Mã đơn: " + (order.getOrderId() != null ? order.getOrderId() : order.getId()));
         binding.tvOrderDateVal.setText(order.getCreatedAt() != null ? order.getCreatedAt().replace("T", " ").replace("Z", "") : "");
 
         // 2. Customer & Address Information
-        if (order.getDelivery() != null) {
-            binding.tvDetailCustomer.setText("Khách hàng: " + order.getDelivery().getName());
-            binding.tvDetailPhone.setText("SĐT: " + order.getDelivery().getPhone());
-            binding.tvDetailAddress.setText("Địa chỉ: " + order.getDelivery().getAddress());
+        if (order.getRecipientName() != null || order.getRecipientPhone() != null || order.getRecipientAddress() != null) {
+            binding.tvDetailCustomer.setText("Khách hàng: " + (order.getRecipientName() != null ? order.getRecipientName() : "N/A"));
+            binding.tvDetailPhone.setText("SĐT: " + (order.getRecipientPhone() != null ? order.getRecipientPhone() : "N/A"));
+            binding.tvDetailAddress.setText("Địa chỉ: " + (order.getRecipientAddress() != null ? order.getRecipientAddress() : "N/A"));
         } else {
             binding.tvDetailCustomer.setText("Khách hàng: N/A");
             binding.tvDetailPhone.setText("SĐT: N/A");
@@ -129,9 +163,14 @@ public class AdminOrderDetailActivity extends AppCompatActivity {
             if (order.getPayment().getMethod() != null) {
                 method = order.getPayment().getMethod().toUpperCase();
             }
-            if ("paid".equalsIgnoreCase(order.getPayment().getStatus()) || order.isPaid()) {
-                statusStr = "Đã thanh toán";
+            String paymentStatus = order.getPayment().getStatus();
+            if ("paid".equalsIgnoreCase(paymentStatus) || order.isPaid()) {
+                statusStr = "Paid";
                 isPaid = true;
+            } else if ("failed".equalsIgnoreCase(paymentStatus)) {
+                statusStr = "Failed";
+            } else if ("pending".equalsIgnoreCase(paymentStatus)) {
+                statusStr = "Pending";
             }
             if (order.getPayment().getTransactionId() != null) {
                 binding.layoutTxnId.setVisibility(View.VISIBLE);
@@ -152,15 +191,31 @@ public class AdminOrderDetailActivity extends AppCompatActivity {
         binding.tvBreakdownSubtotal.setText(CurrencyFormatter.formatVnd(subtotal));
         binding.tvBreakdownShipping.setText("+ " + CurrencyFormatter.formatVnd(order.getShippingFee()));
         binding.tvBreakdownDiscount.setText("- " + CurrencyFormatter.formatVnd(order.getDiscount()));
-        binding.tvBreakdownTotal.setText(CurrencyFormatter.formatVnd(order.getTotalAmount()));
+        binding.tvBreakdownTotal.setText(CurrencyFormatter.formatVnd(order.getFinalAmount()));
 
         // 6. Bottom Actions: Mark Paid
-        if (!isPaid && !"audit".equals(currentUser.getRole())) {
+        if (!isPaid && !"MOMO".equalsIgnoreCase(method) && !"audit".equals(currentUser.getRole())) {
             binding.btnMarkPaid.setVisibility(View.VISIBLE);
             binding.btnMarkPaid.setOnClickListener(v -> {
-                repo.markPaid(order.getId());
-                Toast.makeText(this, "Đã cập nhật trạng thái: ĐÃ THANH TOÁN", Toast.LENGTH_SHORT).show();
-                loadOrderDetails(orderId); // reload view
+                adminOrderApi.markPaid(order.getId()).enqueue(new Callback<ApiResponse<Order>>() {
+                    @Override
+                    public void onResponse(@NonNull Call<ApiResponse<Order>> call,
+                                           @NonNull Response<ApiResponse<Order>> response) {
+                        if (response.isSuccessful() && response.body() != null && response.body().isSuccess()
+                                && response.body().getData() != null) {
+                            order = response.body().getData();
+                            Toast.makeText(AdminOrderDetailActivity.this, "Đã cập nhật trạng thái: ĐÃ THANH TOÁN", Toast.LENGTH_SHORT).show();
+                            renderOrderDetails(orderId);
+                        } else {
+                            Toast.makeText(AdminOrderDetailActivity.this, "Không cập nhật được thanh toán", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<ApiResponse<Order>> call, @NonNull Throwable t) {
+                        Toast.makeText(AdminOrderDetailActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
             });
         } else {
             binding.btnMarkPaid.setVisibility(View.GONE);
@@ -180,7 +235,7 @@ public class AdminOrderDetailActivity extends AppCompatActivity {
         binding.spinnerOrderStatus.setAdapter(spinnerAdapter);
 
         // Find current status index
-        int currentIndex = STATUS_CODES.indexOf(order.getStatus());
+        int currentIndex = STATUS_CODES.indexOf(order.getStatus() != null ? order.getStatus().toLowerCase() : "");
         if (currentIndex >= 0) {
             isInitialSpinnerLoad = true;
             binding.spinnerOrderStatus.setSelection(currentIndex);
@@ -200,10 +255,29 @@ public class AdminOrderDetailActivity extends AppCompatActivity {
                     return;
                 }
                 String newStatus = STATUS_CODES.get(position);
-                if (!newStatus.equals(order.getStatus())) {
-                    repo.updateOrderStatus(order.getId(), newStatus);
-                    Toast.makeText(AdminOrderDetailActivity.this, "Đã chuyển trạng thái sang: " + newStatus.toUpperCase(), Toast.LENGTH_SHORT).show();
-                    loadOrderDetails(order.getId()); // Refresh items and shipment states!
+                if (!newStatus.equalsIgnoreCase(order.getStatus())) {
+                    java.util.Map<String, String> body = new java.util.HashMap<>();
+                    body.put("status", newStatus);
+                    body.put("updatedBy", currentUser.getName() != null ? currentUser.getName() : "Admin");
+                    adminOrderApi.updateOrderStatus(order.getId(), body).enqueue(new Callback<ApiResponse<Order>>() {
+                        @Override
+                        public void onResponse(@NonNull Call<ApiResponse<Order>> call,
+                                               @NonNull Response<ApiResponse<Order>> response) {
+                            if (response.isSuccessful() && response.body() != null && response.body().isSuccess()
+                                    && response.body().getData() != null) {
+                                order = response.body().getData();
+                                Toast.makeText(AdminOrderDetailActivity.this, "Đã chuyển trạng thái sang: " + newStatus.toUpperCase(), Toast.LENGTH_SHORT).show();
+                                renderOrderDetails(order.getId());
+                            } else {
+                                Toast.makeText(AdminOrderDetailActivity.this, "Không cập nhật được trạng thái", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(@NonNull Call<ApiResponse<Order>> call, @NonNull Throwable t) {
+                            Toast.makeText(AdminOrderDetailActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
             }
 

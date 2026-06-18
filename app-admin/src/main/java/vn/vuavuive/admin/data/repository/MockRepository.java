@@ -368,7 +368,50 @@ public class MockRepository {
                 "}";
         Order o3 = createDtoFromJson(o3Json, Order.class);
 
-        orders.addAll(Arrays.asList(o1, o2, o3));
+        String momoPendingJson = "{\n" +
+                "  \"_id\": \"ORD-MOMO-P\",\n" +
+                "  \"orderId\": \"ORD-MOMO-P\",\n" +
+                "  \"userId\": \"usr-4\",\n" +
+                "  \"delivery\": {\"name\": \"Phạm Minh Huy\", \"phone\": \"0934567890\", \"address\": \"12 Song Hành, TP. Thủ Đức\"},\n" +
+                "  \"payment\": {\"method\": \"momo\", \"status\": \"pending\", \"gateway\": \"momo\", \"transactionId\": \"REQ-MOMO-P\", \"amount\": 157000},\n" +
+                "  \"shippingFee\": 15000,\n" +
+                "  \"subtotal\": 142000,\n" +
+                "  \"totalAmount\": 157000,\n" +
+                "  \"status\": \"pending\",\n" +
+                "  \"createdAt\": \"2026-05-23T09:15:00Z\",\n" +
+                "  \"items\": [{\"productId\": \"prod-1\", \"name\": \"Cà chua bi hữu cơ Đà Lạt\", \"price\": 35000, \"quantity\": 2, \"unit\": \"Hộp 500g\"}]\n" +
+                "}";
+        String momoPaidJson = "{\n" +
+                "  \"_id\": \"ORD-MOMO-S\",\n" +
+                "  \"orderId\": \"ORD-MOMO-S\",\n" +
+                "  \"userId\": \"usr-4\",\n" +
+                "  \"delivery\": {\"name\": \"Phạm Minh Huy\", \"phone\": \"0934567890\", \"address\": \"12 Song Hành, TP. Thủ Đức\"},\n" +
+                "  \"payment\": {\"method\": \"momo\", \"status\": \"paid\", \"gateway\": \"momo\", \"transactionId\": \"MOMO12948194\", \"amount\": 104000},\n" +
+                "  \"shippingFee\": 15000,\n" +
+                "  \"subtotal\": 89000,\n" +
+                "  \"totalAmount\": 104000,\n" +
+                "  \"status\": \"confirmed\",\n" +
+                "  \"createdAt\": \"2026-05-23T10:20:00Z\",\n" +
+                "  \"items\": [{\"productId\": \"prod-3\", \"name\": \"Táo Envy Mỹ nhập khẩu\", \"price\": 89000, \"quantity\": 1, \"unit\": \"Kg\"}]\n" +
+                "}";
+        String momoFailedJson = "{\n" +
+                "  \"_id\": \"ORD-MOMO-F\",\n" +
+                "  \"orderId\": \"ORD-MOMO-F\",\n" +
+                "  \"userId\": \"usr-5\",\n" +
+                "  \"delivery\": {\"name\": \"Đặng Minh Anh\", \"phone\": \"0945678901\", \"address\": \"56 Nguyễn Chí Thanh, Quận 5\"},\n" +
+                "  \"payment\": {\"method\": \"momo\", \"status\": \"failed\", \"gateway\": \"momo\", \"transactionId\": \"REQ-MOMO-F\", \"amount\": 143000},\n" +
+                "  \"shippingFee\": 15000,\n" +
+                "  \"subtotal\": 128000,\n" +
+                "  \"totalAmount\": 143000,\n" +
+                "  \"status\": \"pending\",\n" +
+                "  \"createdAt\": \"2026-05-23T11:30:00Z\",\n" +
+                "  \"items\": [{\"productId\": \"prod-4\", \"name\": \"Sữa tươi tiệt trùng ít đường\", \"price\": 32000, \"quantity\": 4, \"unit\": \"Lốc 4 hộp 180ml\"}]\n" +
+                "}";
+        Order momoPending = createDtoFromJson(momoPendingJson, Order.class);
+        Order momoPaid = createDtoFromJson(momoPaidJson, Order.class);
+        Order momoFailed = createDtoFromJson(momoFailedJson, Order.class);
+
+        orders.addAll(Arrays.asList(o1, o2, o3, momoPending, momoPaid, momoFailed));
 
         // 5. Initial Shipments - Handled lazily via getShipments()
 

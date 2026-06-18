@@ -9,9 +9,11 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -56,6 +58,7 @@ public class HomeFragment extends Fragment {
     private ChipGroup cgRecipeCategories;
     private ChipGroup cgProductCategories;
     private NestedScrollView scrollView;
+    private EditText etSearchHome;
 
     private String currentProductCategory = "all";
     private String currentProductSearch = "";
@@ -152,6 +155,7 @@ public class HomeFragment extends Fragment {
     // ── Search Setup ───────────────────────────────────────────────────────────
     private void setupSearch(View view) {
         EditText etSearch = view.findViewById(R.id.et_search_home);
+        etSearchHome = etSearch;
         View btnMenu = view.findViewById(R.id.btn_menu);
 
         if (btnMenu != null) {
@@ -184,6 +188,30 @@ public class HomeFragment extends Fragment {
                 }
             });
         }
+
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (clearHomeSearch()) return;
+                setEnabled(false);
+                requireActivity().getOnBackPressedDispatcher().onBackPressed();
+            }
+        });
+    }
+
+    private boolean clearHomeSearch() {
+        if (etSearchHome == null || (!etSearchHome.hasFocus() && currentProductSearch.isEmpty())) return false;
+        searchHandler.removeCallbacks(searchRunnable);
+        if (etSearchHome.getText() != null && etSearchHome.getText().length() > 0) {
+            etSearchHome.setText("");
+            currentProductSearch = "";
+            productViewModel.setSearch("");
+            loadProducts(getView());
+        }
+        etSearchHome.clearFocus();
+        InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null) imm.hideSoftInputFromWindow(etSearchHome.getWindowToken(), 0);
+        return true;
     }
 
     // ── Shortcuts Setup ────────────────────────────────────────────────────────

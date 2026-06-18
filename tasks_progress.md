@@ -11,8 +11,21 @@
 - [x] M3 Android Customer Auth UI
 - [x] M4 Customer MainActivity shell
 - [x] M5 Home screen + product grid
-- [ ] Bugfix checkpoint: cart controls/search exit/stock safety
+- [x] Bugfix checkpoint: cart controls/search exit/stock safety
 - [ ] M6 ProductDetailActivity manual verification
+
+## Bugfix checkpoint update - 17/06/2026
+
+- [x] Build passed: `.\gradlew.bat :app-customer:assembleDebug`
+- [x] Cart minus no longer deletes item at quantity 1
+- [x] Cart plus/minus/delete controls are visible and distinct
+- [x] ProductDetail blocks add-to-cart when stock <= 0 and clamps quantity after bind
+- [x] Home/ProductList/SearchActivity can clear active search with Android back
+- [x] `item_product.xml` and `item_recipe.xml` inspected; both are item layouts with no back arrow
+- [ ] Manual device retest: cart controls, stock=0 product, search exit
+
+## Remaining milestones
+
 - [ ] M7 Cart full flow
 - [ ] M8 Checkout
 - [ ] M9 Orders

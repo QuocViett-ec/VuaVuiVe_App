@@ -8,7 +8,10 @@ import retrofit2.Response;
 import vn.vuavuive.shared.data.api.OrderApi;
 import vn.vuavuive.shared.data.api.PaymentApi;
 import vn.vuavuive.shared.data.dto.ApiResponse;
+import vn.vuavuive.shared.data.dto.CreateMomoPaymentRequest;
+import vn.vuavuive.shared.data.dto.CreateMomoPaymentResponse;
 import vn.vuavuive.shared.data.dto.Order;
+import vn.vuavuive.shared.data.dto.PaymentStatusResponse;
 import vn.vuavuive.shared.data.dto.Voucher;
 import vn.vuavuive.shared.data.dto.request.CreateOrderRequest;
 import java.util.HashMap;
@@ -200,6 +203,53 @@ public class OrderRepository {
             @Override
             public void onFailure(Call<ApiResponse<Map<String, String>>> call, Throwable t) {
                 result.postValue(AuthRepository.Result.error("Lỗi kết nối"));
+            }
+        });
+        return result;
+    }
+
+    public LiveData<AuthRepository.Result<CreateMomoPaymentResponse>> createMomoPayment(
+            String orderId, double amount, String userId) {
+        MutableLiveData<AuthRepository.Result<CreateMomoPaymentResponse>> result = new MutableLiveData<>();
+        result.postValue(AuthRepository.Result.loading());
+
+        paymentApi.createMomoPayment(new CreateMomoPaymentRequest(
+                orderId, amount, "Thanh toan don hang Vua Vui Ve: " + orderId, userId))
+                .enqueue(new Callback<ApiResponse<CreateMomoPaymentResponse>>() {
+            @Override
+            public void onResponse(Call<ApiResponse<CreateMomoPaymentResponse>> call,
+                                   Response<ApiResponse<CreateMomoPaymentResponse>> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                    result.postValue(AuthRepository.Result.success(response.body().getData()));
+                } else {
+                    result.postValue(AuthRepository.Result.error("Không tạo được thanh toán MoMo"));
+                }
+            }
+            @Override
+            public void onFailure(Call<ApiResponse<CreateMomoPaymentResponse>> call, Throwable t) {
+                result.postValue(AuthRepository.Result.error("Lỗi kết nối: " + t.getMessage()));
+            }
+        });
+        return result;
+    }
+
+    public LiveData<AuthRepository.Result<PaymentStatusResponse>> getPaymentStatus(String orderId) {
+        MutableLiveData<AuthRepository.Result<PaymentStatusResponse>> result = new MutableLiveData<>();
+        result.postValue(AuthRepository.Result.loading());
+
+        paymentApi.getPaymentStatus(orderId).enqueue(new Callback<ApiResponse<PaymentStatusResponse>>() {
+            @Override
+            public void onResponse(Call<ApiResponse<PaymentStatusResponse>> call,
+                                   Response<ApiResponse<PaymentStatusResponse>> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                    result.postValue(AuthRepository.Result.success(response.body().getData()));
+                } else {
+                    result.postValue(AuthRepository.Result.error("Không kiểm tra được trạng thái thanh toán"));
+                }
+            }
+            @Override
+            public void onFailure(Call<ApiResponse<PaymentStatusResponse>> call, Throwable t) {
+                result.postValue(AuthRepository.Result.error("Lỗi kết nối: " + t.getMessage()));
             }
         });
         return result;

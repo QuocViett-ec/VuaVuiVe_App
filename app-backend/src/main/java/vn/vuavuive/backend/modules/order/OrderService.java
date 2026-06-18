@@ -103,11 +103,13 @@ public class OrderService {
         }
 
         // Tạo Order
+        BigDecimal finalAmount = totalAmount.add(request.shippingFeeAmount()).subtract(request.discountAmount());
         Order order = Order.builder()
                 .user(user)
                 .paymentMethod(request.paymentMethod())
+                .paymentStatus("MOMO".equals(request.paymentMethod()) ? Order.PaymentStatus.PENDING : Order.PaymentStatus.UNPAID)
                 .totalAmount(totalAmount)
-                .finalAmount(totalAmount) // Có thể trừ voucher ở đây sau
+                .finalAmount(finalAmount)
                 .deliveryAddress(request.deliveryAddress())
                 .note(request.note())
                 .build();
@@ -130,10 +132,6 @@ public class OrderService {
             paymentUrl = vnPayService.createPaymentUrl(
                     order.getId().toString(), order.getFinalAmount(), clientIp);
             log.info("Tạo VNPay URL cho đơn {}", order.getId());
-        } else if ("MOMO".equals(request.paymentMethod())) {
-            paymentUrl = moMoService.createPaymentUrl(
-                    order.getId().toString(), order.getFinalAmount());
-            log.info("Tạo MoMo URL cho đơn {}", order.getId());
         }
 
         log.info("Đơn hàng {} đã được tạo bởi user {}", order.getId(), email);
@@ -143,13 +141,30 @@ public class OrderService {
     /**
      * Xem lịch sử đơn hàng của User hiện tại.
      */
-    public PagedResponse<OrderResponse> getMyOrders(int page, int size) {
+    public PagedResponse<OrderResponse> getMyOrders(String statusStr, int page, int size) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> AppException.notFound("User"));
 
-        Page<Order> orders = orderRepository.findByUserIdOrderByCreatedAtDesc(
-                user.getId(), PageRequest.of(page, size, Sort.by("createdAt").descending()));
+        PageRequest pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Order.OrderStatus status = parseOrderStatus(statusStr);
+        Page<Order> orders = status == null
+                ? orderRepository.findByUserIdOrderByCreatedAtDesc(user.getId(), pageable)
+                : orderRepository.findByUserIdAndStatusOrderByCreatedAtDesc(user.getId(), status, pageable);
+
+        return new PagedResponse<>(
+                orders.getContent().stream().map(o -> toResponse(o, null)).toList(),
+                orders.getNumber(), orders.getTotalPages(),
+                orders.getTotalElements(), orders.isFirst(), orders.isLast()
+        );
+    }
+
+    public PagedResponse<OrderResponse> getAllOrders(String statusStr, int page, int size) {
+        PageRequest pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Order.OrderStatus status = parseOrderStatus(statusStr);
+        Page<Order> orders = status == null
+                ? orderRepository.findAll(pageable)
+                : orderRepository.findByStatusOrderByCreatedAtDesc(status, pageable);
 
         return new PagedResponse<>(
                 orders.getContent().stream().map(o -> toResponse(o, null)).toList(),
@@ -186,7 +201,7 @@ public class OrderService {
         if (statusStr == null || statusStr.isBlank()) {
             orders = orderRepository.findByShipperIdOrderByCreatedAtDesc(shipper.getId(), pageable);
         } else {
-            Order.OrderStatus status = Order.OrderStatus.valueOf(statusStr.toUpperCase());
+            Order.OrderStatus status = parseOrderStatus(statusStr);
             orders = orderRepository.findByShipperIdAndStatusOrderByCreatedAtDesc(
                     shipper.getId(), status, pageable);
         }
@@ -233,9 +248,32 @@ public class OrderService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> AppException.notFound("Đơn hàng"));
 
-        Order.OrderStatus status = Order.OrderStatus.valueOf(newStatus.toUpperCase());
+        Order.OrderStatus status = parseOrderStatus(newStatus);
+        if (status == null) {
+            throw AppException.badRequest("Trang thai don hang khong hop le");
+        }
         order.setStatus(status);
         appendStatusLog(order, status, note, "ADMIN", updatedByName);
+        return toResponse(orderRepository.save(order), null);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public OrderResponse markPaid(UUID orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> AppException.notFound("Đơn hàng"));
+        order.setPaymentStatus(Order.PaymentStatus.PAID);
+        if (order.getStatus() == Order.OrderStatus.PENDING) {
+            order.setStatus(Order.OrderStatus.CONFIRMED);
+            appendStatusLog(order, Order.OrderStatus.CONFIRMED, "Admin xac nhan da thanh toan", "ADMIN", "Admin");
+        }
+        return toResponse(orderRepository.save(order), null);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public OrderResponse markRefunded(UUID orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> AppException.notFound("Đơn hàng"));
+        order.setPaymentStatus(Order.PaymentStatus.REFUNDED);
         return toResponse(orderRepository.save(order), null);
     }
 
@@ -339,6 +377,20 @@ public class OrderService {
 
     // =================== Helpers ===================
 
+    private Order.OrderStatus parseOrderStatus(String value) {
+        if (value == null || value.isBlank() || "all".equalsIgnoreCase(value)) {
+            return null;
+        }
+        String normalized = value.trim().toUpperCase();
+        if ("SHIPPED".equals(normalized) || "IN_TRANSIT".equals(normalized)) {
+            normalized = "SHIPPING";
+        }
+        if ("PROCESSING".equals(normalized) || "PREPARING".equals(normalized) || "READY_FOR_PICKUP".equals(normalized)) {
+            normalized = "CONFIRMED";
+        }
+        return Order.OrderStatus.valueOf(normalized);
+    }
+
     /** Ghi một mốc lịch sử trạng thái vào bảng ORDER_STATUS_LOGS */
     private void appendStatusLog(Order order, Order.OrderStatus status,
                                   String note, String role, String updatedByName) {
@@ -365,14 +417,8 @@ public class OrderService {
                         item.getSubtotal()
                 )).toList();
 
-        List<OrderStatusLogResponse> logResponses = order.getStatusLogs().stream().map(l ->
-                new OrderStatusLogResponse(
-                        l.getStatus().name(),
-                        l.getNote(),
-                        l.getUpdatedByName(),
-                        l.getUpdatedByRole(),
-                        l.getCreatedAt()
-                )).toList();
+        // ponytail: avoid lazy-loading status_logs; old local schemas store UUID FKs as varchar and can cast-fail here.
+        List<OrderStatusLogResponse> logResponses = List.of();
 
         return new OrderResponse(
                 order.getId(),
@@ -393,3 +439,4 @@ public class OrderService {
         );
     }
 }
+

@@ -18,6 +18,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import com.google.android.material.tabs.TabLayout;
+import dagger.hilt.android.AndroidEntryPoint;
+import javax.inject.Inject;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -27,10 +32,15 @@ import java.util.Set;
 import vn.vuavuive.admin.R;
 import vn.vuavuive.admin.data.repository.MockRepository;
 import vn.vuavuive.admin.databinding.FragmentAdminOrderListBinding;
+import vn.vuavuive.shared.data.api.AdminOrderApi;
+import vn.vuavuive.shared.data.dto.ApiResponse;
 import vn.vuavuive.shared.data.dto.Order;
 import vn.vuavuive.shared.data.dto.User;
 
+@AndroidEntryPoint
 public class AdminOrderListFragment extends Fragment implements OrderAdapter.OnOrderClickListener {
+
+    @Inject AdminOrderApi adminOrderApi;
 
     private FragmentAdminOrderListBinding binding;
     private OrderAdapter adapter;
@@ -130,24 +140,43 @@ public class AdminOrderListFragment extends Fragment implements OrderAdapter.OnO
     }
 
     private void loadOrders() {
-        allOrders = new ArrayList<>(MockRepository.getInstance().getOrders());
-        applyFilters();
-        binding.swipeRefresh.setRefreshing(false);
+        adminOrderApi.getOrders(null, 1, 100, null, null).enqueue(new Callback<ApiResponse<List<Order>>>() {
+            @Override
+            public void onResponse(@NonNull Call<ApiResponse<List<Order>>> call,
+                                   @NonNull Response<ApiResponse<List<Order>>> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()
+                        && response.body().getData() != null) {
+                    allOrders = new ArrayList<>(response.body().getData());
+                } else {
+                    allOrders = new ArrayList<>(MockRepository.getInstance().getOrders());
+                }
+                applyFilters();
+                binding.swipeRefresh.setRefreshing(false);
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ApiResponse<List<Order>>> call, @NonNull Throwable t) {
+                allOrders = new ArrayList<>(MockRepository.getInstance().getOrders());
+                applyFilters();
+                binding.swipeRefresh.setRefreshing(false);
+            }
+        });
     }
 
     private void applyFilters() {
         List<Order> filteredList = new ArrayList<>();
         for (Order o : allOrders) {
+            String status = o.getStatus() == null ? "" : o.getStatus().toLowerCase(Locale.getDefault());
             // Status check
             boolean matchesStatus = false;
             if ("all".equals(currentStatusFilter)) {
                 matchesStatus = true;
             } else if ("returns".equals(currentStatusFilter)) {
-                matchesStatus = o.getStatus() != null && o.getStatus().startsWith("return");
+                matchesStatus = status.startsWith("return");
             } else if ("shipping".equals(currentStatusFilter)) {
-                matchesStatus = "shipping".equals(o.getStatus()) || "shipped".equals(o.getStatus());
+                matchesStatus = "shipping".equals(status) || "shipped".equals(status);
             } else {
-                matchesStatus = currentStatusFilter.equals(o.getStatus());
+                matchesStatus = currentStatusFilter.equals(status);
             }
 
             // Search query check (Order ID or Customer name or phone)
@@ -156,9 +185,10 @@ public class AdminOrderListFragment extends Fragment implements OrderAdapter.OnO
                 matchesQuery = true;
             } else {
                 String q = currentSearchQuery.toLowerCase(Locale.getDefault());
-                String id = o.getOrderId() != null ? o.getOrderId().toLowerCase() : o.getId().toLowerCase();
-                String name = o.getDelivery() != null && o.getDelivery().getName() != null ? o.getDelivery().getName().toLowerCase() : "";
-                String phone = o.getDelivery() != null && o.getDelivery().getPhone() != null ? o.getDelivery().getPhone() : "";
+                String rawId = o.getOrderId() != null ? o.getOrderId() : o.getId();
+                String id = rawId != null ? rawId.toLowerCase(Locale.getDefault()) : "";
+                String name = o.getRecipientName() != null ? o.getRecipientName().toLowerCase(Locale.getDefault()) : "";
+                String phone = o.getRecipientPhone() != null ? o.getRecipientPhone() : "";
 
                 if (id.contains(q) || name.contains(q) || phone.contains(q)) {
                     matchesQuery = true;
@@ -215,9 +245,15 @@ public class AdminOrderListFragment extends Fragment implements OrderAdapter.OnO
                 String targetStatus = statusCodes[which];
                 Set<String> selectedIds = adapter.getSelectedOrderIds();
                 
-                MockRepository repo = MockRepository.getInstance();
                 for (String id : selectedIds) {
-                    repo.updateOrderStatus(id, targetStatus);
+                    java.util.Map<String, String> body = new java.util.HashMap<>();
+                    body.put("status", targetStatus);
+                    body.put("updatedBy", currentUser.getName() != null ? currentUser.getName() : "Admin");
+                    adminOrderApi.updateOrderStatus(id, body).enqueue(new Callback<ApiResponse<Order>>() {
+                        @Override public void onResponse(@NonNull Call<ApiResponse<Order>> call,
+                                                         @NonNull Response<ApiResponse<Order>> response) {}
+                        @Override public void onFailure(@NonNull Call<ApiResponse<Order>> call, @NonNull Throwable t) {}
+                    });
                 }
 
                 Toast.makeText(getContext(), "Đã cập nhật hàng loạt " + selectedIds.size() + " đơn hàng thành công!", Toast.LENGTH_SHORT).show();
@@ -242,23 +278,24 @@ public class AdminOrderListFragment extends Fragment implements OrderAdapter.OnO
             List<Order> currentItems = new ArrayList<>();
             applyFilters(); // Ensure adapter list is correct
             for (Order o : allOrders) {
+                String status = o.getStatus() == null ? "" : o.getStatus().toLowerCase(Locale.getDefault());
                 // Quick filter mirror
                 boolean matchesStatus = "all".equals(currentStatusFilter) || 
-                        ("returns".equals(currentStatusFilter) && o.getStatus() != null && o.getStatus().startsWith("return")) ||
-                        ("shipping".equals(currentStatusFilter) && ("shipping".equals(o.getStatus()) || "shipped".equals(o.getStatus()))) ||
-                        currentStatusFilter.equals(o.getStatus());
+                        ("returns".equals(currentStatusFilter) && status.startsWith("return")) ||
+                        ("shipping".equals(currentStatusFilter) && ("shipping".equals(status) || "shipped".equals(status))) ||
+                        currentStatusFilter.equals(status);
 
                 boolean matchesQuery = currentSearchQuery.isEmpty() || 
                         (o.getOrderId() != null && o.getOrderId().toLowerCase().contains(currentSearchQuery.toLowerCase())) ||
-                        (o.getDelivery() != null && o.getDelivery().getName() != null && o.getDelivery().getName().toLowerCase().contains(currentSearchQuery.toLowerCase()));
+                        (o.getRecipientName() != null && o.getRecipientName().toLowerCase().contains(currentSearchQuery.toLowerCase()));
 
                 if (matchesStatus && matchesQuery) {
-                    String name = o.getDelivery() != null ? o.getDelivery().getName() : "N/A";
-                    String phone = o.getDelivery() != null ? o.getDelivery().getPhone() : "N/A";
-                    String address = o.getDelivery() != null ? o.getDelivery().getAddress().replace(",", " -") : "N/A";
+                    String name = o.getRecipientName() != null ? o.getRecipientName() : "N/A";
+                    String phone = o.getRecipientPhone() != null ? o.getRecipientPhone() : "N/A";
+                    String address = o.getRecipientAddress() != null ? o.getRecipientAddress().replace(",", " -") : "N/A";
                     csv.append(String.format("%s,%s,%s,%s,%.0f,%s,%s\n",
                             o.getOrderId() != null ? o.getOrderId() : o.getId(),
-                            name, phone, address, o.getTotalAmount(), o.getStatus(), o.getCreatedAt()));
+                            name, phone, address, o.getFinalAmount(), o.getStatus(), o.getCreatedAt()));
                 }
             }
 

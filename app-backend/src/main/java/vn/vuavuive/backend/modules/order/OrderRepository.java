@@ -17,6 +17,8 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
     /** Lấy đơn hàng của một user (App Customer xem lịch sử đơn) */
     Page<Order> findByUserIdOrderByCreatedAtDesc(UUID userId, Pageable pageable);
 
+    Page<Order> findByUserIdAndStatusOrderByCreatedAtDesc(UUID userId, Order.OrderStatus status, Pageable pageable);
+
     /** Lấy đơn theo trạng thái (Admin lọc đơn PENDING/IN_TRANSIT...) */
     Page<Order> findByStatusOrderByCreatedAtDesc(Order.OrderStatus status, Pageable pageable);
 
@@ -34,7 +36,7 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
         SELECT o FROM Order o
         WHERE o.status = 'PENDING'
         AND o.paymentMethod IN ('VNPAY', 'MOMO')
-        AND o.paymentStatus = 'UNPAID'
+        AND o.paymentStatus IN ('UNPAID', 'PENDING')
         AND o.createdAt < :cutoffTime
     """)
     List<Order> findExpiredUnpaidOrders(@Param("cutoffTime") LocalDateTime cutoffTime);

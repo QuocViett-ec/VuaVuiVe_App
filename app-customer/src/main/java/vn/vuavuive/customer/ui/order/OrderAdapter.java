@@ -72,7 +72,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
             tvStatus.setTextColor(context.getResources().getColor(statusColor, null));
 
             // Total
-            tvTotal.setText(CurrencyFormatter.format(order.getTotalAmount()));
+            tvTotal.setText(CurrencyFormatter.format(order.getFinalAmount()));
 
             // Date
             String dateStr = order.getCreatedAt() != null && order.getCreatedAt().length() >= 10
@@ -103,7 +103,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
 
         private String getStatusLabel(String status) {
             if (status == null) return "—";
-            switch (status) {
+            switch (status.toLowerCase()) {
                 case "pending":          return "Chờ xác nhận";
                 case "confirmed":        return "Đã xác nhận";
                 case "shipping":         return "Đang giao";
@@ -118,7 +118,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
 
         private int getStatusColor(String status) {
             if (status == null) return R.color.text_secondary;
-            switch (status) {
+            switch (status.toLowerCase()) {
                 case "pending":          return R.color.status_pending;
                 case "confirmed":        return R.color.status_confirmed;
                 case "shipping":         return R.color.status_shipping;

@@ -110,11 +110,11 @@ public class OrderDetailActivity extends AppCompatActivity {
         // Payment
         if (order.getPayment() != null) {
             String method = order.getPayment().getMethod();
-            tvPaymentMethod.setText(getPaymentLabel(method));
+            tvPaymentMethod.setText(getPaymentLabel(method) + " - " + getPaymentStatusLabel(order.getPayment().getStatus()));
         } else {
             tvPaymentMethod.setText("—");
         }
-        tvTotal.setText(CurrencyFormatter.format(order.getTotalAmount()));
+        tvTotal.setText(CurrencyFormatter.format(order.getFinalAmount()));
 
         // Order items
         if (order.getItems() != null) {
@@ -126,7 +126,7 @@ public class OrderDetailActivity extends AppCompatActivity {
     }
 
     private void updateActionButtons(Order order) {
-        String status = order.getStatus();
+        String status = order.getStatus() == null ? "" : order.getStatus().toLowerCase();
         btnCancelOrder.setVisibility(View.GONE);
         btnReturnOrder.setVisibility(View.GONE);
         btnReview.setVisibility(View.GONE);
@@ -236,7 +236,7 @@ public class OrderDetailActivity extends AppCompatActivity {
     // Helpers
     private String getStatusLabel(String status) {
         if (status == null) return "—";
-        switch (status) {
+        switch (status.toLowerCase()) {
             case "pending":          return "Chờ xác nhận";
             case "confirmed":        return "Đã xác nhận";
             case "processing":       return "Đang xử lý";
@@ -253,7 +253,7 @@ public class OrderDetailActivity extends AppCompatActivity {
 
     private int getStatusColor(String status) {
         if (status == null) return R.color.text_secondary;
-        switch (status) {
+        switch (status.toLowerCase()) {
             case "pending":          return R.color.status_pending;
             case "confirmed":        return R.color.status_confirmed;
             case "shipping":         return R.color.status_shipping;
@@ -265,11 +265,22 @@ public class OrderDetailActivity extends AppCompatActivity {
 
     private String getPaymentLabel(String method) {
         if (method == null) return "—";
+        method = method.toLowerCase();
         switch (method) {
             case "cod":   return "Thanh toán khi nhận hàng (COD)";
             case "vnpay": return "VNPay";
             case "momo":  return "MoMo";
             default:      return method.toUpperCase();
+        }
+    }
+
+    private String getPaymentStatusLabel(String status) {
+        if (status == null) return "Pending";
+        switch (status.toLowerCase()) {
+            case "paid": return "Paid";
+            case "failed": return "Failed";
+            case "cancelled": return "Cancelled";
+            default: return "Pending";
         }
     }
 }

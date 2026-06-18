@@ -242,6 +242,9 @@ public class ProductDetailActivity extends AppCompatActivity {
 
         // Stock status
         if (product.getStock() > 0) {
+            if (quantity > product.getStock()) quantity = product.getStock();
+            if (quantity < 1) quantity = 1;
+            tvQuantity.setText(String.valueOf(quantity));
             String stockText = product.getStock() >= 1000
                     ? "Còn hàng: " + (product.getStock() / 1000) + "K+ " + (product.getUnit() != null ? product.getUnit() : "")
                     : "Còn hàng: " + product.getStock() + (product.getUnit() != null ? " " + product.getUnit() : "");
@@ -253,6 +256,8 @@ public class ProductDetailActivity extends AppCompatActivity {
             tvStock.setText("Hết hàng");
             tvStock.setTextColor(getResources().getColor(R.color.error, null));
             fabAddToCart.setEnabled(false);
+            quantity = 1;
+            tvQuantity.setText(String.valueOf(quantity));
             fabAddToCart.setText("Hết hàng");
         }
 
@@ -264,6 +269,10 @@ public class ProductDetailActivity extends AppCompatActivity {
     // ── Add to cart ────────────────────────────────────────────────────────────
     private void addToCart() {
         if (currentProduct == null) return;
+        if (currentProduct.getStock() <= 0) {
+            Toast.makeText(this, "Sản phẩm đã hết hàng", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         CartItemEntity item = new CartItemEntity();
         item.setProductId(currentProduct.getId() != null ? currentProduct.getId() : "mock_" + System.currentTimeMillis());

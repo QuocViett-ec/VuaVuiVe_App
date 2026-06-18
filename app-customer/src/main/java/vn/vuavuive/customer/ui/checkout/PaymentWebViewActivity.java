@@ -9,24 +9,27 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 import dagger.hilt.android.AndroidEntryPoint;
 import vn.vuavuive.customer.R;
+import vn.vuavuive.customer.data.repository.AuthRepository;
 import vn.vuavuive.customer.viewmodel.CartViewModel;
-import androidx.lifecycle.ViewModelProvider;
+import vn.vuavuive.customer.viewmodel.OrderViewModel;
 
 @AndroidEntryPoint
 public class PaymentWebViewActivity extends AppCompatActivity {
-
     private WebView webView;
     private ProgressBar progressBar;
     private CartViewModel cartViewModel;
+    private OrderViewModel orderViewModel;
     private String orderId;
+    private String provider;
+    private boolean checkingStatus;
 
-    // VNPay success callback pattern
-    private static final String VNPAY_RETURN_URL = "/api/payment/vnpay/return";
-    // MoMo success callback pattern
-    private static final String MOMO_RETURN_URL = "/api/payment/momo/return";
+    private static final String VNPAY_RETURN_URL = "/api/payments/vnpay/return";
+    private static final String MOMO_RETURN_URL = "/api/payments/momo/return";
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -35,25 +38,23 @@ public class PaymentWebViewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_payment_webview);
 
         cartViewModel = new ViewModelProvider(this).get(CartViewModel.class);
+        orderViewModel = new ViewModelProvider(this).get(OrderViewModel.class);
         orderId = getIntent().getStringExtra("order_id");
-        String paymentUrl = getIntent().getStringExtra("payment_url");
+        provider = getIntent().getStringExtra("provider");
 
         webView = findViewById(R.id.web_view);
         progressBar = findViewById(R.id.progress_bar);
-
-        setupWebView(paymentUrl);
+        setupWebView(getIntent().getStringExtra("payment_url"));
     }
 
     @SuppressLint("SetJavaScriptEnabled")
     private void setupWebView(String url) {
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setDomStorageEnabled(true);
-
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                String requestUrl = request.getUrl().toString();
-                return handleUrl(requestUrl);
+                return handleUrl(request.getUrl().toString());
             }
 
             @Override
@@ -68,53 +69,54 @@ public class PaymentWebViewActivity extends AppCompatActivity {
             }
         });
 
-        if (url != null && !url.isEmpty()) {
-            webView.loadUrl(url);
-        } else {
-            Toast.makeText(this, "Không tải được trang thanh toán", Toast.LENGTH_SHORT).show();
+        if (url == null || url.isEmpty()) {
+            Toast.makeText(this, "Khong tai duoc trang thanh toan", Toast.LENGTH_SHORT).show();
             finish();
+        } else {
+            webView.loadUrl(url);
         }
     }
 
     private boolean handleUrl(String url) {
         if (url == null) return false;
-
-        // Check VNPay return
-        if (url.contains(VNPAY_RETURN_URL)) {
-            Uri uri = Uri.parse(url);
-            String responseCode = uri.getQueryParameter("vnp_ResponseCode");
-            if ("00".equals(responseCode)) {
-                handlePaymentSuccess();
-            } else {
-                handlePaymentFailure("Thanh toán VNPay thất bại (code: " + responseCode + ")");
-            }
+        if (url.contains(VNPAY_RETURN_URL) || url.contains("/api/payment/vnpay/return")) {
+            String responseCode = Uri.parse(url).getQueryParameter("vnp_ResponseCode");
+            if ("00".equals(responseCode)) handlePaymentSuccess();
+            else handlePaymentFailure("Thanh toan VNPay that bai (code: " + responseCode + ")");
             return true;
         }
-
-        // Check MoMo return
-        if (url.contains(MOMO_RETURN_URL)) {
-            Uri uri = Uri.parse(url);
-            String resultCode = uri.getQueryParameter("resultCode");
-            if ("0".equals(resultCode)) {
-                handlePaymentSuccess();
-            } else {
-                handlePaymentFailure("Thanh toán MoMo thất bại (code: " + resultCode + ")");
-            }
+        if (url.contains(MOMO_RETURN_URL) || url.contains("/api/payment/momo/return")) {
+            checkMomoStatus();
             return true;
         }
-
         return false;
+    }
+
+    private void checkMomoStatus() {
+        if (checkingStatus || orderId == null) return;
+        checkingStatus = true;
+        orderViewModel.getPaymentStatus(orderId).observe(this, result -> {
+            if (result.status == AuthRepository.Result.Status.SUCCESS && result.data != null) {
+                String status = result.data.getPaymentStatus();
+                if ("PAID".equalsIgnoreCase(status)) {
+                    handlePaymentSuccess();
+                } else if ("FAILED".equalsIgnoreCase(status) || "CANCELLED".equalsIgnoreCase(status)) {
+                    handlePaymentFailure("Thanh toan MoMo that bai");
+                } else {
+                    Toast.makeText(this, "Thanh toan MoMo dang cho xac nhan", Toast.LENGTH_LONG).show();
+                    goToOrders();
+                }
+            } else if (result.status == AuthRepository.Result.Status.ERROR) {
+                checkingStatus = false;
+                Toast.makeText(this, result.message, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     private void handlePaymentSuccess() {
         cartViewModel.clearCart();
-        Toast.makeText(this, "Thanh toán thành công!", Toast.LENGTH_LONG).show();
-        // Go back to main with order list tab
-        Intent intent = new Intent(this, vn.vuavuive.customer.ui.MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        intent.putExtra("navigate_to", "orders");
-        startActivity(intent);
-        finish();
+        Toast.makeText(this, "Thanh toan thanh cong!", Toast.LENGTH_LONG).show();
+        goToOrders();
     }
 
     private void handlePaymentFailure(String message) {
@@ -122,9 +124,23 @@ public class PaymentWebViewActivity extends AppCompatActivity {
         finish();
     }
 
+    private void goToOrders() {
+        Intent intent = new Intent(this, vn.vuavuive.customer.ui.MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        intent.putExtra("navigate_to", "orders");
+        startActivity(intent);
+        finish();
+    }
+
     @Override
     public void onBackPressed() {
-        if (webView.canGoBack()) {
+        if ("MOMO".equalsIgnoreCase(provider)) {
+            new AlertDialog.Builder(this)
+                    .setMessage("Do you want to cancel this payment?")
+                    .setPositiveButton("Exit", (d, w) -> finish())
+                    .setNegativeButton("Continue", null)
+                    .show();
+        } else if (webView.canGoBack()) {
             webView.goBack();
         } else {
             super.onBackPressed();

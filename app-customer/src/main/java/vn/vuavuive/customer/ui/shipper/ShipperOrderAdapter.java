@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.button.MaterialButton;
 import vn.vuavuive.customer.R;
 import vn.vuavuive.shared.data.dto.Order;
+import vn.vuavuive.shared.data.dto.PaymentDetail;
 import java.text.NumberFormat;
 import java.util.Locale;
 
@@ -119,9 +120,12 @@ public class ShipperOrderAdapter extends ListAdapter<Order, ShipperOrderAdapter.
             }
 
             // Total amount
-            if (order.getTotalAmount() > 0) {
+            PaymentDetail pmt = order.getPayment();
+            if (pmt != null && "momo".equalsIgnoreCase(pmt.getMethod())) {
+                tvTotal.setText(momoBadge(pmt.getStatus()));
+            } else if (order.getFinalAmount() > 0) {
                 NumberFormat fmt = NumberFormat.getNumberInstance(new Locale("vi", "VN"));
-                tvTotal.setText(fmt.format((long) order.getTotalAmount()) + " đ");
+                tvTotal.setText("Collect cash: " + fmt.format((long) order.getFinalAmount()) + " đ");
             } else {
                 tvTotal.setText("—");
             }
@@ -136,11 +140,13 @@ public class ShipperOrderAdapter extends ListAdapter<Order, ShipperOrderAdapter.
 
         private void bindStatus(String status) {
             if (status == null) return;
-            switch (status) {
+            switch (status.toUpperCase()) {
+                case "CONFIRMED":
                 case "PREPARING":
                 case "READY_FOR_PICKUP":
                     tvStatus.setText("Chờ lấy hàng");
                     tvStatus.setBackgroundColor(Color.parseColor("#FF9800")); break;
+                case "SHIPPING":
                 case "IN_TRANSIT":
                     tvStatus.setText("Đang giao");
                     tvStatus.setBackgroundColor(Color.parseColor("#FF6B35")); break;
@@ -167,6 +173,12 @@ public class ShipperOrderAdapter extends ListAdapter<Order, ShipperOrderAdapter.
                 String t = parts.length > 1 ? parts[1].substring(0, 5) : "";
                 return d[2] + "/" + d[1] + "/" + d[0] + " · " + t;
             } catch (Exception e) { return raw; }
+        }
+
+        private String momoBadge(String status) {
+            if ("paid".equalsIgnoreCase(status)) return "Paid by MoMo";
+            if ("failed".equalsIgnoreCase(status)) return "MoMo failed";
+            return "MoMo pending";
         }
     }
 }

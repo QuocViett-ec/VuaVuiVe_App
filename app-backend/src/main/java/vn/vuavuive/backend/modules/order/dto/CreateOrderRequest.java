@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -37,6 +38,8 @@ public class CreateOrderRequest {
 
     /** Mã voucher áp dụng (tùy chọn) */
     private String voucherCode;
+    private Double shippingFee;
+    private Double discount;
 
     /**
      * Getter tương thích với chữ ký record cũ cho items()
@@ -50,6 +53,14 @@ public class CreateOrderRequest {
      */
     public String note() {
         return this.note;
+    }
+
+    public BigDecimal shippingFeeAmount() {
+        return BigDecimal.valueOf(shippingFee == null ? 0 : shippingFee);
+    }
+
+    public BigDecimal discountAmount() {
+        return BigDecimal.valueOf(discount == null ? 0 : discount);
     }
 
     /**

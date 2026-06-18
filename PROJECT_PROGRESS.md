@@ -308,3 +308,44 @@ Then move to:
 - M7 CartFragment full flow
 - M8 Checkout
 - M9 Orders
+
+---
+
+## 7. Bugfix checkpoint completion update - 17/06/2026
+
+Status: completed. Build passed with:
+
+```powershell
+.\gradlew.bat :app-customer:assembleDebug
+```
+
+Files changed:
+- `app-customer/src/main/java/vn/vuavuive/customer/ui/cart/CartAdapter.java`
+- `app-customer/src/main/res/layout/item_cart.xml`
+- `app-customer/src/main/res/drawable/ic_remove.xml`
+- `app-customer/src/main/java/vn/vuavuive/customer/ui/product/ProductDetailActivity.java`
+- `app-customer/src/main/java/vn/vuavuive/customer/ui/home/HomeFragment.java`
+- `app-customer/src/main/java/vn/vuavuive/customer/ui/product/ProductListFragment.java`
+- `app-customer/src/main/java/vn/vuavuive/customer/ui/search/SearchActivity.java`
+
+Completed:
+- Cart minus at quantity 1 no longer sends quantity 0, so it no longer deletes the item.
+- Cart minus uses a dedicated remove icon; delete remains explicit via the close button or swipe-delete.
+- ProductDetail clamps quantity after product bind and blocks add-to-cart when stock <= 0.
+- Home search, ProductList search, and SearchActivity can clear focus/hide keyboard/reset search from Android back.
+- `item_product.xml` and `item_recipe.xml` were inspected; both are item/card layouts and contain no back arrow.
+- ProductDetail and RecipeDetail back handlers were inspected and already call `finish()`, so no navigation file was changed.
+
+Manual test checklist:
+- [ ] Cart item quantity 1, tap minus, item remains
+- [ ] Cart plus/minus/delete controls are visible and tappable
+- [ ] Delete removes item only through explicit delete/remove or swipe-delete
+- [ ] Stock=0 product detail shows out-of-stock and cannot be added
+- [ ] Home search can be exited with Android back
+- [ ] Product list search can be exited with Android back
+- [ ] SearchActivity clears/exits search correctly
+- [x] Build passes
+
+Remaining risks:
+- Stock=0 list visibility depends on loaded API/mock data containing stock=0 products; app-side list code does not filter them out.
+- Manual testing is still needed on a device/emulator for keyboard/back behavior.

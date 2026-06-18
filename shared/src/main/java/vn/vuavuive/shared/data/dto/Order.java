@@ -22,6 +22,12 @@ public class Order {
     @SerializedName("payment")
     private PaymentDetail payment;
 
+    @SerializedName("paymentMethod")
+    private String paymentMethod;
+
+    @SerializedName("paymentStatus")
+    private String paymentStatus;
+
     @SerializedName("voucherId")
     private String voucherId;
 
@@ -39,6 +45,9 @@ public class Order {
 
     @SerializedName("totalAmount")
     private double totalAmount;
+
+    @SerializedName("finalAmount")
+    private double finalAmount;
 
     @SerializedName("status")
     private String status;  // pending, confirmed, processing, packed, shipped, delivered, cancelled, return_requested, return_approved, return_rejected
@@ -72,18 +81,27 @@ public class Order {
     private String updatedAt;
 
     // Getters
-    public String getId() { return id; }
+    public String getId() { return id != null ? id : orderId; }
     public String getOrderId() { return orderId; }
     public String getUserId() { return userId; }
     public List<OrderItem> getItems() { return items; }
     public DeliveryInfo getDelivery() { return delivery; }
-    public PaymentDetail getPayment() { return payment; }
+    public PaymentDetail getPayment() {
+        if (payment == null && (paymentMethod != null || paymentStatus != null)) {
+            payment = new PaymentDetail();
+            payment.setMethod(paymentMethod == null ? null : paymentMethod.toLowerCase());
+            payment.setStatus(paymentStatus == null ? null : paymentStatus.toLowerCase());
+            payment.setAmount(getFinalAmount());
+        }
+        return payment;
+    }
     public String getVoucherId() { return voucherId; }
     public String getVoucherCode() { return voucherCode; }
     public double getShippingFee() { return shippingFee; }
     public double getDiscount() { return discount; }
     public double getSubtotal() { return subtotal; }
     public double getTotalAmount() { return totalAmount; }
+    public double getFinalAmount() { return finalAmount > 0 ? finalAmount : totalAmount; }
     public String getStatus() { return status; }
     public String getDeliveredAt() { return deliveredAt; }
     public List<String> getShipmentIds() { return shipmentIds; }
@@ -124,6 +142,7 @@ public class Order {
     // Setters
     public void setStatus(String status) { this.status = status; }
     public void setPaymentStatus(String paymentStatus) {
+        this.paymentStatus = paymentStatus;
         if (payment != null) payment.setStatus(paymentStatus);
     }
 
@@ -132,14 +151,15 @@ public class Order {
 
     // Helper methods
     public boolean isCancellable() {
-        return "pending".equals(status) || "confirmed".equals(status);
+        return "pending".equalsIgnoreCase(status) || "confirmed".equalsIgnoreCase(status);
     }
 
     public boolean isReturnable() {
-        return "delivered".equals(status);
+        return "delivered".equalsIgnoreCase(status);
     }
 
     public boolean isPaid() {
-        return payment != null && "paid".equals(payment.getStatus());
+        return (paymentStatus != null && "paid".equalsIgnoreCase(paymentStatus))
+                || (payment != null && "paid".equalsIgnoreCase(payment.getStatus()));
     }
 }

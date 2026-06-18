@@ -170,10 +170,9 @@ public class ShipperOrderDetailActivity extends AppCompatActivity {
 
         // ── Total & Payment ──────────────────────────────────────────
         NumberFormat fmt = NumberFormat.getNumberInstance(new Locale("vi", "VN"));
-        tvTotal.setText(fmt.format((long) order.getTotalAmount()) + " đ");
+        tvTotal.setText(fmt.format((long) order.getFinalAmount()) + " đ");
         PaymentDetail pmt = order.getPayment();
-        tvPaymentMethod.setText("Thanh toán: " + (pmt != null && pmt.getMethod() != null
-                ? pmt.getMethod() : "COD"));
+        tvPaymentMethod.setText(paymentText(pmt, order.getFinalAmount()));
 
         // ── Items ────────────────────────────────────────────────────
         List<OrderItem> items = order.getItems();
@@ -186,19 +185,20 @@ public class ShipperOrderDetailActivity extends AppCompatActivity {
     }
 
     private void setupActionButtons(String status) {
+        status = status == null ? "" : status.toUpperCase();
         btnStartDelivery.setVisibility(View.GONE);
         btnDelivered.setVisibility(View.GONE);
         btnFailed.setVisibility(View.GONE);
         tvDoneLabel.setVisibility(View.GONE);
 
-        if ("PREPARING".equals(status) || "READY_FOR_PICKUP".equals(status)) {
+        if ("CONFIRMED".equals(status) || "PREPARING".equals(status) || "READY_FOR_PICKUP".equals(status)) {
             btnStartDelivery.setVisibility(View.VISIBLE);
             btnStartDelivery.setOnClickListener(v ->
                     confirm("Bắt đầu giao hàng?",
                             "Xác nhận bạn đã lấy hàng và bắt đầu giao cho khách?",
                             "IN_TRANSIT"));
 
-        } else if ("IN_TRANSIT".equals(status)) {
+        } else if ("SHIPPING".equals(status) || "IN_TRANSIT".equals(status)) {
             btnDelivered.setVisibility(View.VISIBLE);
             btnFailed.setVisibility(View.VISIBLE);
             btnDelivered.setOnClickListener(v ->
@@ -256,11 +256,13 @@ public class ShipperOrderDetailActivity extends AppCompatActivity {
 
     private void bindStatusBadge(String status) {
         if (status == null) return;
-        switch (status) {
+        switch (status.toUpperCase()) {
+            case "CONFIRMED":
             case "PREPARING":
             case "READY_FOR_PICKUP":
                 tvHeaderStatus.setText("CHỜ LẤY HÀNG");
                 tvHeaderStatus.setBackgroundColor(Color.parseColor("#FF9800")); break;
+            case "SHIPPING":
             case "IN_TRANSIT":
                 tvHeaderStatus.setText("ĐANG GIAO");
                 tvHeaderStatus.setBackgroundColor(Color.parseColor("#FF6B35")); break;
@@ -274,6 +276,16 @@ public class ShipperOrderDetailActivity extends AppCompatActivity {
                 tvHeaderStatus.setText(status);
                 tvHeaderStatus.setBackgroundColor(Color.parseColor("#9E9E9E"));
         }
+    }
+
+    private String paymentText(PaymentDetail pmt, double total) {
+        NumberFormat fmt = NumberFormat.getNumberInstance(new Locale("vi", "VN"));
+        if (pmt != null && "momo".equalsIgnoreCase(pmt.getMethod())) {
+            if ("paid".equalsIgnoreCase(pmt.getStatus())) return "Payment: Paid by MoMo. Do not collect cash.";
+            return "Payment: MoMo " + (pmt.getStatus() == null ? "pending" : pmt.getStatus())
+                    + ". Online payment has not been completed.";
+        }
+        return "Payment: COD. Amount to collect: " + fmt.format((long) total) + " đ";
     }
 
     private String formatDate(String raw) {
