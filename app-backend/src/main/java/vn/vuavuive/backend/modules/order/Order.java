@@ -70,6 +70,14 @@ public class Order extends BaseEntity {
     @Column(name = "delivery_address", columnDefinition = "TEXT")
     private String deliveryAddress;
 
+    /** Tên người nhận hàng — snapshot tại thời điểm đặt, tách riêng để dễ query & hiển thị */
+    @Column(name = "delivery_name")
+    private String deliveryName;
+
+    /** Số điện thoại người nhận hàng — dùng để Shipper gọi điện */
+    @Column(name = "delivery_phone", length = 20)
+    private String deliveryPhone;
+
     @Column(name = "note")
     private String note;
 

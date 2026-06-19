@@ -32,6 +32,7 @@ import vn.vuavuive.shared.data.api.RecommendApi;
 import vn.vuavuive.shared.data.api.RecipeApi;
 import vn.vuavuive.shared.data.api.ShipmentApi;
 import vn.vuavuive.shared.data.api.ShipperOrderApi;
+import vn.vuavuive.shared.util.AuthInterceptor;
 import vn.vuavuive.shared.util.CsrfInterceptor;
 import vn.vuavuive.shared.util.PersistentCookieJar;
 import vn.vuavuive.shared.util.PortalScopeInterceptor;
@@ -57,7 +58,7 @@ public class NetworkModule {
 
     @Provides
     @Singleton
-    public OkHttpClient provideOkHttpClient(PersistentCookieJar cookieJar) {
+    public OkHttpClient provideOkHttpClient(PersistentCookieJar cookieJar, SessionManager sessionManager) {
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(BuildConfig.DEBUG
                 ? HttpLoggingInterceptor.Level.BODY
@@ -65,6 +66,7 @@ public class NetworkModule {
 
         return new OkHttpClient.Builder()
                 .cookieJar(cookieJar)
+                .addInterceptor(new AuthInterceptor(sessionManager))   // << JWT token tự động
                 .addInterceptor(new PortalScopeInterceptor(BuildConfig.PORTAL_SCOPE))
                 .addInterceptor(new CsrfInterceptor())
                 .addInterceptor(logging)

@@ -89,14 +89,14 @@ public class OrderService {
             product.setStockQuantity(product.getStockQuantity() - itemReq.quantity());
             productRepository.save(product);
 
-            BigDecimal subtotal = product.getSellingPrice()
-                    .multiply(BigDecimal.valueOf(itemReq.quantity()));
+            BigDecimal unitPrice = itemReq.price() != null ? itemReq.price() : product.getSellingPrice();
+            BigDecimal subtotal = unitPrice.multiply(BigDecimal.valueOf(itemReq.quantity()));
             totalAmount = totalAmount.add(subtotal);
 
             OrderItem orderItem = OrderItem.builder()
                     .product(product)
                     .quantity(itemReq.quantity())
-                    .unitPrice(product.getSellingPrice())
+                    .unitPrice(unitPrice)
                     .subtotal(subtotal)
                     .build();
             orderItems.add(orderItem);
@@ -104,13 +104,20 @@ public class OrderService {
 
         // Tạo Order
         BigDecimal finalAmount = totalAmount.add(request.shippingFeeAmount()).subtract(request.discountAmount());
+
+        // Lấy thông tin giao hàng từ request.getDelivery() (đối tượng DeliveryInfo riêng)
+        String recipientName  = request.getDelivery() != null ? request.getDelivery().name()  : null;
+        String recipientPhone = request.getDelivery() != null ? request.getDelivery().phone() : null;
+
         Order order = Order.builder()
                 .user(user)
                 .paymentMethod(request.paymentMethod())
                 .paymentStatus("MOMO".equals(request.paymentMethod()) ? Order.PaymentStatus.PENDING : Order.PaymentStatus.UNPAID)
                 .totalAmount(totalAmount)
                 .finalAmount(finalAmount)
-                .deliveryAddress(request.deliveryAddress())
+                .deliveryAddress(request.deliveryAddress())  // chuỗi tổng hợp "Tên (SĐT): Địa chỉ"
+                .deliveryName(recipientName)                  // lưu riêng để dễ hiển thị
+                .deliveryPhone(recipientPhone)                // lưu riêng để Shipper gọi điện
                 .note(request.note())
                 .build();
 
@@ -417,8 +424,38 @@ public class OrderService {
                         item.getSubtotal()
                 )).toList();
 
-        // ponytail: avoid lazy-loading status_logs; old local schemas store UUID FKs as varchar and can cast-fail here.
+        // Tránh lazy-loading status_logs
         List<OrderStatusLogResponse> logResponses = List.of();
+
+        // Ưu tiên 1: đọc từ cột riêng delivery_name / delivery_phone (đơn hàng mới sau migration)
+        String deliveryName  = order.getDeliveryName();
+        String deliveryPhone = order.getDeliveryPhone();
+        String deliveryAddr  = order.getDeliveryAddress();
+
+        // Ưu tiên 2: parse từ chuỗi tổng hợp "Tên (SĐT): Địa chỉ" (đơn hàng cũ trước migration)
+        if ((deliveryName == null || deliveryName.isBlank()) && deliveryAddr != null
+                && deliveryAddr.contains(" (") && deliveryAddr.contains("): ")) {
+            try {
+                int nameEnd  = deliveryAddr.indexOf(" (");
+                int phoneEnd = deliveryAddr.indexOf("): ");
+                if (nameEnd > 0 && phoneEnd > nameEnd) {
+                    deliveryName  = deliveryAddr.substring(0, nameEnd).trim();
+                    deliveryPhone = deliveryAddr.substring(nameEnd + 2, phoneEnd).trim();
+                    deliveryAddr  = deliveryAddr.substring(phoneEnd + 3).trim();
+                }
+            } catch (Exception ignored) {}
+        }
+
+        // Ưu tiên 3 (fallback): lấy từ User account — chỉ cho đơn rất cũ không có format nào
+        if (deliveryName == null && order.getUser() != null) {
+            deliveryName  = order.getUser().getFullName();
+            deliveryPhone = order.getUser().getPhone();
+        }
+
+        // Dùng biến parsedXxx để tương thích với return bên dưới
+        String parsedName    = deliveryName;
+        String parsedPhone   = deliveryPhone;
+        String parsedAddress = deliveryAddr;
 
         return new OrderResponse(
                 order.getId(),
@@ -427,10 +464,9 @@ public class OrderService {
                 order.getPaymentStatus().name(),
                 order.getTotalAmount(),
                 order.getFinalAmount(),
-                order.getDeliveryAddress(),
-                // Tên và SĐT của người nhận hàng (từ entity User)
-                order.getUser() != null ? order.getUser().getFullName() : null,
-                order.getUser() != null ? order.getUser().getPhone() : null,
+                parsedAddress,
+                parsedName,
+                parsedPhone,
                 order.getNote(),
                 itemResponses,
                 logResponses,

@@ -101,11 +101,13 @@ public class OrderDetailActivity extends AppCompatActivity {
         }
 
         // Delivery info
-        if (order.getDelivery() != null) {
-            tvReceiverName.setText(order.getDelivery().getName() != null ? order.getDelivery().getName() : "—");
-            tvReceiverPhone.setText(order.getDelivery().getPhone() != null ? order.getDelivery().getPhone() : "—");
-            tvDeliveryAddress.setText(order.getDelivery().getAddress() != null ? order.getDelivery().getAddress() : "—");
-        }
+        String recipientName = order.getRecipientName();
+        String recipientPhone = order.getRecipientPhone();
+        String recipientAddress = order.getRecipientAddress();
+
+        tvReceiverName.setText(recipientName != null ? recipientName : "—");
+        tvReceiverPhone.setText(recipientPhone != null ? recipientPhone : "—");
+        tvDeliveryAddress.setText(recipientAddress != null ? recipientAddress : "—");
 
         // Payment
         if (order.getPayment() != null) {

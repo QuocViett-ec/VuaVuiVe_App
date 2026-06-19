@@ -117,7 +117,10 @@ public class Order {
      */
     public String getRecipientName() {
         if (deliveryName != null && !deliveryName.isEmpty()) return deliveryName;
-        return (delivery != null) ? delivery.getName() : null;
+        if (delivery != null) return delivery.getName();
+        String parsed = parseFromAddress(1);
+        if (parsed != null) return parsed;
+        return null;
     }
 
     /**
@@ -127,7 +130,10 @@ public class Order {
      */
     public String getRecipientPhone() {
         if (deliveryPhone != null && !deliveryPhone.isEmpty()) return deliveryPhone;
-        return (delivery != null) ? delivery.getPhone() : null;
+        if (delivery != null) return delivery.getPhone();
+        String parsed = parseFromAddress(2);
+        if (parsed != null) return parsed;
+        return null;
     }
 
     /**
@@ -136,7 +142,29 @@ public class Order {
      */
     public String getRecipientAddress() {
         if (delivery != null && delivery.getAddress() != null) return delivery.getAddress();
+        String parsed = parseFromAddress(3);
+        if (parsed != null) return parsed;
         return deliveryAddress;
+    }
+
+    private String parseFromAddress(int part) {
+        if (deliveryAddress == null || deliveryAddress.isEmpty()) return null;
+        if (deliveryAddress.contains(" (") && deliveryAddress.contains("): ")) {
+            try {
+                int nameEnd = deliveryAddress.indexOf(" (");
+                int phoneEnd = deliveryAddress.indexOf("): ");
+                if (nameEnd > 0 && phoneEnd > nameEnd) {
+                    if (part == 1) {
+                        return deliveryAddress.substring(0, nameEnd).trim();
+                    } else if (part == 2) {
+                        return deliveryAddress.substring(nameEnd + 2, phoneEnd).trim();
+                    } else if (part == 3) {
+                        return deliveryAddress.substring(phoneEnd + 3).trim();
+                    }
+                }
+            } catch (Exception ignored) {}
+        }
+        return null;
     }
 
     // Setters
