@@ -254,7 +254,7 @@
                     android:orientation="horizontal"
                     android:paddingBottom="6dp">
 
-                    <!-- Shortcut 1: Flash Sale -->
+                    <!-- Shortcut 1: Flash Sale (static, always visible) -->
                     <LinearLayout
                         android:id="@+id/sc_flash_sale"
                         android:layout_width="80dp"
@@ -285,131 +285,16 @@
                             android:gravity="center" />
                     </LinearLayout>
 
-                    <!-- Shortcut 2: Bánh tươi -->
+                    <!-- Dynamic category shortcuts: loaded from backend DB at runtime -->
                     <LinearLayout
-                        android:id="@+id/sc_banh_tuoi"
-                        android:layout_width="80dp"
+                        android:id="@+id/ll_shortcuts_from_db"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:clickable="true"
-                        android:focusable="true">
-                        <FrameLayout
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            android:background="@drawable/bg_avatar_circle"
-                            android:backgroundTint="@color/primary_container">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:text="🍰"
-                                android:textSize="24sp" />
-                        </FrameLayout>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="6dp"
-                            android:text="Bánh tươi"
-                            android:textColor="@color/text_primary"
-                            android:textSize="11sp"
-                            android:gravity="center" />
-                    </LinearLayout>
+                        android:orientation="horizontal" />
 
-                    <!-- Shortcut 3: Mì ăn liền -->
-                    <LinearLayout
-                        android:id="@+id/sc_mi_an_lien"
-                        android:layout_width="80dp"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:clickable="true"
-                        android:focusable="true">
-                        <FrameLayout
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            android:background="@drawable/bg_avatar_circle"
-                            android:backgroundTint="@color/primary_container">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:text="🍜"
-                                android:textSize="24sp" />
-                        </FrameLayout>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="6dp"
-                            android:text="Mì ăn liền"
-                            android:textColor="@color/text_primary"
-                            android:textSize="11sp"
-                            android:gravity="center" />
-                    </LinearLayout>
-
-                    <!-- Shortcut 4: Bia nước ngọt -->
-                    <LinearLayout
-                        android:id="@+id/sc_bia"
-                        android:layout_width="80dp"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:clickable="true"
-                        android:focusable="true">
-                        <FrameLayout
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            android:background="@drawable/bg_avatar_circle"
-                            android:backgroundTint="@color/primary_container">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:text="🍺"
-                                android:textSize="24sp" />
-                        </FrameLayout>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="6dp"
-                            android:text="Bia, Nước ngọt"
-                            android:textColor="@color/text_primary"
-                            android:textSize="11sp"
-                            android:gravity="center" />
-                    </LinearLayout>
-
-                    <!-- Shortcut 5: Sữa tươi -->
-                    <LinearLayout
-                        android:id="@+id/sc_sua_tuoi"
-                        android:layout_width="80dp"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:clickable="true"
-                        android:focusable="true">
-                        <FrameLayout
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            android:background="@drawable/bg_avatar_circle"
-                            android:backgroundTint="@color/primary_container">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:text="🥛"
-                                android:textSize="24sp" />
-                        </FrameLayout>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="6dp"
-                            android:text="Sữa tươi"
-                            android:textColor="@color/text_primary"
-                            android:textSize="11sp"
-                            android:gravity="center" />
-                    </LinearLayout>
                 </LinearLayout>
             </HorizontalScrollView>
+
 
             <!-- ╔══════════════════════════════════════════╗
                  ║            Sliding Promo Banner          ║

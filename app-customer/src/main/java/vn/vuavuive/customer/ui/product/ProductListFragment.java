@@ -26,7 +26,6 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import dagger.hilt.android.AndroidEntryPoint;
 import vn.vuavuive.customer.R;
-import vn.vuavuive.customer.data.MockDataProvider;
 import vn.vuavuive.customer.data.repository.AuthRepository;
 import vn.vuavuive.customer.viewmodel.CategoryViewModel;
 import vn.vuavuive.customer.viewmodel.ProductViewModel;
@@ -59,7 +58,7 @@ public class ProductListFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        productViewModel = new ViewModelProvider(requireActivity()).get(ProductViewModel.class);
+        productViewModel  = new ViewModelProvider(requireActivity()).get(ProductViewModel.class);
         categoryViewModel = new ViewModelProvider(requireActivity()).get(CategoryViewModel.class);
 
         setupSearch(view);
@@ -69,7 +68,7 @@ public class ProductListFragment extends Fragment {
         loadProducts(view);
     }
 
-    // ── Search setup ───────────────────────────────────────────────────────────
+    // ── Search ─────────────────────────────────────────────────────────────────
     private void setupSearch(View view) {
         etSearch = view.findViewById(R.id.et_search);
         TextInputLayout tilSearch = view.findViewById(R.id.til_search);
@@ -99,14 +98,15 @@ public class ProductListFragment extends Fragment {
             });
         }
 
-        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                if (clearSearch(view)) return;
-                setEnabled(false);
-                requireActivity().getOnBackPressedDispatcher().onBackPressed();
-            }
-        });
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(),
+                new OnBackPressedCallback(true) {
+                    @Override
+                    public void handleOnBackPressed() {
+                        if (clearSearch(view)) return;
+                        setEnabled(false);
+                        requireActivity().getOnBackPressedDispatcher().onBackPressed();
+                    }
+                });
     }
 
     private boolean clearSearch(View view) {
@@ -119,18 +119,20 @@ public class ProductListFragment extends Fragment {
             loadProducts(view);
         }
         etSearch.clearFocus();
-        InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(android.content.Context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager)
+                requireContext().getSystemService(android.content.Context.INPUT_METHOD_SERVICE);
         if (imm != null) imm.hideSoftInputFromWindow(etSearch.getWindowToken(), 0);
         return true;
     }
 
-    // ── Category chips ──────────────────────────────────────────────────
+    // ── Category chips — loaded from DB only, no mock ──────────────────────────
     private void setupCategoryChips(View view) {
         ChipGroup chipGroup = view.findViewById(R.id.chip_group_categories);
         if (chipGroup == null) return;
 
         if (categoryViewModel == null) {
-            buildChipsFromMock(view, chipGroup);
+            // DB unavailable — show "Tất cả" chip alone
+            buildChipsFromApi(view, chipGroup, null);
             return;
         }
 
@@ -141,12 +143,13 @@ public class ProductListFragment extends Fragment {
                     && !result.data.isEmpty()) {
                 buildChipsFromApi(view, chipGroup, result.data);
             } else {
-                buildChipsFromMock(view, chipGroup);
+                // API empty/error — show "Tất cả" chip alone so products still load
+                buildChipsFromApi(view, chipGroup, null);
             }
         });
     }
 
-    /** Build chips from live backend categories. */
+    /** Builds category chips from live DB data. Pass null to get only the "Tất cả" chip. */
     private void buildChipsFromApi(View view, ChipGroup chipGroup, List<CategoryResponse> categories) {
         chipGroup.removeAllViews();
 
@@ -166,6 +169,8 @@ public class ProductListFragment extends Fragment {
         });
         chipGroup.addView(allChip);
 
+        if (categories == null) return;
+
         for (CategoryResponse cat : categories) {
             String slug = cat.getSlug();
             String label = getEmoji(slug) + " " + cat.getName();
@@ -180,27 +185,6 @@ public class ProductListFragment extends Fragment {
             chip.setOnClickListener(v -> {
                 currentCategory = slug;
                 productViewModel.setCategory(slug);
-                loadProducts(view);
-            });
-            chipGroup.addView(chip);
-        }
-    }
-
-    /** Fallback: build chips from MockDataProvider.CATEGORIES. */
-    private void buildChipsFromMock(View view, ChipGroup chipGroup) {
-        chipGroup.removeAllViews();
-        for (String[] cat : MockDataProvider.CATEGORIES) {
-            Chip chip = new Chip(requireContext());
-            chip.setText(cat[1]);
-            chip.setCheckable(true);
-            chip.setChecked("all".equals(cat[0]));
-            chip.setChipBackgroundColorResource(R.color.surface_variant);
-            chip.setTextColor(getResources().getColorStateList(R.color.bottom_nav_color, null));
-            chip.setChipStrokeColorResource(R.color.outline);
-            chip.setChipStrokeWidth(1f);
-            chip.setOnClickListener(v -> {
-                currentCategory = cat[0];
-                productViewModel.setCategory(cat[0]);
                 loadProducts(view);
             });
             chipGroup.addView(chip);
@@ -223,7 +207,7 @@ public class ProductListFragment extends Fragment {
         }
     }
 
-    // ── RecyclerView setup ─────────────────────────────────────────────────────
+    // ── RecyclerView ───────────────────────────────────────────────────────────
     private void setupRecyclerView(View view) {
         RecyclerView rv = view.findViewById(R.id.rv_products);
         if (rv == null) return;
@@ -233,11 +217,10 @@ public class ProductListFragment extends Fragment {
             intent.putExtra("product_id", product.getId());
             startActivity(intent);
         });
-        adapter.setAddToCartListener(product -> {
-            Toast.makeText(getContext(),
-                    "✅ Đã thêm \"" + product.getName() + "\" vào giỏ",
-                    Toast.LENGTH_SHORT).show();
-        });
+        adapter.setAddToCartListener(product ->
+                Toast.makeText(getContext(),
+                        "✅ Đã thêm \"" + product.getName() + "\" vào giỏ",
+                        Toast.LENGTH_SHORT).show());
 
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
         rv.setLayoutManager(layoutManager);
@@ -249,8 +232,8 @@ public class ProductListFragment extends Fragment {
             public void onScrolled(@NonNull RecyclerView rv, int dx, int dy) {
                 if (!isLoading && dy > 0) {
                     int visible = layoutManager.getChildCount();
-                    int total = layoutManager.getItemCount();
-                    int first = layoutManager.findFirstVisibleItemPosition();
+                    int total   = layoutManager.getItemCount();
+                    int first   = layoutManager.findFirstVisibleItemPosition();
                     if (first + visible >= total - 4) {
                         loadNextPageFromApi(view);
                     }
@@ -270,37 +253,26 @@ public class ProductListFragment extends Fragment {
         });
     }
 
-    // ── Load products (mock first, then API) ───────────────────────────────────
+    // ── Load products from API only — no mock data ─────────────────────────────
     private void loadProducts(View view) {
-        // First show mock data instantly for responsive UX
-        List<Product> mockProducts = currentSearch.isEmpty()
-                ? MockDataProvider.getMockProductsByCategory(currentCategory)
-                : MockDataProvider.searchMockProducts(currentSearch);
-
-        showLoading(view, false);
-        if (adapter != null) {
-            adapter.setProducts(mockProducts);
-        }
-        updateEmptyState(view, mockProducts.isEmpty(), currentSearch.isEmpty() ? null : currentSearch);
-
-        // Then try API in background
-        tryLoadFromApi(view);
-    }
-
-    private void tryLoadFromApi(View view) {
+        showLoading(view, true);
         try {
             isLoading = true;
             productViewModel.loadProducts(1).observe(getViewLifecycleOwner(), result -> {
                 isLoading = false;
+                showLoading(view, false);
                 if (result != null
                         && result.status == AuthRepository.Result.Status.SUCCESS
                         && result.data != null) {
                     if (adapter != null) adapter.setProducts(result.data);
                     updateEmptyState(view, result.data.isEmpty(), currentSearch.isEmpty() ? null : currentSearch);
+                } else {
+                    updateEmptyState(view, true, currentSearch.isEmpty() ? null : currentSearch);
                 }
             });
         } catch (Exception e) {
             isLoading = false;
+            showLoading(view, false);
         }
     }
 
@@ -325,9 +297,7 @@ public class ProductListFragment extends Fragment {
     private void showLoading(View view, boolean show) {
         if (view == null) return;
         LinearLayout layoutLoading = view.findViewById(R.id.layout_loading);
-        if (layoutLoading != null) {
-            layoutLoading.setVisibility(show ? View.VISIBLE : View.GONE);
-        }
+        if (layoutLoading != null) layoutLoading.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     private void updateEmptyState(View view, boolean isEmpty, String query) {
@@ -346,14 +316,15 @@ public class ProductListFragment extends Fragment {
             }
         }
 
-        // Wire up clear filter button
         View btnClear = view.findViewById(R.id.btn_clear_filter);
         if (btnClear != null) {
             btnClear.setOnClickListener(v -> {
                 currentCategory = "all";
                 currentSearch = "";
-                TextInputEditText etSearch = view.findViewById(R.id.et_search);
-                if (etSearch != null) etSearch.setText("");
+                TextInputEditText etS = view.findViewById(R.id.et_search);
+                if (etS != null) etS.setText("");
+                productViewModel.setCategory("all");
+                productViewModel.setSearch("");
                 loadProducts(view);
             });
         }
