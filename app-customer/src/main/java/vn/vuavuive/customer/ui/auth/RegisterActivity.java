@@ -119,14 +119,14 @@ public class RegisterActivity extends AppCompatActivity {
         request.setPassword(pass);
         request.setAddress(address.isEmpty() ? null : address);
 
-        authViewModel.register(request).observe(this, result -> {
+        authViewModel.sendRegisterOtp(request).observe(this, result -> {
             switch (result.status) {
                 case LOADING:
                     setLoading(true);
                     break;
                 case SUCCESS:
                     setLoading(false);
-                    goToMain();
+                    showOtpVerificationDialog(request);
                     break;
                 case ERROR:
                     setLoading(false);
@@ -134,6 +134,143 @@ public class RegisterActivity extends AppCompatActivity {
                     break;
             }
         });
+    }
+
+    private android.app.AlertDialog otpDialog;
+    private android.os.CountDownTimer countDownTimer;
+
+    private void showOtpVerificationDialog(RegisterRequest registerRequest) {
+        if (isFinishing()) return;
+
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_otp_verification, null);
+        builder.setView(dialogView);
+        builder.setCancelable(false);
+
+        otpDialog = builder.create();
+        if (otpDialog.getWindow() != null) {
+            otpDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        }
+
+        TextView tvSubtitle = dialogView.findViewById(R.id.tv_dialog_subtitle);
+        TextInputEditText etOtp = dialogView.findViewById(R.id.et_otp);
+        TextView tvOtpError = dialogView.findViewById(R.id.tv_otp_error);
+        TextView tvCountdown = dialogView.findViewById(R.id.tv_countdown);
+        TextView tvResendOtp = dialogView.findViewById(R.id.tv_resend_otp);
+        MaterialButton btnVerifyOtp = dialogView.findViewById(R.id.btn_verify_otp);
+        MaterialButton btnCancelOtp = dialogView.findViewById(R.id.btn_cancel_otp);
+
+        // Subtitle text masking phone
+        String phoneStr = registerRequest.getPhone();
+        String maskedPhone = phoneStr.length() > 3 
+                ? "*******" + phoneStr.substring(phoneStr.length() - 3) 
+                : "***";
+        tvSubtitle.setText("Mã OTP đã được gửi đến " + maskedPhone + " qua Telegram. Vui lòng kiểm tra và nhập vào bên dưới.");
+
+        // Start 60s countdown timer
+        startOtpCountdown(tvCountdown, tvResendOtp, registerRequest);
+
+        btnVerifyOtp.setOnClickListener(v -> {
+            String otpCode = etOtp.getText() != null ? etOtp.getText().toString().trim() : "";
+            if (otpCode.length() != 6) {
+                tvOtpError.setText("Vui lòng nhập đầy đủ mã OTP 6 số");
+                tvOtpError.setVisibility(View.VISIBLE);
+                return;
+            }
+
+            tvOtpError.setVisibility(View.GONE);
+            btnVerifyOtp.setEnabled(false);
+            btnCancelOtp.setEnabled(false);
+
+            authViewModel.verifyRegisterOtp(phoneStr, otpCode).observe(this, verifyResult -> {
+                switch (verifyResult.status) {
+                    case LOADING:
+                        break;
+                    case SUCCESS:
+                        if (countDownTimer != null) {
+                            countDownTimer.cancel();
+                        }
+                        if (otpDialog != null && otpDialog.isShowing()) {
+                            otpDialog.dismiss();
+                        }
+                        goToMain();
+                        break;
+                    case ERROR:
+                        btnVerifyOtp.setEnabled(true);
+                        btnCancelOtp.setEnabled(true);
+                        tvOtpError.setText(verifyResult.message);
+                        tvOtpError.setVisibility(View.VISIBLE);
+                        break;
+                }
+            });
+        });
+
+        tvResendOtp.setOnClickListener(v -> {
+            tvOtpError.setVisibility(View.GONE);
+            tvResendOtp.setVisibility(View.GONE);
+            tvCountdown.setVisibility(View.VISIBLE);
+
+            authViewModel.sendRegisterOtp(registerRequest).observe(this, resendResult -> {
+                switch (resendResult.status) {
+                    case LOADING:
+                        break;
+                    case SUCCESS:
+                        android.widget.Toast.makeText(RegisterActivity.this, "Mã OTP mới đã được gửi", android.widget.Toast.LENGTH_SHORT).show();
+                        startOtpCountdown(tvCountdown, tvResendOtp, registerRequest);
+                        break;
+                    case ERROR:
+                        tvResendOtp.setVisibility(View.VISIBLE);
+                        tvCountdown.setVisibility(View.GONE);
+                        tvOtpError.setText("Gửi lại OTP thất bại: " + resendResult.message);
+                        tvOtpError.setVisibility(View.VISIBLE);
+                        break;
+                }
+            });
+        });
+
+        btnCancelOtp.setOnClickListener(v -> {
+            if (countDownTimer != null) {
+                countDownTimer.cancel();
+            }
+            if (otpDialog != null && otpDialog.isShowing()) {
+                otpDialog.dismiss();
+            }
+        });
+
+        otpDialog.show();
+    }
+
+    private void startOtpCountdown(TextView tvCountdown, TextView tvResendOtp, RegisterRequest registerRequest) {
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
+
+        tvCountdown.setVisibility(View.VISIBLE);
+        tvResendOtp.setVisibility(View.GONE);
+
+        countDownTimer = new android.os.CountDownTimer(60000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                tvCountdown.setText("Gửi lại sau: " + (millisUntilFinished / 1000) + "s");
+            }
+
+            @Override
+            public void onFinish() {
+                tvCountdown.setVisibility(View.GONE);
+                tvResendOtp.setVisibility(View.VISIBLE);
+            }
+        }.start();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
+        if (otpDialog != null && otpDialog.isShowing()) {
+            otpDialog.dismiss();
+        }
+        super.onDestroy();
     }
 
     private String getText(TextInputEditText et) {

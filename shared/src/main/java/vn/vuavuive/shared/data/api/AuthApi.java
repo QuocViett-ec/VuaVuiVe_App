@@ -17,6 +17,12 @@ public interface AuthApi {
     @POST("api/auth/register")
     Call<ApiResponse<User>> register(@Body RegisterRequest body);
 
+    @POST("api/auth/register/send-otp")
+    Call<ApiResponse<Void>> sendRegisterOtp(@Body RegisterRequest body);
+
+    @POST("api/auth/register/verify-otp")
+    Call<ApiResponse<User>> verifyRegisterOtp(@Body Map<String, String> body);
+
     @POST("api/auth/login")
     Call<ApiResponse<User>> login(@Body LoginRequest body);
 

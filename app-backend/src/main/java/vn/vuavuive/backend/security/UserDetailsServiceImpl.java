@@ -21,16 +21,21 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private final UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy user: " + email));
+    public UserDetails loadUserByUsername(String identifier) throws UsernameNotFoundException {
+        User user = userRepository.findByEmail(identifier)
+                .or(() -> userRepository.findByPhone(identifier))
+                .orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy user: " + identifier));
 
         if (!user.getIsActive()) {
             throw new AppException(HttpStatus.FORBIDDEN, "Tài khoản đã bị vô hiệu hóa");
         }
 
+        String username = user.getEmail() != null && !user.getEmail().isEmpty()
+                ? user.getEmail()
+                : user.getPhone();
+
         return org.springframework.security.core.userdetails.User.builder()
-                .username(user.getEmail())
+                .username(username)
                 .password(user.getPasswordHash())
                 .authorities("ROLE_" + user.getRole().name())
                 .build();

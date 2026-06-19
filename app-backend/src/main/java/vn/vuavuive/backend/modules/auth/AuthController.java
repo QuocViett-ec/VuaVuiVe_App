@@ -52,6 +52,39 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
     }
 
+    @Operation(summary = "Gửi mã OTP qua Telegram để đăng ký")
+    @PostMapping("/register/send-otp")
+    public ResponseEntity<ApiResponse<Void>> sendRegisterOtp(
+            @Valid @RequestBody RegisterOtpRequest request) {
+        authService.sendRegisterOtp(request);
+        ApiResponse<Void> apiResponse = ApiResponse.<Void>builder()
+                .success(true)
+                .message("Mã OTP đã được gửi. Vui lòng kiểm tra nhóm Telegram.")
+                .build();
+        return ResponseEntity.ok(apiResponse);
+    }
+
+    @Operation(summary = "Xác thực mã OTP và hoàn tất đăng ký")
+    @PostMapping("/register/verify-otp")
+    public ResponseEntity<ApiResponse<UserResponse>> verifyRegisterOtp(
+            @Valid @RequestBody VerifyOtpRequest request,
+            HttpServletResponse response) {
+        AuthResponse auth = authService.verifyRegisterOtp(request);
+        UserResponse user = authService.getUserResponse(request.phone());
+
+        // Set Cookie
+        setAuthCookie(response, auth.accessToken(), user.role());
+
+        ApiResponse<UserResponse> apiResponse = ApiResponse.<UserResponse>builder()
+                .success(true)
+                .message("Đăng ký tài khoản thành công")
+                .data(user)
+                .accessToken(auth.accessToken())
+                .refreshToken(auth.refreshToken())
+                .build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
+    }
+
     @Operation(summary = "Đăng nhập bằng email và mật khẩu (Customer)")
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<UserResponse>> login(

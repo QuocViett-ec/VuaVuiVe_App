@@ -32,6 +32,14 @@ public class AuthViewModel extends ViewModel {
         return authRepository.register(request);
     }
 
+    public LiveData<AuthRepository.Result<Void>> sendRegisterOtp(RegisterRequest request) {
+        return authRepository.sendRegisterOtp(request);
+    }
+
+    public LiveData<AuthRepository.Result<User>> verifyRegisterOtp(String phone, String code) {
+        return authRepository.verifyRegisterOtp(phone, code);
+    }
+
     // ── Check session ──────────────────────────────────────────────────────
     public LiveData<AuthRepository.Result<User>> checkSession() {
         return authRepository.checkSession();

@@ -1,6 +1,6 @@
 # ============================================
-#  MÔI TRƯỜNG PHÁT TRIỂN (DEV / SANDBOX)
-#  Dùng để test local với Ngrok + Sandbox VNPay/MoMo
+#  MÔI TRƯỜNG PHÁT TRIỂN (DEV / SANDBOX) - EXAMPLE TEMPLATE
+#  Copy file này thành application-dev.yml và điền thông tin của bạn.
 # ============================================
 spring:
   session:
@@ -11,15 +11,15 @@ spring:
     url: jdbc:postgresql://localhost:5432/vuavuive_app
     driver-class-name: org.postgresql.Driver
     username: postgres
-    password: Viet0609
+    password: YOUR_DATABASE_PASSWORD
     hikari:
       maximum-pool-size: 10
       minimum-idle: 2
 
   jpa:
     hibernate:
-      ddl-auto: update       # Tu tao/cap nhat bang khi khoi dong
-    show-sql: true           # In cau lenh SQL ra console de debug
+      ddl-auto: update
+    show-sql: true
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
@@ -30,13 +30,12 @@ spring:
 server:
   port: 3000
 
-
 # ============================================
 #  CẤU HÌNH JWT
 # ============================================
 app:
   jwt:
-    secret: "vuavuive-super-secret-key-for-jwt-please-change-in-production-min-256bit"
+    secret: "YOUR_JWT_SUPER_SECRET_KEY_MIN_256BIT"
     access-token-expiration-ms: 900000       # 15 phút
     refresh-token-expiration-ms: 2592000000  # 30 ngày
 
@@ -45,50 +44,50 @@ app:
 # ============================================
   payment:
     vnpay:
-      tmn-code: "TFQUUGXU"        # <<< ĐỔI THÀNH MÃ SANDBOX CỦA BẠN
-      secret-key: "V5IY2EZ98VHA6Q2P39VYMA7VJFK6DR6F"   # <<< ĐỔI THÀNH KEY SANDBOX
+      tmn-code: "YOUR_VNPAY_TMN_CODE"
+      secret-key: "YOUR_VNPAY_SECRET_KEY"
       pay-url: "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"
-      return-url: "https://lowell-intercerebral-monopodially.ngrok-free.app/api/payments/vnpay/return"
-      ipn-url: "https://lowell-intercerebral-monopodially.ngrok-free.app/api/payments/vnpay/ipn"
+      return-url: "https://localhost:3000/api/payments/vnpay/return"
+      ipn-url: "https://localhost:3000/api/payments/vnpay/ipn"
 
     momo:
-      partner-code: "${MOMO_PARTNER_CODE:MOMO}"
-      access-key: "${MOMO_ACCESS_KEY:}"
-      secret-key: "${MOMO_SECRET_KEY:}"
-      endpoint: "${MOMO_ENDPOINT:https://test-payment.momo.vn/v2/gateway/api/create}"
-      redirect-url: "${MOMO_REDIRECT_URL:http://10.0.2.2:3000/api/momo/return}"
-      ipn-url: "${MOMO_IPN_URL:http://10.0.2.2:3000/api/momo/ipn}"
-      request-type: "${MOMO_REQUEST_TYPE:captureWallet}"
-      lang: "${MOMO_LANG:vi}"
-      mock-mode: "${MOCK_MOMO_MODE:true}"
+      partner-code: "YOUR_MOMO_PARTNER_CODE"
+      access-key: "YOUR_MOMO_ACCESS_KEY"
+      secret-key: "YOUR_MOMO_SECRET_KEY"
+      endpoint: "https://test-payment.momo.vn/v2/gateway/api/create"
+      redirect-url: "http://10.0.2.2:3000/api/momo/return"
+      ipn-url: "http://10.0.2.2:3000/api/momo/ipn"
+      request-type: "captureWallet"
+      lang: "vi"
+      mock-mode: "true"
 
 # ============================================
 #  CẤU HÌNH CLOUDINARY (Lưu trữ ảnh)
 # ============================================
   cloudinary:
-    cloud-name: "ddj1f931a"    # <<< ĐỔI
-    api-key: "239185989455687"          # <<< ĐỔI
-    api-secret: "M3dSBbSLmEkryTAWEsBOKf0o4zQ"    # <<< ĐỔI
+    cloud-name: "YOUR_CLOUDINARY_CLOUD_NAME"
+    api-key: "YOUR_CLOUDINARY_API_KEY"
+    api-secret: "YOUR_CLOUDINARY_API_SECRET"
 
 # ============================================
 #  CẤU HÌNH GOOGLE GEMINI AI (Chatbot)
 # ============================================
   gemini:
-    api-key: "AIzaSyDcxtXgTMoWpOimJWfsPX9l21CrTwXskIk"   # <<< ĐỔI THÀNH API KEY CỦA BẠN
+    api-key: "YOUR_GEMINI_API_KEY"
     model: "gemini-1.5-flash"
 
 # ============================================
 #  CẤU HÌNH TỰ ĐỘNG HỦY ĐƠN (Cron Job)
 # ============================================
   order:
-    auto-cancel-minutes: 15  # Hủy đơn chưa thanh toán sau 15 phút
+    auto-cancel-minutes: 15
 
 # ============================================
 #  CẤU HÌNH TELEGRAM BOT
 # ============================================
   telegram:
-    bot-token: ${TELEGRAM_BOT_TOKEN:8997579650:AAF9pvs53W1fEnXgfoo23p5CmJPN6EP2jdA}
-    chat-id: ${TELEGRAM_CHAT_ID:5759562152}
+    bot-token: ${TELEGRAM_BOT_TOKEN:}
+    chat-id: ${TELEGRAM_CHAT_ID:}
 
 logging:
   level:

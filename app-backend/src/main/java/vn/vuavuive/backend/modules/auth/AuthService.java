@@ -13,6 +13,9 @@ import vn.vuavuive.backend.modules.auth.dto.*;
 import vn.vuavuive.backend.modules.user.User;
 import vn.vuavuive.backend.modules.user.UserRepository;
 import vn.vuavuive.backend.security.JwtUtils;
+import java.time.LocalDateTime;
+import java.util.Optional;
+import java.util.Random;
 
 /**
  * AuthService — Xử lý logic đăng ký, đăng nhập và làm mới token.
@@ -25,23 +28,139 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
     private final AuthenticationManager authenticationManager;
+    private final PendingRegistrationRepository pendingRegistrationRepository;
+    private final OtpRepository otpRepository;
+    private final TelegramNotificationService telegramNotificationService;
 
     /**
      * Đăng ký tài khoản mới.
      * Kiểm tra email và phone chưa tồn tại, mã hóa mật khẩu bằng BCrypt.
      */
+    /**
+     * Gửi mã OTP phục vụ đăng ký.
+     * Chặn spam cooldown 60s, kiểm tra trùng số điện thoại, hash mật khẩu.
+     */
+    @Transactional
+    public void sendRegisterOtp(RegisterOtpRequest request) {
+        // Kiểm tra số điện thoại đã tồn tại trong bảng Users chính thức
+        if (userRepository.existsByPhone(request.phone())) {
+            throw AppException.conflict("Số điện thoại '" + request.phone() + "' đã được đăng ký");
+        }
+        // Kiểm tra email nếu được điền
+        if (request.email() != null && !request.email().trim().isEmpty() && userRepository.existsByEmail(request.email())) {
+            throw AppException.conflict("Email '" + request.email() + "' đã được đăng ký");
+        }
+
+        // Kiểm tra cooldown resend 60s
+        Optional<Otp> existingOtpOpt = otpRepository.findTopByPhoneAndTypeOrderByCreatedAtDesc(request.phone(), "REGISTER");
+        if (existingOtpOpt.isPresent()) {
+            Otp existingOtp = existingOtpOpt.get();
+            if (existingOtp.getLastSentAt().plusSeconds(60).isAfter(LocalDateTime.now())) {
+                throw new AppException(HttpStatus.TOO_MANY_REQUESTS, "Vui lòng đợi 60 giây trước khi yêu cầu gửi lại mã OTP");
+            }
+        }
+
+        // Tạo mã OTP 6 số
+        String rawOtp = String.format(java.util.Locale.getDefault(), "%06d", new Random().nextInt(1000000));
+        String codeHash = passwordEncoder.encode(rawOtp);
+
+        // Upsert Pending Registration
+        PendingRegistration pending = pendingRegistrationRepository.findByPhone(request.phone())
+                .orElse(new PendingRegistration());
+        pending.setPhone(request.phone());
+        pending.setFullName(request.fullName());
+        pending.setEmail(request.email() != null && !request.email().trim().isEmpty() ? request.email().trim() : null);
+        pending.setPasswordHash(passwordEncoder.encode(request.password()));
+        pending.setAddress(request.address());
+        pending.setExpiresAt(LocalDateTime.now().plusMinutes(15)); // Pending user exists for 15 minutes
+        pendingRegistrationRepository.save(pending);
+
+        // Lưu / Cập nhật OTP record
+        Otp otp = existingOtpOpt.orElse(new Otp());
+        otp.setPhone(request.phone());
+        otp.setCodeHash(codeHash);
+        otp.setType("REGISTER");
+        otp.setExpiresAt(LocalDateTime.now().plusMinutes(5)); // OTP valid for 5 mins
+        otp.setIsUsed(false);
+        otp.setAttemptCount(0);
+        otp.setLastSentAt(LocalDateTime.now());
+        otpRepository.save(otp);
+
+        // Gửi qua Telegram Bot
+        telegramNotificationService.sendOtp(request.phone(), rawOtp);
+    }
+
+    /**
+     * Xác thực mã OTP và tiến hành tạo tài khoản người dùng chính thức.
+     */
+    @Transactional
+    public AuthResponse verifyRegisterOtp(VerifyOtpRequest request) {
+        Otp otp = otpRepository.findTopByPhoneAndTypeOrderByCreatedAtDesc(request.phone(), "REGISTER")
+                .orElseThrow(() -> new AppException(HttpStatus.BAD_REQUEST, "Không tìm thấy yêu cầu xác thực OTP cho số điện thoại này"));
+
+        // Kiểm tra xem OTP đã được sử dụng hay hết hạn
+        if (otp.getIsUsed()) {
+            throw new AppException(HttpStatus.BAD_REQUEST, "Mã OTP đã được sử dụng. Vui lòng yêu cầu mã mới.");
+        }
+        if (otp.getExpiresAt().isBefore(LocalDateTime.now())) {
+            throw new AppException(HttpStatus.BAD_REQUEST, "Mã OTP đã hết hạn. Vui lòng yêu cầu mã mới.");
+        }
+        if (otp.getAttemptCount() >= 5) {
+            throw new AppException(HttpStatus.BAD_REQUEST, "Mã OTP đã bị khóa do nhập sai quá 5 lần. Vui lòng yêu cầu mã mới.");
+        }
+
+        // So sánh khớp mã OTP
+        if (!passwordEncoder.matches(request.code(), otp.getCodeHash())) {
+            otp.setAttemptCount(otp.getAttemptCount() + 1);
+            if (otp.getAttemptCount() >= 5) {
+                otp.setIsUsed(true); // Lock OTP
+                otpRepository.save(otp);
+                throw new AppException(HttpStatus.BAD_REQUEST, "Mã OTP đã bị khóa do nhập sai quá 5 lần. Vui lòng yêu cầu mã mới.");
+            }
+            otpRepository.save(otp);
+            throw new AppException(HttpStatus.BAD_REQUEST, "Mã OTP không chính xác. Bạn còn " + (5 - otp.getAttemptCount()) + " lần thử.");
+        }
+
+        // Tải Pending Registration
+        PendingRegistration pending = pendingRegistrationRepository.findByPhone(request.phone())
+                .orElseThrow(() -> new AppException(HttpStatus.BAD_REQUEST, "Yêu cầu đăng ký đã hết hạn hoặc không tồn tại. Vui lòng thử lại."));
+
+        if (pending.getExpiresAt().isBefore(LocalDateTime.now())) {
+            throw new AppException(HttpStatus.BAD_REQUEST, "Yêu cầu đăng ký đã hết hạn. Vui lòng bắt đầu lại.");
+        }
+
+        // Tạo User chính thức
+        User user = User.builder()
+                .fullName(pending.getFullName())
+                .email(pending.getEmail())
+                .phone(pending.getPhone())
+                .passwordHash(pending.getPasswordHash())
+                .role(User.Role.CUSTOMER)
+                .isActive(true)
+                .build();
+        user = userRepository.save(user);
+
+        // Vô hiệu hóa OTP và dọn dẹp Pending Registration
+        otp.setIsUsed(true);
+        otp.setUsedAt(LocalDateTime.now());
+        otpRepository.save(otp);
+        pendingRegistrationRepository.delete(pending);
+
+        return buildAuthResponse(user);
+    }
+
+    /**
+     * Đăng ký tài khoản mới (Endpoint cũ trực tiếp - giữ lại fallback nếu cần)
+     */
     @Transactional
     public AuthResponse register(RegisterRequest request) {
-        // Kiểm tra email đã tồn tại
         if (userRepository.existsByEmail(request.email())) {
             throw AppException.conflict("Email '" + request.email() + "' đã được đăng ký");
         }
-        // Kiểm tra số điện thoại đã tồn tại
         if (userRepository.existsByPhone(request.phone())) {
             throw AppException.conflict("Số điện thoại '" + request.phone() + "' đã được đăng ký");
         }
 
-        // Tạo user mới với mật khẩu đã mã hóa
         User user = User.builder()
                 .fullName(request.fullName())
                 .email(request.email())
@@ -51,25 +170,27 @@ public class AuthService {
                 .build();
 
         user = userRepository.save(user);
-
         return buildAuthResponse(user);
     }
 
     /**
-     * Đăng nhập bằng email + mật khẩu.
-     * Dùng AuthenticationManager của Spring Security để xác thực — tự động so sánh BCrypt.
+     * Đăng nhập bằng email / số điện thoại và mật khẩu.
+     * Sử dụng tên đăng nhập (email hoặc sđt) phù hợp để Spring Security xác thực.
      */
     public AuthResponse login(LoginRequest request) {
         String identifier = request.identifier();
         
-        // Tìm user bằng email hoặc số điện thoại
         User user = userRepository.findByEmail(identifier)
                 .or(() -> userRepository.findByPhone(identifier))
                 .orElseThrow(() -> new AppException(HttpStatus.UNAUTHORIZED, "Tài khoản hoặc mật khẩu không đúng"));
 
         try {
+            String principal = user.getEmail() != null && !user.getEmail().isEmpty()
+                    ? user.getEmail()
+                    : user.getPhone();
+
             authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(user.getEmail(), request.password())
+                    new UsernamePasswordAuthenticationToken(principal, request.password())
             );
         } catch (BadCredentialsException e) {
             throw new AppException(HttpStatus.UNAUTHORIZED, "Tài khoản hoặc mật khẩu không đúng");
@@ -80,8 +201,6 @@ public class AuthService {
 
     /**
      * Làm mới Access Token từ Refresh Token.
-     * App Android gọi API này khi Access Token hết hạn (15 phút).
-     * Trả về Access Token mới mà không cần đăng nhập lại.
      */
     public AuthResponse refreshToken(RefreshTokenRequest request) {
         String refreshToken = request.refreshToken();
@@ -91,12 +210,16 @@ public class AuthService {
                     "Refresh Token không hợp lệ hoặc đã hết hạn, vui lòng đăng nhập lại");
         }
 
-        String email = jwtUtils.getEmailFromToken(refreshToken);
-        User user = userRepository.findByEmail(email)
+        String identifier = jwtUtils.getEmailFromToken(refreshToken);
+        User user = userRepository.findByEmail(identifier)
+                .or(() -> userRepository.findByPhone(identifier))
                 .orElseThrow(() -> AppException.notFound("User"));
 
-        // Chỉ cấp Access Token mới, giữ nguyên Refresh Token cũ
-        String newAccessToken = jwtUtils.generateAccessToken(email);
+        String subject = user.getEmail() != null && !user.getEmail().isEmpty()
+                ? user.getEmail()
+                : user.getPhone();
+
+        String newAccessToken = jwtUtils.generateAccessToken(subject);
 
         return new AuthResponse(
                 user.getId(),
@@ -104,14 +227,18 @@ public class AuthService {
                 user.getEmail(),
                 user.getRole().name(),
                 newAccessToken,
-                refreshToken   // Giữ nguyên Refresh Token cũ
+                refreshToken
         );
     }
 
     /** Tạo AuthResponse kèm cả Access Token và Refresh Token */
     private AuthResponse buildAuthResponse(User user) {
-        String accessToken  = jwtUtils.generateAccessToken(user.getEmail());
-        String refreshToken = jwtUtils.generateRefreshToken(user.getEmail());
+        String subject = user.getEmail() != null && !user.getEmail().isEmpty()
+                ? user.getEmail()
+                : user.getPhone();
+
+        String accessToken  = jwtUtils.generateAccessToken(subject);
+        String refreshToken = jwtUtils.generateRefreshToken(subject);
 
         return new AuthResponse(
                 user.getId(),

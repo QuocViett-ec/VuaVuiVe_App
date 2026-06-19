@@ -84,6 +84,58 @@ public class AuthRepository {
         return result;
     }
 
+    // ── Send Register OTP ──────────────────────────────────────────────────
+    public LiveData<Result<Void>> sendRegisterOtp(RegisterRequest request) {
+        MutableLiveData<Result<Void>> result = new MutableLiveData<>();
+        result.postValue(Result.loading());
+
+        authApi.sendRegisterOtp(request).enqueue(new Callback<ApiResponse<Void>>() {
+            @Override
+            public void onResponse(Call<ApiResponse<Void>> call, Response<ApiResponse<Void>> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                    result.postValue(Result.success(null));
+                } else {
+                    result.postValue(Result.error(extractError(response)));
+                }
+            }
+            @Override
+            public void onFailure(Call<ApiResponse<Void>> call, Throwable t) {
+                result.postValue(Result.error("Lỗi kết nối: " + t.getMessage()));
+            }
+        });
+        return result;
+    }
+
+    // ── Verify Register OTP ────────────────────────────────────────────────
+    public LiveData<Result<User>> verifyRegisterOtp(String phone, String code) {
+        MutableLiveData<Result<User>> result = new MutableLiveData<>();
+        result.postValue(Result.loading());
+
+        Map<String, String> body = new HashMap<>();
+        body.put("phone", phone);
+        body.put("code", code);
+
+        authApi.verifyRegisterOtp(body).enqueue(new Callback<ApiResponse<User>>() {
+            @Override
+            public void onResponse(Call<ApiResponse<User>> call, Response<ApiResponse<User>> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                    ApiResponse<User> apiResponse = response.body();
+                    User user = apiResponse.getData();
+                    sessionManager.saveUser(user);
+                    sessionManager.saveTokens(apiResponse.getAccessToken(), apiResponse.getRefreshToken());
+                    result.postValue(Result.success(user));
+                } else {
+                    result.postValue(Result.error(extractError(response)));
+                }
+            }
+            @Override
+            public void onFailure(Call<ApiResponse<User>> call, Throwable t) {
+                result.postValue(Result.error("Lỗi kết nối: " + t.getMessage()));
+            }
+        });
+        return result;
+    }
+
     // ── Check session (GET /api/auth/me) ───────────────────────────────────
     public LiveData<Result<User>> checkSession() {
         MutableLiveData<Result<User>> result = new MutableLiveData<>();
