@@ -148,7 +148,7 @@ DDL_STATEMENTS = [
         id               VARCHAR(36)   PRIMARY KEY,
         created_at       TIMESTAMP,
         note             VARCHAR(255),
-        status           VARCHAR(50)   NOT NULL CHECK (status IN ('PENDING','CONFIRMED','PREPARING','READY_FOR_PICKUP','IN_TRANSIT','DELIVERED','FAILED','RETURNED','CANCELLED')),
+        status           VARCHAR(50)   NOT NULL CHECK (status IN ('PENDING','CONFIRMED','SHIPPING','PREPARING','READY_FOR_PICKUP','IN_TRANSIT','DELIVERED','FAILED','RETURNED','CANCELLED')),
         updated_by_id    VARCHAR(36),
         updated_by_name  VARCHAR(255),
         updated_by_role  VARCHAR(255)  NOT NULL,
@@ -165,6 +165,48 @@ DDL_STATEMENTS = [
         name        VARCHAR(255),
         prep_time   VARCHAR(255),
         steps       TEXT
+    )""",
+    """CREATE TABLE IF NOT EXISTS pending_registrations (
+        id            VARCHAR(36)  PRIMARY KEY,
+        created_at    TIMESTAMP,
+        updated_at    TIMESTAMP,
+        phone         VARCHAR(255) NOT NULL UNIQUE,
+        email         VARCHAR(255),
+        full_name     VARCHAR(255) NOT NULL,
+        password_hash VARCHAR(255) NOT NULL,
+        address       VARCHAR(255),
+        expires_at    TIMESTAMP    NOT NULL
+    )""",
+    """CREATE TABLE IF NOT EXISTS otps (
+        id            VARCHAR(36)  PRIMARY KEY,
+        created_at    TIMESTAMP,
+        updated_at    TIMESTAMP,
+        phone         VARCHAR(255) NOT NULL,
+        code_hash     VARCHAR(255) NOT NULL,
+        type          VARCHAR(50)  NOT NULL,
+        expires_at    TIMESTAMP    NOT NULL,
+        is_used       BOOLEAN      NOT NULL DEFAULT FALSE,
+        attempt_count INTEGER      NOT NULL DEFAULT 0,
+        last_sent_at  TIMESTAMP    NOT NULL,
+        used_at       TIMESTAMP
+    )""",
+    """CREATE TABLE IF NOT EXISTS payment_transactions (
+        id             VARCHAR(36)   PRIMARY KEY,
+        created_at     TIMESTAMP,
+        updated_at     TIMESTAMP,
+        order_id       VARCHAR(36)   NOT NULL REFERENCES orders(id),
+        user_id        VARCHAR(36)   NOT NULL REFERENCES users(id),
+        provider       VARCHAR(255)  NOT NULL,
+        amount         NUMERIC(12,2) NOT NULL,
+        request_id     VARCHAR(255)  NOT NULL UNIQUE,
+        transaction_id VARCHAR(255),
+        status         VARCHAR(50)   NOT NULL CHECK (status IN ('PENDING','PAID','FAILED','CANCELLED')),
+        pay_url        TEXT,
+        deeplink       TEXT,
+        qr_code_url    TEXT,
+        result_code    INTEGER,
+        message        VARCHAR(255),
+        response_time  BIGINT
     )""",
 ]
 
