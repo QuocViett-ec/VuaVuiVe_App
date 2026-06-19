@@ -10,9 +10,11 @@
 .DS_Store
 build/
 target/
-*.db
+# Ignore test/temp db files but allow main database
 *.db-shm
 *.db-wal
+test_*.db
+# app-backend/vuavuive_v2.db được phép push lên git để bàn giao
 /captures
 .externalNativeBuild
 .cxx
