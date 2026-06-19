@@ -12,44 +12,91 @@
 
 ---
 
-## 1. Cài Đặt PostgreSQL (nếu chưa có)
+## 1. Cài Đặt PostgreSQL
 
-### Cách 1: Tải từ trang chủ
+### 🍎 macOS
+
+```bash
+# Cài qua Homebrew (khuyên dùng)
+brew install postgresql@15
+brew services start postgresql@15
+
+# Thêm vào PATH (thêm vào ~/.zshrc hoặc ~/.bash_profile)
+echo 'export PATH="/opt/homebrew/opt/postgresql@15/bin:$PATH"' >> ~/.zshrc
+source ~/.zshrc
+
+# Tạo user postgres với password
+psql postgres -c "CREATE USER postgres WITH SUPERUSER PASSWORD 'Viet0609';"
+
+# Kiểm tra
+psql -U postgres -c "SELECT version();"
+```
+
+### 🪟 Windows
+
+**Cách 1: Tải từ trang chủ**
 1. Truy cập [https://www.postgresql.org/download/windows/](https://www.postgresql.org/download/windows/)
 2. Tải bản **PostgreSQL 15+** → chạy installer
 3. Trong quá trình cài đặt:
    - **Port**: giữ mặc định `5432`
-   - **Password cho user `postgres`**: đặt là `Viet0609` (hoặc password tùy ý, nhưng phải sửa lại trong config)
+   - **Password cho user `postgres`**: đặt là `Viet0609`
    - Bỏ chọn Stack Builder khi được hỏi
 
-### Cách 2: Cài qua Scoop (nhanh hơn)
+**Cách 2: Cài qua Scoop**
 ```powershell
 scoop install postgresql
-pg_ctl register -N postgresql -D "C:\ProgramData\PostgreSQL\data"
-initdb -D "C:\ProgramData\PostgreSQL\data" -U postgres -E UTF8
-pg_ctl start -D "C:\ProgramData\PostgreSQL\data"
 ```
 
-### Cách 3: Cài qua Chocolatey
+**Cách 3: Cài qua Chocolatey**
 ```powershell
 choco install postgresql --params "/Password:Viet0609"
 ```
 
-### Kiểm tra PostgreSQL đã chạy
+**Kiểm tra:**
 ```powershell
 psql -U postgres -c "SELECT version();"
 ```
+
 > Nếu lệnh `psql` không tìm thấy, thêm đường dẫn PostgreSQL `bin` vào biến môi trường `PATH` (thường là `C:\Program Files\PostgreSQL\15\bin`).
 
 ---
 
-## 2. Tạo Database & Migrate Dữ Liệu
+## 2. Cài Đặt JDK 21
 
-> Script sẽ tự động tạo database `vuavuive_app`, tạo bảng và migrate dữ liệu từ file SQLite có sẵn.
+### 🍎 macOS
+```bash
+# Cài qua Homebrew
+brew install --cask temurin@21
+
+# Kiểm tra
+java -version
+# Kết quả: openjdk version "21.x.x"
+```
+
+### 🪟 Windows
+
+**Cách 1: Scoop (khuyên dùng)**
+```powershell
+scoop bucket add java
+scoop install temurin21-jdk
+```
+
+**Cách 2: Tải thủ công**
+Tải từ [https://adoptium.net/](https://adoptium.net/) → chọn **Temurin 21 LTS**
 
 ```powershell
+java -version
+# Kết quả: openjdk version "21.x.x"
+```
+
+---
+
+## 3. Migrate Dữ Liệu SQLite → PostgreSQL
+
+> 📦 File `app-backend/vuavuive_v2.db` đã có sẵn trong repo (đã được push lên). Chỉ cần chạy script migrate một lần để chuyển vào PostgreSQL.
+
+```bash
 cd app-backend
-pip install psycopg2-binary
 python migrate_to_postgres.py
 ```
 
@@ -58,6 +105,10 @@ python migrate_to_postgres.py
 [1/4] Creating database 'vuavuive_app'...
 [2/4] Creating tables in 'vuavuive_app'...
 [3/4] Migrating data from SQLite...
+  [OK] users: 3 rows migrated
+  [OK] categories: 8 rows migrated
+  [OK] products: 92 rows migrated
+  ...
 [4/4] Verify row counts in PostgreSQL:
 [DONE] Migration complete!
 ```
@@ -68,27 +119,16 @@ python migrate_to_postgres.py
 
 ---
 
-## 3. Cài Đặt JDK 21 (nếu chưa có)
-
-### Cách 1: Scoop (khuyên dùng)
-```powershell
-scoop bucket add java
-scoop install temurin21-jdk
-```
-
-### Cách 2: Tải thủ công
-Tải từ [https://adoptium.net/](https://adoptium.net/) → chọn **Temurin 21 LTS**
-
-### Kiểm tra
-```powershell
-java -version
-# Kết quả: openjdk version "21.x.x"
-```
-
----
-
 ## 4. Chạy Backend Server
 
+### 🍎 macOS / Linux
+```bash
+cd app-backend
+chmod +x mvn
+./mvn spring-boot:run -Dspring-boot.run.profiles=dev
+```
+
+### 🪟 Windows
 ```powershell
 cd app-backend
 .\run_backend.bat
@@ -102,7 +142,7 @@ Backend sẽ chạy tại **http://localhost:3000**
 
 ## 5. Build & Chạy Android Modules
 
-1. Mở thư mục gốc `VuaVuiVe` bằng **Android Studio**
+1. Mở thư mục gốc `VuaVuiVe_App` bằng **Android Studio**
 2. Đợi Gradle sync hoàn tất
 3. Chọn module cần chạy:
    - `app-customer` — Ứng dụng khách hàng
@@ -117,7 +157,46 @@ Backend sẽ chạy tại **http://localhost:3000**
 
 ```
 1. Khởi động PostgreSQL service
-2. Chạy migrate (lần đầu): python migrate_to_postgres.py
-3. Chạy backend: run_backend.bat
+2. Chạy migrate (lần đầu tiên): python migrate_to_postgres.py
+3. Chạy backend server
 4. Chạy app Android từ Android Studio
 ```
+
+---
+
+## Cấu Trúc Dự Án
+
+```
+VuaVuiVe_App/
+├── app-backend/          # Spring Boot backend (Java)
+│   ├── src/              # Source code
+│   ├── vuavuive_v2.db    # SQLite database (dùng để migrate)
+│   ├── migrate_to_postgres.py  # Script migrate sang PostgreSQL
+│   └── run_backend.bat   # Script chạy backend (Windows)
+├── app-customer/         # Android app cho khách hàng
+├── app-admin/            # Android app cho admin
+└── shared/               # Shared code (models, API interfaces)
+```
+
+---
+
+## Thông Tin Tài Khoản Mặc Định
+
+Sau khi migrate dữ liệu, các tài khoản mặc định trong database:
+
+| Role | Thông tin đăng nhập |
+|------|---------------------|
+| Admin | Xem trong `app-backend/vuavuive_v2.db` → bảng `users` |
+
+> Mật khẩu đã được hash bằng BCrypt, kiểm tra tài khoản admin trong database.
+
+---
+
+## Tích Hợp Bên Ngoài (cần cấu hình trong `application-dev.yml`)
+
+| Dịch vụ | Mô tả |
+|---------|-------|
+| **Cloudinary** | Lưu trữ ảnh sản phẩm |
+| **Telegram Bot** | Đăng nhập/đăng ký qua Telegram |
+| **VNPay** | Thanh toán online (sandbox) |
+| **Google Gemini AI** | Chatbot hỏi đáp |
