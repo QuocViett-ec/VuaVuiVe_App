@@ -28,7 +28,9 @@ import dagger.hilt.android.AndroidEntryPoint;
 import vn.vuavuive.customer.R;
 import vn.vuavuive.customer.data.MockDataProvider;
 import vn.vuavuive.customer.data.repository.AuthRepository;
+import vn.vuavuive.customer.viewmodel.CategoryViewModel;
 import vn.vuavuive.customer.viewmodel.ProductViewModel;
+import vn.vuavuive.shared.data.dto.CategoryResponse;
 import vn.vuavuive.shared.data.dto.Product;
 import java.util.List;
 
@@ -36,6 +38,7 @@ import java.util.List;
 public class ProductListFragment extends Fragment {
 
     private ProductViewModel productViewModel;
+    private CategoryViewModel categoryViewModel;
     private ProductAdapter adapter;
     private boolean isLoading = false;
     private String currentCategory = "all";
@@ -57,6 +60,7 @@ public class ProductListFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         productViewModel = new ViewModelProvider(requireActivity()).get(ProductViewModel.class);
+        categoryViewModel = new ViewModelProvider(requireActivity()).get(CategoryViewModel.class);
 
         setupSearch(view);
         setupCategoryChips(view);
@@ -120,11 +124,71 @@ public class ProductListFragment extends Fragment {
         return true;
     }
 
-    // ── Category chips ─────────────────────────────────────────────────────────
+    // ── Category chips ──────────────────────────────────────────────────
     private void setupCategoryChips(View view) {
         ChipGroup chipGroup = view.findViewById(R.id.chip_group_categories);
         if (chipGroup == null) return;
 
+        if (categoryViewModel == null) {
+            buildChipsFromMock(view, chipGroup);
+            return;
+        }
+
+        categoryViewModel.getCategories().observe(getViewLifecycleOwner(), result -> {
+            if (result != null
+                    && result.status == AuthRepository.Result.Status.SUCCESS
+                    && result.data != null
+                    && !result.data.isEmpty()) {
+                buildChipsFromApi(view, chipGroup, result.data);
+            } else {
+                buildChipsFromMock(view, chipGroup);
+            }
+        });
+    }
+
+    /** Build chips from live backend categories. */
+    private void buildChipsFromApi(View view, ChipGroup chipGroup, List<CategoryResponse> categories) {
+        chipGroup.removeAllViews();
+
+        // "Tất cả" first
+        Chip allChip = new Chip(requireContext());
+        allChip.setText("🛒 Tất cả");
+        allChip.setCheckable(true);
+        allChip.setChecked("all".equals(currentCategory));
+        allChip.setChipBackgroundColorResource(R.color.surface_variant);
+        allChip.setTextColor(getResources().getColorStateList(R.color.bottom_nav_color, null));
+        allChip.setChipStrokeColorResource(R.color.outline);
+        allChip.setChipStrokeWidth(1f);
+        allChip.setOnClickListener(v -> {
+            currentCategory = "all";
+            productViewModel.setCategory("all");
+            loadProducts(view);
+        });
+        chipGroup.addView(allChip);
+
+        for (CategoryResponse cat : categories) {
+            String slug = cat.getSlug();
+            String label = getEmoji(slug) + " " + cat.getName();
+            Chip chip = new Chip(requireContext());
+            chip.setText(label);
+            chip.setCheckable(true);
+            chip.setChecked(slug.equals(currentCategory));
+            chip.setChipBackgroundColorResource(R.color.surface_variant);
+            chip.setTextColor(getResources().getColorStateList(R.color.bottom_nav_color, null));
+            chip.setChipStrokeColorResource(R.color.outline);
+            chip.setChipStrokeWidth(1f);
+            chip.setOnClickListener(v -> {
+                currentCategory = slug;
+                productViewModel.setCategory(slug);
+                loadProducts(view);
+            });
+            chipGroup.addView(chip);
+        }
+    }
+
+    /** Fallback: build chips from MockDataProvider.CATEGORIES. */
+    private void buildChipsFromMock(View view, ChipGroup chipGroup) {
+        chipGroup.removeAllViews();
         for (String[] cat : MockDataProvider.CATEGORIES) {
             Chip chip = new Chip(requireContext());
             chip.setText(cat[1]);
@@ -140,6 +204,22 @@ public class ProductListFragment extends Fragment {
                 loadProducts(view);
             });
             chipGroup.addView(chip);
+        }
+    }
+
+    private String getEmoji(String slug) {
+        if (slug == null) return "🏷️";
+        switch (slug) {
+            case "veg":       return "🥦";
+            case "fruit":     return "🍎";
+            case "meat":      return "🥩";
+            case "drink":     return "🥤";
+            case "dry":       return "🌾";
+            case "spice":     return "🌶️";
+            case "sweet":     return "🍰";
+            case "frozen":    return "❄️";
+            case "household": return "🏠";
+            default:          return "🏷️";
         }
     }
 
@@ -214,15 +294,13 @@ public class ProductListFragment extends Fragment {
                 isLoading = false;
                 if (result != null
                         && result.status == AuthRepository.Result.Status.SUCCESS
-                        && result.data != null && !result.data.isEmpty()) {
+                        && result.data != null) {
                     if (adapter != null) adapter.setProducts(result.data);
-                    updateEmptyState(view, false, null);
+                    updateEmptyState(view, result.data.isEmpty(), currentSearch.isEmpty() ? null : currentSearch);
                 }
-                // Otherwise keep mock data showing
             });
         } catch (Exception e) {
             isLoading = false;
-            // API not available, mock data is already shown
         }
     }
 

@@ -35,8 +35,10 @@ import vn.vuavuive.customer.ui.recipe.RecipeAdapter;
 import vn.vuavuive.customer.ui.recipe.RecipeDetailActivity;
 import vn.vuavuive.customer.viewmodel.AuthViewModel;
 import vn.vuavuive.customer.viewmodel.CartViewModel;
+import vn.vuavuive.customer.viewmodel.CategoryViewModel;
 import vn.vuavuive.customer.viewmodel.ProductViewModel;
 import vn.vuavuive.customer.viewmodel.RecipeViewModel;
+import vn.vuavuive.shared.data.dto.CategoryResponse;
 import vn.vuavuive.shared.data.dto.Product;
 import vn.vuavuive.shared.data.local.CartItemEntity;
 
@@ -51,6 +53,7 @@ public class HomeFragment extends Fragment {
     private ProductViewModel productViewModel;
     private RecipeViewModel recipeViewModel;
     private CartViewModel cartViewModel;
+    private CategoryViewModel categoryViewModel;
 
     private RecipeAdapter recipeAdapter;
     private ProductAdapter productAdapter;
@@ -88,6 +91,7 @@ public class HomeFragment extends Fragment {
         productViewModel = new ViewModelProvider(requireActivity()).get(ProductViewModel.class);
         recipeViewModel = new ViewModelProvider(requireActivity()).get(RecipeViewModel.class);
         cartViewModel = new ViewModelProvider(requireActivity()).get(CartViewModel.class);
+        categoryViewModel = new ViewModelProvider(requireActivity()).get(CategoryViewModel.class);
 
         scrollView = view.findViewById(R.id.scroll_view);
 
@@ -374,27 +378,8 @@ public class HomeFragment extends Fragment {
         cgProductCategories = view.findViewById(R.id.cg_product_categories);
         RecyclerView rvProducts = view.findViewById(R.id.rv_products_home);
 
-        if (cgProductCategories != null) {
-            for (String[] cat : MockDataProvider.CATEGORIES) {
-                Chip chip = new Chip(requireContext());
-                chip.setText(cat[1]);
-                chip.setCheckable(true);
-                chip.setChecked("all".equals(cat[0]));
-                chip.setTag(cat[0]);
-                chip.setChipBackgroundColorResource(R.color.surface_variant);
-                chip.setTextColor(getResources().getColorStateList(R.color.bottom_nav_color, null));
-                chip.setChipStrokeColorResource(R.color.outline);
-                chip.setChipStrokeWidth(1f);
-                chip.setOnClickListener(v -> {
-                    currentProductCategory = cat[0];
-                    currentShortcutKeywords = null;
-                    currentShortcutSaleOnly = false;
-                    productViewModel.setCategory(cat[0]);
-                    loadProducts(view);
-                });
-                cgProductCategories.addView(chip);
-            }
-        }
+        // Load categories from live API first, then fall back to mock data
+        loadCategoriesAndBuildChips(view);
 
         if (rvProducts != null) {
             productAdapter = new ProductAdapter(requireContext(), product -> {
@@ -423,6 +408,127 @@ public class HomeFragment extends Fragment {
         }
     }
 
+    /**
+     * Requests categories from the backend API.
+     * On success: builds chips from the live list.
+     * On empty/failure: falls back to MockDataProvider.CATEGORIES.
+     */
+    private void loadCategoriesAndBuildChips(View view) {
+        if (categoryViewModel == null) {
+            buildProductCategoryChipsFromMock(view);
+            return;
+        }
+        categoryViewModel.getCategories().observe(getViewLifecycleOwner(), result -> {
+            if (result != null
+                    && result.status == AuthRepository.Result.Status.SUCCESS
+                    && result.data != null
+                    && !result.data.isEmpty()) {
+                buildProductCategoryChipsFromApi(view, result.data);
+            } else {
+                // Fallback to hardcoded mock categories
+                buildProductCategoryChipsFromMock(view);
+            }
+        });
+    }
+
+    /**
+     * Builds product category chips from live API data.
+     * Each chip's tag is the category slug for filtering.
+     */
+    private void buildProductCategoryChipsFromApi(View view, List<CategoryResponse> categories) {
+        if (cgProductCategories == null) return;
+        cgProductCategories.removeAllViews();
+
+        // "Tất cả" chip first
+        Chip allChip = new Chip(requireContext());
+        allChip.setText("🛒 Tất cả");
+        allChip.setCheckable(true);
+        allChip.setChecked(true);
+        allChip.setTag("all");
+        allChip.setChipBackgroundColorResource(R.color.surface_variant);
+        allChip.setTextColor(getResources().getColorStateList(R.color.bottom_nav_color, null));
+        allChip.setChipStrokeColorResource(R.color.outline);
+        allChip.setChipStrokeWidth(1f);
+        allChip.setOnClickListener(v -> {
+            currentProductCategory = "all";
+            currentShortcutKeywords = null;
+            currentShortcutSaleOnly = false;
+            productViewModel.setCategory("all");
+            loadProducts(view);
+        });
+        cgProductCategories.addView(allChip);
+
+        // One chip per backend category
+        for (CategoryResponse cat : categories) {
+            String slug = cat.getSlug();
+            String name = getCategoryEmoji(slug) + " " + cat.getName();
+            Chip chip = new Chip(requireContext());
+            chip.setText(name);
+            chip.setCheckable(true);
+            chip.setChecked(false);
+            chip.setTag(slug);
+            chip.setChipBackgroundColorResource(R.color.surface_variant);
+            chip.setTextColor(getResources().getColorStateList(R.color.bottom_nav_color, null));
+            chip.setChipStrokeColorResource(R.color.outline);
+            chip.setChipStrokeWidth(1f);
+            chip.setOnClickListener(v -> {
+                currentProductCategory = slug;
+                currentShortcutKeywords = null;
+                currentShortcutSaleOnly = false;
+                productViewModel.setCategory(slug);
+                loadProducts(view);
+            });
+            cgProductCategories.addView(chip);
+        }
+    }
+
+    /**
+     * Maps a backend category slug to a matching emoji for display.
+     */
+    private String getCategoryEmoji(String slug) {
+        if (slug == null) return "🏷️";
+        switch (slug) {
+            case "veg":       return "🥦";
+            case "fruit":     return "🍎";
+            case "meat":      return "🥩";
+            case "drink":     return "🥤";
+            case "dry":       return "🌾";
+            case "spice":     return "🌶️";
+            case "sweet":     return "🍰";
+            case "frozen":    return "❄️";
+            case "household": return "🏠";
+            default:          return "🏷️";
+        }
+    }
+
+    /**
+     * Falls back to building chips from MockDataProvider.CATEGORIES
+     * when the backend is unreachable or returns an empty list.
+     */
+    private void buildProductCategoryChipsFromMock(View view) {
+        if (cgProductCategories == null) return;
+        cgProductCategories.removeAllViews();
+        for (String[] cat : MockDataProvider.CATEGORIES) {
+            Chip chip = new Chip(requireContext());
+            chip.setText(cat[1]);
+            chip.setCheckable(true);
+            chip.setChecked("all".equals(cat[0]));
+            chip.setTag(cat[0]);
+            chip.setChipBackgroundColorResource(R.color.surface_variant);
+            chip.setTextColor(getResources().getColorStateList(R.color.bottom_nav_color, null));
+            chip.setChipStrokeColorResource(R.color.outline);
+            chip.setChipStrokeWidth(1f);
+            chip.setOnClickListener(v -> {
+                currentProductCategory = cat[0];
+                currentShortcutKeywords = null;
+                currentShortcutSaleOnly = false;
+                productViewModel.setCategory(cat[0]);
+                loadProducts(view);
+            });
+            cgProductCategories.addView(chip);
+        }
+    }
+
     private void loadProducts(View view) {
         // Mock data immediately for instant loading state
         List<Product> mockProducts = currentProductSearch.isEmpty()
@@ -441,7 +547,7 @@ public class HomeFragment extends Fragment {
                 isProductLoading = false;
                 if (result != null
                         && result.status == AuthRepository.Result.Status.SUCCESS
-                        && result.data != null && !result.data.isEmpty()) {
+                        && result.data != null) {
                     List<Product> products = applyShortcutFilter(result.data);
                     if (productAdapter != null) {
                         productAdapter.setProducts(products);

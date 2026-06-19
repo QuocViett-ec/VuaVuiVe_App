@@ -22,6 +22,7 @@ import vn.vuavuive.shared.data.api.AdminVoucherApi;
 import vn.vuavuive.shared.data.api.AuditLogApi;
 import vn.vuavuive.shared.data.api.AuthApi;
 import vn.vuavuive.shared.data.api.CartApi;
+import vn.vuavuive.shared.data.api.CategoryApi;
 import vn.vuavuive.shared.data.api.ChatbotApi;
 import vn.vuavuive.shared.data.api.DashboardApi;
 import vn.vuavuive.shared.data.api.OrderApi;
@@ -118,4 +119,7 @@ public class NetworkModule {
 
     @Provides @Singleton
     public ShipperOrderApi provideShipperOrderApi(Retrofit retrofit) { return retrofit.create(ShipperOrderApi.class); }
+
+    @Provides @Singleton
+    public CategoryApi provideCategoryApi(Retrofit retrofit) { return retrofit.create(CategoryApi.class); }
 }

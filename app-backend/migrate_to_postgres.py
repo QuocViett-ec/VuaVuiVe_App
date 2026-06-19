@@ -190,7 +190,13 @@ def blob_to_uuid(v):
     return v
 
 def migrate_table(table_name):
-    cur_sq.execute(f'SELECT * FROM "{table_name}"')
+    try:
+        cur_sq.execute(f'SELECT * FROM "{table_name}"')
+    except sqlite3.OperationalError as e:
+        if "no such table" in str(e):
+            log(f"  - {table_name}: not found in SQLite (skip)")
+            return 0
+        raise e
     rows = cur_sq.fetchall()
     if not rows:
         log(f"  - {table_name}: 0 rows (skip)")
