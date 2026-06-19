@@ -47,6 +47,11 @@
             android:parentActivityName=".ui.MainActivity" />
 
         <activity
+            android:name=".ui.product.FlashSaleActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.MainActivity" />
+
+        <activity
             android:name=".ui.search.SearchActivity"
             android:exported="false"
             android:parentActivityName=".ui.MainActivity" />

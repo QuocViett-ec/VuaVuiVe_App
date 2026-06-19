@@ -219,15 +219,12 @@ public class HomeFragment extends Fragment {
     private void setupShortcuts(View view) {
         llShortcutsFromDb = view.findViewById(R.id.ll_shortcuts_from_db);
 
-        // Flash Sale: always shown, triggers sale-only product filter
+        // Flash Sale: always shown, navigates to dedicated Flash Sale page
         View flashSale = view.findViewById(R.id.sc_flash_sale);
         if (flashSale != null) {
             flashSale.setOnClickListener(v -> {
-                currentShortcutSaleOnly = true;
-                currentProductCategory = "all";
-                productViewModel.setCategory("all");
-                loadProducts(view);
-                scrollToProducts(view);
+                Intent intent = new Intent(requireContext(), vn.vuavuive.customer.ui.product.FlashSaleActivity.class);
+                startActivity(intent);
             });
         }
 
