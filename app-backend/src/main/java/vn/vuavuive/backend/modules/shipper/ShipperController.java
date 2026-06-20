@@ -41,6 +41,13 @@ public class ShipperController {
         return ResponseEntity.ok(shipperService.getAllShippers());
     }
 
+    @Operation(summary = "[SHIPPER] Láº¥y thÃ´ng tin profile shipper hiá»‡n táº¡i")
+    @GetMapping("/me")
+    @PreAuthorize("hasRole('SHIPPER')")
+    public ResponseEntity<ShipperResponse> getMyProfile() {
+        return ResponseEntity.ok(shipperService.getMyProfile());
+    }
+
     @Operation(summary = "[SHIPPER/ADMIN] Cập nhật trạng thái online/offline của tài xế")
     @PutMapping("/{id}/status")
     @PreAuthorize("hasAnyRole('SHIPPER', 'ADMIN')")

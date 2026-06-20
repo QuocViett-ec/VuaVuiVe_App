@@ -1,5 +1,6 @@
 package vn.vuavuive.shared.data.api;
 
+import java.util.List;
 import java.util.Map;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -9,7 +10,7 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 import vn.vuavuive.shared.data.dto.ApiResponse;
 import vn.vuavuive.shared.data.dto.Order;
-import vn.vuavuive.shared.data.dto.PagedResponse;
+import vn.vuavuive.shared.data.dto.ShipperProfile;
 
 /**
  * ShipperOrderApi — Các endpoint dành riêng cho ứng dụng Shipper.
@@ -17,9 +18,12 @@ import vn.vuavuive.shared.data.dto.PagedResponse;
  */
 public interface ShipperOrderApi {
 
+    @GET("api/shippers/me")
+    Call<ApiResponse<ShipperProfile>> getMyProfile();
+
     /** Lấy danh sách đơn hàng được gán cho Shipper này (lọc theo trạng thái) */
     @GET("api/orders/shipper")
-    Call<PagedResponse<Order>> getMyShipperOrders(
+    Call<ApiResponse<List<Order>>> getMyShipperOrders(
             @Query("status") String status  // PREPARING, IN_TRANSIT, DELIVERED, FAILED
     );
 

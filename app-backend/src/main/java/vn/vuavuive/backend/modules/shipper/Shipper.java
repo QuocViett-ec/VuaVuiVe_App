@@ -3,6 +3,7 @@ package vn.vuavuive.backend.modules.shipper;
 import jakarta.persistence.*;
 import lombok.*;
 import vn.vuavuive.backend.core.BaseEntity;
+import vn.vuavuive.backend.modules.user.User;
 
 /**
  * Bảng SHIPPERS — Lưu thông tin tài xế giao hàng.
@@ -25,6 +26,10 @@ public class Shipper extends BaseEntity {
 
     @Column(name = "vehicle_number")
     private String vehicleNumber;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", unique = true)
+    private User user;
 
     /**
      * Trạng thái hiện tại của Shipper để hệ thống phân công đơn:

@@ -29,6 +29,9 @@ public interface AuthApi {
     @POST("api/auth/admin/login")
     Call<ApiResponse<User>> adminLogin(@Body LoginRequest body);
 
+    @POST("api/auth/shipper/login")
+    Call<ApiResponse<User>> shipperLogin(@Body LoginRequest body);
+
     @POST("api/auth/google")
     Call<ApiResponse<User>> googleLogin(@Body GoogleLoginRequest body);
 

@@ -1,4 +1,4 @@
-package vn.vuavuive.customer.ui.shipper;
+package vn.vuavuive.shipper.ui.main;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,10 +12,11 @@ import dagger.hilt.android.AndroidEntryPoint;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import vn.vuavuive.customer.R;
-import vn.vuavuive.customer.ui.auth.LoginActivity;
+import vn.vuavuive.shipper.R;
+import vn.vuavuive.shipper.ui.auth.ShipperLoginActivity;
 import vn.vuavuive.shared.data.api.ShipperOrderApi;
 import vn.vuavuive.shared.data.dto.ApiResponse;
+import vn.vuavuive.shared.data.dto.ShipperProfile;
 import vn.vuavuive.shared.util.SessionManager;
 import javax.inject.Inject;
 
@@ -34,11 +35,15 @@ public class ShipperMainActivity extends AppCompatActivity {
     @Inject SessionManager sessionManager;
     @Inject ShipperOrderApi shipperOrderApi;
 
-    private static final String[] TAB_TITLES = {"📦 Cần giao", "📋 Lịch sử"};
+    private static final String[] TAB_TITLES = {"Can giao", "Lich su"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (!sessionManager.isLoggedIn() || !sessionManager.isShipper() || !sessionManager.hasValidAccessToken()) {
+            goToLogin();
+            return;
+        }
         setContentView(R.layout.activity_shipper_main);
 
         setupHeader();
@@ -70,11 +75,15 @@ public class ShipperMainActivity extends AppCompatActivity {
     private void setupLogout() {
         findViewById(R.id.btn_logout).setOnClickListener(v -> {
             sessionManager.clearSession();
-            Intent intent = new Intent(this, LoginActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            finish();
+            goToLogin();
         });
+    }
+
+    private void goToLogin() {
+        Intent intent = new Intent(this, ShipperLoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 
     private void setupOnlineToggle() {
@@ -84,14 +93,26 @@ public class ShipperMainActivity extends AppCompatActivity {
 
         switchOnline.setOnCheckedChangeListener((buttonView, isChecked) -> {
             String newStatus = isChecked ? "AVAILABLE" : "OFFLINE";
-            tvStatusLabel.setText(isChecked ? "● Đang online" : "○ Đang offline");
+            tvStatusLabel.setText(isChecked ? "Online" : "Offline");
             tvStatusLabel.setTextColor(isChecked
                     ? getColor(R.color.status_delivered)
                     : getColor(R.color.text_hint));
 
             if (user == null) return;
-            // Cập nhật trạng thái lên backend (best-effort, không block UI)
-            // Dùng phone của user để lookup shipperId trên backend
+            shipperOrderApi.getMyProfile().enqueue(new Callback<ApiResponse<ShipperProfile>>() {
+                @Override
+                public void onResponse(Call<ApiResponse<ShipperProfile>> call, Response<ApiResponse<ShipperProfile>> response) {
+                    if (response.isSuccessful() && response.body() != null && response.body().getData() != null && response.body().getData().getId() != null) {
+                        shipperOrderApi.updateShipperStatus(response.body().getData().getId(), newStatus).enqueue(new Callback<ApiResponse<Void>>() {
+                            @Override public void onResponse(Call<ApiResponse<Void>> call, Response<ApiResponse<Void>> response) {}
+                            @Override public void onFailure(Call<ApiResponse<Void>> call, Throwable t) {}
+                        });
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ApiResponse<ShipperProfile>> call, Throwable t) {}
+            });
         });
     }
 }

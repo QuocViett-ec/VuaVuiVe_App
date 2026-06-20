@@ -3,6 +3,8 @@ package vn.vuavuive.backend.modules.shipper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vn.vuavuive.backend.exception.AppException;
@@ -12,6 +14,8 @@ import vn.vuavuive.backend.modules.order.OrderStatusLog;
 import vn.vuavuive.backend.modules.order.OrderStatusLogRepository;
 import vn.vuavuive.backend.modules.shipper.dto.ShipperRequest;
 import vn.vuavuive.backend.modules.shipper.dto.ShipperResponse;
+import vn.vuavuive.backend.modules.user.User;
+import vn.vuavuive.backend.modules.user.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -28,6 +32,8 @@ public class ShipperService {
     private final OrderRepository orderRepository;
     private final OrderStatusLogRepository statusLogRepository;
     private final SimpMessagingTemplate messagingTemplate;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     /**
      * Tạo mới shipper (Admin)
@@ -38,22 +44,48 @@ public class ShipperService {
             throw AppException.conflict("Số điện thoại shipper đã tồn tại!");
         }
 
+        User user = userRepository.findByPhone(request.phone()).orElseGet(() -> {
+            User newUser = User.builder()
+                    .phone(request.phone())
+                    .fullName(request.fullName())
+                    .role(User.Role.SHIPPER)
+                    .passwordHash(passwordEncoder.encode("shipper123"))
+                    .isActive(true)
+                    .build();
+            return userRepository.save(newUser);
+        });
+        if (user.getRole() != User.Role.SHIPPER) {
+            user.setRole(User.Role.SHIPPER);
+            userRepository.save(user);
+        }
+
         Shipper shipper = Shipper.builder()
                 .fullName(request.fullName())
                 .phone(request.phone())
                 .vehicleNumber(request.vehicleNumber())
                 .currentStatus(Shipper.Status.AVAILABLE)
                 .isActive(true)
+                .user(user)
                 .build();
 
         return toResponse(shipperRepository.save(shipper));
     }
-
     /**
      * Lấy toàn bộ shipper
      */
     public List<ShipperResponse> getAllShippers() {
         return shipperRepository.findAll().stream().map(this::toResponse).toList();
+    }
+
+    public ShipperResponse getMyProfile() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByEmail(email)
+                .or(() -> userRepository.findByPhone(email))
+                .orElseThrow(() -> AppException.notFound("User"));
+        Shipper shipper = shipperRepository.findByUserId(user.getId())
+                .or(() -> shipperRepository.findByPhone(user.getPhone()))
+                .orElseThrow(() -> AppException.notFound("Shipper profile chưa được thiết lập"));
+        return toResponse(shipper);
     }
 
     /**
@@ -93,8 +125,11 @@ public class ShipperService {
             throw AppException.badRequest("Shipper này hiện đang bị khóa tài khoản");
         }
 
-        if (order.getPaymentStatus() != Order.PaymentStatus.PAID) {
-            throw AppException.badRequest("Chi gan shipper cho don hang da thanh toan");
+        Order.OrderStatus status = order.getStatus();
+        if (status != Order.OrderStatus.CONFIRMED
+                && status != Order.OrderStatus.PREPARING
+                && status != Order.OrderStatus.READY_FOR_PICKUP) {
+            throw AppException.badRequest("Chỉ gán shipper cho đơn đã xác nhận (CONFIRMED/PREPARING/READY_FOR_PICKUP)");
         }
 
         order.setShipper(shipper);
@@ -126,7 +161,20 @@ public class ShipperService {
         }
 
         Order.OrderStatus newStatus = Order.OrderStatus.valueOf(newStatusStr.toUpperCase());
-        
+        Order.OrderStatus currentStatus = order.getStatus();
+        boolean validTransition =
+                newStatus == Order.OrderStatus.IN_TRANSIT
+                        && (currentStatus == Order.OrderStatus.SHIPPING
+                        || currentStatus == Order.OrderStatus.CONFIRMED
+                        || currentStatus == Order.OrderStatus.PREPARING
+                        || currentStatus == Order.OrderStatus.READY_FOR_PICKUP);
+        validTransition = validTransition
+                || ((newStatus == Order.OrderStatus.DELIVERED || newStatus == Order.OrderStatus.FAILED)
+                && currentStatus == Order.OrderStatus.IN_TRANSIT);
+        if (!validTransition) {
+            throw AppException.badRequest("Không thể chuyển từ " + currentStatus + " sang " + newStatus);
+        }
+
         // Cập nhật trạng thái đơn
         order.setStatus(newStatus);
 
@@ -205,7 +253,8 @@ public class ShipperService {
                 s.getPhone(),
                 s.getVehicleNumber(),
                 s.getCurrentStatus().name(),
-                s.getIsActive()
+                s.getIsActive(),
+                s.getUser() != null ? s.getUser().getId().toString() : null
         );
     }
 }

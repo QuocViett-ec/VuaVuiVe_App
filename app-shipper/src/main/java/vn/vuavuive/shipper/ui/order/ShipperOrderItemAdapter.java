@@ -1,4 +1,4 @@
-package vn.vuavuive.customer.ui.shipper;
+package vn.vuavuive.shipper.ui.order;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import vn.vuavuive.customer.R;
+import vn.vuavuive.shipper.R;
 import vn.vuavuive.shared.data.dto.OrderItem;
 import java.text.NumberFormat;
 import java.util.List;
@@ -51,8 +51,8 @@ public class ShipperOrderItemAdapter extends RecyclerView.Adapter<ShipperOrderIt
         ViewHolder(View itemView) {
             super(itemView);
             tvName     = itemView.findViewById(R.id.tv_product_name);
-            tvQty      = itemView.findViewById(R.id.tv_quantity);
-            tvSubtotal = itemView.findViewById(R.id.tv_subtotal);
+            tvQty      = itemView.findViewById(R.id.tv_qty_price);
+            tvSubtotal = itemView.findViewById(R.id.tv_line_total);
         }
 
         void bind(OrderItem item) {

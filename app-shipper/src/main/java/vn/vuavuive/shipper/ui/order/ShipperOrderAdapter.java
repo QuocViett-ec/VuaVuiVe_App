@@ -1,4 +1,4 @@
-package vn.vuavuive.customer.ui.shipper;
+package vn.vuavuive.shipper.ui.order;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.button.MaterialButton;
-import vn.vuavuive.customer.R;
+import vn.vuavuive.shipper.R;
 import vn.vuavuive.shared.data.dto.Order;
 import vn.vuavuive.shared.data.dto.PaymentDetail;
 import java.text.NumberFormat;

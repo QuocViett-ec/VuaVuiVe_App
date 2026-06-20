@@ -26,3 +26,4 @@ rootProject.name = "VuaVuiVe"
 include(":shared")
 include(":app-customer")
 include(":app-admin")
+include(":app-shipper")

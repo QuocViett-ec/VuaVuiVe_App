@@ -3,11 +3,15 @@ package vn.vuavuive.backend.config;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import vn.vuavuive.backend.modules.category.Category;
 import vn.vuavuive.backend.modules.category.CategoryRepository;
+import vn.vuavuive.backend.modules.order.Order;
+import vn.vuavuive.backend.modules.order.OrderItem;
+import vn.vuavuive.backend.modules.order.OrderRepository;
 import vn.vuavuive.backend.modules.product.Product;
 import vn.vuavuive.backend.modules.product.ProductRepository;
 import vn.vuavuive.backend.modules.shipper.Shipper;
@@ -16,6 +20,7 @@ import vn.vuavuive.backend.modules.user.User;
 import vn.vuavuive.backend.modules.user.UserRepository;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 /**
  * DataSeeder - Tự động chèn tài khoản thử nghiệm và dữ liệu mẫu khi ứng dụng khởi động.
@@ -30,6 +35,7 @@ public class DataSeeder implements CommandLineRunner {
     private final ShipperRepository shipperRepository;
     private final CategoryRepository categoryRepository;
     private final ProductRepository productRepository;
+    private final OrderRepository orderRepository;
     private final PasswordEncoder passwordEncoder;
     private final JdbcTemplate jdbcTemplate;
 
@@ -37,6 +43,7 @@ public class DataSeeder implements CommandLineRunner {
     public void run(String... args) throws Exception {
         seedUsers();
         seedProducts();
+        seedShipperOrders();
     }
 
     private void seedUsers() {
@@ -69,8 +76,8 @@ public class DataSeeder implements CommandLineRunner {
         }
 
         // 3. Seed tài khoản SHIPPER (User) và đối tượng Shipper
-        if (!userRepository.findByEmail("shipper@gmail.com").isPresent()) {
-            User shipperUser = User.builder()
+        User shipperUser = userRepository.findByEmail("shipper@gmail.com").orElseGet(() -> {
+            User user = User.builder()
                     .email("shipper@gmail.com")
                     .fullName("Tài Xế Vui Vẻ")
                     .phone("0987654321")
@@ -78,21 +85,30 @@ public class DataSeeder implements CommandLineRunner {
                     .role(User.Role.SHIPPER)
                     .isActive(true)
                     .build();
-            userRepository.save(shipperUser);
+            userRepository.save(user);
             log.info(">> SEED: Tạo thành công tài khoản SHIPPER (User): shipper@gmail.com / Shipper@123");
+            return user;
+        });
+        if (shipperUser.getRole() != User.Role.SHIPPER) {
+            shipperUser.setRole(User.Role.SHIPPER);
+            userRepository.save(shipperUser);
+        }
 
-            // Tạo đối tượng Shipper trong bảng shippers tương ứng
-            if (!shipperRepository.findByPhone("0987654321").isPresent()) {
-                Shipper shipper = Shipper.builder()
-                        .fullName("Tài Xế Vui Vẻ")
-                        .phone("0987654321")
-                        .vehicleNumber("29A-123.45")
-                        .currentStatus(Shipper.Status.AVAILABLE)
-                        .isActive(true)
-                        .build();
-                shipperRepository.save(shipper);
-                log.info(">> SEED: Tạo thành công thực thể Shipper với SĐT: 0987654321");
-            }
+        // Tạo/cập nhật đối tượng Shipper trong bảng shippers tương ứng
+        Shipper shipper = shipperRepository.findByPhone("0987654321").orElseGet(() -> {
+            Shipper created = Shipper.builder()
+                    .fullName("Tài Xế Vui Vẻ")
+                    .phone("0987654321")
+                    .vehicleNumber("29A-123.45")
+                    .currentStatus(Shipper.Status.AVAILABLE)
+                    .isActive(true)
+                    .build();
+            log.info(">> SEED: Tạo thành công thực thể Shipper với SĐT: 0987654321");
+            return created;
+        });
+        if (shipper.getUser() == null) {
+            shipper.setUser(shipperUser);
+            shipperRepository.save(shipper);
         }
     }
 
@@ -269,5 +285,51 @@ public class DataSeeder implements CommandLineRunner {
 
             log.info(">> SEED: Đã tạo 25 sản phẩm tương ứng khớp với MockDataProvider bằng SQL");
         }
+    }
+
+    private void seedShipperOrders() {
+        Shipper shipper = shipperRepository.findByPhone("0987654321").orElse(null);
+        User customer = userRepository.findByEmail("customer@gmail.com").orElse(null);
+        Product product = productRepository.findById(UUID.fromString("11111111-1111-1111-1111-111111110001"))
+                .orElseGet(() -> productRepository.findAll().stream().findFirst().orElse(null));
+        if (shipper == null || customer == null || product == null) {
+            return;
+        }
+        if (orderRepository.findByShipperIdOrderByCreatedAtDesc(shipper.getId(), PageRequest.of(0, 3)).getNumberOfElements() >= 3) {
+            return;
+        }
+
+        seedOrder(customer, shipper, product, Order.OrderStatus.SHIPPING, Order.PaymentStatus.UNPAID, "Seed: Admin da gan shipper");
+        seedOrder(customer, shipper, product, Order.OrderStatus.IN_TRANSIT, Order.PaymentStatus.UNPAID, "Seed: Shipper dang giao");
+        seedOrder(customer, shipper, product, Order.OrderStatus.DELIVERED, Order.PaymentStatus.PAID, "Seed: Da giao thanh cong");
+        log.info(">> SEED: Da tao 3 don hang mau cho shipper@gmail.com / Shipper@123");
+    }
+
+    private void seedOrder(User customer, Shipper shipper, Product product,
+                           Order.OrderStatus status, Order.PaymentStatus paymentStatus, String note) {
+        BigDecimal unitPrice = product.getSellingPrice();
+        BigDecimal subtotal = unitPrice.multiply(BigDecimal.valueOf(2));
+        Order order = Order.builder()
+                .user(customer)
+                .shipper(shipper)
+                .status(status)
+                .paymentMethod("COD")
+                .paymentStatus(paymentStatus)
+                .totalAmount(subtotal)
+                .finalAmount(subtotal)
+                .deliveryName("Khach Test Flow")
+                .deliveryPhone("0912345678")
+                .deliveryAddress("123 Duong Test, Quan 1, TP.HCM")
+                .note(note)
+                .build();
+        OrderItem item = OrderItem.builder()
+                .order(order)
+                .product(product)
+                .quantity(2)
+                .unitPrice(unitPrice)
+                .subtotal(subtotal)
+                .build();
+        order.getOrderItems().add(item);
+        orderRepository.save(order);
     }
 }

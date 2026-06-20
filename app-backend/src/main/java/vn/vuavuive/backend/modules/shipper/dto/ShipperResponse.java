@@ -8,5 +8,6 @@ public record ShipperResponse(
         String phone,
         String vehicleNumber,
         String currentStatus,
-        Boolean isActive
+        Boolean isActive,
+        String userId
 ) {}

@@ -1,4 +1,4 @@
-package vn.vuavuive.customer.ui.shipper;
+package vn.vuavuive.shipper.ui.order;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -16,13 +16,14 @@ import dagger.hilt.android.AndroidEntryPoint;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import vn.vuavuive.customer.R;
+import vn.vuavuive.shipper.R;
 import vn.vuavuive.shared.data.api.OrderApi;
 import vn.vuavuive.shared.data.api.ShipperOrderApi;
 import vn.vuavuive.shared.data.dto.ApiResponse;
 import vn.vuavuive.shared.data.dto.Order;
 import vn.vuavuive.shared.data.dto.OrderItem;
 import vn.vuavuive.shared.data.dto.PaymentDetail;
+import vn.vuavuive.shared.data.dto.ShipperProfile;
 import vn.vuavuive.shared.util.SessionManager;
 import java.text.NumberFormat;
 import java.util.List;
@@ -191,14 +192,14 @@ public class ShipperOrderDetailActivity extends AppCompatActivity {
         btnFailed.setVisibility(View.GONE);
         tvDoneLabel.setVisibility(View.GONE);
 
-        if ("CONFIRMED".equals(status) || "PREPARING".equals(status) || "READY_FOR_PICKUP".equals(status)) {
+        if ("CONFIRMED".equals(status) || "PREPARING".equals(status) || "READY_FOR_PICKUP".equals(status) || "SHIPPING".equals(status)) {
             btnStartDelivery.setVisibility(View.VISIBLE);
             btnStartDelivery.setOnClickListener(v ->
                     confirm("Bắt đầu giao hàng?",
                             "Xác nhận bạn đã lấy hàng và bắt đầu giao cho khách?",
                             "IN_TRANSIT"));
 
-        } else if ("SHIPPING".equals(status) || "IN_TRANSIT".equals(status)) {
+        } else if ("IN_TRANSIT".equals(status)) {
             btnDelivered.setVisibility(View.VISIBLE);
             btnFailed.setVisibility(View.VISIBLE);
             btnDelivered.setOnClickListener(v ->
@@ -231,28 +232,35 @@ public class ShipperOrderDetailActivity extends AppCompatActivity {
     }
 
     private void updateStatus(String newStatus) {
-        vn.vuavuive.shared.data.dto.User user = sessionManager.getUser();
-        if (user == null) return;
+        shipperOrderApi.getMyProfile().enqueue(new Callback<ApiResponse<ShipperProfile>>() {
+            @Override
+            public void onResponse(Call<ApiResponse<ShipperProfile>> call, Response<ApiResponse<ShipperProfile>> response) {
+                if (!response.isSuccessful() || response.body() == null || response.body().getData().getId() == null) {
+                    Toast.makeText(ShipperOrderDetailActivity.this, "Khong tai duoc thong tin shipper", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                shipperOrderApi.updateDeliveryStatus(response.body().getData().getId(), orderId, newStatus, "")
+                        .enqueue(new Callback<ApiResponse<Void>>() {
+                            @Override
+                            public void onResponse(Call<ApiResponse<Void>> call, Response<ApiResponse<Void>> response) {
+                                String msg = response.isSuccessful() ? "Cap nhat thanh cong" : "Cap nhat that bai";
+                                Toast.makeText(ShipperOrderDetailActivity.this, msg, Toast.LENGTH_SHORT).show();
+                                if (response.isSuccessful()) fetchAndBind();
+                            }
+                            @Override
+                            public void onFailure(Call<ApiResponse<Void>> call, Throwable t) {
+                                Toast.makeText(ShipperOrderDetailActivity.this, "Loi ket noi", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+            }
 
-        // Backend endpoint: PUT /api/shippers/{shipperId}/orders/{orderId}/delivery?status=&note=
-        shipperOrderApi.updateDeliveryStatus(user.getId(), orderId, newStatus, "")
-                .enqueue(new Callback<ApiResponse<Void>>() {
-                    @Override
-                    public void onResponse(Call<ApiResponse<Void>> call, Response<ApiResponse<Void>> response) {
-                        String msg = (response.isSuccessful())
-                                ? "✅ Cập nhật thành công!" : "❌ Cập nhật thất bại. Thử lại!";
-                        Toast.makeText(ShipperOrderDetailActivity.this, msg, Toast.LENGTH_SHORT).show();
-                        if (response.isSuccessful()) fetchAndBind();
-                    }
-                    @Override
-                    public void onFailure(Call<ApiResponse<Void>> call, Throwable t) {
-                        Toast.makeText(ShipperOrderDetailActivity.this,
-                                "Lỗi kết nối", Toast.LENGTH_SHORT).show();
-                    }
-                });
+            @Override
+            public void onFailure(Call<ApiResponse<ShipperProfile>> call, Throwable t) {
+                Toast.makeText(ShipperOrderDetailActivity.this, "Loi ket noi", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
-
-    // ── Helpers ─────────────────────────────────────────────────────────────
+    // Helpers ─────────────────────────────────────────────────────────────
 
     private void bindStatusBadge(String status) {
         if (status == null) return;

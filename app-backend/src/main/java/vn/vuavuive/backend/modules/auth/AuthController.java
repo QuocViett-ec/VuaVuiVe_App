@@ -131,6 +131,30 @@ public class AuthController {
         return ResponseEntity.ok(apiResponse);
     }
 
+    @Operation(summary = "Đăng nhập bằng email hoặc số điện thoại cho Shipper")
+    @PostMapping("/shipper/login")
+    public ResponseEntity<ApiResponse<UserResponse>> shipperLogin(
+            @Valid @RequestBody LoginRequest request,
+            HttpServletResponse response) {
+        AuthResponse auth = authService.login(request);
+        UserResponse user = authService.getUserResponse(request.identifier());
+
+        if (!"shipper".equals(user.role())) {
+            throw new AppException(HttpStatus.FORBIDDEN, "Tài khoản không có quyền Shipper");
+        }
+
+        setAuthCookie(response, auth.accessToken(), user.role());
+
+        ApiResponse<UserResponse> apiResponse = ApiResponse.<UserResponse>builder()
+                .success(true)
+                .message("Đăng nhập thành công")
+                .data(user)
+                .accessToken(auth.accessToken())
+                .refreshToken(auth.refreshToken())
+                .build();
+        return ResponseEntity.ok(apiResponse);
+    }
+
     @Operation(summary = "Lấy thông tin người dùng đang đăng nhập")
     @GetMapping("/me")
     public ResponseEntity<ApiResponse<UserResponse>> getMe() {
@@ -157,6 +181,7 @@ public class AuthController {
     public ResponseEntity<ApiResponse<Void>> logout(HttpServletResponse response) {
         clearCookie(response, "vvv.customer.sid");
         clearCookie(response, "vvv.admin.sid");
+        clearCookie(response, "vvv.shipper.sid");
 
         ApiResponse<Void> apiResponse = ApiResponse.<Void>builder()
                 .success(true)
@@ -180,6 +205,8 @@ public class AuthController {
         String cookieName = "vvv.customer.sid";
         if ("admin".equals(role) || "staff".equals(role) || "audit".equals(role)) {
             cookieName = "vvv.admin.sid";
+        } else if ("shipper".equals(role)) {
+            cookieName = "vvv.shipper.sid";
         }
         jakarta.servlet.http.Cookie cookie = new jakarta.servlet.http.Cookie(cookieName, token);
         cookie.setPath("/");

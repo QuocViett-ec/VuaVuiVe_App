@@ -70,7 +70,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         // Kiểm tra trong Cookie
         if (request.getCookies() != null) {
             for (jakarta.servlet.http.Cookie cookie : request.getCookies()) {
-                if ("vvv.customer.sid".equals(cookie.getName()) || "vvv.admin.sid".equals(cookie.getName())) {
+                if ("vvv.customer.sid".equals(cookie.getName())
+                        || "vvv.admin.sid".equals(cookie.getName())
+                        || "vvv.shipper.sid".equals(cookie.getName())) {
                     if (StringUtils.hasText(cookie.getValue())) {
                         return cookie.getValue();
                     }

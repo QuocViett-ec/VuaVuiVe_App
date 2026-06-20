@@ -1,4 +1,4 @@
-package vn.vuavuive.customer.ui.shipper;
+package vn.vuavuive.shipper.ui.order;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -16,10 +16,10 @@ import dagger.hilt.android.AndroidEntryPoint;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import vn.vuavuive.customer.R;
+import vn.vuavuive.shipper.R;
 import vn.vuavuive.shared.data.api.ShipperOrderApi;
+import vn.vuavuive.shared.data.dto.ApiResponse;
 import vn.vuavuive.shared.data.dto.Order;
-import vn.vuavuive.shared.data.dto.PagedResponse;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
@@ -106,13 +106,13 @@ public class ShipperOrderListFragment extends Fragment {
         // Tab History: lọc DELIVERED
         String statusFilter = "";
 
-        shipperOrderApi.getMyShipperOrders(statusFilter).enqueue(new Callback<PagedResponse<Order>>() {
+        shipperOrderApi.getMyShipperOrders(statusFilter).enqueue(new Callback<ApiResponse<List<Order>>>() {
             @Override
-            public void onResponse(@NonNull Call<PagedResponse<Order>> call,
-                                   @NonNull Response<PagedResponse<Order>> response) {
+            public void onResponse(@NonNull Call<ApiResponse<List<Order>>> call,
+                                   @NonNull Response<ApiResponse<List<Order>>> response) {
                 showLoading(false);
-                if (response.isSuccessful() && response.body() != null) {
-                    List<Order> allOrders = response.body().getContent();
+                if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                    List<Order> allOrders = response.body().getData();
 
                     // For active tab: also filter PREPARING + IN_TRANSIT from the full list
                     List<Order> filtered = new ArrayList<>();
@@ -148,7 +148,7 @@ public class ShipperOrderListFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(@NonNull Call<PagedResponse<Order>> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<ApiResponse<List<Order>>> call, @NonNull Throwable t) {
                 showLoading(false);
                 showError("Lỗi kết nối: " + t.getMessage());
             }

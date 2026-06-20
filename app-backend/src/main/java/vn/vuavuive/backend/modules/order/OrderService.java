@@ -196,10 +196,12 @@ public class OrderService {
     public PagedResponse<OrderResponse> getShipperOrders(String statusStr, int page, int size) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByEmail(email)
+                .or(() -> userRepository.findByPhone(email))
                 .orElseThrow(() -> AppException.notFound("User"));
 
         // Tìm Shipper entity qua số điện thoại của User SHIPPER
-        Shipper shipper = shipperRepository.findByPhone(user.getPhone())
+        Shipper shipper = shipperRepository.findByUserId(user.getId())
+                .or(() -> shipperRepository.findByPhone(user.getPhone()))
                 .orElseThrow(() -> AppException.notFound("Thông tin tài xế chưa được thiết lập"));
 
         PageRequest pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
@@ -389,13 +391,17 @@ public class OrderService {
             return null;
         }
         String normalized = value.trim().toUpperCase();
-        if ("SHIPPED".equals(normalized) || "IN_TRANSIT".equals(normalized)) {
+        if ("SHIPPED".equals(normalized)) {
             normalized = "SHIPPING";
         }
-        if ("PROCESSING".equals(normalized) || "PREPARING".equals(normalized) || "READY_FOR_PICKUP".equals(normalized)) {
+        if ("PROCESSING".equals(normalized)) {
             normalized = "CONFIRMED";
         }
-        return Order.OrderStatus.valueOf(normalized);
+        try {
+            return Order.OrderStatus.valueOf(normalized);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
     }
 
     /** Ghi một mốc lịch sử trạng thái vào bảng ORDER_STATUS_LOGS */

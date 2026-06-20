@@ -12,6 +12,8 @@ public interface ShipperRepository extends JpaRepository<Shipper, UUID> {
     
     Optional<Shipper> findByPhone(String phone);
 
+    Optional<Shipper> findByUserId(UUID userId);
+
     List<Shipper> findByCurrentStatusAndIsActiveTrue(Shipper.Status status);
 
     boolean existsByPhone(String phone);

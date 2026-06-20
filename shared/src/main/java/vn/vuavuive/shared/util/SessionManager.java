@@ -2,7 +2,9 @@ package vn.vuavuive.shared.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Base64;
 import com.google.gson.Gson;
+import org.json.JSONObject;
 import vn.vuavuive.shared.data.dto.User;
 
 /**
@@ -64,6 +66,19 @@ public class SessionManager {
 
     public String getAccessToken() {
         return prefs.getString(KEY_ACCESS_TOKEN, null);
+    }
+
+    public boolean hasValidAccessToken() {
+        String token = getAccessToken();
+        if (token == null || token.isEmpty()) return false;
+        try {
+            String[] parts = token.split("\\.");
+            if (parts.length < 2) return false;
+            JSONObject payload = new JSONObject(new String(Base64.decode(parts[1], Base64.URL_SAFE | Base64.NO_WRAP)));
+            return payload.optLong("exp", 0) * 1000 > System.currentTimeMillis();
+        } catch (Exception ignored) {
+            return false;
+        }
     }
 
     public String getRefreshToken() {

@@ -12,6 +12,7 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app-admin" />
             <option value="$PROJECT_DIR$/app-customer" />
+            <option value="$PROJECT_DIR$/app-shipper" />
             <option value="$PROJECT_DIR$/shared" />
           </set>
         </option>

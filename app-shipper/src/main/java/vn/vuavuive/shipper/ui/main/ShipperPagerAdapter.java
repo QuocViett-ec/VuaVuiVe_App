@@ -1,9 +1,10 @@
-package vn.vuavuive.customer.ui.shipper;
+package vn.vuavuive.shipper.ui.main;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
+import vn.vuavuive.shipper.ui.order.ShipperOrderListFragment;
 
 /**
  * ShipperPagerAdapter — Cung cấp 2 Fragment cho tabs của ShipperMainActivity:
