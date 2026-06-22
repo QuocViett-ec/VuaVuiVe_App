@@ -60,6 +60,10 @@ public class ProductViewModel extends ViewModel {
         return productRepository.getProductReviews(productId);
     }
 
+    public LiveData<AuthRepository.Result<Review>> submitProductReview(String productId, int rating, String comment) {
+        return productRepository.submitProductReview(productId, rating, comment);
+    }
+
     public LiveData<AuthRepository.Result<List<Product>>> getSimilarProducts(String productId) {
         return productRepository.getSimilarProducts(productId);
     }

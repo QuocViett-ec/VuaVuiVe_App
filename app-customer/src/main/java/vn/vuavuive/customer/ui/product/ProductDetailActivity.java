@@ -17,7 +17,9 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.google.android.material.button.MaterialButton;
 import dagger.hilt.android.AndroidEntryPoint;
+import javax.inject.Inject;
 import vn.vuavuive.customer.R;
+import vn.vuavuive.shared.util.SessionManager;
 import vn.vuavuive.customer.data.MockDataProvider;
 import vn.vuavuive.customer.data.repository.AuthRepository;
 import vn.vuavuive.customer.ui.review.ReviewAdapter;
@@ -32,6 +34,9 @@ import java.util.List;
 
 @AndroidEntryPoint
 public class ProductDetailActivity extends AppCompatActivity {
+
+    @Inject
+    SessionManager sessionManager;
 
     private ProductViewModel productViewModel;
     private CartViewModel cartViewModel;
@@ -142,6 +147,31 @@ public class ProductDetailActivity extends AppCompatActivity {
 
         // FAB
         fabAddToCart.setOnClickListener(v -> addToCart());
+
+        // Write Review button
+        MaterialButton btnWriteReview = findViewById(R.id.btn_write_review);
+        if (btnWriteReview != null) {
+            btnWriteReview.setOnClickListener(v -> {
+                if (sessionManager == null || !sessionManager.isLoggedIn()) {
+                    Toast.makeText(this, "Vui lòng đăng nhập để viết đánh giá", Toast.LENGTH_SHORT).show();
+                    android.content.Intent intent = new android.content.Intent(this, vn.vuavuive.customer.ui.auth.LoginActivity.class);
+                    startActivity(intent);
+                    return;
+                }
+                if (currentProduct != null) {
+                    vn.vuavuive.customer.ui.review.ReviewBottomSheetDialogFragment dialog = 
+                            vn.vuavuive.customer.ui.review.ReviewBottomSheetDialogFragment.newInstance(
+                                    "",
+                                    currentProduct.getId(),
+                                    currentProduct.getName(),
+                                    currentProduct.getImageUrl(),
+                                    currentProduct.getPrice(),
+                                    currentProduct.getUnit()
+                            );
+                    dialog.show(getSupportFragmentManager(), "ReviewBottomSheet");
+                }
+            });
+        }
     }
 
     // ── Mock data loading ──────────────────────────────────────────────────────
@@ -174,13 +204,7 @@ public class ProductDetailActivity extends AppCompatActivity {
                 }
             });
 
-            productViewModel.getProductReviews(productId).observe(this, result -> {
-                if (result != null
-                        && result.status == AuthRepository.Result.Status.SUCCESS
-                        && result.data != null && !result.data.isEmpty()) {
-                    reviewAdapter.setReviews(result.data);
-                }
-            });
+            refreshReviews(productId);
 
             productViewModel.getSimilarProducts(productId).observe(this, result -> {
                 if (result != null
@@ -192,6 +216,25 @@ public class ProductDetailActivity extends AppCompatActivity {
         } catch (Exception e) {
             // API unavailable — mock data already shown
         }
+    }
+
+    public void refreshReviews() {
+        if (currentProduct == null) return;
+        String productId = currentProduct.getId();
+        if (productId == null || productId.isEmpty()) return;
+        refreshReviews(productId);
+    }
+
+    private void refreshReviews(String productId) {
+        try {
+            productViewModel.getProductReviews(productId).observe(this, result -> {
+                if (result != null
+                        && result.status == AuthRepository.Result.Status.SUCCESS
+                        && result.data != null) {
+                    reviewAdapter.setReviews(result.data);
+                }
+            });
+        } catch (Exception ignored) {}
     }
 
     // ── Bind product data to views ─────────────────────────────────────────────

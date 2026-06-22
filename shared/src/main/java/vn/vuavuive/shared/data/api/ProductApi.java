@@ -3,11 +3,14 @@ package vn.vuavuive.shared.data.api;
 import java.util.List;
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
+import retrofit2.http.Body;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 import vn.vuavuive.shared.data.dto.ApiResponse;
 import vn.vuavuive.shared.data.dto.Product;
 import vn.vuavuive.shared.data.dto.Review;
+import vn.vuavuive.shared.data.dto.request.ReviewRequest;
 
 public interface ProductApi {
 
@@ -32,5 +35,8 @@ public interface ProductApi {
 
     @GET("api/products/{id}/reviews")
     Call<ApiResponse<List<Review>>> getProductReviews(@Path("id") String id);
+
+    @POST("api/reviews")
+    Call<ApiResponse<Review>> submitReview(@Body ReviewRequest body);
 }
 
