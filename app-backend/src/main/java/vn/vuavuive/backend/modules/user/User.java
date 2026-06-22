@@ -37,7 +37,7 @@ public class User extends BaseEntity {
     @Column(name = "avatar_url")
     private String avatarUrl;
 
-    @Column(name = "points", nullable = false)
+    @Column(name = "points")
     @Builder.Default
     private Integer points = 0;
 

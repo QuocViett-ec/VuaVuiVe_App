@@ -13,6 +13,15 @@ public class SchemaConstraintFixer implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
+        try {
+            try (java.sql.Connection conn = java.util.Objects.requireNonNull(jdbcTemplate.getDataSource()).getConnection()) {
+                String dbProduct = conn.getMetaData().getDatabaseProductName();
+                if (dbProduct != null && dbProduct.toLowerCase().contains("sqlite")) {
+                    return; // Skip constraint fixing for SQLite
+                }
+            }
+        } catch (Exception ignored) {}
+
         // ponytail: Hibernate update does not refresh old enum check constraints in Postgres.
         fix("orders", "orders_payment_status_check",
                 "payment_status in ('UNPAID','PENDING','PAID','FAILED','CANCELLED','REFUNDED')");

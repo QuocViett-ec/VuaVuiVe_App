@@ -21,6 +21,7 @@ import vn.vuavuive.customer.ui.product.ProductDetailActivity;
 import vn.vuavuive.customer.viewmodel.OrderViewModel;
 import vn.vuavuive.customer.viewmodel.ProductViewModel;
 import vn.vuavuive.shared.util.CurrencyFormatter;
+import vn.vuavuive.shared.util.SessionManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -110,7 +111,24 @@ public class ReviewBottomSheetDialogFragment extends BottomSheetDialogFragment {
         if (args == null) return;
         String orderId = args.getString(ARG_ORDER_ID, "");
         String productId = args.getString(ARG_PRODUCT_ID, "");
-        if (orderId.isEmpty()) return;
+        if (orderId == null || orderId.isEmpty()) {
+            SessionManager sessionManager = new SessionManager(requireContext());
+            String currentUserId = sessionManager.getUserId();
+            if (currentUserId != null && !currentUserId.isEmpty()) {
+                productViewModel.getProductReviews(productId).observe(getViewLifecycleOwner(), result -> {
+                    if (result != null && result.status == AuthRepository.Result.Status.SUCCESS && result.data != null) {
+                        for (vn.vuavuive.shared.data.dto.Review r : result.data) {
+                            if (currentUserId.equals(r.getUserId())) {
+                                ratingBar.setRating(r.getRating());
+                                etComment.setText(r.getComment() != null ? r.getComment() : "");
+                                break;
+                            }
+                        }
+                    }
+                });
+            }
+            return;
+        }
 
         orderViewModel.getMyReview(orderId).observe(getViewLifecycleOwner(), result -> {
             if (result.status == AuthRepository.Result.Status.SUCCESS && result.data != null) {

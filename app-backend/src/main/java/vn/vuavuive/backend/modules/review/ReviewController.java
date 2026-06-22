@@ -41,4 +41,25 @@ public class ReviewController {
         ApiResponse<ReviewResponse> response = reviewService.submitReview(authHeader, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+
+    @Operation(summary = "Submit reviews for an order")
+    @PostMapping("/orders/{orderId}/reviews")
+    public ResponseEntity<ApiResponse<ReviewResponse>> submitOrderReviews(
+            @RequestHeader("Authorization") String authHeader,
+            @PathVariable UUID orderId,
+            @RequestBody java.util.Map<String, Object> body
+    ) {
+        ApiResponse<ReviewResponse> response = reviewService.submitOrderReviews(authHeader, orderId, body);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @Operation(summary = "Get user review for an order")
+    @GetMapping("/orders/{orderId}/reviews/me")
+    public ResponseEntity<ApiResponse<ReviewResponse>> getMyReviewForOrder(
+            @RequestHeader("Authorization") String authHeader,
+            @PathVariable UUID orderId
+    ) {
+        ApiResponse<ReviewResponse> response = reviewService.getMyReviewForOrder(authHeader, orderId);
+        return ResponseEntity.ok(response);
+    }
 }

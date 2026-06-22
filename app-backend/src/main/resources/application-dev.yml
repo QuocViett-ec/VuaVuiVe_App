@@ -8,13 +8,13 @@ spring:
   cache:
     type: simple
   datasource:
-    url: jdbc:postgresql://localhost:5432/vuavuive_app
-    driver-class-name: org.postgresql.Driver
-    username: postgres
-    password: Viet0609
+    url: "jdbc:sqlite:vuavuive_v2.db?date_string_format=yyyy-MM-dd HH:mm:ss.SSS&date_class=text&busy_timeout=5000"
+    driver-class-name: org.sqlite.JDBC
+    username: sa
+    password: sa
     hikari:
-      maximum-pool-size: 10
-      minimum-idle: 2
+      maximum-pool-size: 1
+      minimum-idle: 1
 
   jpa:
     hibernate:
@@ -22,7 +22,7 @@ spring:
     show-sql: true           # In cau lenh SQL ra console de debug
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+        dialect: org.hibernate.community.dialect.SQLiteDialect
         format_sql: true
         jdbc:
           time_zone: UTC
