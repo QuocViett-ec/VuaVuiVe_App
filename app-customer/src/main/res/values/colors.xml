@@ -16,6 +16,7 @@
     <!-- ── Tertiary (for badges, highlights) ── -->
     <color name="tertiary">#FFB800</color>
     <color name="tertiary_light">#FFF3C4</color>
+    <color name="vvv_warning_yellow">#FFD700</color>
 
     <!-- ── Background tones ── -->
     <color name="background">#F4F7F4</color>

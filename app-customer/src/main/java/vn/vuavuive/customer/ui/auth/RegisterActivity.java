@@ -92,11 +92,8 @@ public class RegisterActivity extends AppCompatActivity {
             tilPhone.setError("Số điện thoại không hợp lệ (VD: 0912345678)");
             valid = false;
         }
-        if (TextUtils.isEmpty(email)) {
-            tilEmail.setError("Vui long nhap email");
-            valid = false;
-        } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            tilEmail.setError("Email khong hop le");
+        if (!TextUtils.isEmpty(email) && !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            tilEmail.setError("Email không hợp lệ");
             valid = false;
         }
         if (pass.length() < 6) {

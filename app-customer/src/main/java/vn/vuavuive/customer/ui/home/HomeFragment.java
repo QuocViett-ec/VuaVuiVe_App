@@ -60,7 +60,7 @@ public class HomeFragment extends Fragment {
     private ProductAdapter productAdapter;
 
     private ChipGroup cgRecipeCategories;
-    private ChipGroup cgProductCategories;
+    private LinearLayout llProductCategories;
     private LinearLayout llShortcutsFromDb;
     private NestedScrollView scrollView;
     private EditText etSearchHome;
@@ -102,7 +102,6 @@ public class HomeFragment extends Fragment {
         setupGreeting(view);
         setupAddressPicker(view);
         setupSearch(view);
-        setupShortcuts(view);          // Flash Sale static + dynamic DB categories
         setupRecipeSection(view);
         setupProductSection(view);
 
@@ -180,7 +179,7 @@ public class HomeFragment extends Fragment {
                         productViewModel.setSearch(currentProductSearch);
                         loadProducts(view);
                         if (!currentProductSearch.isEmpty() && scrollView != null) {
-                            View target = view.findViewById(R.id.cg_product_categories);
+                            View target = view.findViewById(R.id.hsv_product_categories);
                             if (target != null) scrollView.smoothScrollTo(0, target.getTop() - 100);
                         }
                     };
@@ -215,100 +214,9 @@ public class HomeFragment extends Fragment {
         return true;
     }
 
-    // ── Shortcuts Setup — Flash Sale (static) + DB categories (dynamic) ────────
+    // ── Shortcuts Setup — Disabled (merged) ────────────────────────────────────
     private void setupShortcuts(View view) {
-        llShortcutsFromDb = view.findViewById(R.id.ll_shortcuts_from_db);
-
-        // Flash Sale: always shown, navigates to dedicated Flash Sale page
-        View flashSale = view.findViewById(R.id.sc_flash_sale);
-        if (flashSale != null) {
-            flashSale.setOnClickListener(v -> {
-                Intent intent = new Intent(requireContext(), vn.vuavuive.customer.ui.product.FlashSaleActivity.class);
-                startActivity(intent);
-            });
-        }
-
-        // Dynamic shortcuts from DB categories
-        if (categoryViewModel != null) {
-            categoryViewModel.getCategories().observe(getViewLifecycleOwner(), result -> {
-                if (result != null
-                        && result.status == AuthRepository.Result.Status.SUCCESS
-                        && result.data != null
-                        && !result.data.isEmpty()) {
-                    buildDynamicShortcuts(view, result.data);
-                }
-                // On failure: no shortcuts added — Flash Sale alone is sufficient
-            });
-        }
-    }
-
-    /**
-     * Dynamically creates one circular shortcut per backend category,
-     * reusing the same visual style as the static Flash Sale shortcut.
-     */
-    private void buildDynamicShortcuts(View view, List<CategoryResponse> categories) {
-        if (llShortcutsFromDb == null) return;
-        llShortcutsFromDb.removeAllViews();
-
-        for (CategoryResponse cat : categories) {
-            String slug = cat.getSlug();
-            String emoji = getCategoryEmoji(slug);
-            String label = cat.getName();
-
-            // Outer container (matches sc_flash_sale layout)
-            LinearLayout container = new LinearLayout(requireContext());
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                    dpToPx(80), LinearLayout.LayoutParams.WRAP_CONTENT);
-            container.setLayoutParams(params);
-            container.setOrientation(LinearLayout.VERTICAL);
-            container.setGravity(android.view.Gravity.CENTER);
-            container.setClickable(true);
-            container.setFocusable(true);
-
-            // Circle background with emoji
-            FrameLayout circle = new FrameLayout(requireContext());
-            LinearLayout.LayoutParams circleParams = new LinearLayout.LayoutParams(dpToPx(50), dpToPx(50));
-            circle.setLayoutParams(circleParams);
-            circle.setBackgroundResource(R.drawable.bg_avatar_circle);
-            circle.setBackgroundTintList(requireContext().getColorStateList(R.color.primary_container));
-
-            TextView tvEmoji = new TextView(requireContext());
-            FrameLayout.LayoutParams emojiParams = new FrameLayout.LayoutParams(
-                    FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
-            emojiParams.gravity = android.view.Gravity.CENTER;
-            tvEmoji.setLayoutParams(emojiParams);
-            tvEmoji.setText(emoji);
-            tvEmoji.setTextSize(24f);
-            circle.addView(tvEmoji);
-
-            // Label text
-            TextView tvLabel = new TextView(requireContext());
-            LinearLayout.LayoutParams labelParams = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            labelParams.topMargin = dpToPx(6);
-            tvLabel.setLayoutParams(labelParams);
-            tvLabel.setText(label);
-            tvLabel.setTextColor(requireContext().getColor(R.color.text_primary));
-            tvLabel.setTextSize(11f);
-            tvLabel.setGravity(android.view.Gravity.CENTER);
-            tvLabel.setMaxLines(2);
-            tvLabel.setEllipsize(android.text.TextUtils.TruncateAt.END);
-
-            container.addView(circle);
-            container.addView(tvLabel);
-
-            // Click: select this category in chip group + scroll to products
-            container.setOnClickListener(v -> {
-                currentShortcutSaleOnly = false;
-                currentProductCategory = slug;
-                productViewModel.setCategory(slug);
-                loadProducts(view);
-                selectChipBySlug(slug);
-                scrollToProducts(view);
-            });
-
-            llShortcutsFromDb.addView(container);
-        }
+        // Disabled since we merged category selectors into the bottom bar
     }
 
     /** Converts dp to pixels. */
@@ -320,29 +228,20 @@ public class HomeFragment extends Fragment {
     /** Scrolls the page to the product section. */
     private void scrollToProducts(View view) {
         if (scrollView != null && view != null) {
-            View target = view.findViewById(R.id.cg_product_categories);
+            View target = view.findViewById(R.id.hsv_product_categories);
             if (target != null) scrollView.smoothScrollTo(0, target.getTop() - 100);
         }
     }
 
-    /** Checks the chip whose tag matches the given slug. */
-    private void selectChipBySlug(String slug) {
-        if (cgProductCategories == null) return;
-        for (int i = 0; i < cgProductCategories.getChildCount(); i++) {
-            View child = cgProductCategories.getChildAt(i);
-            if (child instanceof Chip) {
-                Chip chip = (Chip) child;
-                Object tag = chip.getTag();
-                if (tag != null && tag.equals(slug)) {
-                    chip.setChecked(true);
-                    break;
-                }
-            }
-        }
+    private void selectCategoryBySlug(String slug) {
+        currentProductCategory = slug;
+        updateCategorySelectionVisuals();
     }
 
     // ── Recipe Section Setup ───────────────────────────────────────────────────
     private void setupRecipeSection(View view) {
+        // Disabled since recipes section is removed from layout
+        /*
         cgRecipeCategories = view.findViewById(R.id.cg_recipe_categories);
         RecyclerView rvRecipes = view.findViewById(R.id.rv_recipes_home);
 
@@ -357,8 +256,7 @@ public class HomeFragment extends Fragment {
                     new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
             rvRecipes.setAdapter(recipeAdapter);
         }
-
-        // Recipe category chips are built dynamically after API responds
+        */
     }
 
     /** Loads real recipes from the API and rebuilds the recipe category chips. */
@@ -482,11 +380,11 @@ public class HomeFragment extends Fragment {
 
     // ── Product Section Setup ──────────────────────────────────────────────────
     private void setupProductSection(View view) {
-        cgProductCategories = view.findViewById(R.id.cg_product_categories);
+        llProductCategories = view.findViewById(R.id.ll_product_categories);
         RecyclerView rvProducts = view.findViewById(R.id.rv_products_home);
 
-        // Load category chips from DB — no mock fallback
-        loadCategoryChipsFromDb(view);
+        // Load category circles from DB
+        loadCategoryCirclesFromDb(view);
 
         if (rvProducts != null) {
             productAdapter = new ProductAdapter(requireContext(), product -> {
@@ -514,67 +412,156 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    /**
-     * Fetches categories from the backend API and builds product filter chips.
-     * No mock fallback — if the API fails the chip group stays empty
-     * and all products continue to load via loadProducts().
-     */
-    private void loadCategoryChipsFromDb(View view) {
+    private void loadCategoryCirclesFromDb(View view) {
         if (categoryViewModel == null) return;
         categoryViewModel.getCategories().observe(getViewLifecycleOwner(), result -> {
             if (result == null || result.status != AuthRepository.Result.Status.SUCCESS
                     || result.data == null || result.data.isEmpty()) {
-                // API returned nothing — show "Tất cả" chip alone
-                buildProductCategoryChips(view, new ArrayList<>());
+                buildProductCategoryCircles(view, new ArrayList<>());
                 return;
             }
-            buildProductCategoryChips(view, result.data);
+            buildProductCategoryCircles(view, result.data);
         });
     }
 
-    private void buildProductCategoryChips(View view, List<CategoryResponse> categories) {
-        if (cgProductCategories == null) return;
-        cgProductCategories.removeAllViews();
+    private void buildProductCategoryCircles(View view, List<CategoryResponse> categories) {
+        if (llProductCategories == null) return;
+        llProductCategories.removeAllViews();
 
-        // "Tất cả" first
-        Chip allChip = new Chip(requireContext());
-        allChip.setText("🛒 Tất cả");
-        allChip.setCheckable(true);
-        allChip.setChecked(true);
-        allChip.setTag("all");
-        styleChip(allChip);
-        allChip.setOnClickListener(v -> {
-            currentProductCategory = "all";
-            currentShortcutSaleOnly = false;
-            productViewModel.setCategory("all");
-            loadProducts(view);
-        });
-        cgProductCategories.addView(allChip);
+        // 1. "Tất cả" circle first
+        addCategoryCircleItem(view, "all", "🛒", "Tất cả", false);
 
+        // 2. "Flash Sale" circle second
+        addCategoryCircleItem(view, "flash_sale", "⚡", "Flash Sale", true);
+
+        // 3. Dynamic categories from DB
         for (CategoryResponse cat : categories) {
             String slug = cat.getSlug();
-            Chip chip = new Chip(requireContext());
-            chip.setText(getCategoryEmoji(slug) + " " + cat.getName());
-            chip.setCheckable(true);
-            chip.setChecked(false);
-            chip.setTag(slug);
-            styleChip(chip);
-            chip.setOnClickListener(v -> {
+            String emoji = getCategoryEmoji(slug);
+            String label = cat.getName();
+            addCategoryCircleItem(view, slug, emoji, label, false);
+        }
+
+        // Apply visual states
+        updateCategorySelectionVisuals();
+    }
+
+    private void addCategoryCircleItem(View view, String slug, String emoji, String label, boolean isFlashSale) {
+        LinearLayout container = new LinearLayout(requireContext());
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                dpToPx(76), LinearLayout.LayoutParams.WRAP_CONTENT);
+        params.setMargins(dpToPx(2), 0, dpToPx(2), 0);
+        container.setLayoutParams(params);
+        container.setOrientation(LinearLayout.VERTICAL);
+        container.setGravity(android.view.Gravity.CENTER);
+        container.setClickable(true);
+        container.setFocusable(true);
+        container.setTag(slug);
+
+        FrameLayout circle = new FrameLayout(requireContext());
+        LinearLayout.LayoutParams circleParams = new LinearLayout.LayoutParams(dpToPx(50), dpToPx(50));
+        circle.setLayoutParams(circleParams);
+        circle.setBackgroundResource(R.drawable.bg_avatar_circle);
+        circle.setTag("circle_bg");
+
+        TextView tvEmoji = new TextView(requireContext());
+        FrameLayout.LayoutParams emojiParams = new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+        emojiParams.gravity = android.view.Gravity.CENTER;
+        tvEmoji.setLayoutParams(emojiParams);
+        tvEmoji.setText(emoji);
+        tvEmoji.setTextSize(22f);
+        circle.addView(tvEmoji);
+
+        TextView tvLabel = new TextView(requireContext());
+        LinearLayout.LayoutParams labelParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        labelParams.topMargin = dpToPx(6);
+        tvLabel.setLayoutParams(labelParams);
+        tvLabel.setText(label);
+        tvLabel.setTextSize(11f);
+        tvLabel.setGravity(android.view.Gravity.CENTER);
+        tvLabel.setMaxLines(2);
+        tvLabel.setEllipsize(android.text.TextUtils.TruncateAt.END);
+        tvLabel.setTag("label_text");
+
+        container.addView(circle);
+        container.addView(tvLabel);
+
+        container.setOnClickListener(v -> {
+            if (isFlashSale) {
+                Intent intent = new Intent(requireContext(), vn.vuavuive.customer.ui.product.FlashSaleActivity.class);
+                startActivity(intent);
+            } else {
                 currentProductCategory = slug;
                 currentShortcutSaleOnly = false;
                 productViewModel.setCategory(slug);
                 loadProducts(view);
-            });
-            cgProductCategories.addView(chip);
+                updateCategorySelectionVisuals();
+            }
+        });
+
+        llProductCategories.addView(container);
+    }
+
+    private void updateCategorySelectionVisuals() {
+        if (llProductCategories == null) return;
+        for (int i = 0; i < llProductCategories.getChildCount(); i++) {
+            View child = llProductCategories.getChildAt(i);
+            if (child instanceof LinearLayout) {
+                LinearLayout container = (LinearLayout) child;
+                String slug = (String) container.getTag();
+
+                FrameLayout circle = container.findViewWithTag("circle_bg");
+                TextView label = container.findViewWithTag("label_text");
+
+                if (circle == null || label == null) continue;
+
+                boolean isSelected = slug != null && slug.equals(currentProductCategory);
+
+                if (isSelected) {
+                    circle.setBackgroundTintList(android.content.res.ColorStateList.valueOf(
+                            requireContext().getColor(R.color.primary)));
+                    label.setTextColor(requireContext().getColor(R.color.primary));
+                    label.setTypeface(android.graphics.Typeface.DEFAULT_BOLD);
+                } else {
+                    int tintColor = getCategoryPastelColor(slug);
+                    circle.setBackgroundTintList(android.content.res.ColorStateList.valueOf(tintColor));
+                    label.setTextColor(requireContext().getColor(R.color.text_secondary));
+                    label.setTypeface(android.graphics.Typeface.DEFAULT);
+                }
+            }
         }
     }
 
-    /** Shared chip styling helper. */
-    private void styleChip(Chip chip) {
-        chip.setChipBackgroundColorResource(R.color.surface_variant);
-        chip.setTextColor(getResources().getColorStateList(R.color.bottom_nav_color, null));
-        chip.setChipStrokeColorResource(R.color.outline);
-        chip.setChipStrokeWidth(1f);
+    private int getCategoryPastelColor(String slug) {
+        if (slug == null) return requireContext().getColor(R.color.surface_tinted);
+        switch (slug) {
+            case "all":
+                return android.graphics.Color.parseColor("#E8F5ED");
+            case "flash_sale":
+                return android.graphics.Color.parseColor("#FFE0D6");
+            case "veg":
+                return android.graphics.Color.parseColor("#E8F5ED");
+            case "fruit":
+                return android.graphics.Color.parseColor("#FCEAEA");
+            case "meat":
+                return android.graphics.Color.parseColor("#FDF2E2");
+            case "drink":
+                return android.graphics.Color.parseColor("#E6F4FA");
+            case "dry":
+                return android.graphics.Color.parseColor("#FDF8E2");
+            case "spice":
+                return android.graphics.Color.parseColor("#FCEAEA");
+            case "sweet":
+                return android.graphics.Color.parseColor("#FCEAEF");
+            case "frozen":
+                return android.graphics.Color.parseColor("#E6F8FA");
+            case "household":
+                return android.graphics.Color.parseColor("#F0EFF4");
+            default:
+                return requireContext().getColor(R.color.surface_tinted);
+        }
     }
 
     /** Maps backend category slug → display emoji. */
@@ -651,6 +638,13 @@ public class HomeFragment extends Fragment {
         return requireContext()
                 .getSharedPreferences(PREFS_HOME, Context.MODE_PRIVATE)
                 .getBoolean(KEY_PROMO_SHOWN, false);
+    }
+
+    private void styleChip(Chip chip) {
+        chip.setChipBackgroundColorResource(R.color.surface_variant);
+        chip.setTextColor(getResources().getColorStateList(R.color.bottom_nav_color, null));
+        chip.setChipStrokeColorResource(R.color.outline);
+        chip.setChipStrokeWidth(1f);
     }
 
     private void markPromoDialogShown() {
