@@ -262,6 +262,9 @@ public class OrderService {
             throw AppException.badRequest("Trang thai don hang khong hop le");
         }
         order.setStatus(status);
+        if (status == Order.OrderStatus.DELIVERED) {
+            awardPointsForOrder(order);
+        }
         appendStatusLog(order, status, note, "ADMIN", updatedByName);
         return toResponse(orderRepository.save(order), null);
     }
@@ -271,6 +274,7 @@ public class OrderService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> AppException.notFound("Đơn hàng"));
         order.setPaymentStatus(Order.PaymentStatus.PAID);
+        awardPointsForOrder(order);
         if (order.getStatus() == Order.OrderStatus.PENDING) {
             order.setStatus(Order.OrderStatus.CONFIRMED);
             appendStatusLog(order, Order.OrderStatus.CONFIRMED, "Admin xac nhan da thanh toan", "ADMIN", "Admin");
@@ -319,6 +323,7 @@ public class OrderService {
         if ("00".equals(responseCode)) {
             order.setPaymentStatus(Order.PaymentStatus.PAID);
             order.setStatus(Order.OrderStatus.CONFIRMED);
+            awardPointsForOrder(order);
             appendStatusLog(order, Order.OrderStatus.CONFIRMED,
                     "Thanh toán VNPay thành công", "SYSTEM", "VNPay Gateway");
             log.info("VNPay IPN: Đơn {} thanh toán thành công", orderId);
@@ -369,6 +374,7 @@ public class OrderService {
         if ("0".equals(resultCode)) {
             order.setPaymentStatus(Order.PaymentStatus.PAID);
             order.setStatus(Order.OrderStatus.CONFIRMED);
+            awardPointsForOrder(order);
             appendStatusLog(order, Order.OrderStatus.CONFIRMED,
                     "Thanh toán MoMo thành công", "SYSTEM", "MoMo Gateway");
         } else {
@@ -382,6 +388,27 @@ public class OrderService {
                     "Thanh toán MoMo thất bại (resultCode: " + resultCode + ")", "SYSTEM", "MoMo Gateway");
         }
         orderRepository.save(order);
+    }
+
+    private void awardPointsForOrder(Order order) {
+        if (order.getPointsAdded() == null || !order.getPointsAdded()) {
+            User user = order.getUser();
+            if (user != null) {
+                BigDecimal totalAmount = order.getTotalAmount();
+                if (totalAmount != null && totalAmount.compareTo(BigDecimal.ZERO) > 0) {
+                    // Mechanism: 10,000đ = 10 points. e.g. 152,000đ -> 150 points.
+                    // Math: (totalAmount / 10000) * 10
+                    int earnedPoints = totalAmount.divide(BigDecimal.valueOf(10000), 0, java.math.RoundingMode.DOWN).intValue() * 10;
+                    if (earnedPoints > 0) {
+                        user.setPoints(user.getPoints() + earnedPoints);
+                        userRepository.save(user);
+                        log.info("Awarded {} points to user {} for order {}", earnedPoints, user.getEmail() != null ? user.getEmail() : user.getPhone(), order.getId());
+                    }
+                }
+            }
+            order.setPointsAdded(true);
+            orderRepository.save(order);
+        }
     }
 
     // =================== Helpers ===================

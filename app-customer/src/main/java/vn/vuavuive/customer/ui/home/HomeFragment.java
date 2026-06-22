@@ -115,20 +115,48 @@ public class HomeFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (authViewModel != null && authViewModel.isLoggedIn()) {
+            authViewModel.checkSession().observe(getViewLifecycleOwner(), result -> {
+                if (result != null && result.status == AuthRepository.Result.Status.SUCCESS && result.data != null) {
+                    authViewModel.setCurrentUser(result.data);
+                }
+            });
+        }
+    }
+
     // ── Greeting Setup ─────────────────────────────────────────────────────────
     private void setupGreeting(View view) {
         TextView tvGreeting = view.findViewById(R.id.tv_greeting_name);
+        TextView tvPoints = view.findViewById(R.id.tv_member_points);
         if (tvGreeting == null) return;
         try {
             authViewModel.getCurrentUser().observe(getViewLifecycleOwner(), user -> {
-                if (user != null && user.getName() != null && !user.getName().isEmpty()) {
-                    tvGreeting.setText(user.getName().toUpperCase());
+                if (user != null) {
+                    if (user.getName() != null && !user.getName().isEmpty()) {
+                        tvGreeting.setText(user.getName().toUpperCase());
+                    } else {
+                        tvGreeting.setText("VỰA VUI VẺ");
+                    }
+                    if (tvPoints != null) {
+                        int points = user.getPoints();
+                        java.text.NumberFormat nf = java.text.NumberFormat.getNumberInstance(new java.util.Locale("vi", "VN"));
+                        tvPoints.setText(nf.format(points) + " điểm");
+                    }
                 } else {
                     tvGreeting.setText("VỰA VUI VẺ");
+                    if (tvPoints != null) {
+                        tvPoints.setText("0 điểm");
+                    }
                 }
             });
         } catch (Exception e) {
             tvGreeting.setText("VỰA VUI VẺ");
+            if (tvPoints != null) {
+                tvPoints.setText("0 điểm");
+            }
         }
     }
 

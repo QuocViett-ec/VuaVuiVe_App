@@ -52,7 +52,13 @@ public class CartRepository {
     // ── Add / Update item ──────────────────────────────────────────────────
     public void addItem(CartItemEntity item) {
         executor.execute(() -> {
-            cartDao.upsert(item);
+            CartItemEntity existing = cartDao.getCartItem(item.getProductId());
+            if (existing != null) {
+                existing.setQuantity(existing.getQuantity() + item.getQuantity());
+                cartDao.upsert(existing);
+            } else {
+                cartDao.upsert(item);
+            }
             if (sessionManager.isLoggedIn()) {
                 scheduleSync();
             }

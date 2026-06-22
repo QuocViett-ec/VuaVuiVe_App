@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+import com.google.android.material.button.MaterialButton;
 import dagger.hilt.android.AndroidEntryPoint;
 import vn.vuavuive.customer.R;
 import vn.vuavuive.customer.data.MockDataProvider;
@@ -44,7 +44,7 @@ public class ProductDetailActivity extends AppCompatActivity {
     private TextView tvRating, tvSold, tvStock, tvDescription, tvQuantity;
     private RatingBar ratingBar;
     private ImageButton btnDecrease, btnIncrease;
-    private ExtendedFloatingActionButton fabAddToCart;
+    private MaterialButton fabAddToCart;
     private RecyclerView rvReviews, rvSimilarProducts;
     private ReviewAdapter reviewAdapter;
     private ProductAdapter similarAdapter;

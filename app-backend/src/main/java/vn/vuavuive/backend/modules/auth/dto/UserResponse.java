@@ -14,7 +14,8 @@ public record UserResponse(
     String role,
     boolean isActive,
     String createdAt,
-    String updatedAt
+    String updatedAt,
+    Integer points
 ) {
     public static UserResponse fromEntity(User user) {
         String roleStr = user.getRole().name().toLowerCase();
@@ -33,7 +34,8 @@ public record UserResponse(
             roleStr,
             user.getIsActive(),
             user.getCreatedAt() != null ? user.getCreatedAt().toString() : null,
-            user.getUpdatedAt() != null ? user.getUpdatedAt().toString() : null
+            user.getUpdatedAt() != null ? user.getUpdatedAt().toString() : null,
+            user.getPoints()
         );
     }
 }

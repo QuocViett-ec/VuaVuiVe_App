@@ -107,9 +107,10 @@
                                 android:textStyle="bold" />
 
                             <TextView
+                                android:id="@+id/tv_member_points"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="6.990 điểm"
+                                android:text="0 điểm"
                                 android:textColor="@color/vvv_warning_yellow"
                                 android:textSize="16sp"
                                 android:textStyle="bold" />
