@@ -41,7 +41,7 @@ public class AdminOrderDetailActivity extends AppCompatActivity {
     private boolean isInitialSpinnerLoad = true;
 
     private static final List<String> STATUS_CODES = Arrays.asList(
-            "pending", "confirmed", "shipping", "delivered", "cancelled"
+            "pending", "confirmed", "in_transit", "delivered", "cancelled"
     );
     private static final List<String> STATUS_DISPLAY = Arrays.asList(
             "Chờ duyệt (Pending)", 
@@ -263,13 +263,19 @@ public class AdminOrderDetailActivity extends AppCompatActivity {
                                 Toast.makeText(AdminOrderDetailActivity.this, "Đã chuyển trạng thái sang: " + newStatus.toUpperCase(), Toast.LENGTH_SHORT).show();
                                 renderOrderDetails(order.getId());
                             } else {
-                                Toast.makeText(AdminOrderDetailActivity.this, "Không cập nhật được trạng thái", Toast.LENGTH_SHORT).show();
+                                String errorMsg = "Không cập nhật được trạng thái (Code: " + response.code() + ")";
+                                try {
+                                    if (response.errorBody() != null) {
+                                        errorMsg += " - " + response.errorBody().string();
+                                    }
+                                } catch (Exception ignored) {}
+                                Toast.makeText(AdminOrderDetailActivity.this, errorMsg, Toast.LENGTH_LONG).show();
                             }
                         }
 
                         @Override
                         public void onFailure(@NonNull Call<ApiResponse<Order>> call, @NonNull Throwable t) {
-                            Toast.makeText(AdminOrderDetailActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AdminOrderDetailActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_LONG).show();
                         }
                     });
                 }

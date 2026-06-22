@@ -1,36 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Modern Dark & Vivid Palette -->
-    <color name="primary">#0D9488</color> <!-- Vibrant Teal -->
-    <color name="primary_dark">#115E59</color>
-    <color name="primary_light">#CCFBF1</color>
-    <color name="secondary">#0369A1</color> <!-- Ocean Blue -->
-    <color name="secondary_dark">#0C4A6E</color>
-    <color name="secondary_light">#E0F2FE</color>
+    <!-- ========================================== -->
+    <!--  VỰA VUI VẺ Admin — "Tươi & Tận Tâm" Palette -->
+    <!-- ========================================== -->
 
-    <color name="background">#0F172A</color> <!-- Sleek Slate Blue Dark -->
-    <color name="surface">#1E293B</color> <!-- Soft Dark Slate Card -->
-    <color name="surface_variant">#334155</color>
-    
-    <color name="text_primary">#F8FAFC</color> <!-- Off White -->
-    <color name="text_secondary">#94A3B8</color> <!-- Medium Slate -->
-    <color name="text_hint">#64748B</color>
+    <!-- Primary: Xanh lục đậm -->
+    <color name="primary">#1B5E20</color>
+    <color name="primary_dark">#124016</color>
+    <color name="primary_light">#4CAF50</color>
+
+    <!-- Secondary: Xanh lục nhạt -->
+    <color name="secondary">#388E3C</color>
+    <color name="secondary_dark">#1B5E20</color>
+    <color name="secondary_light">#E8F5E9</color>
+
+    <!-- Backgrounds -->
+    <color name="background">#FEF9E6</color>       <!-- Kem ấm -->
+    <color name="surface">#FFFFFF</color>            <!-- Trắng card -->
+    <color name="surface_variant">#F1EDD8</color>   <!-- Kem đậm hơn cho divider/border -->
+
+    <!-- Text -->
+    <color name="text_primary">#1B2B1E</color>      <!-- Xám đậm gần đen -->
+    <color name="text_secondary">#4A6B50</color>    <!-- Xanh xám trung bình -->
+    <color name="text_hint">#8BA98F</color>          <!-- Xanh xám nhạt -->
 
     <!-- Semantic Colors -->
-    <color name="success">#10B981</color> <!-- Emerald Green -->
-    <color name="warning">#F59E0B</color> <!-- Warm Amber -->
-    <color name="error">#EF4444</color> <!-- Coral Red -->
-    <color name="info">#3B82F6</color> <!-- Sky Blue -->
-    
-    <color name="divider">#1E293B</color>
-    
-    <!-- Transparent helpers -->
-    <color name="primary_translucent">#1A0D9488</color>
-    <color name="success_translucent">#1A10B981</color>
-    <color name="warning_translucent">#1AF59E0B</color>
-    <color name="error_translucent">#1AEF4444</color>
-    <color name="info_translucent">#1A3B82F6</color>
-    
+    <color name="success">#2E7D32</color>            <!-- Xanh thành công -->
+    <color name="warning">#F9A825</color>            <!-- Vàng amber accent -->
+    <color name="error">#C62828</color>              <!-- Đỏ lỗi -->
+    <color name="info">#1565C0</color>               <!-- Xanh dương thông tin -->
+
+    <!-- Status Badge Colors -->
+    <color name="status_pending">#F9A825</color>
+    <color name="status_active">#2E7D32</color>
+    <color name="status_cancelled">#C62828</color>
+    <color name="status_delivered">#1565C0</color>
+
+    <!-- Divider & Borders -->
+    <color name="divider">#DDE9DC</color>
+
+    <!-- Translucent helpers (20% alpha) -->
+    <color name="primary_translucent">#331B5E20</color>
+    <color name="success_translucent">#332E7D32</color>
+    <color name="warning_translucent">#33F9A825</color>
+    <color name="error_translucent">#33C62828</color>
+    <color name="info_translucent">#331565C0</color>
+    <color name="secondary_translucent">#33388E3C</color>
+
+    <!-- Base -->
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
+    <color name="transparent">#00000000</color>
+
+    <!-- Bottom Nav -->
+    <color name="bottom_nav_bg">#FFFFFF</color>
+    <color name="bottom_nav_selected">#1B5E20</color>
+    <color name="bottom_nav_unselected">#8BA98F</color>
 </resources>

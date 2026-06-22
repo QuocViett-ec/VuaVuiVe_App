@@ -6,61 +6,81 @@
     android:layout_height="match_parent"
     android:background="@color/background">
 
-    <!-- Search Box -->
+    <!-- ===== HEADER + SEARCH ===== -->
     <LinearLayout
         android:id="@+id/layout_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="12dp"
+        android:orientation="vertical"
+        android:paddingHorizontal="14dp"
+        android:paddingTop="14dp"
+        android:paddingBottom="4dp"
+        android:background="@color/background"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="0dp"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="Tìm kiếm mã đơn, tên khách..."
-            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-            app:startIconDrawable="@drawable/ic_search"
-            app:startIconTint="@color/text_secondary"
-            app:boxStrokeColor="@color/primary"
-            app:hintTextColor="@color/primary">
+            android:text="QUẢN LÝ ĐƠN HÀNG"
+            android:textColor="@color/primary"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.05"
+            android:layout_marginBottom="10dp" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_search_order"
-                android:layout_width="match_parent"
+        <!-- Search + Export -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textColor="@color/text_primary"
-                android:inputType="text" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:layout_weight="1"
+                android:hint="Tìm kiếm mã đơn, tên khách..."
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                app:startIconDrawable="@drawable/ic_search"
+                app:startIconTint="@color/text_secondary"
+                app:boxStrokeColor="@color/primary"
+                app:hintTextColor="@color/primary"
+                app:boxBackgroundColor="@color/white">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_search_order"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_primary"
+                    
+                    android:inputType="text" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- CSV Export Button -->
-        <ImageButton
-            android:id="@+id/btn_export_csv"
-            android:layout_width="54dp"
-            android:layout_height="54dp"
-            android:layout_marginStart="8dp"
-            android:layout_gravity="center_vertical"
-            android:background="@drawable/bg_card_dark"
-            android:src="@android:drawable/ic_menu_save"
-            android:contentDescription="Xuất CSV"
-            app:tint="@color/primary" />
+            <ImageButton
+                android:id="@+id/btn_export_csv"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/bg_chip_primary"
+                android:src="@drawable/ic_info"
+                android:contentDescription="Xuất CSV"
+                app:tint="@color/white" />
+        </LinearLayout>
     </LinearLayout>
 
-    <!-- TabLayout for statuses -->
+    <!-- ===== STATUS TABS ===== -->
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tab_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/surface"
-        app:tabBackground="@color/surface"
+        android:layout_height="44dp"
+        android:background="@color/secondary_light"
         app:tabTextColor="@color/text_secondary"
         app:tabSelectedTextColor="@color/primary"
         app:tabIndicatorColor="@color/primary"
+        app:tabIndicatorHeight="3dp"
         app:tabMode="scrollable"
         app:layout_constraintTop_toBottomOf="@id/layout_search" />
 
-    <!-- SwipeRefresh & RecyclerView -->
+    <!-- ===== ORDER LIST ===== -->
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
@@ -74,42 +94,49 @@
             android:id="@+id/rv_orders"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="12dp"
+            android:paddingHorizontal="14dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
             android:clipToPadding="false"
             tools:listitem="@layout/item_order" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <!-- Bulk Action Panel (Hidden by default, shown when items are selected) -->
-    <LinearLayout
+    <!-- ===== BULK ACTION PANEL ===== -->
+    <androidx.cardview.widget.CardView
         android:id="@+id/layout_bulk_actions"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/surface"
-        android:orientation="horizontal"
-        android:padding="12dp"
-        android:gravity="center_vertical"
         android:visibility="gone"
+        app:cardBackgroundColor="@color/primary"
+        app:cardCornerRadius="0dp"
+        app:cardElevation="8dp"
         app:layout_constraintBottom_toBottomOf="parent">
-
-        <TextView
-            android:id="@+id/tv_bulk_count"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Đã chọn: 2 đơn hàng"
-            android:textColor="@color/text_primary"
-            android:textStyle="bold"
-            android:textSize="13sp" />
-
-        <Button
-            android:id="@+id/btn_bulk_status"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Cập nhật trạng thái"
-            android:textColor="@color/white"
-            android:textSize="12sp"
-            android:backgroundTint="@color/primary"
-            app:cornerRadius="8dp" />
-    </LinearLayout>
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="12dp">
+            <TextView
+                android:id="@+id/tv_bulk_count"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Đã chọn: 2 đơn hàng"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="13sp" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_bulk_status"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="Cập nhật trạng thái"
+                android:textColor="@color/primary"
+                android:textSize="12sp"
+                app:backgroundTint="@color/white"
+                app:cornerRadius="10dp" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

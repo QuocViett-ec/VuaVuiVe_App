@@ -11,7 +11,7 @@
         android:id="@+id/layout_header"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/surface"
+        android:background="@color/primary"
         android:paddingHorizontal="16dp"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -21,7 +21,7 @@
             android:layout_height="28dp"
             android:layout_centerVertical="true"
             android:src="@drawable/ic_arrow_back"
-            app:tint="@color/text_primary"
+            app:tint="@color/white"
             android:contentDescription="Quay lại" />
 
         <TextView
@@ -79,18 +79,19 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_card_dark"
+                android:background="@drawable/bg_card_light"
                 android:orientation="vertical"
                 android:padding="16dp"
-                android:layout_marginBottom="16dp">
+                android:layout_marginBottom="16dp"
+                android:elevation="2dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Trạng Thái &amp; Xử Lý"
-                    android:textColor="@color/white"
+                    android:textColor="@color/primary"
                     android:textStyle="bold"
-                    android:textSize="13sp"
+                    android:textSize="14sp"
                     android:layout_marginBottom="8dp" />
 
                 <LinearLayout
@@ -111,7 +112,7 @@
                         android:id="@+id/spinner_order_status"
                         android:layout_width="match_parent"
                         android:layout_height="44dp"
-                        android:backgroundTint="@color/text_primary" />
+                        android:backgroundTint="@color/primary" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -120,11 +121,12 @@
                 android:id="@+id/layout_return_review"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_card_dark"
-                android:backgroundTint="@color/warning_translucent"
+                android:background="@drawable/bg_card_light"
+                android:backgroundTint="#FFF3CD"
                 android:orientation="vertical"
                 android:padding="16dp"
                 android:layout_marginBottom="16dp"
+                android:elevation="2dp"
                 android:visibility="gone">
 
                 <TextView
@@ -177,18 +179,19 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_card_dark"
+                android:background="@drawable/bg_card_light"
                 android:orientation="vertical"
                 android:padding="16dp"
-                android:layout_marginBottom="16dp">
+                android:layout_marginBottom="16dp"
+                android:elevation="2dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Khách Hàng &amp; Giao Hàng"
-                    android:textColor="@color/white"
+                    android:textColor="@color/primary"
                     android:textStyle="bold"
-                    android:textSize="13sp"
+                    android:textSize="14sp"
                     android:layout_marginBottom="12dp" />
 
                 <TextView
@@ -197,7 +200,7 @@
                     android:layout_height="wrap_content"
                     android:text="Khách hàng: Phạm Minh Huy"
                     android:textColor="@color/text_primary"
-                    android:textSize="13sp" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/tv_detail_phone"
@@ -206,7 +209,7 @@
                     android:layout_marginTop="4dp"
                     android:text="SĐT: 0934567890"
                     android:textColor="@color/text_primary"
-                    android:textSize="13sp" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/tv_detail_address"
@@ -215,25 +218,26 @@
                     android:layout_marginTop="4dp"
                     android:text="Địa chỉ: 12 Song Hành, TP. Thủ Đức, TP. HCM"
                     android:textColor="@color/text_secondary"
-                    android:textSize="12sp" />
+                    android:textSize="13sp" />
             </LinearLayout>
 
             <!-- Order Items List -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_card_dark"
+                android:background="@drawable/bg_card_light"
                 android:orientation="vertical"
                 android:padding="16dp"
-                android:layout_marginBottom="16dp">
+                android:layout_marginBottom="16dp"
+                android:elevation="2dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Danh Sách Sản Phẩm"
-                    android:textColor="@color/white"
+                    android:textColor="@color/primary"
                     android:textStyle="bold"
-                    android:textSize="13sp"
+                    android:textSize="14sp"
                     android:layout_marginBottom="12dp" />
 
                 <!-- Nested items will be added programmatically or via dynamic layouts -->
@@ -248,18 +252,19 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_card_dark"
+                android:background="@drawable/bg_card_light"
                 android:orientation="vertical"
                 android:padding="16dp"
-                android:layout_marginBottom="16dp">
+                android:layout_marginBottom="16dp"
+                android:elevation="2dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Thanh Toán"
-                    android:textColor="@color/white"
+                    android:textColor="@color/primary"
                     android:textStyle="bold"
-                    android:textSize="13sp"
+                    android:textSize="14sp"
                     android:layout_marginBottom="12dp" />
 
                 <RelativeLayout
@@ -271,7 +276,7 @@
                         android:layout_height="wrap_content"
                         android:text="Phương thức:"
                         android:textColor="@color/text_secondary"
-                        android:textSize="13sp" />
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/tv_payment_method_val"
@@ -280,7 +285,7 @@
                         android:layout_alignParentEnd="true"
                         android:text="VNPAY"
                         android:textColor="@color/text_primary"
-                        android:textSize="13sp"
+                        android:textSize="14sp"
                         android:textStyle="bold" />
                 </RelativeLayout>
 
@@ -294,7 +299,7 @@
                         android:layout_height="wrap_content"
                         android:text="Trạng thái:"
                         android:textColor="@color/text_secondary"
-                        android:textSize="13sp" />
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/tv_payment_status_val"
@@ -303,7 +308,7 @@
                         android:layout_alignParentEnd="true"
                         android:text="Đã thanh toán"
                         android:textColor="@color/success"
-                        android:textSize="13sp"
+                        android:textSize="14sp"
                         android:textStyle="bold" />
                 </RelativeLayout>
 
@@ -319,7 +324,7 @@
                         android:layout_height="wrap_content"
                         android:text="Mã giao dịch:"
                         android:textColor="@color/text_secondary"
-                        android:textSize="13sp" />
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/tv_txn_id_val"
@@ -328,7 +333,7 @@
                         android:layout_alignParentEnd="true"
                         android:text="VNPAY12948194"
                         android:textColor="@color/text_primary"
-                        android:textSize="12sp" />
+                        android:textSize="13sp" />
                 </RelativeLayout>
             </LinearLayout>
 
@@ -336,10 +341,11 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_card_dark"
+                android:background="@drawable/bg_card_light"
                 android:orientation="vertical"
                 android:padding="16dp"
-                android:layout_marginBottom="16dp">
+                android:layout_marginBottom="16dp"
+                android:elevation="2dp">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -350,7 +356,7 @@
                         android:layout_height="wrap_content"
                         android:text="Tạm tính"
                         android:textColor="@color/text_secondary"
-                        android:textSize="13sp" />
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/tv_breakdown_subtotal"
@@ -359,7 +365,7 @@
                         android:layout_alignParentEnd="true"
                         android:text="215,000 đ"
                         android:textColor="@color/text_primary"
-                        android:textSize="13sp" />
+                        android:textSize="14sp" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -372,7 +378,7 @@
                         android:layout_height="wrap_content"
                         android:text="Phí vận chuyển"
                         android:textColor="@color/text_secondary"
-                        android:textSize="13sp" />
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/tv_breakdown_shipping"
@@ -381,7 +387,7 @@
                         android:layout_alignParentEnd="true"
                         android:text="+ 20,000 đ"
                         android:textColor="@color/text_primary"
-                        android:textSize="13sp" />
+                        android:textSize="14sp" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -394,7 +400,7 @@
                         android:layout_height="wrap_content"
                         android:text="Voucher giảm giá"
                         android:textColor="@color/text_secondary"
-                        android:textSize="13sp" />
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/tv_breakdown_discount"
@@ -403,7 +409,7 @@
                         android:layout_alignParentEnd="true"
                         android:text="- 15,000 đ"
                         android:textColor="@color/error"
-                        android:textSize="13sp" />
+                        android:textSize="14sp" />
                 </RelativeLayout>
 
                 <View
@@ -420,9 +426,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Tổng tiền"
-                        android:textColor="@color/white"
+                        android:textColor="@color/text_primary"
                         android:textStyle="bold"
-                        android:textSize="15sp" />
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/tv_breakdown_total"

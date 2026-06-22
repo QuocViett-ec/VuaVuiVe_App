@@ -143,27 +143,24 @@ public class AdminOrderListFragment extends Fragment implements OrderAdapter.OnO
     }
 
     private void loadOrders() {
-        adminOrderApi.getOrders(null, 1, 100, null, null).enqueue(new Callback<ApiResponse<List<Order>>>() {
+        binding.swipeRefresh.setRefreshing(true);
+        // Call the real API
+        adminOrderApi.getOrders("all", 0, 100, null, null).enqueue(new Callback<ApiResponse<List<Order>>>() {
             @Override
-            public void onResponse(@NonNull Call<ApiResponse<List<Order>>> call,
-                                   @NonNull Response<ApiResponse<List<Order>>> response) {
-                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()
-                        && response.body().getData() != null) {
-                    allOrders = new ArrayList<>(response.body().getData());
-                } else {
-                    allOrders = new ArrayList<>();
-                    Toast.makeText(getContext(), "Khong tai duoc don hang", Toast.LENGTH_SHORT).show();
-                }
-                applyFilters();
+            public void onResponse(@NonNull Call<ApiResponse<List<Order>>> call, @NonNull Response<ApiResponse<List<Order>>> response) {
                 binding.swipeRefresh.setRefreshing(false);
+                if (response.isSuccessful() && response.body() != null && response.body().isSuccess() && response.body().getData() != null) {
+                    allOrders = new ArrayList<>(response.body().getData());
+                    applyFilters();
+                } else {
+                    Toast.makeText(getContext(), "Không thể tải danh sách đơn hàng!", Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
             public void onFailure(@NonNull Call<ApiResponse<List<Order>>> call, @NonNull Throwable t) {
-                allOrders = new ArrayList<>();
-                Toast.makeText(getContext(), "Loi ket noi: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                applyFilters();
                 binding.swipeRefresh.setRefreshing(false);
+                Toast.makeText(getContext(), "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -240,7 +237,7 @@ public class AdminOrderListFragment extends Fragment implements OrderAdapter.OnO
         }
 
         final String[] options = {"Xác nhận đơn hàng (confirmed)", "Bắt đầu giao hàng (shipping)", "Đã giao hàng (delivered)", "Hủy đơn hàng (cancelled)"};
-        final String[] statusCodes = {"confirmed", "shipping", "delivered", "cancelled"};
+        final String[] statusCodes = {"confirmed", "in_transit", "delivered", "cancelled"};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Chọn trạng thái cập nhật hàng loạt");
@@ -287,7 +284,7 @@ public class AdminOrderListFragment extends Fragment implements OrderAdapter.OnO
                 // Quick filter mirror
                 boolean matchesStatus = "all".equals(currentStatusFilter) || 
                         ("returns".equals(currentStatusFilter) && status.startsWith("return")) ||
-                        ("shipping".equals(currentStatusFilter) && ("shipping".equals(status) || "shipped".equals(status))) ||
+                        ("shipping".equals(currentStatusFilter) && ("shipping".equals(status) || "shipped".equals(status) || "in_transit".equals(status))) ||
                         currentStatusFilter.equals(status);
 
                 boolean matchesQuery = currentSearchQuery.isEmpty() || 

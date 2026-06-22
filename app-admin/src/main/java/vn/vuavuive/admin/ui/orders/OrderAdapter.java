@@ -186,6 +186,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
                     break;
                 case "shipped":
                 case "shipping":
+                case "in_transit":
                     bgTint = Color.parseColor("#339C27B0"); // Purple translucent
                     textColor = Color.parseColor("#9C27B0");
                     statusText = "ĐANG GIAO";
