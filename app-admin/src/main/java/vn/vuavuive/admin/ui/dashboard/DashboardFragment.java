@@ -20,6 +20,11 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import javax.inject.Inject;
+import dagger.hilt.android.AndroidEntryPoint;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import vn.vuavuive.admin.R;
 import vn.vuavuive.admin.data.repository.MockRepository;
 import vn.vuavuive.admin.databinding.FragmentDashboardBinding;
@@ -31,13 +36,22 @@ import vn.vuavuive.admin.ui.products.AdminProductListFragment;
 import vn.vuavuive.admin.ui.products.ProductAdapter;
 import vn.vuavuive.admin.ui.shipments.ShipmentListFragment;
 import vn.vuavuive.admin.ui.users.UserListFragment;
+import vn.vuavuive.shared.data.api.AdminOrderApi;
+import vn.vuavuive.shared.data.api.AdminProductApi;
+import vn.vuavuive.shared.data.dto.ApiResponse;
 import vn.vuavuive.shared.data.dto.DashboardStats;
 import vn.vuavuive.shared.data.dto.Order;
 import vn.vuavuive.shared.data.dto.Product;
 import vn.vuavuive.shared.data.dto.User;
 import vn.vuavuive.shared.util.CurrencyFormatter;
+import vn.vuavuive.shared.util.SessionManager;
 
+@AndroidEntryPoint
 public class DashboardFragment extends Fragment {
+    @Inject AdminOrderApi adminOrderApi;
+    @Inject AdminProductApi adminProductApi;
+    @Inject SessionManager sessionManager;
+
     private FragmentDashboardBinding binding;
     private User currentUser;
     private OrderAdapter orderAdapter;
@@ -54,7 +68,7 @@ public class DashboardFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        currentUser = MockRepository.getInstance().getCurrentUser();
+        currentUser = sessionManager.getUser();
         if (currentUser == null) return;
 
         binding.tvWelcome.setText("Chào buổi chiều, " + currentUser.getName() + " 👋");
@@ -79,31 +93,42 @@ public class DashboardFragment extends Fragment {
         MockRepository repo = MockRepository.getInstance();
         DashboardStats stats = repo.getDashboardStats();
 
-        // Bind main metrics
+        // Bind main metrics (Keep Mock for stats because no Backend API for dashboard stats yet)
         binding.tvStatOrders.setText(stats.getTotalOrders() + " đơn");
         binding.tvStatRevenue.setText(CurrencyFormatter.formatVnd(stats.getTotalRevenue()));
         binding.tvStatUsers.setText(stats.getTotalUsers() + " users");
         binding.tvStatPending.setText(stats.getPendingCount() + " đơn");
 
-        // Filter and bind pending orders list (limit to 3)
-        List<Order> pendingOrders = new ArrayList<>();
-        for (Order o : repo.getOrders()) {
-            if ("pending".equals(o.getStatus())) {
-                pendingOrders.add(o);
-                if (pendingOrders.size() >= 3) break;
+        // Fetch real pending orders
+        adminOrderApi.getOrders("pending", 0, 3, null, null).enqueue(new Callback<ApiResponse<List<Order>>>() {
+            @Override
+            public void onResponse(@NonNull Call<ApiResponse<List<Order>>> call, @NonNull Response<ApiResponse<List<Order>>> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                    orderAdapter.updateData(response.body().getData());
+                }
             }
-        }
-        orderAdapter.updateData(pendingOrders);
+            @Override
+            public void onFailure(@NonNull Call<ApiResponse<List<Order>>> call, @NonNull Throwable t) {}
+        });
 
-        // Filter and bind low stock products (limit to 3, stock <= 10)
-        List<Product> lowStock = new ArrayList<>();
-        for (Product p : repo.getProducts()) {
-            if (p.getStock() <= 10 && p.isActive()) {
-                lowStock.add(p);
-                if (lowStock.size() >= 3) break;
+        // Fetch real low stock products
+        adminProductApi.getAllProducts(1, 100, "", "all").enqueue(new Callback<ApiResponse<List<Product>>>() {
+            @Override
+            public void onResponse(@NonNull Call<ApiResponse<List<Product>>> call, @NonNull Response<ApiResponse<List<Product>>> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                    List<Product> lowStock = new ArrayList<>();
+                    for (Product p : response.body().getData()) {
+                        if (p.getStock() <= 10 && p.isActive()) {
+                            lowStock.add(p);
+                            if (lowStock.size() >= 3) break;
+                        }
+                    }
+                    productAdapter.updateData(lowStock);
+                }
             }
-        }
-        productAdapter.updateData(lowStock);
+            @Override
+            public void onFailure(@NonNull Call<ApiResponse<List<Product>>> call, @NonNull Throwable t) {}
+        });
 
         binding.swipeRefresh.setRefreshing(false);
     }

@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import dagger.hilt.android.AndroidEntryPoint;
 import javax.inject.Inject;
@@ -68,40 +69,39 @@ public class AdminLoginActivity extends AppCompatActivity {
     private void performLogin() {
         String email = binding.etEmail.getText().toString().trim();
         String password = binding.etPassword.getText().toString().trim();
+        
         if (email.isEmpty() || password.isEmpty()) {
-            Toast.makeText(this, "Nhap email va mat khau", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Vui lòng nhập đủ thông tin", Toast.LENGTH_SHORT).show();
             return;
         }
 
         binding.btnLogin.setEnabled(false);
-        authApi.adminLogin(new LoginRequest(email, password)).enqueue(new Callback<ApiResponse<User>>() {
+        LoginRequest request = new LoginRequest(email, password);
+        authApi.adminLogin(request).enqueue(new Callback<ApiResponse<User>>() {
             @Override
-            public void onResponse(Call<ApiResponse<User>> call, Response<ApiResponse<User>> response) {
+            public void onResponse(@NonNull Call<ApiResponse<User>> call, @NonNull Response<ApiResponse<User>> response) {
                 binding.btnLogin.setEnabled(true);
-                ApiResponse<User> body = response.body();
-                User user = body != null ? body.getData() : null;
-                if (!response.isSuccessful() || body == null || !body.isSuccess() || user == null) {
-                    Toast.makeText(AdminLoginActivity.this, "Dang nhap that bai", Toast.LENGTH_LONG).show();
-                    return;
+                if (response.isSuccessful() && response.body() != null && response.body().isSuccess() && response.body().getData() != null) {
+                    User user = response.body().getData();
+                    String accessToken = response.body().getAccessToken();
+                    String refreshToken = response.body().getRefreshToken();
+                    
+                    if (accessToken != null) {
+                        sessionManager.saveTokens(accessToken, refreshToken != null ? refreshToken : "");
+                    }
+                    sessionManager.saveUser(user);
+                    MockRepository.getInstance().setCurrentUser(user);
+                    startActivity(new Intent(AdminLoginActivity.this, MainActivity.class));
+                    finish();
+                } else {
+                    Toast.makeText(AdminLoginActivity.this, "Đăng nhập thất bại. Kiểm tra lại thông tin!", Toast.LENGTH_SHORT).show();
                 }
-
-                if (user.getRole() != null) user.setRole(user.getRole().toLowerCase());
-                if (!user.isBackoffice() || !user.isActive()) {
-                    Toast.makeText(AdminLoginActivity.this, "Tai khoan khong co quyen admin", Toast.LENGTH_LONG).show();
-                    return;
-                }
-
-                sessionManager.saveUser(user);
-                sessionManager.saveTokens(body.getAccessToken(), body.getRefreshToken());
-                MockRepository.getInstance().setCurrentUser(user);
-                startActivity(new Intent(AdminLoginActivity.this, MainActivity.class));
-                finish();
             }
 
             @Override
-            public void onFailure(Call<ApiResponse<User>> call, Throwable t) {
+            public void onFailure(@NonNull Call<ApiResponse<User>> call, @NonNull Throwable t) {
                 binding.btnLogin.setEnabled(true);
-                Toast.makeText(AdminLoginActivity.this, "Loi ket noi: " + t.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(AdminLoginActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

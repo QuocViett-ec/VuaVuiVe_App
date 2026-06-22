@@ -299,7 +299,7 @@ public class DataSeeder implements CommandLineRunner {
             return;
         }
 
-        seedOrder(customer, shipper, product, Order.OrderStatus.SHIPPING, Order.PaymentStatus.UNPAID, "Seed: Admin da gan shipper");
+        seedOrder(customer, shipper, product, Order.OrderStatus.PREPARING, Order.PaymentStatus.UNPAID, "Seed: Admin da gan shipper");
         seedOrder(customer, shipper, product, Order.OrderStatus.IN_TRANSIT, Order.PaymentStatus.UNPAID, "Seed: Shipper dang giao");
         seedOrder(customer, shipper, product, Order.OrderStatus.DELIVERED, Order.PaymentStatus.PAID, "Seed: Da giao thanh cong");
         log.info(">> SEED: Da tao 3 don hang mau cho shipper@gmail.com / Shipper@123");

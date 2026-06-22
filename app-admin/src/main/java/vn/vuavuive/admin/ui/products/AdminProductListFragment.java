@@ -19,6 +19,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.tabs.TabLayout;
 import dagger.hilt.android.AndroidEntryPoint;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
@@ -29,6 +31,8 @@ import javax.inject.Inject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import vn.vuavuive.admin.R;
+import vn.vuavuive.admin.data.repository.MockRepository;
 import vn.vuavuive.admin.databinding.FragmentAdminProductListBinding;
 import vn.vuavuive.shared.data.api.AdminProductApi;
 import vn.vuavuive.shared.data.dto.ApiResponse;
@@ -123,31 +127,24 @@ public class AdminProductListFragment extends Fragment implements ProductAdapter
     }
 
     private void loadProducts() {
-        if (binding == null) return;
         binding.swipeRefresh.setRefreshing(true);
-        adminProductApi.getAllProducts(1, 100, null, null).enqueue(new Callback<ApiResponse<List<Product>>>() {
+        // Call real API
+        adminProductApi.getAllProducts(1, 100, "", currentCategoryFilter).enqueue(new Callback<ApiResponse<List<Product>>>() {
             @Override
-            public void onResponse(@NonNull Call<ApiResponse<List<Product>>> call,
-                                   @NonNull Response<ApiResponse<List<Product>>> response) {
-                if (binding == null || !isAdded()) return;
-                ApiResponse<List<Product>> body = response.body();
-                allProducts = response.isSuccessful() && body != null && body.isSuccess() && body.getData() != null
-                        ? new ArrayList<>(body.getData())
-                        : new ArrayList<>();
-                if (allProducts.isEmpty()) {
-                    Toast.makeText(getContext(), "Khong tai duoc san pham", Toast.LENGTH_SHORT).show();
-                }
-                applyFilters();
+            public void onResponse(@NonNull Call<ApiResponse<List<Product>>> call, @NonNull Response<ApiResponse<List<Product>>> response) {
                 binding.swipeRefresh.setRefreshing(false);
+                if (response.isSuccessful() && response.body() != null && response.body().isSuccess() && response.body().getData() != null) {
+                    allProducts = new ArrayList<>(response.body().getData());
+                    applyFilters();
+                } else {
+                    Toast.makeText(getContext(), "Không thể tải danh sách sản phẩm!", Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
             public void onFailure(@NonNull Call<ApiResponse<List<Product>>> call, @NonNull Throwable t) {
-                if (binding == null || !isAdded()) return;
-                allProducts = new ArrayList<>();
-                applyFilters();
                 binding.swipeRefresh.setRefreshing(false);
-                Toast.makeText(getContext(), "Loi ket noi: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

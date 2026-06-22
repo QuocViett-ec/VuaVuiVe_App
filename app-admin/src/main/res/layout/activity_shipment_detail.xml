@@ -11,7 +11,7 @@
         android:id="@+id/layout_header"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/surface"
+        android:background="@color/primary"
         android:paddingHorizontal="16dp"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -21,7 +21,7 @@
             android:layout_height="28dp"
             android:layout_centerVertical="true"
             android:src="@drawable/ic_arrow_back"
-            app:tint="@color/text_primary"
+            app:tint="@color/white"
             android:contentDescription="Quay lại" />
 
         <TextView
@@ -53,10 +53,11 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_card_dark"
+                android:background="@drawable/bg_card_light"
                 android:orientation="vertical"
                 android:padding="16dp"
-                android:layout_marginBottom="16dp">
+                android:layout_marginBottom="16dp"
+                android:elevation="2dp">
 
                 <TextView
                     android:id="@+id/tv_detail_tracking"
@@ -74,7 +75,7 @@
                     android:layout_marginTop="4dp"
                     android:text="Nhà vận chuyển: Giao Hàng Nhanh (GHN)"
                     android:textColor="@color/text_primary"
-                    android:textSize="13sp" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/tv_detail_order_id"
@@ -83,7 +84,7 @@
                     android:layout_marginTop="4dp"
                     android:text="Mã đơn hàng gốc: ORD-9843A"
                     android:textColor="@color/text_secondary"
-                    android:textSize="13sp"
+                    android:textSize="14sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -92,26 +93,27 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:text="Dự kiến giao hàng: 25/05/2026"
-                    android:textColor="@color/text_hint"
-                    android:textSize="12sp" />
+                    android:textColor="@color/text_secondary"
+                    android:textSize="13sp" />
             </LinearLayout>
 
             <!-- Status Update Panel -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_card_dark"
+                android:background="@drawable/bg_card_light"
                 android:orientation="vertical"
                 android:padding="16dp"
-                android:layout_marginBottom="16dp">
+                android:layout_marginBottom="16dp"
+                android:elevation="2dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Cập Nhật Trạng Thái Mới"
-                    android:textColor="@color/white"
+                    android:textColor="@color/primary"
                     android:textStyle="bold"
-                    android:textSize="13sp"
+                    android:textSize="14sp"
                     android:layout_marginBottom="8dp" />
 
                 <LinearLayout
@@ -126,14 +128,14 @@
                         android:layout_height="wrap_content"
                         android:text="Trạng thái:"
                         android:textColor="@color/text_secondary"
-                        android:textSize="13sp"
+                        android:textSize="14sp"
                         android:layout_marginEnd="12dp" />
 
                     <Spinner
                         android:id="@+id/spinner_shipment_status"
                         android:layout_width="match_parent"
                         android:layout_height="44dp"
-                        android:backgroundTint="@color/text_primary" />
+                        android:backgroundTint="@color/primary" />
                 </LinearLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -158,18 +160,19 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_card_dark"
+                android:background="@drawable/bg_card_light"
                 android:orientation="vertical"
                 android:padding="16dp"
-                android:layout_marginBottom="16dp">
+                android:layout_marginBottom="16dp"
+                android:elevation="2dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Lịch Trình Vận Chuyển"
-                    android:textColor="@color/white"
+                    android:textColor="@color/primary"
                     android:textStyle="bold"
-                    android:textSize="13sp"
+                    android:textSize="14sp"
                     android:layout_marginBottom="12dp" />
 
                 <!-- Nested timeline layout loaded programmatically or dynamically -->

@@ -1,6 +1,14 @@
 @echo off
 title VuaVuiVe Backend Server
-echo Dang khoi dong Backend Server (Cong 3000)...
+echo =======================================================
+echo    KHOI DONG VUAVUIVE BACKEND
+echo =======================================================
+
+set "JAVA_HOME=C:\Program Files\Android\Android Studio\jbr"
+set "PATH=%JAVA_HOME%\bin;%~dp0apache-maven-3.9.6\bin;%PATH%"
+
+echo [+] Kiem tra Java:
+java -version
 echo.
 set JAVA_HOME=C:\Program Files\Android\Android Studio\jbr
 
@@ -31,5 +39,17 @@ if "%MOMO_PUBLIC_BASE_URL%"=="" (
 echo MoMo public base URL: %MOMO_PUBLIC_BASE_URL%
 echo MoMo mock mode: %MOCK_MOMO_MODE%
 
-call apache-maven-3.9.6\bin\mvn.cmd spring-boot:run
+call mvn -version >nul 2>&1
+if %errorlevel% neq 0 (
+    echo [!] LOI: May ban chua cài Maven.
+    echo -------------------------------------------------------
+    echo Vui long mo Terminal trong Android Studio va chay:
+    echo winget install Apache.Maven
+    echo -------------------------------------------------------
+    pause
+    exit /b
+)
+
+echo [+] Dang khoi dong Spring Boot...
+call mvn spring-boot:run
 pause
