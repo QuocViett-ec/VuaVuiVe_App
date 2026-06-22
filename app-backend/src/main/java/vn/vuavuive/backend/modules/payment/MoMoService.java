@@ -275,7 +275,9 @@ public class MoMoService {
 
     private User currentUser() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        return userRepository.findByEmail(email).orElseThrow(() -> AppException.notFound("User"));
+        return userRepository.findByEmail(email)
+                .or(() -> userRepository.findByPhone(email))
+                .orElseThrow(() -> AppException.notFound("User"));
     }
 
     private void appendStatusLog(Order order, String note) {

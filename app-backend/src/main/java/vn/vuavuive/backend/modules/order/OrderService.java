@@ -64,6 +64,7 @@ public class OrderService {
         // Lấy email từ JWT Token (đã được Spring Security xác thực)
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByEmail(email)
+                .or(() -> userRepository.findByPhone(email))
                 .orElseThrow(() -> AppException.notFound("User"));
 
         List<OrderItem> orderItems = new ArrayList<>();
@@ -151,6 +152,7 @@ public class OrderService {
     public PagedResponse<OrderResponse> getMyOrders(String statusStr, int page, int size) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByEmail(email)
+                .or(() -> userRepository.findByPhone(email))
                 .orElseThrow(() -> AppException.notFound("User"));
 
         PageRequest pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
