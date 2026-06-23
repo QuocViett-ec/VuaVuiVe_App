@@ -44,6 +44,10 @@ public class ShipperLoginActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progress_bar);
         tvError = findViewById(R.id.tv_error);
 
+        // TODO: Prefill for testing (remove in production)
+        etIdentifier.setText("shipper@gmail.com");
+        etPassword.setText("Shipper@123");
+
         if (authViewModel.isLoggedIn()) {
             goToMain();
             return;

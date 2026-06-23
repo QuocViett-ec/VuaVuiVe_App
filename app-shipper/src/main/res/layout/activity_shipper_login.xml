@@ -5,24 +5,41 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    android:padding="24dp">
+    android:padding="32dp"
+    android:background="@color/background">
+
+    <ImageView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/bg_avatar_circle"
+        app:tint="@color/primary" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="8dp"
         android:gravity="center"
-        android:text="@string/app_name"
-        android:textColor="@color/text_primary"
-        android:textSize="24sp"
+        android:text="Vựa Vui Vẻ Shipper"
+        android:textColor="@color/primary"
+        android:textSize="26sp"
         android:textStyle="bold" />
+        
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:gravity="center"
+        android:text="Đăng nhập để nhận đơn giao hàng"
+        android:textColor="@color/text_secondary"
+        android:textSize="14sp" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_identifier"
         style="@style/Widget.VuaVuiVe.TextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="So dien thoai hoac email">
+        android:hint="Số điện thoại hoặc Email">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_identifier"
@@ -36,8 +53,8 @@
         style="@style/Widget.VuaVuiVe.TextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:hint="Mat khau"
+        android:layout_marginTop="16dp"
+        android:hint="Mật khẩu"
         app:passwordToggleEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -51,7 +68,8 @@
         android:id="@+id/tv_error"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
         android:textColor="@color/error"
         android:visibility="gone" />
 
@@ -59,14 +77,16 @@
         android:id="@+id/btn_login"
         style="@style/Widget.VuaVuiVe.Button.Primary"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="Dang nhap" />
+        android:layout_height="56dp"
+        android:layout_marginTop="24dp"
+        android:text="Đăng nhập"
+        android:textSize="16sp" />
 
     <ProgressBar
         android:id="@+id/progress_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="24dp"
+        android:indeterminateTint="@color/primary"
         android:visibility="gone" />
 </LinearLayout>

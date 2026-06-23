@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    activity_shipper_main.xml
-    Màn hình chính của Shipper: Header + Toggle trạng thái + ViewPager 2 tabs
--->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#F4F7F4">
+    android:background="@color/background">
 
     <!-- ── Header Gradient ── -->
     <LinearLayout
@@ -18,7 +14,7 @@
         android:background="@drawable/bg_header_gradient"
         android:paddingHorizontal="20dp"
         android:paddingTop="48dp"
-        android:paddingBottom="20dp"
+        android:paddingBottom="24dp"
         android:orientation="vertical">
 
         <!-- Top Row: Avatar + Info + Logout -->
@@ -28,20 +24,19 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <!-- Avatar icon -->
             <LinearLayout
-                android:layout_width="52dp"
-                android:layout_height="52dp"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
                 android:background="@drawable/bg_avatar_circle"
+                android:backgroundTint="@color/surface"
                 android:gravity="center">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="🚚"
-                    android:textSize="26sp" />
+                    android:textSize="28sp" />
             </LinearLayout>
 
-            <!-- Name + role -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -54,29 +49,28 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Tài Xế Vui Vẻ"
-                    android:textColor="#FFFFFF"
-                    android:textSize="17sp"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="🏍️ Shipper · VuaVuiVe"
-                    android:textColor="#CCffffff"
-                    android:textSize="13sp"
+                    android:text="Shipper · VuaVuiVe"
+                    android:textColor="#E0FFFFFF"
+                    android:textSize="14sp"
                     android:layout_marginTop="2dp"/>
             </LinearLayout>
 
-            <!-- Logout button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_logout"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="36dp"
                 android:text="Đăng xuất"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/white"
                 android:textSize="12sp"
-                app:strokeColor="#FFFFFF"
+                app:strokeColor="@color/white"
                 app:cornerRadius="18dp" />
         </LinearLayout>
 
@@ -84,10 +78,10 @@
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="20dp"
             app:cardCornerRadius="16dp"
             app:cardElevation="0dp"
-            app:cardBackgroundColor="#22FFFFFF">
+            app:cardBackgroundColor="#33FFFFFF">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -107,8 +101,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Trạng thái hoạt động"
-                        android:textColor="#FFFFFF"
-                        android:textSize="14sp"
+                        android:textColor="@color/white"
+                        android:textSize="15sp"
                         android:textStyle="bold"/>
 
                     <TextView
@@ -116,8 +110,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="● Đang online"
-                        android:textColor="#A5F3C0"
+                        android:textColor="@color/warning"
                         android:textSize="13sp"
+                        android:textStyle="bold"
                         android:layout_marginTop="2dp"/>
                 </LinearLayout>
 
@@ -126,8 +121,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:checked="true"
-                    app:thumbTint="#FFFFFF"
-                    app:trackTint="#66FFFFFF"/>
+                    app:thumbTint="@color/white"
+                    app:trackTint="#88FFFFFF"/>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
     </LinearLayout>
