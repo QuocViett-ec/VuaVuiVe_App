@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Card Elevations -->
+    <dimen name="card_elevation">3dp</dimen>
+    <dimen name="card_elevation_hover">6dp</dimen>
+    <dimen name="card_elevation_high">8dp</dimen>
+
+    <!-- Corner Radii -->
+    <dimen name="radius_sm">8dp</dimen>
+    <dimen name="radius_lg">16dp</dimen>
+    <dimen name="radius_xl">18dp</dimen>
+    <dimen name="radius_pill">100dp</dimen>
+</resources>

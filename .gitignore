@@ -25,3 +25,4 @@ app-backend/apache-maven-*/
 
 # Backend runtime logs
 app-backend/target/backend-run.*.log
+screencap.png

@@ -10,8 +10,10 @@ import vn.vuavuive.shared.data.api.RecommendApi;
 import vn.vuavuive.shared.data.dto.ApiResponse;
 import vn.vuavuive.shared.data.dto.Product;
 import vn.vuavuive.shared.data.dto.Review;
+import vn.vuavuive.shared.data.dto.request.ReviewRequest;
 import vn.vuavuive.shared.data.local.ProductDao;
 import vn.vuavuive.shared.data.local.ProductEntity;
+import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -182,6 +184,38 @@ public class ProductRepository {
             @Override
             public void onFailure(Call<ApiResponse<Void>> call, Throwable t) {
                 result.postValue(AuthRepository.Result.error(t.getMessage()));
+            }
+        });
+        return result;
+    }
+
+    public LiveData<AuthRepository.Result<Review>> submitProductReview(String productId, int rating, String comment) {
+        MutableLiveData<AuthRepository.Result<Review>> result = new MutableLiveData<>();
+        result.postValue(AuthRepository.Result.loading());
+
+        ReviewRequest req = new ReviewRequest(productId, rating, comment);
+
+        productApi.submitReview(req).enqueue(new Callback<ApiResponse<Review>>() {
+            @Override
+            public void onResponse(Call<ApiResponse<Review>> call, Response<ApiResponse<Review>> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                    result.postValue(AuthRepository.Result.success(response.body().getData()));
+                } else {
+                    String msg = "Không thể gửi đánh giá";
+                    if (response.errorBody() != null) {
+                        try {
+                            String errStr = response.errorBody().string();
+                            JSONObject obj = new JSONObject(errStr);
+                            if (obj.has("message")) msg = obj.getString("message");
+                        } catch (Exception ignored) {}
+                    }
+                    result.postValue(AuthRepository.Result.error(msg));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse<Review>> call, Throwable t) {
+                result.postValue(AuthRepository.Result.error("Lỗi kết nối: " + t.getMessage()));
             }
         });
         return result;

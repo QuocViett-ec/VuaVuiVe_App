@@ -81,6 +81,10 @@ public class Order extends BaseEntity {
     @Column(name = "note")
     private String note;
 
+    @Column(name = "points_added", nullable = false)
+    @Builder.Default
+    private Boolean pointsAdded = false;
+
     /** Chi tiết sản phẩm trong đơn */
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default

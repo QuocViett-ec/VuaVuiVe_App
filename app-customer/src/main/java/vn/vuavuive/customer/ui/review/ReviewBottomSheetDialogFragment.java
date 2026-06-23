@@ -17,8 +17,11 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import vn.vuavuive.customer.R;
 import vn.vuavuive.customer.data.repository.AuthRepository;
+import vn.vuavuive.customer.ui.product.ProductDetailActivity;
 import vn.vuavuive.customer.viewmodel.OrderViewModel;
+import vn.vuavuive.customer.viewmodel.ProductViewModel;
 import vn.vuavuive.shared.util.CurrencyFormatter;
+import vn.vuavuive.shared.util.SessionManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -48,6 +51,7 @@ public class ReviewBottomSheetDialogFragment extends BottomSheetDialogFragment {
     }
 
     private OrderViewModel orderViewModel;
+    private ProductViewModel productViewModel;
 
     private ImageView ivProduct;
     private TextView tvName, tvPrice;
@@ -66,6 +70,7 @@ public class ReviewBottomSheetDialogFragment extends BottomSheetDialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         orderViewModel = new ViewModelProvider(requireActivity()).get(OrderViewModel.class);
+        productViewModel = new ViewModelProvider(requireActivity()).get(ProductViewModel.class);
 
         ivProduct = view.findViewById(R.id.iv_product);
         tvName = view.findViewById(R.id.tv_product_name);
@@ -106,7 +111,24 @@ public class ReviewBottomSheetDialogFragment extends BottomSheetDialogFragment {
         if (args == null) return;
         String orderId = args.getString(ARG_ORDER_ID, "");
         String productId = args.getString(ARG_PRODUCT_ID, "");
-        if (orderId.isEmpty()) return;
+        if (orderId == null || orderId.isEmpty()) {
+            SessionManager sessionManager = new SessionManager(requireContext());
+            String currentUserId = sessionManager.getUserId();
+            if (currentUserId != null && !currentUserId.isEmpty()) {
+                productViewModel.getProductReviews(productId).observe(getViewLifecycleOwner(), result -> {
+                    if (result != null && result.status == AuthRepository.Result.Status.SUCCESS && result.data != null) {
+                        for (vn.vuavuive.shared.data.dto.Review r : result.data) {
+                            if (currentUserId.equals(r.getUserId())) {
+                                ratingBar.setRating(r.getRating());
+                                etComment.setText(r.getComment() != null ? r.getComment() : "");
+                                break;
+                            }
+                        }
+                    }
+                });
+            }
+            return;
+        }
 
         orderViewModel.getMyReview(orderId).observe(getViewLifecycleOwner(), result -> {
             if (result.status == AuthRepository.Result.Status.SUCCESS && result.data != null) {
@@ -127,7 +149,24 @@ public class ReviewBottomSheetDialogFragment extends BottomSheetDialogFragment {
         String comment = etComment.getText() != null ? etComment.getText().toString().trim() : "";
 
         if (rating <= 0) {
-            Toast.makeText(getContext(), "Vui long chon so sao", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Vui lòng chọn số sao đánh giá", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (orderId == null || orderId.isEmpty()) {
+            btnSubmit.setEnabled(false);
+            productViewModel.submitProductReview(productId, rating, comment).observe(getViewLifecycleOwner(), result -> {
+                btnSubmit.setEnabled(true);
+                if (result.status == AuthRepository.Result.Status.SUCCESS) {
+                    Toast.makeText(getContext(), "Gửi đánh giá thành công", Toast.LENGTH_SHORT).show();
+                    if (getActivity() instanceof ProductDetailActivity) {
+                        ((ProductDetailActivity) getActivity()).refreshReviews();
+                    }
+                    dismiss();
+                } else if (result.status == AuthRepository.Result.Status.ERROR) {
+                    Toast.makeText(getContext(), result.message, Toast.LENGTH_SHORT).show();
+                }
+            });
             return;
         }
 
@@ -142,7 +181,7 @@ public class ReviewBottomSheetDialogFragment extends BottomSheetDialogFragment {
         orderViewModel.submitReview(orderId, reviews).observe(getViewLifecycleOwner(), result -> {
             btnSubmit.setEnabled(true);
             if (result.status == AuthRepository.Result.Status.SUCCESS) {
-                Toast.makeText(getContext(), "Da gui danh gia", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Gửi đánh giá thành công", Toast.LENGTH_SHORT).show();
                 dismiss();
             } else if (result.status == AuthRepository.Result.Status.ERROR) {
                 Toast.makeText(getContext(), result.message, Toast.LENGTH_SHORT).show();

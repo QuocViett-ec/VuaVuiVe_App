@@ -46,7 +46,6 @@
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
-        
         <!-- ===== SQLITE SUPPORT ===== -->
         <dependency>
             <groupId>org.xerial</groupId>

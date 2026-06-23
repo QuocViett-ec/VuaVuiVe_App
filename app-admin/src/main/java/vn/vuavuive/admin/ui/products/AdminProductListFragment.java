@@ -1,6 +1,7 @@
 package vn.vuavuive.admin.ui.products;
 
 import android.app.AlertDialog;
+import android.content.res.ColorStateList;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
@@ -77,6 +78,7 @@ public class AdminProductListFragment extends Fragment implements ProductAdapter
         setupRecyclerView();
         setupSpinner();
         setupFiltersAndFab();
+        updateChipSelection(currentCategoryFilter);
         loadProducts();
     }
 
@@ -116,6 +118,10 @@ public class AdminProductListFragment extends Fragment implements ProductAdapter
             binding.chipLowStock.setChecked(currentLowStockFilter);
             applyFilters();
         });
+        binding.chipAll.setOnClickListener(v -> selectCategory("all"));
+        binding.chipFruit.setOnClickListener(v -> selectCategory("fruit"));
+        binding.chipVeg.setOnClickListener(v -> selectCategory("veg"));
+        binding.chipDry.setOnClickListener(v -> selectCategory("dry"));
         binding.fabAddProduct.setOnClickListener(v -> {
             if (isAudit()) {
                 Toast.makeText(getContext(), "Read-only account", Toast.LENGTH_SHORT).show();
@@ -164,6 +170,46 @@ public class AdminProductListFragment extends Fragment implements ProductAdapter
             if (matchesCategory && matchesStock && matchesQuery) filteredList.add(p);
         }
         adapter.updateData(filteredList);
+        binding.tvProductCount.setText(String.format(Locale.getDefault(), "Danh sách (%d)", filteredList.size()));
+    }
+
+    private void selectCategory(String category) {
+        currentCategoryFilter = category;
+        updateChipSelection(category);
+        loadProducts();
+    }
+
+    private void updateChipSelection(String selectedCategory) {
+        if (binding == null) return;
+        setChipUnselected(binding.chipAll);
+        setChipUnselected(binding.chipFruit);
+        setChipUnselected(binding.chipVeg);
+        setChipUnselected(binding.chipDry);
+
+        if ("all".equals(selectedCategory)) {
+            setChipSelected(binding.chipAll);
+        } else if ("fruit".equals(selectedCategory)) {
+            setChipSelected(binding.chipFruit);
+        } else if ("veg".equals(selectedCategory)) {
+            setChipSelected(binding.chipVeg);
+        } else if ("dry".equals(selectedCategory)) {
+            setChipSelected(binding.chipDry);
+        }
+    }
+
+    private void setChipSelected(com.google.android.material.chip.Chip chip) {
+        if (getContext() == null) return;
+        chip.setTextColor(getResources().getColor(R.color.white, null));
+        chip.setChipBackgroundColor(ColorStateList.valueOf(getResources().getColor(R.color.primary, null)));
+        chip.setChipStrokeWidth(0);
+    }
+
+    private void setChipUnselected(com.google.android.material.chip.Chip chip) {
+        if (getContext() == null) return;
+        chip.setTextColor(getResources().getColor(R.color.primary, null));
+        chip.setChipBackgroundColor(ColorStateList.valueOf(getResources().getColor(R.color.secondary_light, null)));
+        chip.setChipStrokeColor(ColorStateList.valueOf(getResources().getColor(R.color.primary, null)));
+        chip.setChipStrokeWidth(1 * getResources().getDisplayMetrics().density);
     }
 
     @Override

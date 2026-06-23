@@ -36,6 +36,9 @@ public class User {
     @SerializedName("updatedAt")
     private String updatedAt;
 
+    @SerializedName("points")
+    private Integer points;
+
     // Getters
     public String getId() { return id; }
     public String getName() { return name; }
@@ -48,6 +51,7 @@ public class User {
     public boolean isActive() { return isActive; }
     public String getCreatedAt() { return createdAt; }
     public String getUpdatedAt() { return updatedAt; }
+    public Integer getPoints() { return points != null ? points : 0; }
 
     // Setters
     public void setId(String id) { this.id = id; }
@@ -61,6 +65,7 @@ public class User {
     public void setActive(boolean active) { isActive = active; }
     public void setCreatedAt(String createdAt) { this.createdAt = createdAt; }
     public void setUpdatedAt(String updatedAt) { this.updatedAt = updatedAt; }
+    public void setPoints(Integer points) { this.points = points; }
 
     public boolean isAdmin() { return "admin".equals(role); }
     public boolean isStaff() { return "staff".equals(role); }
