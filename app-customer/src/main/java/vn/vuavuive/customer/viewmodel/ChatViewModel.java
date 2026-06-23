@@ -33,16 +33,27 @@ public class ChatViewModel extends ViewModel {
         Map<String, String> body = new HashMap<>();
         body.put("message", message);
 
-        chatbotApi.sendMessage(body).enqueue(new Callback<ApiResponse<Map<String, Object>>>() {
+        chatbotApi.sendMessage(body).enqueue(new Callback<Map<String, Object>>() {
             @Override
-            public void onResponse(Call<ApiResponse<Map<String, Object>>> call,
-                                   Response<ApiResponse<Map<String, Object>>> response) {
+            public void onResponse(Call<Map<String, Object>> call,
+                                   Response<Map<String, Object>> response) {
                 ChatResponse chatResponse = new ChatResponse();
-                if (response.isSuccessful() && response.body() != null
-                        && response.body().getData() != null) {
-                    Object reply = response.body().getData().get("reply");
+                if (response.isSuccessful() && response.body() != null) {
+                    // Backend bọc tất cả response trong ApiResponse: {success, data: {reply}}
+                    // Cần unwrap data trước khi lấy reply
+                    Object replyObj = null;
+                    Object dataRaw = response.body().get("data");
+                    if (dataRaw instanceof Map) {
+                        @SuppressWarnings("unchecked")
+                        Map<String, Object> data = (Map<String, Object>) dataRaw;
+                        replyObj = data.get("reply");
+                    }
+                    // Fallback: thử đọc trực tiếp nếu không có wrapper
+                    if (replyObj == null) {
+                        replyObj = response.body().get("reply");
+                    }
                     chatResponse.success = true;
-                    chatResponse.reply   = reply != null ? reply.toString()
+                    chatResponse.reply   = replyObj != null ? replyObj.toString()
                             : "Xin lỗi, tôi không hiểu câu hỏi đó.";
                 } else {
                     chatResponse.success = false;
@@ -51,7 +62,7 @@ public class ChatViewModel extends ViewModel {
                 result.postValue(chatResponse);
             }
             @Override
-            public void onFailure(Call<ApiResponse<Map<String, Object>>> call, Throwable t) {
+            public void onFailure(Call<Map<String, Object>> call, Throwable t) {
                 result.postValue(null);
             }
         });

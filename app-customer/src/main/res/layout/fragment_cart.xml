@@ -1,150 +1,160 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
-    android:orientation="vertical">
+    android:background="@color/background">
 
-    <!-- ╔══════════════════════════════════════════╗
-         ║           Cart Header Bar               ║
-         ╚══════════════════════════════════════════╝ -->
-    <include layout="@layout/layout_common_header_search" />
-
-    <TextView
-        android:id="@+id/tv_item_count"
-        android:layout_width="wrap_content"
+    <!-- Top AppBar -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone" />
-
-    <!-- ╔══════════════════════════════════════════╗
-         ║           Empty Cart State              ║
-         ╚══════════════════════════════════════════╝ -->
-    <LinearLayout
-        android:id="@+id/layout_empty_cart"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="🛒"
-            android:textSize="80sp" />
-
-        <TextView
-            android:id="@+id/tv_empty_cart"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/cart_empty"
-            android:textColor="@color/text_primary"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:gravity="center"
-            android:text="@string/cart_empty_hint"
-            android:textColor="@color/text_secondary"
-            android:textSize="14sp" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_shop_now"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="Mua sắm ngay"
-            android:paddingHorizontal="32dp"
-            app:backgroundTint="@color/primary"
-            app:cornerRadius="24dp" />
-    </LinearLayout>
-
-    <!-- ╔══════════════════════════════════════════╗
-         ║           Cart Content                  ║
-         ╚══════════════════════════════════════════╝ -->
-    <LinearLayout
-        android:id="@+id/layout_cart_content"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <androidx.core.widget.NestedScrollView
+        app:elevation="0dp"
+        android:background="@color/surface">
+        
+        <androidx.appcompat.widget.Toolbar
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:overScrollMode="never">
+            android:layout_height="?attr/actionBarSize">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Giỏ hàng"
+                android:textColor="@color/text_primary"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+                
+            <TextView
+                android:id="@+id/tv_item_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|center_vertical"
+                android:layout_marginEnd="16dp"
+                android:text="(0)"
+                android:textColor="@color/text_secondary"
+                android:textSize="16sp" />
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <!-- Empty Cart Layout -->
+        <LinearLayout
+            android:id="@+id/layout_empty_cart"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:padding="24dp">
+
+            <ImageView
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:src="@drawable/ic_cart"
+                app:tint="@color/outline"
+                android:layout_marginBottom="24dp" />
+
+            <TextView
+                android:id="@+id/tv_empty_cart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Giỏ hàng đang trống"
+                android:textColor="@color/text_primary"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Khám phá thêm các sản phẩm tươi ngon nhé!"
+                android:textColor="@color/text_secondary"
+                android:textSize="14sp"
+                android:gravity="center"
+                android:layout_marginBottom="32dp"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_shop_now"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:text="Mua sắm ngay"
+                app:cornerRadius="28dp"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Cart Content Layout -->
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/layout_cart_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingBottom="140dp"> <!-- Space for bottom bar -->
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingTop="8dp"
-                android:paddingBottom="16dp">
+                android:orientation="vertical">
 
-                <!-- Inline empty hint (when only saved items exist) -->
                 <TextView
                     android:id="@+id/tv_empty_cart_inline"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="16dp"
-                    android:layout_marginBottom="8dp"
-                    android:text="@string/cart_empty"
+                    android:padding="16dp"
+                    android:text="Không có sản phẩm nào."
                     android:textColor="@color/text_secondary"
-                    android:textSize="14sp"
                     android:visibility="gone" />
 
-                <!-- Cart items RecyclerView -->
+                <!-- Main Cart Items -->
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_cart_items"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:nestedScrollingEnabled="false"
-                    android:clipToPadding="false" />
+                    android:clipToPadding="false"
+                    android:paddingTop="12dp" />
 
-                <!-- Saved for later section header -->
+                <!-- Saved for later Section -->
                 <LinearLayout
                     android:id="@+id/layout_saved_header"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="16dp"
-                    android:layout_marginTop="12dp"
-                    android:background="@color/surface_variant"
-                    android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:padding="12dp">
-
+                    android:padding="16dp"
+                    android:layout_marginTop="16dp"
+                    android:background="@color/surface">
+                    
                     <TextView
                         android:id="@+id/tv_saved_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Đã lưu để mua sau"
+                        android:textColor="@color/text_primary"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                        
+                    <TextView
+                        android:id="@+id/tv_saved_count"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/label_saved_for_later"
-                        android:textColor="@color/text_primary"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tv_saved_count"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
                         android:text="(0)"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="13sp" />
-
+                        android:textColor="@color/text_secondary" />
+                        
                     <TextView
                         android:id="@+id/tv_saved_toggle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:text="▼"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="14sp" />
+                        android:text="Hiện"
+                        android:textColor="@color/primary"
+                        android:textStyle="bold"
+                        android:padding="4dp" />
                 </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -152,19 +162,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:nestedScrollingEnabled="false"
-                    android:clipToPadding="false"
                     android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/tv_saved_empty"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="16dp"
-                    android:layout_marginTop="6dp"
-                    android:text="Chưa có sản phẩm lưu"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="13sp"
+                    android:padding="16dp"
+                    android:text="Không có sản phẩm nào lưu lại."
+                    android:textColor="@color/text_hint"
                     android:visibility="gone" />
+
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
 
@@ -174,6 +182,7 @@
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
             app:cardCornerRadius="0dp"
             app:cardElevation="16dp"
             app:cardBackgroundColor="@color/surface">
@@ -256,6 +265,6 @@
                     app:iconTint="@color/white" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
-    </LinearLayout>
+    </FrameLayout>
 
-</LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

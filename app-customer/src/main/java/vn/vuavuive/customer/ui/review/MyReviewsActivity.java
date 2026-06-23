@@ -23,7 +23,7 @@ public class MyReviewsActivity extends AppCompatActivity {
     private OrderViewModel orderViewModel;
     private OrderAdapter orderAdapter;
     private ProgressBar progressBar;
-    private TextView tvEmpty;
+    private View layoutEmpty;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +41,7 @@ public class MyReviewsActivity extends AppCompatActivity {
         ImageButton btnBack = findViewById(R.id.btn_back);
         if (btnBack != null) btnBack.setOnClickListener(v -> finish());
         progressBar = findViewById(R.id.progress_bar);
-        tvEmpty = findViewById(R.id.tv_empty);
+        layoutEmpty = findViewById(R.id.layout_empty);
     }
 
     private void setupRecycler() {
@@ -61,9 +61,9 @@ public class MyReviewsActivity extends AppCompatActivity {
             progressBar.setVisibility(View.GONE);
             if (result.status == AuthRepository.Result.Status.SUCCESS && result.data != null) {
                 orderAdapter.setOrders(result.data);
-                tvEmpty.setVisibility(result.data.isEmpty() ? View.VISIBLE : View.GONE);
+                layoutEmpty.setVisibility(result.data.isEmpty() ? View.VISIBLE : View.GONE);
             } else {
-                tvEmpty.setVisibility(View.VISIBLE);
+                layoutEmpty.setVisibility(View.VISIBLE);
             }
         });
     }

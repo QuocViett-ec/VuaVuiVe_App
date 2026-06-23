@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
         cartViewModel = new ViewModelProvider(this).get(CartViewModel.class);
 
-        // Check session (guest users are allowed)
+        // Check session
         authViewModel.checkSession().observe(this, result -> {
             if (result.status == vn.vuavuive.customer.data.repository.AuthRepository.Result.Status.SUCCESS) {
                 authViewModel.setCurrentUser(result.data);
@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
                 cartViewModel.syncFromServer();
             } else if (result.status == vn.vuavuive.customer.data.repository.AuthRepository.Result.Status.ERROR) {
                 authViewModel.setCurrentUser(null);
+                goToLogin();
             }
         });
 
@@ -91,5 +92,12 @@ public class MainActivity extends AppCompatActivity {
         } else if (bottomNavView != null) {
             bottomNavView.setSelectedItemId(R.id.navigation_home);
         }
+    }
+
+    private void goToLogin() {
+        Intent intent = new Intent(this, vn.vuavuive.customer.ui.auth.LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 }

@@ -12,6 +12,6 @@ public interface ChatbotApi {
      * Customer chatbot — Gemini AI
      * Body: { message: String, sessionId: String (optional) }
      */
-    @POST("api/chatbot")
-    Call<ApiResponse<Map<String, Object>>> sendMessage(@Body Map<String, String> body);
+    @POST("api/ai/chat")
+    Call<Map<String, Object>> sendMessage(@Body Map<String, String> body);
 }

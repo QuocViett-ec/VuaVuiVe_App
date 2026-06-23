@@ -38,10 +38,11 @@ public class CheckoutActivity extends AppCompatActivity {
 
     private TextInputEditText etName, etPhone, etAddress, etVoucher, etNote;
     private RadioGroup rgPaymentMethod;
-    private MaterialButton btnPlaceOrder;
+    private MaterialButton btnPlaceOrder, btnApplyVoucher;
     private ProgressBar progressBar;
     private android.widget.TextView tvSubtotal, tvShippingFee, tvDiscount, tvTotal;
     private android.widget.LinearLayout layoutDiscount;
+    private double appliedDiscount = 0;
 
     private List<CartItemEntity> cartItems = new ArrayList<>();
 
@@ -72,6 +73,7 @@ public class CheckoutActivity extends AppCompatActivity {
         etPhone     = findViewById(R.id.et_receiver_phone);
         etAddress   = findViewById(R.id.et_delivery_address);
         etVoucher   = findViewById(R.id.et_voucher_code);
+        btnApplyVoucher = findViewById(R.id.btn_apply_voucher);
         etNote      = findViewById(R.id.et_note);
         rgPaymentMethod = findViewById(R.id.rg_payment_method);
         btnPlaceOrder = findViewById(R.id.btn_place_order);
@@ -81,6 +83,10 @@ public class CheckoutActivity extends AppCompatActivity {
         tvDiscount    = findViewById(R.id.tv_discount);
         tvTotal       = findViewById(R.id.tv_total);
         layoutDiscount = findViewById(R.id.layout_discount);
+
+        if (btnApplyVoucher != null) {
+            btnApplyVoucher.setOnClickListener(v -> applyVoucherCode());
+        }
     }
 
     private void observeCart() {
@@ -90,14 +96,41 @@ public class CheckoutActivity extends AppCompatActivity {
         });
     }
 
-    private void updatePriceSummary() {
+    private double getSubtotal() {
         double subtotal = 0;
         for (CartItemEntity ci : cartItems) {
             subtotal += ci.getLineTotal();
         }
+        return subtotal;
+    }
+
+    private void applyVoucherCode() {
+        String code = getText(etVoucher);
+        if (code.isEmpty()) {
+            Toast.makeText(this, "Vui lòng nhập mã", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if ("VUAVUIVE".equalsIgnoreCase(code)) {
+            double sub = getSubtotal();
+            appliedDiscount = sub * 0.15;
+            Toast.makeText(this, "Áp dụng mã thành công! Giảm 15%", Toast.LENGTH_SHORT).show();
+        } else if ("FREESHIP24".equalsIgnoreCase(code) || "FREESHIP".equalsIgnoreCase(code)) {
+            appliedDiscount = 30000;
+            Toast.makeText(this, "Áp dụng mã thành công! Miễn phí ship", Toast.LENGTH_SHORT).show();
+        } else {
+            appliedDiscount = 0;
+            Toast.makeText(this, "Mã không hợp lệ hoặc đã hết hạn", Toast.LENGTH_SHORT).show();
+        }
+        updatePriceSummary();
+    }
+
+    private void updatePriceSummary() {
+        double subtotal = getSubtotal();
         double shippingFee = 30000; // default 30k
-        double discount = 0;
+        double discount = appliedDiscount;
         double total = subtotal + shippingFee - discount;
+        if (total < 0) total = 0;
 
         if (tvSubtotal != null) {
             tvSubtotal.setText(CurrencyFormatter.format(subtotal));
@@ -166,12 +199,16 @@ public class CheckoutActivity extends AppCompatActivity {
         request.setShippingFee(30000); // default 30k
 
         String voucher = getText(etVoucher);
-        if (!voucher.isEmpty()) request.setVoucherCode(voucher);
+        if (!voucher.isEmpty()) {
+            request.setVoucherCode(voucher);
+            request.setDiscount(appliedDiscount);
+        }
 
         String note = getText(etNote);
         if (!note.isEmpty()) request.setNote(note);
 
-        double total = subtotal + 30000 - request.getDiscount();
+        double total = subtotal + 30000 - appliedDiscount;
+        if (total < 0) total = 0;
         request.setTotalAmount(total);
 
         Map<String, String> paymentMap = new java.util.HashMap<>();

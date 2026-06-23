@@ -104,6 +104,7 @@ public class HomeFragment extends Fragment {
         setupSearch(view);
         setupRecipeSection(view);
         setupProductSection(view);
+        setupVouchers(view);
 
         // Load data from real API
         loadRecipesFromApi();
@@ -191,8 +192,10 @@ public class HomeFragment extends Fragment {
         etSearchHome = etSearch;
         View btnMenu = view.findViewById(R.id.btn_menu);
         if (btnMenu != null) {
-            btnMenu.setOnClickListener(v ->
-                    Toast.makeText(getContext(), "Danh mục đang được phát triển thêm", Toast.LENGTH_SHORT).show());
+            btnMenu.setOnClickListener(v -> {
+                Intent intent = new Intent(requireContext(), vn.vuavuive.customer.ui.chat.ChatActivity.class);
+                startActivity(intent);
+            });
         }
 
         if (etSearch != null) {
@@ -264,6 +267,30 @@ public class HomeFragment extends Fragment {
     private void selectCategoryBySlug(String slug) {
         currentProductCategory = slug;
         updateCategorySelectionVisuals();
+    }
+
+    // ── Voucher Setup ──────────────────────────────────────────────────────────
+    private void setupVouchers(View view) {
+        View btnCopy1 = view.findViewById(R.id.btn_copy_voucher_1);
+        TextView tvCode1 = view.findViewById(R.id.tv_voucher_code_1);
+        if (btnCopy1 != null && tvCode1 != null) {
+            btnCopy1.setOnClickListener(v -> copyToClipboard(tvCode1.getText().toString()));
+        }
+
+        View btnCopy2 = view.findViewById(R.id.btn_copy_voucher_2);
+        TextView tvCode2 = view.findViewById(R.id.tv_voucher_code_2);
+        if (btnCopy2 != null && tvCode2 != null) {
+            btnCopy2.setOnClickListener(v -> copyToClipboard(tvCode2.getText().toString()));
+        }
+    }
+
+    private void copyToClipboard(String text) {
+        android.content.ClipboardManager clipboard = (android.content.ClipboardManager) requireContext().getSystemService(Context.CLIPBOARD_SERVICE);
+        android.content.ClipData clip = android.content.ClipData.newPlainText("Voucher", text);
+        if (clipboard != null) {
+            clipboard.setPrimaryClip(clip);
+            Toast.makeText(requireContext(), "Đã sao chép mã: " + text, Toast.LENGTH_SHORT).show();
+        }
     }
 
     // ── Recipe Section Setup ───────────────────────────────────────────────────

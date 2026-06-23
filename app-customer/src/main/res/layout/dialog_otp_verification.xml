@@ -5,9 +5,18 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="24dp"
-    android:background="@color/white"
+    android:padding="32dp"
+    android:background="@drawable/bg_bottom_sheet_dialog"
     android:gravity="center_horizontal">
+
+    <ImageView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:src="@drawable/ic_lock"
+        android:background="@drawable/bg_circle_primary"
+        android:padding="20dp"
+        app:tint="@color/white"
+        android:layout_marginBottom="24dp" />
 
     <TextView
         android:id="@+id/tv_dialog_title"
@@ -15,9 +24,9 @@
         android:layout_height="wrap_content"
         android:text="Xác thực mã OTP"
         android:textColor="@color/text_primary"
-        android:textSize="20sp"
+        android:textSize="22sp"
         android:textStyle="bold"
-        android:layout_marginBottom="8dp" />
+        android:layout_marginBottom="12dp" />
 
     <TextView
         android:id="@+id/tv_dialog_subtitle"
@@ -27,14 +36,18 @@
         android:textColor="@color/text_secondary"
         android:textSize="14sp"
         android:gravity="center"
-        android:layout_marginBottom="24dp" />
+        android:layout_marginBottom="32dp" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_otp"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
+        android:layout_marginBottom="16dp"
+        app:boxCornerRadiusTopStart="16dp"
+        app:boxCornerRadiusBottomStart="16dp"
+        app:boxCornerRadiusTopEnd="16dp"
+        app:boxCornerRadiusBottomEnd="16dp"
         app:boxStrokeColor="@color/primary">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -44,9 +57,11 @@
             android:gravity="center"
             android:inputType="number"
             android:maxLength="6"
-            android:textSize="24sp"
+            android:textSize="28sp"
             android:letterSpacing="0.4"
             android:textColor="@color/text_primary"
+            android:paddingVertical="16dp"
+            android:textStyle="bold"
             android:maxLines="1" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -55,9 +70,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/error"
-        android:textSize="13sp"
+        android:textSize="14sp"
         android:visibility="gone"
-        android:layout_marginBottom="12dp"
+        android:layout_marginBottom="16dp"
         android:gravity="center" />
 
     <LinearLayout
@@ -65,7 +80,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center"
-        android:layout_marginBottom="24dp">
+        android:layout_marginBottom="32dp">
 
         <TextView
             android:id="@+id/tv_countdown"
@@ -92,18 +107,19 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_verify_otp"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="56dp"
         android:text="Xác nhận"
         android:textSize="16sp"
+        android:textStyle="bold"
         app:backgroundTint="@color/primary"
-        app:cornerRadius="10dp"
-        android:layout_marginBottom="8dp" />
+        app:cornerRadius="28dp"
+        android:layout_marginBottom="12dp" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_cancel_otp"
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="56dp"
         android:text="Hủy"
         android:textColor="@color/text_secondary"
         android:textSize="16sp" />

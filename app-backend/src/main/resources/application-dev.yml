@@ -35,7 +35,7 @@ server:
 app:
   jwt:
     secret: "vuavuive-super-secret-key-for-jwt-please-change-in-production-min-256bit"
-    access-token-expiration-ms: 900000       # 15 phút
+    access-token-expiration-ms: 86400000       # 24 giờ
     refresh-token-expiration-ms: 2592000000  # 30 ngày
 
 # ============================================
@@ -72,8 +72,8 @@ app:
 #  CẤU HÌNH GOOGLE GEMINI AI (Chatbot)
 # ============================================
   gemini:
-    api-key: "AIzaSyDcxtXgTMoWpOimJWfsPX9l21CrTwXskIk"   # <<< ĐỔI THÀNH API KEY CỦA BẠN
-    model: "gemini-1.5-flash"
+    api-key: "AQ.Ab8RN6LcGFuoZkB5TJ1l4IcQ2fbDRqh_am_AXegYvptxdhf0gw"
+    model: "gemini-1.5-flash-latest"
 
 # ============================================
 #  CẤU HÌNH TỰ ĐỘNG HỦY ĐƠN (Cron Job)

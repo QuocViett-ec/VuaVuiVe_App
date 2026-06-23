@@ -34,6 +34,7 @@ public class LoginActivity extends AppCompatActivity {
     private TextView tvRegisterLink;
     private TextView tvForgotPassword;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,11 +45,11 @@ public class LoginActivity extends AppCompatActivity {
         initViews();
         setupClickListeners();
 
-        // Check if already logged in
-        if (authViewModel.isLoggedIn()) {
-            goToMain();
-            return;
-        }
+        // Check if already logged in (disabled by user request to always show login)
+        // if (authViewModel.isLoggedIn()) {
+        //     goToMain();
+        //     return;
+        // }
     }
 
     private void initViews() {
@@ -60,7 +61,16 @@ public class LoginActivity extends AppCompatActivity {
         progressBar     = findViewById(R.id.progress_bar);
         tvError         = findViewById(R.id.tv_error);
         tvRegisterLink  = findViewById(R.id.tv_register_link);
+
         tvForgotPassword = findViewById(R.id.tv_forgot_password);
+
+        // Pre-fill credentials for testing
+        if (etPhoneEmail != null) {
+            etPhoneEmail.setText("0912345678");
+        }
+        if (etPassword != null) {
+            etPassword.setText("Customer@123");
+        }
     }
 
     private void setupClickListeners() {
@@ -73,6 +83,8 @@ public class LoginActivity extends AppCompatActivity {
         tvForgotPassword.setOnClickListener(v -> {
             startActivity(new Intent(this, ForgotPasswordActivity.class));
         });
+
+
     }
 
     private void attemptLogin() {

@@ -35,7 +35,7 @@ public class CartFragment extends Fragment {
     private CartAdapter savedAdapter;
     private TextView tvTotal, tvEmptyCart, tvEmptyCartInline, tvItemCount, tvSubtotalAmount;
     private TextView tvSavedCount, tvSavedToggle, tvSavedEmpty;
-    private LinearLayout layoutCartContent;
+    private View layoutCartContent;
     private View layoutEmptyCart;
     private View layoutSavedHeader;
     private Button btnCheckout;

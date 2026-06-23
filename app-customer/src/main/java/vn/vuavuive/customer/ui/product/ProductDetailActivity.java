@@ -48,7 +48,7 @@ public class ProductDetailActivity extends AppCompatActivity {
     private TextView tvProductName, tvPrice, tvOriginalPrice, tvDiscount;
     private TextView tvRating, tvSold, tvStock, tvDescription, tvQuantity;
     private RatingBar ratingBar;
-    private ImageButton btnDecrease, btnIncrease;
+    private ImageView btnDecrease, btnIncrease;
     private MaterialButton fabAddToCart;
     private RecyclerView rvReviews, rvSimilarProducts;
     private ReviewAdapter reviewAdapter;
@@ -149,7 +149,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         fabAddToCart.setOnClickListener(v -> addToCart());
 
         // Write Review button
-        MaterialButton btnWriteReview = findViewById(R.id.btn_write_review);
+        TextView btnWriteReview = findViewById(R.id.btn_write_review);
         if (btnWriteReview != null) {
             btnWriteReview.setOnClickListener(v -> {
                 if (sessionManager == null || !sessionManager.isLoggedIn()) {

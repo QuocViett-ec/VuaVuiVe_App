@@ -1,0 +1,1690 @@
+<figma file="Admin_VUAVUIVE">
+    <TextNode>
+      <base>ĐỔI MẬT KHẨU</base>
+      <string page="undefined" frame="Heading 1" nodeid="14:176" transform="1,0,1497.77001953125,0,1,160"><font val="Inter:Bold"/>ĐỔI MẬT KHẨU</string>
+    </TextNode>
+    <TextNode>
+      <base>Mật khẩu hiện tại</base>
+      <string page="undefined" frame="Label" nodeid="14:187" transform="1,0,1438,0,1,378"><font val="Inter:Semi Bold"/>Mật khẩu hiện tại</string>
+    </TextNode>
+    <TextNode>
+      <base>Nhập mật khẩu cũ</base>
+      <string page="undefined" frame="Container" nodeid="14:191" transform="1,0,1451,0,1,425"><font val="Inter:Regular"/>Nhập mật khẩu cũ</string>
+    </TextNode>
+    <TextNode>
+      <base>Mật khẩu mới</base>
+      <string page="undefined" frame="Label" nodeid="14:198" transform="1,0,1438,0,1,487"><font val="Inter:Semi Bold"/>Mật khẩu mới</string>
+    </TextNode>
+    <TextNode>
+      <base>Nhập mật khẩu mới</base>
+      <string page="undefined" frame="Container" nodeid="14:202" transform="1,0,1451,0,1,534"><font val="Inter:Regular"/>Nhập mật khẩu mới</string>
+    </TextNode>
+    <TextNode>
+      <base>Xác nhận mật khẩu mới</base>
+      <string page="undefined" frame="Label" nodeid="14:209" transform="1,0,1438,0,1,596"><font val="Inter:Semi Bold"/>Xác nhận mật khẩu mới</string>
+    </TextNode>
+    <TextNode>
+      <base>Nhập lại mật khẩu mới</base>
+      <string page="undefined" frame="Container" nodeid="14:213" transform="1,0,1451,0,1,643"><font val="Inter:Regular"/>Nhập lại mật khẩu mới</string>
+    </TextNode>
+    <TextNode>
+      <base>ĐỔI MẬT KHẨU</base>
+      <string page="undefined" frame="Submit Button" nodeid="14:220" transform="1,0,1506,0,1,721"><font val="Inter:Bold"/>ĐỔI MẬT KHẨU</string>
+    </TextNode>
+    <TextNode>
+      <base>Bạn gặp khó khăn? Liên hệ hỗ trợ</base>
+      <string page="undefined" frame="Help Link:margin" nodeid="14:222" transform="1,0,1462.5,0,1,829"><color val="type:SOLID:visible:true:opacity:1:blendMode:NORMAL:color:r:0.41960784792900085:g:0.4470588266849518:b:0.501960813999176:boundVariables:"/><decor val="NONE"/><font val="Inter:Regular"/>Bạn gặp khó khăn? <color val="type:SOLID:visible:true:opacity:1:blendMode:NORMAL:color:r:0.10588235408067703:g:0.3686274588108063:b:0.125490203499794:boundVariables:"/><decor val="UNDERLINE"/><font val="Inter:Semi Bold"/>Liên hệ hỗ trợ<color val="type:SOLID:visible:true:opacity:1:blendMode:NORMAL:color:r:0.41960784792900085:g:0.4470588266849518:b:0.501960813999176:boundVariables:"/><decor val="NONE"/><font val="Inter:Regular"/></string>
+    </TextNode>
+    <TextNode>
+      <base>© 2024 Vựa Vui Vẻ - Thực Phẩm Sạch &amp; Tươi.</base>
+      <string page="undefined" frame="NavigationFooter (Optional App Context)" nodeid="14:224" transform="1,0,1443.5,0,1,971"><font val="Inter:Regular"/>© 2024 Vựa Vui Vẻ - Thực Phẩm Sạch &amp; Tươi.</string>
+    </TextNode>
+    <TextNode>
+      <base>Họ và tên *</base>
+      <string page="undefined" frame="Label" nodeid="14:231" transform="1,0,1905,0,1,230"><font val="Inter:Semi Bold"/>Họ và tên *</string>
+    </TextNode>
+    <TextNode>
+      <base>Nhập họ và tên</base>
+      <string page="undefined" frame="Container" nodeid="14:235" transform="1,0,1921,0,1,272"><font val="Inter:Regular"/>Nhập họ và tên</string>
+    </TextNode>
+    <TextNode>
+      <base>Số điện thoại</base>
+      <string page="undefined" frame="Label" nodeid="14:238" transform="1,0,1905,0,1,325"><font val="Inter:Semi Bold"/>Số điện thoại</string>
+    </TextNode>
+    <TextNode>
+      <base>Nhập số điện thoại</base>
+      <string page="undefined" frame="Container" nodeid="14:242" transform="1,0,1921,0,1,367"><font val="Inter:Regular"/>Nhập số điện thoại</string>
+    </TextNode>
+    <TextNode>
+      <base>Địa chỉ</base>
+      <string page="undefined" frame="Label" nodeid="14:245" transform="1,0,1905,0,1,420"><font val="Inter:Semi Bold"/>Địa chỉ</string>
+    </TextNode>
+    <TextNode>
+      <base>Nhập địa chỉ của bạn</base>
+      <string page="undefined" frame="Container" nodeid="14:249" transform="1,0,1921,0,1,460"><font val="Inter:Regular"/>Nhập địa chỉ của bạn</string>
+    </TextNode>
+    <TextNode>
+      <base>LƯU THAY ĐỔI</base>
+      <string page="undefined" frame="Action Button → Button" nodeid="14:252" transform="1,0,2009.5,0,1,610"><font val="Inter:Bold"/>LƯU THAY ĐỔI</string>
+    </TextNode>
+    <TextNode>
+      <base>Vựa Vui Vẻ - Nông sản tươi sạch</base>
+      <string page="undefined" frame="Container" nodeid="14:255" transform="1,0,1979,0,1,974"><font val="Inter:Medium"/>Vựa Vui Vẻ - Nông sản tươi sạch</string>
+    </TextNode>
+    <TextNode>
+      <base>Chỉnh sửa hồ sơ</base>
+      <string page="undefined" frame="Heading 1" nodeid="14:263" transform="1,0,1933,0,1,154"><font val="Inter:Bold"/>Chỉnh sửa hồ sơ</string>
+    </TextNode>
+    <TextNode>
+      <base>Khôi phục mật khẩu</base>
+      <string page="undefined" frame="Heading 1" nodeid="14:271" transform="1,0,2478,0,1,148"><font val="Plus Jakarta Sans:Bold"/>Khôi phục mật khẩu</string>
+    </TextNode>
+    <TextNode>
+      <base>Bước 1 / 3</base>
+      <string page="undefined" frame="Container" nodeid="14:277" transform="1,0,2434,0,1,226"><font val="Plus Jakarta Sans:Bold"/>Bước 1 / 3</string>
+    </TextNode>
+    <TextNode>
+      <base>Xác thực tài khoản</base>
+      <string page="undefined" frame="Container" nodeid="14:279" transform="1,0,2676.330078125,0,1,228"><font val="Liberation Sans:Italic"/>Xác thực tài khoản</string>
+    </TextNode>
+    <TextNode>
+      <base>Nhập email hoặc số điện thoại đã đăng ký để<br id="n"/>nhận mã thiết lập lại mật khẩu.</base>
+      <string page="undefined" frame="Container" nodeid="14:287" transform="1,0,2451,0,1,310.375"><font val="Liberation Sans:Regular"/>Nhập email hoặc số điện thoại đã đăng ký để<br id="n"/>nhận mã thiết lập lại mật khẩu.</string>
+    </TextNode>
+    <TextNode>
+      <base>EMAIL HOẶC SỐ ĐIỆN THOẠI</base>
+      <string page="undefined" frame="Label" nodeid="14:290" transform="1,0,2451,0,1,380.375"><font val="Plus Jakarta Sans:Bold"/>EMAIL HOẶC SỐ ĐIỆN THOẠI</string>
+    </TextNode>
+    <TextNode>
+      <base>example@gmail.com</base>
+      <string page="undefined" frame="Container" nodeid="14:293" transform="1,0,2469,0,1,426.375"><font val="Liberation Sans:Regular"/>example@gmail.com</string>
+    </TextNode>
+    <TextNode>
+      <base>Tiếp tục</base>
+      <string page="undefined" frame="Button" nodeid="14:297" transform="1,0,2574,0,1,497.375"><font val="Plus Jakarta Sans:Bold"/>Tiếp tục</string>
+    </TextNode>
+    <TextNode>
+      <base>Bạn gặp khó khăn? Liên hệ hỗ trợ</base>
+      <string page="undefined" frame="Container" nodeid="14:301" transform="1,0,2495.75,0,1,938"><color val="type:SOLID:visible:true:opacity:1:blendMode:NORMAL:color:r:0.41960784792900085:g:0.4470588266849518:b:0.501960813999176:boundVariables:"/><decor val="NONE"/><font val="Liberation Sans:Regular"/>Bạn gặp khó khăn? <color val="type:SOLID:visible:true:opacity:1:blendMode:NORMAL:color:r:0.10588235408067703:g:0.3686274588108063:b:0.125490203499794:boundVariables:"/><decor val="UNDERLINE"/><font val="Plus Jakarta Sans:Bold"/>Liên hệ hỗ trợ<color val="type:SOLID:visible:true:opacity:1:blendMode:NORMAL:color:r:0.41960784792900085:g:0.4470588266849518:b:0.501960813999176:boundVariables:"/><decor val="NONE"/><font val="Liberation Sans:Regular"/></string>
+    </TextNode>
+    <TextNode>
+      <base>Khôi phục mật khẩu</base>
+      <string page="undefined" frame="Heading 1:margin" nodeid="14:308" transform="1,0,2968,0,1,149"><font val="Plus Jakarta Sans:SemiBold"/>Khôi phục mật khẩu</string>
+    </TextNode>
+    <TextNode>
+      <base>Bước 3 / 3</base>
+      <string page="undefined" frame="Container" nodeid="14:314" transform="1,0,2912,0,1,209"><font val="Plus Jakarta Sans:SemiBold"/>Bước 3 / 3</string>
+    </TextNode>
+    <TextNode>
+      <base>Thiết lập mật khẩu mới</base>
+      <string page="undefined" frame="Container" nodeid="14:316" transform="1,0,3141,0,1,211"><font val="Plus Jakarta Sans:Bold"/>Thiết lập mật khẩu mới</string>
+    </TextNode>
+    <TextNode>
+      <base>Bảo mật tài khoản</base>
+      <string page="undefined" frame="Container" nodeid="14:324" transform="1,0,2996.9951171875,0,1,329"><font val="Plus Jakarta Sans:SemiBold"/>Bảo mật tài khoản</string>
+    </TextNode>
+    <TextNode>
+      <base>Sử dụng mật khẩu mạnh để bảo vệ thông tin<br id="n"/>của bạn.</base>
+      <string page="undefined" frame="Container" nodeid="14:326" transform="1,0,2948.47509765625,0,1,361"><font val="Plus Jakarta Sans:Regular"/>Sử dụng mật khẩu mạnh để bảo vệ thông tin<br id="n"/>của bạn.</string>
+    </TextNode>
+    <TextNode>
+      <base>Mật khẩu mới</base>
+      <string page="undefined" frame="Label" nodeid="14:331" transform="1,0,2933,0,1,502"><font val="Plus Jakarta Sans:SemiBold"/>Mật khẩu mới</string>
+    </TextNode>
+    <TextNode>
+      <base>Nhập ít nhất 8 ký tự</base>
+      <string page="undefined" frame="Container" nodeid="14:337" transform="1,0,2974,0,1,548"><font val="Plus Jakarta Sans:Regular"/>Nhập ít nhất 8 ký tự</string>
+    </TextNode>
+    <TextNode>
+      <base>Xác nhận mật khẩu mới</base>
+      <string page="undefined" frame="Label" nodeid="14:343" transform="1,0,2933,0,1,611"><font val="Plus Jakarta Sans:SemiBold"/>Xác nhận mật khẩu mới</string>
+    </TextNode>
+    <TextNode>
+      <base>Nhập lại mật khẩu</base>
+      <string page="undefined" frame="Container" nodeid="14:349" transform="1,0,2974,0,1,657"><font val="Plus Jakarta Sans:Regular"/>Nhập lại mật khẩu</string>
+    </TextNode>
+    <TextNode>
+      <base>Yêu cầu mật khẩu:</base>
+      <string page="undefined" frame="Container" nodeid="14:357" transform="1,0,2961,0,1,733"><font val="Plus Jakarta Sans:SemiBold"/>Yêu cầu mật khẩu:</string>
+    </TextNode>
+    <TextNode>
+      <base>Tối thiểu 8 ký tự</base>
+      <string page="undefined" frame="Container" nodeid="14:362" transform="1,0,2961.666748046875,0,1,761"><font val="Plus Jakarta Sans:Medium"/>Tối thiểu 8 ký tự</string>
+    </TextNode>
+    <TextNode>
+      <base>Bao gồm chữ cái và số</base>
+      <string page="undefined" frame="Container" nodeid="14:366" transform="1,0,2961.666748046875,0,1,780.5"><font val="Plus Jakarta Sans:Medium"/>Bao gồm chữ cái và số</string>
+    </TextNode>
+    <TextNode>
+      <base>Lưu mật khẩu</base>
+      <string page="undefined" frame="Action Button" nodeid="14:368" transform="1,0,3019.050048828125,0,1,849.5"><font val="Plus Jakarta Sans:SemiBold"/>Lưu mật khẩu</string>
+    </TextNode>
+    <TextNode>
+      <base>Bạn gặp khó khăn? Liên hệ hỗ trợ</base>
+      <string page="undefined" frame="Container" nodeid="14:374" transform="1,0,2984,0,1,958.5"><color val="type:SOLID:visible:true:opacity:1:blendMode:NORMAL:color:r:0.2549019753932953:g:0.2862745225429535:b:0.24313725531101227:boundVariables:"/><font val="Plus Jakarta Sans:Regular"/>Bạn gặp khó khăn? <color val="type:SOLID:visible:true:opacity:1:blendMode:NORMAL:color:r:0:g:0.2705882489681244:b:0.05098039284348488:boundVariables:"/><font val="Plus Jakarta Sans:Bold"/>Liên hệ hỗ trợ<color val="type:SOLID:visible:true:opacity:1:blendMode:NORMAL:color:r:0.2549019753932953:g:0.2862745225429535:b:0.24313725531101227:boundVariables:"/><font val="Plus Jakarta Sans:Regular"/></string>
+    </TextNode>
+    <TextNode>
+      <base>BƯỚC 2 / 3 - XÁC THỰC MÃ OTP</base>
+      <string page="undefined" frame="Container" nodeid="14:380" transform="1,0,3398,0,1,212"><font val="Plus Jakarta Sans:SemiBold"/>BƯỚC 2 / 3 - XÁC THỰC MÃ OTP</string>
+    </TextNode>
+    <TextNode>
+      <base>66%</base>
+      <string page="undefined" frame="Container" nodeid="14:382" transform="1,0,3724.43994140625,0,1,212"><font val="Plus Jakarta Sans:SemiBold"/>66%</string>
+    </TextNode>
+    <TextNode>
+      <base>Kiểm tra tin nhắn của bạn</base>
+      <string page="undefined" frame="Heading 2" nodeid="14:394" transform="1,0,3446.5,0,1,438"><font val="Plus Jakarta Sans:SemiBold"/>Kiểm tra tin nhắn của bạn</string>
+    </TextNode>
+    <TextNode>
+      <base>Chúng tôi đã gửi một mã xác thực gồm 6 chữ</base>
+      <string page="undefined" frame="Paragraph" nodeid="14:396" transform="1,0,3432,0,1,478"><font val="Plus Jakarta Sans:Regular"/>Chúng tôi đã gửi một mã xác thực gồm 6 chữ</string>
+    </TextNode>
+    <TextNode>
+      <base>số đến số điện thoại 091****678. Vui lòng<br id="n"/>nhập mã để tiếp tục.</base>
+      <string page="undefined" frame="Paragraph" nodeid="14:397" transform="1,0,3443,0,1,500.625"><color val="type:SOLID:visible:true:opacity:1:blendMode:NORMAL:color:r:0.2549019753932953:g:0.2862745225429535:b:0.24313725531101227:boundVariables:"/><font val="Plus Jakarta Sans:Regular"/>số đến số điện thoại <color val="type:SOLID:visible:true:opacity:1:blendMode:NORMAL:color:r:0.11372549086809158:g:0.10980392247438431:b:0.06666667014360428:boundVariables:"/><font val="Plus Jakarta Sans:Bold"/>091****678<color val="type:SOLID:visible:true:opacity:1:blendMode:NORMAL:color:r:0.2549019753932953:g:0.2862745225429535:b:0.24313725531101227:boundVariables:"/><font val="Plus Jakarta Sans:Regular"/>. Vui lòng<br id="n"/>nhập mã để tiếp tục.</string>
+    </TextNode>
+    <TextNode>
+      <base>Bạn không nhận được mã?</base>
+      <string page="undefined" frame="Container" nodeid="14:419" transform="1,0,3487.5,0,1,666.625"><font val="Plus Jakarta Sans:SemiBold"/>Bạn không nhận được mã?</string>
+    </TextNode>
+    <TextNode>
+      <base>Gửi lại mã </base>
+      <string page="undefined" frame="Button" nodeid="14:421" transform="1,0,3509.10009765625,0,1,698.125"><font val="Plus Jakarta Sans:Bold"/>Gửi lại mã </string>
+    </TextNode>
+    <TextNode>
+      <base>(00:58)</base>
+      <string page="undefined" frame="Container" nodeid="14:423" transform="1,0,3584.10009765625,0,1,698.125"><font val="Plus Jakarta Sans:Bold"/>(00:58)</string>
+    </TextNode>
+    <TextNode>
+      <base>Xác nhận</base>
+      <string page="undefined" frame="CTA Button" nodeid="14:425" transform="1,0,3537.5,0,1,778.125"><font val="Plus Jakarta Sans:Bold"/>Xác nhận</string>
+    </TextNode>
+    <TextNode>
+      <base>Khôi phục mật khẩu</base>
+      <string page="undefined" frame="Heading 1" nodeid="14:435" transform="1,0,3454,0,1,144"><font val="Plus Jakarta Sans:SemiBold"/>Khôi phục mật khẩu</string>
+    </TextNode>
+    <TextNode>
+      <base>Vựa Vui Vẻ</base>
+      <string page="undefined" frame="Heading 1" nodeid="14:453" transform="1,0,825.2049560546875,0,1,370.5"><font val="Plus Jakarta Sans:Regular"/>Vựa Vui Vẻ</string>
+    </TextNode>
+    <TextNode>
+      <base>Thực phẩm tươi ngon mỗi ngày</base>
+      <string page="undefined" frame="Container" nodeid="14:458" transform="1,0,803.0399780273438,0,1,410.5"><font val="Plus Jakarta Sans:Regular"/>Thực phẩm tươi ngon mỗi ngày</string>
+    </TextNode>
+    <TextNode>
+      <base>Đăng nhập</base>
+      <string page="undefined" frame="Heading 2" nodeid="14:465" transform="1,0,748,0,1,496"><font val="Plus Jakarta Sans:Regular"/>Đăng nhập</string>
+    </TextNode>
+    <TextNode>
+      <base>Chào mừng bạn trở lại với Vựa Vui Vẻ</base>
+      <string page="undefined" frame="Container" nodeid="14:467" transform="1,0,748,0,1,528"><font val="Plus Jakarta Sans:Regular"/>Chào mừng bạn trở lại với Vựa Vui Vẻ</string>
+    </TextNode>
+    <TextNode>
+      <base>Số điện thoại hoặc email</base>
+      <string page="undefined" frame="Label" nodeid="14:472" transform="1,0,752,0,1,580"><font val="Plus Jakarta Sans:Regular"/>Số điện thoại hoặc email</string>
+    </TextNode>
+    <TextNode>
+      <base>Nhập SĐT hoặc email của bạn</base>
+      <string page="undefined" frame="Container" nodeid="14:478" transform="1,0,789,0,1,616"><font val="Plus Jakarta Sans:Regular"/>Nhập SĐT hoặc email của bạn</string>
+    </TextNode>
+    <TextNode>
+      <base>Mật khẩu</base>
+      <string page="undefined" frame="Label" nodeid="14:482" transform="1,0,752,0,1,667"><font val="Plus Jakarta Sans:Regular"/>Mật khẩu</string>
+    </TextNode>
+    <TextNode>
+      <base>Nhập mật khẩu</base>
+      <string page="undefined" frame="Container" nodeid="14:488" transform="1,0,789,0,1,703"><font val="Plus Jakarta Sans:Regular"/>Nhập mật khẩu</string>
+    </TextNode>
+    <TextNode>
+      <base>Quên mật khẩu?</base>
+      <string page="undefined" frame="Link" nodeid="14:494" transform="1,0,929.02001953125,0,1,754"><font val="Plus Jakarta Sans:Regular"/>Quên mật khẩu?</string>
+    </TextNode>
+    <TextNode>
+      <base>ĐĂNG NHẬP</base>
+      <string page="undefined" frame="Container" nodeid="14:499" transform="1,0,824.52001953125,0,1,822"><font val="Plus Jakarta Sans:Regular"/>ĐĂNG NHẬP</string>
+    </TextNode>
+    <TextNode>
+      <base>hoặc</base>
+      <string page="undefined" frame="Background" nodeid="14:506" transform="1,0,877.1950073242188,0,1,894"><font val="Plus Jakarta Sans:Regular"/>hoặc</string>
+    </TextNode>
+    <TextNode>
+      <base>Tiếp tục với Google</base>
+      <string page="undefined" frame="Google" nodeid="14:510" transform="1,0,843.8300170898438,0,1,959"><font val="Plus Jakarta Sans:Regular"/>Tiếp tục với Google</string>
+    </TextNode>
+    <TextNode>
+      <base>Chưa có tài khoản? </base>
+      <string page="undefined" frame="Register Footer" nodeid="14:513" transform="1,0,801.0549926757812,0,1,1024"><font val="Plus Jakarta Sans:Regular"/>Chưa có tài khoản? </string>
+    </TextNode>
+    <TextNode>
+      <base>Đăng ký</base>
+      <string page="undefined" frame="Register Footer" nodeid="14:514" transform="1,0,931.8349609375,0,1,1024"><font val="Plus Jakarta Sans:Regular"/>Đăng ký</string>
+    </TextNode>
+    <TextNode>
+      <base>BẢO MẬT</base>
+      <string page="undefined" frame="Container" nodeid="14:520" transform="1,0,752.0800170898438,0,1,1133"><font val="Plus Jakarta Sans:Regular"/>BẢO MẬT</string>
+    </TextNode>
+    <TextNode>
+      <base>HỮU CƠ</base>
+      <string page="undefined" frame="Container" nodeid="14:525" transform="1,0,875.1400146484375,0,1,1131.4962158203125"><font val="Plus Jakarta Sans:Regular"/>HỮU CƠ</string>
+    </TextNode>
+    <TextNode>
+      <base>TẬN NƠI</base>
+      <string page="undefined" frame="Container" nodeid="14:530" transform="1,0,992.22998046875,0,1,1131"><font val="Plus Jakarta Sans:Regular"/>TẬN NƠI</string>
+    </TextNode>
+    <TextNode>
+      <base>Đăng ký</base>
+      <string page="undefined" frame="Heading 1" nodeid="14:544" transform="1,0,264.30499267578125,0,1,290"><font val="Plus Jakarta Sans:Regular"/>Đăng ký</string>
+    </TextNode>
+    <TextNode>
+      <base>Gia nhập cộng đồng tươi sạch ngay!</base>
+      <string page="undefined" frame="Container" nodeid="14:546" transform="1,0,199.260009765625,0,1,330"><font val="Plus Jakarta Sans:Regular"/>Gia nhập cộng đồng tươi sạch ngay!</string>
+    </TextNode>
+    <TextNode>
+      <base>Họ và tên</base>
+      <string page="undefined" frame="Full Name" nodeid="14:550" transform="1,0,166,0,1,379.5"><font val="Plus Jakarta Sans:Regular"/>Họ và tên</string>
+    </TextNode>
+    <TextNode>
+      <base>Nhập họ và tên</base>
+      <string page="undefined" frame="Container" nodeid="14:553" transform="1,0,179,0,1,418"><font val="Plus Jakarta Sans:Regular"/>Nhập họ và tên</string>
+    </TextNode>
+    <TextNode>
+      <base>Số điện thoại</base>
+      <string page="undefined" frame="Phone Number" nodeid="14:555" transform="1,0,166,0,1,477.5"><font val="Plus Jakarta Sans:Regular"/>Số điện thoại</string>
+    </TextNode>
+    <TextNode>
+      <base>Nhập số điện thoại</base>
+      <string page="undefined" frame="Container" nodeid="14:558" transform="1,0,179,0,1,516"><font val="Plus Jakarta Sans:Regular"/>Nhập số điện thoại</string>
+    </TextNode>
+    <TextNode>
+      <base>Email (tùy chọn)</base>
+      <string page="undefined" frame="Email" nodeid="14:560" transform="1,0,166,0,1,575.5"><font val="Plus Jakarta Sans:Regular"/>Email (tùy chọn)</string>
+    </TextNode>
+    <TextNode>
+      <base>email@vi-du.com</base>
+      <string page="undefined" frame="Container" nodeid="14:563" transform="1,0,179,0,1,614"><font val="Plus Jakarta Sans:Regular"/>email@vi-du.com</string>
+    </TextNode>
+    <TextNode>
+      <base>Mật khẩu</base>
+      <string page="undefined" frame="Password" nodeid="14:565" transform="1,0,166,0,1,673.5"><font val="Plus Jakarta Sans:Regular"/>Mật khẩu</string>
+    </TextNode>
+    <TextNode>
+      <base>Tối thiểu 8 ký tự</base>
+      <string page="undefined" frame="Container" nodeid="14:569" transform="1,0,179,0,1,712"><font val="Plus Jakarta Sans:Regular"/>Tối thiểu 8 ký tự</string>
+    </TextNode>
+    <TextNode>
+      <base>Xác nhận mật khẩu</base>
+      <string page="undefined" frame="Confirm Password" nodeid="14:574" transform="1,0,166,0,1,771.5"><font val="Plus Jakarta Sans:Regular"/>Xác nhận mật khẩu</string>
+    </TextNode>
+    <TextNode>
+      <base>Nhập lại mật khẩu</base>
+      <string page="undefined" frame="Container" nodeid="14:578" transform="1,0,179,0,1,810"><font val="Plus Jakarta Sans:Regular"/>Nhập lại mật khẩu</string>
+    </TextNode>
+    <TextNode>
+      <base>Địa chỉ (tùy chọn)</base>
+      <string page="undefined" frame="Address" nodeid="14:583" transform="1,0,166,0,1,869.5"><font val="Plus Jakarta Sans:Regular"/>Địa chỉ (tùy chọn)</string>
+    </TextNode>
+    <TextNode>
+      <base>Số nhà, tên đường, phường...</base>
+      <string page="undefined" frame="Container" nodeid="14:586" transform="1,0,179,0,1,908"><font val="Plus Jakarta Sans:Regular"/>Số nhà, tên đường, phường...</string>
+    </TextNode>
+    <TextNode>
+      <base>Tôi đồng ý với Điều khoản sử dụng và Chính sách<br id="n"/>bảo mật.</base>
+      <string page="undefined" frame="Label" nodeid="14:591" transform="1,0,190,0,1,970"><font val="Plus Jakarta Sans:Regular"/>Tôi đồng ý với Điều khoản sử dụng và Chính sách<br id="n"/>bảo mật.</string>
+    </TextNode>
+    <TextNode>
+      <base>ĐĂNG KÝ</base>
+      <string page="undefined" frame="Submit Button" nodeid="14:594" transform="1,0,276.95501708984375,0,1,1034"><font val="Plus Jakarta Sans:Regular"/>ĐĂNG KÝ</string>
+    </TextNode>
+    <TextNode>
+      <base>Đã có tài khoản? Đăng nhập</base>
+      <string page="undefined" frame="Footer - Login Redirect" nodeid="14:596" transform="1,0,225.80999755859375,0,1,1106"><font val="Plus Jakarta Sans:Regular"/><color val="type:SOLID:visible:true:opacity:1:blendMode:NORMAL:color:r:0.2549019753932953:g:0.2862745225429535:b:0.24313725531101227:boundVariables:"/>Đã có tài khoản? <color val="type:SOLID:visible:true:opacity:1:blendMode:NORMAL:color:r:0.10588235408067703:g:0.4274509847164154:b:0.1411764770746231:boundVariables:"/>Đăng nhập<color val="type:SOLID:visible:true:opacity:1:blendMode:NORMAL:color:r:0.2549019753932953:g:0.2862745225429535:b:0.24313725531101227:boundVariables:"/></string>
+    </TextNode>
+    <TextNode>
+      <base>© 2024 Vựa Vui Vẻ. All Freshness Reserved.</base>
+      <string page="undefined" frame="Aesthetic Footer Elements" nodeid="14:598" transform="1,0,194.70999145507812,0,1,1198"><font val="Plus Jakarta Sans:Regular"/>© 2024 Vựa Vui Vẻ. All Freshness Reserved.</string>
+    </TextNode>
+    <TextNode>
+      <base>Chào mừng bạn đến với</base>
+      <string page="undefined" frame="Container" nodeid="14:2415" transform="1,0,4126,0,1,204"><font val="Plus Jakarta Sans:Regular"/>Chào mừng bạn đến với</string>
+    </TextNode>
+    <TextNode>
+      <base>VỰA VUI VẺ</base>
+      <string page="undefined" frame="Heading 1" nodeid="14:2417" transform="1,0,4126,0,1,232"><font val="Plus Jakarta Sans:Regular"/>VỰA VUI VẺ</string>
+    </TextNode>
+    <TextNode>
+      <base>HẠNG THÀNH VIÊN</base>
+      <string page="undefined" frame="Container" nodeid="14:2422" transform="1,0,4146,0,1,292"><font val="Plus Jakarta Sans:Regular"/>HẠNG THÀNH VIÊN</string>
+    </TextNode>
+    <TextNode>
+      <base>CHƯA CÓ HẠNG</base>
+      <string page="undefined" frame="Heading 2" nodeid="14:2424" transform="1,0,4146,0,1,316"><font val="Plus Jakarta Sans:Regular"/>CHƯA CÓ HẠNG</string>
+    </TextNode>
+    <TextNode>
+      <base>Điểm tích lũy</base>
+      <string page="undefined" frame="Container" nodeid="14:2427" transform="1,0,4369.080078125,0,1,292"><font val="Plus Jakarta Sans:Regular"/>Điểm tích lũy</string>
+    </TextNode>
+    <TextNode>
+      <base>6.990 điểm</base>
+      <string page="undefined" frame="Container" nodeid="14:2429" transform="1,0,4375.52001953125,0,1,316"><font val="Plus Jakarta Sans:Regular"/>6.990 điểm</string>
+    </TextNode>
+    <TextNode>
+      <base>Giao đến: 19a Ql1a, Linh Xuân...</base>
+      <string page="undefined" frame="Container" nodeid="14:2440" transform="1,0,4160.66650390625,0,1,479.5"><font val="Plus Jakarta Sans:Regular"/>Giao đến: 19a Ql1a, Linh Xuân...</string>
+    </TextNode>
+    <TextNode>
+      <base>Đổi</base>
+      <string page="undefined" frame="Button" nodeid="14:2442" transform="1,0,4435.953125,0,1,479.5"><font val="Plus Jakarta Sans:Regular"/>Đổi</string>
+    </TextNode>
+    <TextNode>
+      <base>Flash Sale</base>
+      <string page="undefined" frame="Container" nodeid="14:2450" transform="1,0,4133.705078125,0,1,708"><font val="Plus Jakarta Sans:Regular"/>Flash Sale</string>
+    </TextNode>
+    <TextNode>
+      <base>Bánh tươi</base>
+      <string page="undefined" frame="Container" nodeid="14:2455" transform="1,0,4222.97021484375,0,1,708"><font val="Plus Jakarta Sans:Regular"/>Bánh tươi</string>
+    </TextNode>
+    <TextNode>
+      <base>Mì ăn liền</base>
+      <string page="undefined" frame="Container" nodeid="14:2460" transform="1,0,4312.60009765625,0,1,708"><font val="Plus Jakarta Sans:Regular"/>Mì ăn liền</string>
+    </TextNode>
+    <TextNode>
+      <base>Bia, Nước</base>
+      <string page="undefined" frame="Container" nodeid="14:2465" transform="1,0,4398.47021484375,0,1,708"><font val="Plus Jakarta Sans:Regular"/>Bia, Nước</string>
+    </TextNode>
+    <TextNode>
+      <base>Sữa tươi</base>
+      <string page="undefined" frame="Container" nodeid="14:2470" transform="1,0,4490.509765625,0,1,708"><font val="Plus Jakarta Sans:Regular"/>Sữa tươi</string>
+    </TextNode>
+    <TextNode>
+      <base>SIÊU KHUYẾN MÃI TUẦN NÀY</base>
+      <string page="undefined" frame="Container" nodeid="14:2479" transform="1,0,4172.77490234375,0,1,794.5"><font val="Plus Jakarta Sans:Regular"/>SIÊU KHUYẾN MÃI TUẦN NÀY</string>
+    </TextNode>
+    <TextNode>
+      <base>Giảm đến 46% cho toàn<br id="n"/>bộ nguyên liệu nấu món<br id="n"/>canh</base>
+      <string page="undefined" frame="Heading 3" nodeid="14:2482" transform="1,0,4150,0,1,819.5"><font val="Plus Jakarta Sans:Regular"/>Giảm đến 46% cho toàn<br id="n"/>bộ nguyên liệu nấu món<br id="n"/>canh</string>
+    </TextNode>
+    <TextNode>
+      <base>Đi chợ tiết kiệm mỗi ngày</base>
+      <string page="undefined" frame="Container" nodeid="14:2486" transform="1,0,4126,0,1,940"><font val="Plus Jakarta Sans:Regular"/>Đi chợ tiết kiệm mỗi ngày</string>
+    </TextNode>
+    <TextNode>
+      <base>Freeship đơn tươi sống</base>
+      <string page="undefined" frame="Background" nodeid="14:2488" transform="1,0,4134,0,1,971"><font val="Plus Jakarta Sans:Regular"/>Freeship đơn tươi sống</string>
+    </TextNode>
+    <TextNode>
+      <base>Xem tất cả</base>
+      <string page="undefined" frame="Button" nodeid="14:2490" transform="1,0,4392.6298828125,0,1,964"><font val="Plus Jakarta Sans:Regular"/>Xem tất cả</string>
+    </TextNode>
+    <TextNode>
+      <base>-20%</base>
+      <string page="undefined" frame="Background" nodeid="14:2498" transform="1,0,4155,0,1,1027"><font val="Plus Jakarta Sans:Regular"/>-20%</string>
+    </TextNode>
+    <TextNode>
+      <base>Dâu tây Đà Lạt xuất<br id="n"/>khẩu - Hộp 500g</base>
+      <string page="undefined" frame="Heading 4" nodeid="14:2500" transform="1,0,4139,0,1,1174"><font val="Plus Jakarta Sans:Regular"/>Dâu tây Đà Lạt xuất<br id="n"/>khẩu - Hộp 500g</string>
+    </TextNode>
+    <TextNode>
+      <base>89.000đ</base>
+      <string page="undefined" frame="Container" nodeid="14:2504" transform="1,0,4139,0,1,1230"><font val="Plus Jakarta Sans:Regular"/>89.000đ</string>
+    </TextNode>
+    <TextNode>
+      <base>115.000đ</base>
+      <string page="undefined" frame="Container" nodeid="14:2506" transform="1,0,4139,0,1,1254"><font val="Plus Jakarta Sans:Regular"/>115.000đ</string>
+    </TextNode>
+    <TextNode>
+      <base>Combo Rau xanh<br id="n"/>nấu canh - Túi 1kg</base>
+      <string page="undefined" frame="Heading 4" nodeid="14:2514" transform="1,0,4326,0,1,1174"><font val="Plus Jakarta Sans:Regular"/>Combo Rau xanh<br id="n"/>nấu canh - Túi 1kg</string>
+    </TextNode>
+    <TextNode>
+      <base>35.000đ</base>
+      <string page="undefined" frame="Container" nodeid="14:2518" transform="1,0,4326,0,1,1230"><font val="Plus Jakarta Sans:Regular"/>35.000đ</string>
+    </TextNode>
+    <TextNode>
+      <base>Vừa cập nhật</base>
+      <string page="undefined" frame="Container" nodeid="14:2520" transform="1,0,4326,0,1,1254"><font val="Plus Jakarta Sans:Regular"/>Vừa cập nhật</string>
+    </TextNode>
+    <TextNode>
+      <base>Cá hồi Nauy Fillet<br id="n"/>tươi sống - Vỉ 250g</base>
+      <string page="undefined" frame="Heading 4" nodeid="14:2528" transform="1,0,4139,0,1,1469"><font val="Plus Jakarta Sans:Regular"/>Cá hồi Nauy Fillet<br id="n"/>tươi sống - Vỉ 250g</string>
+    </TextNode>
+    <TextNode>
+      <base>125.000đ</base>
+      <string page="undefined" frame="Container" nodeid="14:2532" transform="1,0,4139,0,1,1525"><font val="Plus Jakarta Sans:Regular"/>125.000đ</string>
+    </TextNode>
+    <TextNode>
+      <base>Bán chạy</base>
+      <string page="undefined" frame="Container" nodeid="14:2534" transform="1,0,4139,0,1,1549"><font val="Plus Jakarta Sans:Regular"/>Bán chạy</string>
+    </TextNode>
+    <TextNode>
+      <base>Sữa tươi thanh<br id="n"/>trùng TH True Milk…</base>
+      <string page="undefined" frame="Heading 4" nodeid="14:2542" transform="1,0,4326,0,1,1469"><font val="Plus Jakarta Sans:Regular"/>Sữa tươi thanh<br id="n"/>trùng TH True Milk…</string>
+    </TextNode>
+    <TextNode>
+      <base>42.000đ</base>
+      <string page="undefined" frame="Container" nodeid="14:2546" transform="1,0,4326,0,1,1525"><font val="Plus Jakarta Sans:Regular"/>42.000đ</string>
+    </TextNode>
+    <TextNode>
+      <base>Date mới</base>
+      <string page="undefined" frame="Container" nodeid="14:2548" transform="1,0,4326,0,1,1549"><font val="Plus Jakarta Sans:Regular"/>Date mới</string>
+    </TextNode>
+    <TextNode>
+      <base>Thịt cá giảm đến 37%...</base>
+      <string page="undefined" frame="Container" nodeid="14:2557" transform="1,0,4175,0,1,561.5"><font val="Plus Jakarta Sans:Regular"/>Thịt cá giảm đến 37%...</string>
+    </TextNode>
+    <TextNode>
+      <base>Trang</base>
+      <string page="undefined" frame="Paragraph" nodeid="14:2568" transform="0.8999999761581421,0,4133.5,0,0.8999999761581421,1627.699951171875"><font val="Plus Jakarta Sans:Regular"/>Trang</string>
+    </TextNode>
+    <TextNode>
+      <base>chủ</base>
+      <string page="undefined" frame="Paragraph" nodeid="14:2569" transform="0.8999999761581421,0,4133.5,0,0.8999999761581421,1642.0999755859375"><font val="Plus Jakarta Sans:Regular"/>chủ</string>
+    </TextNode>
+    <TextNode>
+      <base>Danh<br id="n"/>mục</base>
+      <string page="undefined" frame="Container" nodeid="14:2574" transform="1,0,4209.02001953125,0,1,1627"><font val="Plus Jakarta Sans:Regular"/>Danh<br id="n"/>mục</string>
+    </TextNode>
+    <TextNode>
+      <base>Công<br id="n"/>thức</base>
+      <string page="undefined" frame="Container" nodeid="14:2579" transform="1,0,4284.9501953125,0,1,1626"><font val="Plus Jakarta Sans:Regular"/>Công<br id="n"/>thức</string>
+    </TextNode>
+    <TextNode>
+      <base>Cá<br id="n"/>nhân</base>
+      <string page="undefined" frame="Container" nodeid="14:2584" transform="1,0,4434.97998046875,0,1,1626"><font val="Plus Jakarta Sans:Regular"/>Cá<br id="n"/>nhân</string>
+    </TextNode>
+    <TextNode>
+      <base>Giỏ<br id="n"/>hàng</base>
+      <string page="undefined" frame="Container" nodeid="14:2589" transform="1,0,4364.10986328125,0,1,1628"><font val="Plus Jakarta Sans:Regular"/>Giỏ<br id="n"/>hàng</string>
+    </TextNode>
+    <TextNode>
+      <base>2</base>
+      <string page="undefined" frame="Background" nodeid="14:2591" transform="1,0,4407.98974609375,0,1,1600"><font val="Plus Jakarta Sans:Regular"/>2</string>
+    </TextNode>
+    <TextNode>
+      <base>VỰA VUI VẺ</base>
+      <string page="undefined" frame="Container" nodeid="14:2597" transform="1,0,4172,0,1,142"><font val="Plus Jakarta Sans:Regular"/>VỰA VUI VẺ</string>
+    </TextNode>
+    <TextNode>
+      <base>VỰA VUI VẺ</base>
+      <string page="undefined" frame="Heading 1" nodeid="14:2610" transform="1,0,4594,0,1,142"><font val="Plus Jakarta Sans:Regular"/>VỰA VUI VẺ</string>
+    </TextNode>
+    <TextNode>
+      <base>Tìm kiếm trái cây, rau củ...</base>
+      <string page="undefined" frame="Container" nodeid="14:2617" transform="1,0,4597,0,1,219"><font val="Plus Jakarta Sans:Regular"/>Tìm kiếm trái cây, rau củ...</string>
+    </TextNode>
+    <TextNode>
+      <base>Tất cả</base>
+      <string page="undefined" frame="Button" nodeid="14:2622" transform="1,0,4564,0,1,285"><font val="Plus Jakarta Sans:Regular"/>Tất cả</string>
+    </TextNode>
+    <TextNode>
+      <base>Trái cây miền Tây</base>
+      <string page="undefined" frame="Button" nodeid="14:2624" transform="1,0,4646.080078125,0,1,285"><font val="Plus Jakarta Sans:Regular"/>Trái cây miền Tây</string>
+    </TextNode>
+    <TextNode>
+      <base>Rau củ hữu cơ</base>
+      <string page="undefined" frame="Button" nodeid="14:2626" transform="1,0,4801.22998046875,0,1,285"><font val="Plus Jakarta Sans:Regular"/>Rau củ hữu cơ</string>
+    </TextNode>
+    <TextNode>
+      <base>Đặc sản</base>
+      <string page="undefined" frame="Button" nodeid="14:2628" transform="1,0,4937.52001953125,0,1,285"><font val="Plus Jakarta Sans:Regular"/>Đặc sản</string>
+    </TextNode>
+    <TextNode>
+      <base>Đề xuất cho bạn</base>
+      <string page="undefined" frame="Heading 2" nodeid="14:2632" transform="1,0,4548,0,1,338"><font val="Plus Jakarta Sans:Regular"/>Đề xuất cho bạn</string>
+    </TextNode>
+    <TextNode>
+      <base>Xem thêm</base>
+      <string page="undefined" frame="Button" nodeid="14:2634" transform="1,0,4827.419921875,0,1,340"><font val="Plus Jakarta Sans:Regular"/>Xem thêm</string>
+    </TextNode>
+    <TextNode>
+      <base>Dứa mật MD2</base>
+      <string page="undefined" frame="Heading 3" nodeid="14:2646" transform="1,0,4561,0,1,560"><font val="Plus Jakarta Sans:Regular"/>Dứa mật MD2</string>
+    </TextNode>
+    <TextNode>
+      <base>(12)</base>
+      <string page="undefined" frame="Container" nodeid="14:2661" transform="1,0,4645,0,1,588"><font val="Plus Jakarta Sans:Regular"/>(12)</string>
+    </TextNode>
+    <TextNode>
+      <base>500</base>
+      <string page="undefined" frame="Container" nodeid="14:2666" transform="1,0,4686.185546875,0,1,588"><font val="Plus Jakarta Sans:Regular"/>500</string>
+    </TextNode>
+    <TextNode>
+      <base>25.000đ</base>
+      <string page="undefined" frame="Paragraph" nodeid="14:2669" transform="1,0,4561,0,1,616"><font val="Plus Jakarta Sans:Regular"/>25.000đ</string>
+    </TextNode>
+    <TextNode>
+      <base>/kg</base>
+      <string page="undefined" frame="Paragraph" nodeid="14:2670" transform="1,0,4561,0,1,648"><font val="Plus Jakarta Sans:Regular"/>/kg</string>
+    </TextNode>
+    <TextNode>
+      <base>GIẢM 20%</base>
+      <string page="undefined" frame="Background" nodeid="14:2678" transform="1,0,4752,0,1,389"><font val="Plus Jakarta Sans:Regular"/>GIẢM 20%</string>
+    </TextNode>
+    <TextNode>
+      <base>Bơ sáp 034</base>
+      <string page="undefined" frame="Heading 3" nodeid="14:2682" transform="1,0,4748,0,1,560"><font val="Plus Jakarta Sans:Regular"/>Bơ sáp 034</string>
+    </TextNode>
+    <TextNode>
+      <base>(48)</base>
+      <string page="undefined" frame="Container" nodeid="14:2697" transform="1,0,4832,0,1,588"><font val="Plus Jakarta Sans:Regular"/>(48)</string>
+    </TextNode>
+    <TextNode>
+      <base>1.2k</base>
+      <string page="undefined" frame="Container" nodeid="14:2702" transform="1,0,4876.6162109375,0,1,588"><font val="Plus Jakarta Sans:Regular"/>1.2k</string>
+    </TextNode>
+    <TextNode>
+      <base>45.000đ</base>
+      <string page="undefined" frame="Paragraph" nodeid="14:2705" transform="1,0,4748,0,1,616"><font val="Plus Jakarta Sans:Regular"/>45.000đ</string>
+    </TextNode>
+    <TextNode>
+      <base>/kg</base>
+      <string page="undefined" frame="Paragraph" nodeid="14:2706" transform="1,0,4748,0,1,648"><font val="Plus Jakarta Sans:Regular"/>/kg</string>
+    </TextNode>
+    <TextNode>
+      <base>Táo Fuji Đỏ</base>
+      <string page="undefined" frame="Heading 3" nodeid="14:2716" transform="1,0,4561,0,1,877"><font val="Plus Jakarta Sans:Regular"/>Táo Fuji Đỏ</string>
+    </TextNode>
+    <TextNode>
+      <base>(25)</base>
+      <string page="undefined" frame="Container" nodeid="14:2731" transform="1,0,4645,0,1,905"><font val="Plus Jakarta Sans:Regular"/>(25)</string>
+    </TextNode>
+    <TextNode>
+      <base>840</base>
+      <string page="undefined" frame="Container" nodeid="14:2736" transform="1,0,4688.99560546875,0,1,905"><font val="Plus Jakarta Sans:Regular"/>840</string>
+    </TextNode>
+    <TextNode>
+      <base>38.000đ</base>
+      <string page="undefined" frame="Paragraph" nodeid="14:2739" transform="1,0,4561,0,1,933"><font val="Plus Jakarta Sans:Regular"/>38.000đ</string>
+    </TextNode>
+    <TextNode>
+      <base>/kg</base>
+      <string page="undefined" frame="Paragraph" nodeid="14:2740" transform="1,0,4561,0,1,965"><font val="Plus Jakarta Sans:Regular"/>/kg</string>
+    </TextNode>
+    <TextNode>
+      <base>Nho đen không hạt</base>
+      <string page="undefined" frame="Heading 3" nodeid="14:2750" transform="1,0,4748,0,1,877"><font val="Plus Jakarta Sans:Regular"/>Nho đen không hạt</string>
+    </TextNode>
+    <TextNode>
+      <base>(110)</base>
+      <string page="undefined" frame="Container" nodeid="14:2765" transform="1,0,4832,0,1,929"><font val="Plus Jakarta Sans:Regular"/>(110)</string>
+    </TextNode>
+    <TextNode>
+      <base>2.4k</base>
+      <string page="undefined" frame="Container" nodeid="14:2770" transform="1,0,4879.265625,0,1,929"><font val="Plus Jakarta Sans:Regular"/>2.4k</string>
+    </TextNode>
+    <TextNode>
+      <base>120.000đ</base>
+      <string page="undefined" frame="Paragraph" nodeid="14:2773" transform="1,0,4748,0,1,957"><font val="Plus Jakarta Sans:Regular"/>120.000đ</string>
+    </TextNode>
+    <TextNode>
+      <base>/hộp</base>
+      <string page="undefined" frame="Paragraph" nodeid="14:2774" transform="1,0,4748,0,1,989"><font val="Plus Jakarta Sans:Regular"/>/hộp</string>
+    </TextNode>
+    <TextNode>
+      <base>Trang<br id="n"/>chủ</base>
+      <string page="undefined" frame="Container" nodeid="14:2784" transform="1,0,4561.97998046875,0,1,1019"><font val="Plus Jakarta Sans:Regular"/>Trang<br id="n"/>chủ</string>
+    </TextNode>
+    <TextNode>
+      <base>Danh<br id="n"/>mục</base>
+      <string page="undefined" frame="Container" nodeid="14:2789" transform="1,0,4639.27978515625,0,1,1019"><font val="Plus Jakarta Sans:Regular"/>Danh<br id="n"/>mục</string>
+    </TextNode>
+    <TextNode>
+      <base>Công<br id="n"/>thức</base>
+      <string page="undefined" frame="Container" nodeid="14:2794" transform="1,0,4716.69970703125,0,1,1018"><font val="Plus Jakarta Sans:Regular"/>Công<br id="n"/>thức</string>
+    </TextNode>
+    <TextNode>
+      <base>Cá<br id="n"/>nhân</base>
+      <string page="undefined" frame="Container" nodeid="14:2799" transform="1,0,4865.830078125,0,1,1018"><font val="Plus Jakarta Sans:Regular"/>Cá<br id="n"/>nhân</string>
+    </TextNode>
+    <TextNode>
+      <base>Giỏ<br id="n"/>hàng</base>
+      <string page="undefined" frame="Container" nodeid="14:2804" transform="1,0,4794.68994140625,0,1,1020"><font val="Plus Jakarta Sans:Regular"/>Giỏ<br id="n"/>hàng</string>
+    </TextNode>
+    <TextNode>
+      <base>3</base>
+      <string page="undefined" frame="Background" nodeid="14:2806" transform="1,0,4826.40478515625,0,1,992"><font val="Plus Jakarta Sans:Regular"/>3</string>
+    </TextNode>
+    <TextNode>
+      <base>Ví Vựa Vui Vẻ</base>
+      <string page="undefined" frame="Heading 4" nodeid="14:2813" transform="1,0,4628,0,1,1036"><font val="Plus Jakarta Sans:Regular"/>Ví Vựa Vui Vẻ</string>
+    </TextNode>
+    <TextNode>
+      <base>Bạn đang có 250 điểm<br id="n"/>tích lũy</base>
+      <string page="undefined" frame="Container" nodeid="14:2815" transform="1,0,4628,0,1,1060"><font val="Plus Jakarta Sans:Regular"/>Bạn đang có 250 điểm<br id="n"/>tích lũy</string>
+    </TextNode>
+    <TextNode>
+      <base>Đổi<br id="n"/>quà</base>
+      <string page="undefined" frame="Button" nodeid="14:2817" transform="1,0,4838.55029296875,0,1,1048"><font val="Plus Jakarta Sans:Regular"/>Đổi<br id="n"/>quà</string>
+    </TextNode>
+    <TextNode>
+      <base>Đánh giá (120)</base>
+      <string page="undefined" frame="Heading 3" nodeid="14:2824" transform="1,0,4995,0,1,1103"><font val="Plus Jakarta Sans:Regular"/>Đánh giá (120)</string>
+    </TextNode>
+    <TextNode>
+      <base>Xem tất cả</base>
+      <string page="undefined" frame="Button" nodeid="14:2826" transform="1,0,5215.3134765625,0,1,1103"><font val="Plus Jakarta Sans:Regular"/>Xem tất cả</string>
+    </TextNode>
+    <TextNode>
+      <base>NH</base>
+      <string page="undefined" frame="Background" nodeid="14:2832" transform="1,0,5003.205078125,0,1,1150.5"><font val="Plus Jakarta Sans:Regular"/>NH</string>
+    </TextNode>
+    <TextNode>
+      <base>Nguyễn Hoàng</base>
+      <string page="undefined" frame="Container" nodeid="14:2836" transform="1,0,5047,0,1,1143"><font val="Plus Jakarta Sans:Regular"/>Nguyễn Hoàng</string>
+    </TextNode>
+    <TextNode>
+      <base>2 ngày trước</base>
+      <string page="undefined" frame="Container" nodeid="14:2838" transform="1,0,5244.41015625,0,1,1145.5"><font val="Plus Jakarta Sans:Regular"/>2 ngày trước</string>
+    </TextNode>
+    <TextNode>
+      <base>Rau rất tươi, giao hàng nhanh. Sẽ còn<br id="n"/>ủng hộ tiếp!</base>
+      <string page="undefined" frame="Container" nodeid="14:2851" transform="1,0,5047,0,1,1191"><font val="Plus Jakarta Sans:Regular"/>Rau rất tươi, giao hàng nhanh. Sẽ còn<br id="n"/>ủng hộ tiếp!</string>
+    </TextNode>
+    <TextNode>
+      <base>MT</base>
+      <string page="undefined" frame="Background" nodeid="14:2854" transform="1,0,5003.51513671875,0,1,1206.5"><font val="Plus Jakarta Sans:Regular"/>MT</string>
+    </TextNode>
+    <TextNode>
+      <base>Minh Tú</base>
+      <string page="undefined" frame="Container" nodeid="14:2858" transform="1,0,5047,0,1,1199"><font val="Plus Jakarta Sans:Regular"/>Minh Tú</string>
+    </TextNode>
+    <TextNode>
+      <base>5 ngày trước</base>
+      <string page="undefined" frame="Container" nodeid="14:2860" transform="1,0,5244.25,0,1,1201.5"><font val="Plus Jakarta Sans:Regular"/>5 ngày trước</string>
+    </TextNode>
+    <TextNode>
+      <base>Đóng gói cẩn thận, cải ngọt lịm luôn.</base>
+      <string page="undefined" frame="Container" nodeid="14:2862" transform="1,0,5047,0,1,1223"><font val="Plus Jakarta Sans:Regular"/>Đóng gói cẩn thận, cải ngọt lịm luôn.</string>
+    </TextNode>
+    <TextNode>
+      <base>-15% GIẢM</base>
+      <string page="undefined" frame="Floating Badge" nodeid="14:2867" transform="1,0,4982,0,1,208"><font val="Plus Jakarta Sans:Regular"/>-15% GIẢM</string>
+    </TextNode>
+    <TextNode>
+      <base>Cải Thảo Đà Lạt Tươi</base>
+      <string page="undefined" frame="Container" nodeid="14:2870" transform="1,0,4995,0,1,579"><font val="Plus Jakarta Sans:Regular"/>Cải Thảo Đà Lạt Tươi</string>
+    </TextNode>
+    <TextNode>
+      <base>25.000đ/kg</base>
+      <string page="undefined" frame="Paragraph" nodeid="14:2875" transform="1,0,4995,0,1,623"><font val="Plus Jakarta Sans:Regular"/>25.000đ/kg</string>
+    </TextNode>
+    <TextNode>
+      <base>30.000đ</base>
+      <string page="undefined" frame="Paragraph" nodeid="14:2876" transform="1,0,5125.22998046875,0,1,627"><font val="Plus Jakarta Sans:Regular"/>30.000đ</string>
+    </TextNode>
+    <TextNode>
+      <base>4.5</base>
+      <string page="undefined" frame="Container" nodeid="14:2882" transform="1,0,5010.66650390625,0,1,682"><font val="Plus Jakarta Sans:Regular"/>4.5</string>
+    </TextNode>
+    <TextNode>
+      <base>(120 đánh<br id="n"/>giá)</base>
+      <string page="undefined" frame="Container" nodeid="14:2884" transform="1,0,5037.7265625,0,1,676"><font val="Plus Jakarta Sans:Regular"/>(120 đánh<br id="n"/>giá)</string>
+    </TextNode>
+    <TextNode>
+      <base>Đã bán<br id="n"/>500+</base>
+      <string page="undefined" frame="Container" nodeid="14:2887" transform="1,0,5128.11669921875,0,1,676"><font val="Plus Jakarta Sans:Regular"/><color val="type:SOLID:visible:true:opacity:1:blendMode:NORMAL:color:r:0.2549019753932953:g:0.2862745225429535:b:0.24313725531101227:boundVariables:"/>Đã bán<br id="n"/><color val="type:SOLID:visible:true:opacity:1:blendMode:NORMAL:color:r:0.11372549086809158:g:0.10980392247438431:b:0.06666667014360428:boundVariables:"/>500+<color val="type:SOLID:visible:true:opacity:1:blendMode:NORMAL:color:r:0.2549019753932953:g:0.2862745225429535:b:0.24313725531101227:boundVariables:"/></string>
+    </TextNode>
+    <TextNode>
+      <base>Còn hàng: 50<br id="n"/>kg</base>
+      <string page="undefined" frame="Container" nodeid="14:2890" transform="1,0,5222.3369140625,0,1,676"><font val="Plus Jakarta Sans:Regular"/>Còn hàng: 50<br id="n"/>kg</string>
+    </TextNode>
+    <TextNode>
+      <base>Mô tả sản phẩm</base>
+      <string page="undefined" frame="Heading 3" nodeid="14:2893" transform="1,0,4995,0,1,737"><font val="Plus Jakarta Sans:Regular"/>Mô tả sản phẩm</string>
+    </TextNode>
+    <TextNode>
+      <base>Rau được thu hoạch trực tiếp từ các nông<br id="n"/>trại hữu cơ tại Đà Lạt vào sáng sớm, đảm<br id="n"/>bảo độ giòn, ngọt và giữ trọn dưỡng<br id="n"/>chất. Không thuốc trừ sâu, không chất<br id="n"/>bảo quản. Phù hợp cho món xào, canh<br id="n"/>hoặc salad.</base>
+      <string page="undefined" frame="Container" nodeid="14:2895" transform="1,0,4995,0,1,769"><font val="Plus Jakarta Sans:Regular"/>Rau được thu hoạch trực tiếp từ các nông<br id="n"/>trại hữu cơ tại Đà Lạt vào sáng sớm, đảm<br id="n"/>bảo độ giòn, ngọt và giữ trọn dưỡng<br id="n"/>chất. Không thuốc trừ sâu, không chất<br id="n"/>bảo quản. Phù hợp cho món xào, canh<br id="n"/>hoặc salad.</string>
+    </TextNode>
+    <TextNode>
+      <base>Số lượng</base>
+      <string page="undefined" frame="Container" nodeid="14:2898" transform="1,0,5011,0,1,977"><font val="Plus Jakarta Sans:Regular"/>Số lượng</string>
+    </TextNode>
+    <TextNode>
+      <base>1</base>
+      <string page="undefined" frame="Container" nodeid="14:2904" transform="1,0,5208.81005859375,0,1,977"><font val="Plus Jakarta Sans:Regular"/>1</string>
+    </TextNode>
+    <TextNode>
+      <base>VỰA VUI VẺ</base>
+      <string page="undefined" frame="Heading 1" nodeid="14:2914" transform="1,0,5070.58984375,0,1,142"><font val="Plus Jakarta Sans:Regular"/>VỰA VUI VẺ</string>
+    </TextNode>
+    <TextNode>
+      <base>3</base>
+      <string page="undefined" frame="Background" nodeid="14:2927" transform="1,0,5014.955078125,0,1,1361"><font val="Plus Jakarta Sans:Regular"/>3</string>
+    </TextNode>
+    <TextNode>
+      <base>THÊM VÀO GIỎ</base>
+      <string page="undefined" frame="Container" nodeid="14:2932" transform="1,0,5140.9609375,0,1,1380"><font val="Plus Jakarta Sans:Regular"/>THÊM VÀO GIỎ</string>
+    </TextNode>
+    <TextNode>
+      <base>Trang chủ</base>
+      <string page="undefined" frame="Container" nodeid="14:2940" transform="1,0,5392.85986328125,0,1,1326"><font val="Plus Jakarta Sans:Regular"/>Trang chủ</string>
+    </TextNode>
+    <TextNode>
+      <base>Danh mục</base>
+      <string page="undefined" frame="Container" nodeid="14:2945" transform="1,0,5473.31005859375,0,1,1326"><font val="Plus Jakarta Sans:Regular"/>Danh mục</string>
+    </TextNode>
+    <TextNode>
+      <base>Công thức</base>
+      <string page="undefined" frame="Container" nodeid="14:2950" transform="1,0,5555.8701171875,0,1,1325"><font val="Plus Jakarta Sans:Regular"/>Công thức</string>
+    </TextNode>
+    <TextNode>
+      <base>Giỏ hàng</base>
+      <string page="undefined" frame="Container" nodeid="14:2955" transform="1,0,5633.9501953125,0,1,1327"><font val="Plus Jakarta Sans:Regular"/>Giỏ hàng</string>
+    </TextNode>
+    <TextNode>
+      <base>Cá nhân</base>
+      <string page="undefined" frame="Container" nodeid="14:2960" transform="1,0,5702.9599609375,0,1,1325"><font val="Plus Jakarta Sans:Regular"/>Cá nhân</string>
+    </TextNode>
+    <TextNode>
+      <base>VỰA VUI VẺ</base>
+      <string page="undefined" frame="Heading 1" nodeid="14:2967" transform="1,0,5438,0,1,142"><font val="Plus Jakarta Sans:Regular"/>VỰA VUI VẺ</string>
+    </TextNode>
+    <TextNode>
+      <base>Sản phẩm</base>
+      <string page="undefined" frame="Heading 2" nodeid="14:2978" transform="1,0,5419.9814453125,0,1,221"><font val="Plus Jakarta Sans:Regular"/>Sản phẩm</string>
+    </TextNode>
+    <TextNode>
+      <base>sort</base>
+      <string page="undefined" frame="Container" nodeid="14:2982" transform="1,0,5617.22021484375,0,1,225"><font val="Material Symbols Outlined:Regular"/>sort</string>
+    </TextNode>
+    <TextNode>
+      <base>SẮP XẾP</base>
+      <string page="undefined" frame="Container" nodeid="14:2984" transform="1,0,5635.3603515625,0,1,225"><font val="Plus Jakarta Sans:Regular"/>SẮP XẾP</string>
+    </TextNode>
+    <TextNode>
+      <base>Tìm kiếm sản phẩm...</base>
+      <string page="undefined" frame="Container" nodeid="14:2991" transform="1,0,5441,0,1,292"><font val="Plus Jakarta Sans:Regular"/>Tìm kiếm sản phẩm...</string>
+    </TextNode>
+    <TextNode>
+      <base>Danh mục nổi bật</base>
+      <string page="undefined" frame="Heading 3" nodeid="14:2997" transform="1,0,5392,0,1,355"><font val="Plus Jakarta Sans:Regular"/>Danh mục nổi bật</string>
+    </TextNode>
+    <TextNode>
+      <base>Trứng &amp; Sữa</base>
+      <string page="undefined" frame="Container" nodeid="14:3004" transform="1,0,5437.830078125,0,1,656"><font val="Plus Jakarta Sans:Regular"/>Trứng &amp; Sữa</string>
+    </TextNode>
+    <TextNode>
+      <base>Bánh mì</base>
+      <string page="undefined" frame="Container" nodeid="14:3010" transform="1,0,5636.72021484375,0,1,656"><font val="Plus Jakarta Sans:Regular"/>Bánh mì</string>
+    </TextNode>
+    <TextNode>
+      <base>Rau xanh tươi sạch</base>
+      <string page="undefined" frame="Container" nodeid="14:3016" transform="1,0,5408,0,1,499"><font val="Plus Jakarta Sans:Regular"/>Rau xanh tươi sạch</string>
+    </TextNode>
+    <TextNode>
+      <base>Giảm giá 20% hôm nay</base>
+      <string page="undefined" frame="Container" nodeid="14:3018" transform="1,0,5408,0,1,523"><font val="Plus Jakarta Sans:Regular"/>Giảm giá 20% hôm nay</string>
+    </TextNode>
+    <TextNode>
+      <base>Tất cả danh mục</base>
+      <string page="undefined" frame="Heading 3" nodeid="14:3022" transform="1,0,5392,0,1,717"><font val="Plus Jakarta Sans:Regular"/>Tất cả danh mục</string>
+    </TextNode>
+    <TextNode>
+      <base>Xem thêm</base>
+      <string page="undefined" frame="Container" nodeid="14:3024" transform="1,0,5692.3701171875,0,1,721"><font val="Plus Jakarta Sans:Regular"/>Xem thêm</string>
+    </TextNode>
+    <TextNode>
+      <base>Trái cây nhập khẩu</base>
+      <string page="undefined" frame="Container" nodeid="14:3032" transform="1,0,5465,0,1,782"><font val="Plus Jakarta Sans:Regular"/>Trái cây nhập khẩu</string>
+    </TextNode>
+    <TextNode>
+      <base>Hải sản tươi sống</base>
+      <string page="undefined" frame="Container" nodeid="14:3041" transform="1,0,5465,0,1,855"><font val="Plus Jakarta Sans:Regular"/>Hải sản tươi sống</string>
+    </TextNode>
+    <TextNode>
+      <base>Đồ uống &amp; Giải khát</base>
+      <string page="undefined" frame="Container" nodeid="14:3050" transform="1,0,5465,0,1,928"><font val="Plus Jakarta Sans:Regular"/>Đồ uống &amp; Giải khát</string>
+    </TextNode>
+    <TextNode>
+      <base>Chăm sóc nhà cửa</base>
+      <string page="undefined" frame="Container" nodeid="14:3059" transform="1,0,5465,0,1,1001"><font val="Plus Jakarta Sans:Regular"/>Chăm sóc nhà cửa</string>
+    </TextNode>
+    <TextNode>
+      <base>Đồ đông lạnh</base>
+      <string page="undefined" frame="Container" nodeid="14:3068" transform="1,0,5465,0,1,1074"><font val="Plus Jakarta Sans:Regular"/>Đồ đông lạnh</string>
+    </TextNode>
+    <TextNode>
+      <base>FLASH SALE CUỐI TUẦN</base>
+      <string page="undefined" frame="Container" nodeid="14:3080" transform="1,0,5436,0,1,1167"><font val="Plus Jakarta Sans:Regular"/>FLASH SALE CUỐI TUẦN</string>
+    </TextNode>
+    <TextNode>
+      <base>Tiết kiệm đến 50%</base>
+      <string page="undefined" frame="Heading 4" nodeid="14:3082" transform="1,0,5412,0,1,1195"><font val="Plus Jakarta Sans:Regular"/>Tiết kiệm đến 50%</string>
+    </TextNode>
+    <TextNode>
+      <base>Mua ngay</base>
+      <string page="undefined" frame="Button" nodeid="14:3085" transform="1,0,5428,0,1,1235"><font val="Plus Jakarta Sans:Regular"/>Mua ngay</string>
+    </TextNode>
+    <TextNode>
+      <base>Trang chủ</base>
+      <string page="undefined" frame="Container" nodeid="14:3093" transform="1,0,5814.85986328125,0,1,975"><font val="Plus Jakarta Sans:Regular"/>Trang chủ</string>
+    </TextNode>
+    <TextNode>
+      <base>Danh mục</base>
+      <string page="undefined" frame="Container" nodeid="14:3098" transform="1,0,5895.31005859375,0,1,975"><font val="Plus Jakarta Sans:Regular"/>Danh mục</string>
+    </TextNode>
+    <TextNode>
+      <base>Công thức</base>
+      <string page="undefined" frame="Container" nodeid="14:3103" transform="1,0,5977.8701171875,0,1,974"><font val="Plus Jakarta Sans:Regular"/>Công thức</string>
+    </TextNode>
+    <TextNode>
+      <base>Giỏ hàng</base>
+      <string page="undefined" frame="Container" nodeid="14:3108" transform="1,0,6055.9501953125,0,1,976"><font val="Plus Jakarta Sans:Regular"/>Giỏ hàng</string>
+    </TextNode>
+    <TextNode>
+      <base>Cá nhân</base>
+      <string page="undefined" frame="Container" nodeid="14:3113" transform="1,0,6124.9599609375,0,1,974"><font val="Plus Jakarta Sans:Regular"/>Cá nhân</string>
+    </TextNode>
+    <TextNode>
+      <base>VỰA VUI VẺ</base>
+      <string page="undefined" frame="Container" nodeid="14:3122" transform="1,0,5856,0,1,125"><font val="Plus Jakarta Sans:Regular"/>VỰA VUI VẺ</string>
+    </TextNode>
+    <TextNode>
+      <base>Bạn tìm gì?</base>
+      <string page="undefined" frame="Container" nodeid="14:3131" transform="1,0,5873,0,1,187"><font val="Plus Jakarta Sans:Regular"/>Bạn tìm gì?</string>
+    </TextNode>
+    <TextNode>
+      <base>Tìm kiếm gần đây</base>
+      <string page="undefined" frame="Heading 2" nodeid="14:3139" transform="1,0,5814,0,1,244"><font val="Plus Jakarta Sans:Regular"/>Tìm kiếm gần đây</string>
+    </TextNode>
+    <TextNode>
+      <base>Xóa hết</base>
+      <string page="undefined" frame="Button" nodeid="14:3141" transform="1,0,6120.18994140625,0,1,246"><font val="Plus Jakarta Sans:Regular"/>Xóa hết</string>
+    </TextNode>
+    <TextNode>
+      <base>Rau xanh Đà Lạt</base>
+      <string page="undefined" frame="Container" nodeid="14:3146" transform="1,0,5847,0,1,292.5"><font val="Plus Jakarta Sans:Regular"/>Rau xanh Đà Lạt</string>
+    </TextNode>
+    <TextNode>
+      <base>Trái cây nhập khẩu</base>
+      <string page="undefined" frame="Container" nodeid="14:3150" transform="1,0,5847,0,1,342.5"><font val="Plus Jakarta Sans:Regular"/>Trái cây nhập khẩu</string>
+    </TextNode>
+    <TextNode>
+      <base>Thịt bò Úc</base>
+      <string page="undefined" frame="Container" nodeid="14:3154" transform="1,0,6044.2001953125,0,1,342.5"><font val="Plus Jakarta Sans:Regular"/>Thịt bò Úc</string>
+    </TextNode>
+    <TextNode>
+      <base>Danh mục gợi ý</base>
+      <string page="undefined" frame="Heading 2" nodeid="14:3157" transform="1,0,5814,0,1,400"><font val="Plus Jakarta Sans:Regular"/>Danh mục gợi ý</string>
+    </TextNode>
+    <TextNode>
+      <base>Rau củ quả</base>
+      <string page="undefined" frame="Container" nodeid="14:3163" transform="1,0,5875.99560546875,0,1,469"><font val="Plus Jakarta Sans:Regular"/>Rau củ quả</string>
+    </TextNode>
+    <TextNode>
+      <base>Gia vị &amp;<br id="n"/>Khô</base>
+      <string page="undefined" frame="Container" nodeid="14:3168" transform="1,0,6061,0,1,457"><font val="Plus Jakarta Sans:Regular"/>Gia vị &amp;<br id="n"/>Khô</string>
+    </TextNode>
+    <TextNode>
+      <base>Bánh kẹo</base>
+      <string page="undefined" frame="Container" nodeid="14:3173" transform="1,0,5881,0,1,566"><font val="Plus Jakarta Sans:Regular"/>Bánh kẹo</string>
+    </TextNode>
+    <TextNode>
+      <base>Thức uống</base>
+      <string page="undefined" frame="Container" nodeid="14:3178" transform="1,0,6064,0,1,566"><font val="Plus Jakarta Sans:Regular"/>Thức uống</string>
+    </TextNode>
+    <TextNode>
+      <base>ƯU ĐÃI HÔM NAY</base>
+      <string page="undefined" frame="Container" nodeid="14:3184" transform="1,0,5838,0,1,652"><font val="Plus Jakarta Sans:Regular"/>ƯU ĐÃI HÔM NAY</string>
+    </TextNode>
+    <TextNode>
+      <base>Giảm tới 30%<br id="n"/>hàng tươi<br id="n"/>sống</base>
+      <string page="undefined" frame="Heading 3" nodeid="14:3186" transform="1,0,5838,0,1,672"><font val="Plus Jakarta Sans:Regular"/>Giảm tới 30%<br id="n"/>hàng tươi<br id="n"/>sống</string>
+    </TextNode>
+    <TextNode>
+      <base>Xem ngay</base>
+      <string page="undefined" frame="Button" nodeid="14:3189" transform="1,0,5854,0,1,768"><font val="Plus Jakarta Sans:Regular"/>Xem ngay</string>
+    </TextNode>
+    <TextNode>
+      <base>VỰA VUI VẺ</base>
+      <string page="undefined" frame="Heading 1" nodeid="14:3197" transform="1,0,6286,0,1,142"><font val="Plus Jakarta Sans:Regular"/>VỰA VUI VẺ</string>
+    </TextNode>
+    <TextNode>
+      <base>Kết quả tìm kiếm</base>
+      <string page="undefined" frame="Search Results Section Label → Heading 2" nodeid="14:3205" transform="1,0,6236,0,1,212"><font val="Plus Jakarta Sans:Regular"/>Kết quả tìm kiếm</string>
+    </TextNode>
+    <TextNode>
+      <base>MỚI</base>
+      <string page="undefined" frame="Background" nodeid="14:3212" transform="1,0,6263,0,1,275"><font val="Plus Jakarta Sans:Regular"/>MỚI</string>
+    </TextNode>
+    <TextNode>
+      <base>Tên sản phẩm</base>
+      <string page="undefined" frame="Heading 3" nodeid="14:3216" transform="1,0,6365,0,1,272"><font val="Plus Jakarta Sans:Regular"/>Tên sản phẩm</string>
+    </TextNode>
+    <TextNode>
+      <base>25.000đ</base>
+      <string page="undefined" frame="Paragraph" nodeid="14:3219" transform="1,0,6365,0,1,299"><font val="Plus Jakarta Sans:Regular"/>25.000đ</string>
+    </TextNode>
+    <TextNode>
+      <base>/kg</base>
+      <string page="undefined" frame="Paragraph" nodeid="14:3220" transform="1,0,6452.72998046875,0,1,303"><font val="Plus Jakarta Sans:Regular"/>/kg</string>
+    </TextNode>
+    <TextNode>
+      <base>Tổng: 50.000đ</base>
+      <string page="undefined" frame="Container" nodeid="14:3222" transform="1,0,6365,0,1,323"><font val="Plus Jakarta Sans:Regular"/>Tổng: 50.000đ</string>
+    </TextNode>
+    <TextNode>
+      <base>2</base>
+      <string page="undefined" frame="Container" nodeid="14:3229" transform="1,0,6415.615234375,0,1,355"><font val="Plus Jakarta Sans:Regular"/>2</string>
+    </TextNode>
+    <TextNode>
+      <base>Lưu lại sau</base>
+      <string page="undefined" frame="Container" nodeid="14:3238" transform="1,0,6299.47509765625,0,1,416"><font val="Plus Jakarta Sans:Regular"/>Lưu lại sau</string>
+    </TextNode>
+    <TextNode>
+      <base>Thêm giỏ hàng</base>
+      <string page="undefined" frame="Container" nodeid="14:3245" transform="1,0,6466.96044921875,0,1,416"><font val="Plus Jakarta Sans:Regular"/>Thêm giỏ hàng</string>
+    </TextNode>
+    <TextNode>
+      <base>Cà chua VietGAP</base>
+      <string page="undefined" frame="Heading 3" nodeid="14:3253" transform="1,0,6365,0,1,485"><font val="Plus Jakarta Sans:Regular"/>Cà chua VietGAP</string>
+    </TextNode>
+    <TextNode>
+      <base>32.000đ</base>
+      <string page="undefined" frame="Paragraph" nodeid="14:3256" transform="1,0,6365,0,1,512"><font val="Plus Jakarta Sans:Regular"/>32.000đ</string>
+    </TextNode>
+    <TextNode>
+      <base>/kg</base>
+      <string page="undefined" frame="Paragraph" nodeid="14:3257" transform="1,0,6452.64013671875,0,1,516"><font val="Plus Jakarta Sans:Regular"/>/kg</string>
+    </TextNode>
+    <TextNode>
+      <base>Tổng: 16.000đ</base>
+      <string page="undefined" frame="Container" nodeid="14:3259" transform="1,0,6365,0,1,536"><font val="Plus Jakarta Sans:Regular"/>Tổng: 16.000đ</string>
+    </TextNode>
+    <TextNode>
+      <base>0.5</base>
+      <string page="undefined" frame="Container" nodeid="14:3266" transform="1,0,6409,0,1,568"><font val="Plus Jakarta Sans:Regular"/>0.5</string>
+    </TextNode>
+    <TextNode>
+      <base>Lưu lại sau</base>
+      <string page="undefined" frame="Container" nodeid="14:3274" transform="1,0,6296.4599609375,0,1,629"><font val="Plus Jakarta Sans:Regular"/>Lưu lại sau</string>
+    </TextNode>
+    <TextNode>
+      <base>Thêm giỏ hàng</base>
+      <string page="undefined" frame="Container" nodeid="14:3280" transform="1,0,6460.560546875,0,1,629"><font val="Plus Jakarta Sans:Regular"/>Thêm giỏ hàng</string>
+    </TextNode>
+    <TextNode>
+      <base>Trang<br id="n"/>chủ</base>
+      <string page="undefined" frame="Container" nodeid="14:3291" transform="1,0,6244,0,1,960"><font val="Plus Jakarta Sans:Regular"/>Trang<br id="n"/>chủ</string>
+    </TextNode>
+    <TextNode>
+      <base>Danh<br id="n"/>mục</base>
+      <string page="undefined" frame="Container" nodeid="14:3296" transform="1,0,6322.02001953125,0,1,960"><font val="Plus Jakarta Sans:Regular"/>Danh<br id="n"/>mục</string>
+    </TextNode>
+    <TextNode>
+      <base>Công<br id="n"/>thức</base>
+      <string page="undefined" frame="Container" nodeid="14:3301" transform="1,0,6397.9501953125,0,1,959"><font val="Plus Jakarta Sans:Regular"/>Công<br id="n"/>thức</string>
+    </TextNode>
+    <TextNode>
+      <base>Cá<br id="n"/>nhân</base>
+      <string page="undefined" frame="Container" nodeid="14:3306" transform="1,0,6547.97998046875,0,1,959"><font val="Plus Jakarta Sans:Regular"/>Cá<br id="n"/>nhân</string>
+    </TextNode>
+    <TextNode>
+      <base>Giỏ<br id="n"/>hàng</base>
+      <string page="undefined" frame="Container" nodeid="14:3311" transform="1,0,6477.10986328125,0,1,961"><font val="Plus Jakarta Sans:Regular"/>Giỏ<br id="n"/>hàng</string>
+    </TextNode>
+    <TextNode>
+      <base>3</base>
+      <string page="undefined" frame="Background" nodeid="14:3313" transform="1,0,6524.93505859375,0,1,933"><font val="Plus Jakarta Sans:Regular"/>3</string>
+    </TextNode>
+    <TextNode>
+      <base>Thanh toán</base>
+      <string page="undefined" frame="Heading 1" nodeid="14:3885" transform="1,0,7266,0,1,899"><font val="Plus Jakarta Sans:Regular"/>Thanh toán</string>
+    </TextNode>
+    <TextNode>
+      <base>Tổng cộng (đã gồm thuế)</base>
+      <string page="undefined" frame="Container" nodeid="14:3893" transform="1,0,7222,0,1,1792"><font val="Plus Jakarta Sans:Regular"/>Tổng cộng (đã gồm thuế)</string>
+    </TextNode>
+    <TextNode>
+      <base>450.000đ</base>
+      <string page="undefined" frame="Container" nodeid="14:3895" transform="1,0,7476.97021484375,0,1,1792"><font val="Plus Jakarta Sans:Regular"/>450.000đ</string>
+    </TextNode>
+    <TextNode>
+      <base>Xác nhận đặt hàng</base>
+      <string page="undefined" frame="Container" nodeid="14:3899" transform="1,0,7307.96484375,0,1,1848"><font val="Plus Jakarta Sans:Regular"/>Xác nhận đặt hàng</string>
+    </TextNode>
+    <TextNode>
+      <base>Thông tin giao hàng</base>
+      <string page="undefined" frame="Heading 2" nodeid="14:3908" transform="1,0,7263,0,1,986"><font val="Plus Jakarta Sans:Regular"/>Thông tin giao hàng</string>
+    </TextNode>
+    <TextNode>
+      <base>Tên người nhận</base>
+      <string page="undefined" frame="Container" nodeid="14:3912" transform="1,0,7256,0,1,1043.5"><font val="Plus Jakarta Sans:Regular"/>Tên người nhận</string>
+    </TextNode>
+    <TextNode>
+      <base>Số điện thoại</base>
+      <string page="undefined" frame="Container" nodeid="14:3915" transform="1,0,7256,0,1,1115.5"><font val="Plus Jakarta Sans:Regular"/>Số điện thoại</string>
+    </TextNode>
+    <TextNode>
+      <base>Địa chỉ giao hàng</base>
+      <string page="undefined" frame="Container" nodeid="14:3918" transform="1,0,7256,0,1,1187.5"><font val="Plus Jakarta Sans:Regular"/>Địa chỉ giao hàng</string>
+    </TextNode>
+    <TextNode>
+      <base>Ghi chú (tùy chọn)</base>
+      <string page="undefined" frame="Container" nodeid="14:3921" transform="1,0,7256,0,1,1259"><font val="Plus Jakarta Sans:Regular"/>Ghi chú (tùy chọn)</string>
+    </TextNode>
+    <TextNode>
+      <base>Nhập mã giảm giá</base>
+      <string page="undefined" frame="Container" nodeid="14:3927" transform="1,0,7256,0,1,1403"><font val="Plus Jakarta Sans:Regular"/>Nhập mã giảm giá</string>
+    </TextNode>
+    <TextNode>
+      <base>ÁP DỤNG</base>
+      <string page="undefined" frame="Button" nodeid="14:3930" transform="1,0,7474.77001953125,0,1,1402"><font val="Plus Jakarta Sans:Regular"/>ÁP DỤNG</string>
+    </TextNode>
+    <TextNode>
+      <base>Phương thức thanh toán</base>
+      <string page="undefined" frame="Heading 2" nodeid="14:3936" transform="1,0,7269,0,1,1494"><font val="Plus Jakarta Sans:Regular"/>Phương thức thanh toán</string>
+    </TextNode>
+    <TextNode>
+      <base>Thanh toán khi nhận hàng<br id="n"/>(COD)</base>
+      <string page="undefined" frame="Container" nodeid="14:3944" transform="1,0,7304.64013671875,0,1,1551"><font val="Plus Jakarta Sans:Regular"/>Thanh toán khi nhận hàng<br id="n"/>(COD)</string>
+    </TextNode>
+    <TextNode>
+      <base>VNPay</base>
+      <string page="undefined" frame="Container" nodeid="14:3953" transform="1,0,7308,0,1,1649"><font val="Plus Jakarta Sans:Regular"/>VNPay</string>
+    </TextNode>
+    <TextNode>
+      <base>MoMo</base>
+      <string page="undefined" frame="Container" nodeid="14:3960" transform="1,0,7308,0,1,1731"><font val="Plus Jakarta Sans:Regular"/>MoMo</string>
+    </TextNode>
+    <TextNode>
+      <base>Thanh toán an toàn</base>
+      <string page="undefined" frame="Heading 1" nodeid="14:3970" transform="1,0,7730.080078125,0,1,912"><font val="Inter:Bold"/>Thanh toán an toàn</string>
+    </TextNode>
+    <TextNode>
+      <base>Xác nhận thanh toán</base>
+      <string page="undefined" frame="Container" nodeid="14:3977" transform="1,0,7772.5166015625,0,1,1702"><font val="Inter:Bold"/>Xác nhận thanh toán</string>
+    </TextNode>
+    <TextNode>
+      <base>Thanh toán được bảo mật và mã hóa 256-bit.</base>
+      <string page="undefined" frame="Container" nodeid="14:3979" transform="1,0,7698.02490234375,0,1,1746"><font val="Inter:Medium"/>Thanh toán được bảo mật và mã hóa 256-bit.</string>
+    </TextNode>
+    <TextNode>
+      <base>VNPAY</base>
+      <string page="undefined" frame="Background+Border+Shadow" nodeid="14:3983" transform="1,0,7790.330078125,0,1,1008"><font val="Inter:Bold"/>VNPAY</string>
+    </TextNode>
+    <TextNode>
+      <base>Tổng tiền thanh toán</base>
+      <string page="undefined" frame="Container" nodeid="14:3986" transform="1,0,7761.39013671875,0,1,1061"><font val="Inter:Medium"/>Tổng tiền thanh toán</string>
+    </TextNode>
+    <TextNode>
+      <base>450,000 ₫</base>
+      <string page="undefined" frame="Margin" nodeid="14:3988" transform="1,0,7771.3203125,0,1,1085"><font val="Inter:Semi Bold"/>450,000 ₫</string>
+    </TextNode>
+    <TextNode>
+      <base>Số thẻ</base>
+      <string page="undefined" frame="Label" nodeid="14:3992" transform="1,0,7653,0,1,1165"><font val="Inter:Medium"/>Số thẻ</string>
+    </TextNode>
+    <TextNode>
+      <base>0000 0000 0000 0000</base>
+      <string page="undefined" frame="Container" nodeid="14:3996" transform="1,0,7694,0,1,1208"><font val="Inter:Regular"/>0000 0000 0000 0000</string>
+    </TextNode>
+    <TextNode>
+      <base>Ngày hết hạn</base>
+      <string page="undefined" frame="Label" nodeid="14:4002" transform="1,0,7653,0,1,1266"><font val="Inter:Medium"/>Ngày hết hạn</string>
+    </TextNode>
+    <TextNode>
+      <base>MM/YY</base>
+      <string page="undefined" frame="Container" nodeid="14:4005" transform="1,0,7666,0,1,1309"><font val="Inter:Regular"/>MM/YY</string>
+    </TextNode>
+    <TextNode>
+      <base>CVV</base>
+      <string page="undefined" frame="Label" nodeid="14:4008" transform="1,0,7840,0,1,1266"><font val="Inter:Medium"/>CVV</string>
+    </TextNode>
+    <TextNode>
+      <base>•••</base>
+      <string page="undefined" frame="Container" nodeid="14:4013" transform="1,0,7853,0,1,1309"><font val="Inter:Regular"/>•••</string>
+    </TextNode>
+    <TextNode>
+      <base>Tên chủ thẻ</base>
+      <string page="undefined" frame="Label" nodeid="14:4016" transform="1,0,7653,0,1,1367"><font val="Inter:Medium"/>Tên chủ thẻ</string>
+    </TextNode>
+    <TextNode>
+      <base>NGUYEN VAN A</base>
+      <string page="undefined" frame="Container" nodeid="14:4019" transform="1,0,7666,0,1,1410"><font val="Inter:Regular"/>NGUYEN VAN A</string>
+    </TextNode>
+    <TextNode>
+      <base>Giỏ hàng của bạn</base>
+      <string page="undefined" frame="Heading 1" nodeid="14:4033" transform="1,0,6827.0400390625,0,1,899"><font val="Inter:Semi Bold"/>Giỏ hàng của bạn</string>
+    </TextNode>
+    <TextNode>
+      <base>Xóa tất cả</base>
+      <string page="undefined" frame="Button" nodeid="14:4035" transform="1,0,7039.66015625,0,1,903"><font val="Inter:Medium"/>Xóa tất cả</string>
+    </TextNode>
+    <TextNode>
+      <base>Bí đỏ lai hồ lô VietGAP</base>
+      <string page="undefined" frame="Heading 2" nodeid="14:4046" transform="1,0,6899,0,1,979"><font val="Inter:Regular"/>Bí đỏ lai hồ lô VietGAP</string>
+    </TextNode>
+    <TextNode>
+      <base>1 kg</base>
+      <string page="undefined" frame="Container" nodeid="14:4048" transform="1,0,6899,0,1,1007"><font val="Inter:Medium"/>1 kg</string>
+    </TextNode>
+    <TextNode>
+      <base>35.000đ</base>
+      <string page="undefined" frame="Container" nodeid="14:4052" transform="1,0,6899,0,1,1035"><font val="Inter:Semi Bold"/>35.000đ</string>
+    </TextNode>
+    <TextNode>
+      <base>2</base>
+      <string page="undefined" frame="Container" nodeid="14:4058" transform="1,0,7050.115234375,0,1,1035"><font val="Inter:Regular"/>2</string>
+    </TextNode>
+    <TextNode>
+      <base>Cà chua Cherry Đà Lạt</base>
+      <string page="undefined" frame="Heading 2" nodeid="14:4071" transform="1,0,6899,0,1,1109"><font val="Inter:Regular"/>Cà chua Cherry Đà Lạt</string>
+    </TextNode>
+    <TextNode>
+      <base>500g</base>
+      <string page="undefined" frame="Container" nodeid="14:4073" transform="1,0,6899,0,1,1137"><font val="Inter:Medium"/>500g</string>
+    </TextNode>
+    <TextNode>
+      <base>42.000đ</base>
+      <string page="undefined" frame="Container" nodeid="14:4077" transform="1,0,6899,0,1,1165"><font val="Inter:Semi Bold"/>42.000đ</string>
+    </TextNode>
+    <TextNode>
+      <base>1</base>
+      <string page="undefined" frame="Container" nodeid="14:4083" transform="1,0,7051.740234375,0,1,1165"><font val="Inter:Regular"/>1</string>
+    </TextNode>
+    <TextNode>
+      <base>Rau muống nước hữu cơ</base>
+      <string page="undefined" frame="Heading 2" nodeid="14:4094" transform="1,0,6899,0,1,1239"><font val="Inter:Regular"/>Rau muống nước hữu cơ</string>
+    </TextNode>
+    <TextNode>
+      <base>1 bó (500g)</base>
+      <string page="undefined" frame="Container" nodeid="14:4096" transform="1,0,6899,0,1,1267"><font val="Inter:Medium"/>1 bó (500g)</string>
+    </TextNode>
+    <TextNode>
+      <base>15.000đ</base>
+      <string page="undefined" frame="Container" nodeid="14:4100" transform="1,0,6899,0,1,1295"><font val="Inter:Semi Bold"/>15.000đ</string>
+    </TextNode>
+    <TextNode>
+      <base>1</base>
+      <string page="undefined" frame="Container" nodeid="14:4106" transform="1,0,7051.740234375,0,1,1295"><font val="Inter:Regular"/>1</string>
+    </TextNode>
+    <TextNode>
+      <base>Táo Fuji nhập khẩu</base>
+      <string page="undefined" frame="Heading 2" nodeid="14:4119" transform="1,0,6899,0,1,1369"><font val="Inter:Regular"/>Táo Fuji nhập khẩu</string>
+    </TextNode>
+    <TextNode>
+      <base>1 kg</base>
+      <string page="undefined" frame="Container" nodeid="14:4121" transform="1,0,6899,0,1,1397"><font val="Inter:Medium"/>1 kg</string>
+    </TextNode>
+    <TextNode>
+      <base>120.000đ</base>
+      <string page="undefined" frame="Container" nodeid="14:4125" transform="1,0,6899,0,1,1425"><font val="Inter:Semi Bold"/>120.000đ</string>
+    </TextNode>
+    <TextNode>
+      <base>3</base>
+      <string page="undefined" frame="Container" nodeid="14:4131" transform="1,0,7050.05517578125,0,1,1425"><font val="Inter:Regular"/>3</string>
+    </TextNode>
+    <TextNode>
+      <base>Tổng tạm tính</base>
+      <string page="undefined" frame="Container" nodeid="14:4138" transform="1,0,6758,0,1,1647"><font val="Inter:Regular"/>Tổng tạm tính</string>
+    </TextNode>
+    <TextNode>
+      <base>450.000đ</base>
+      <string page="undefined" frame="Container" nodeid="14:4140" transform="1,0,7000.68994140625,0,1,1645"><font val="Inter:Semi Bold"/>450.000đ</string>
+    </TextNode>
+    <TextNode>
+      <base>Tiến hành đặt hàng</base>
+      <string page="undefined" frame="Button" nodeid="14:4142" transform="1,0,6844,0,1,1705"><font val="Inter:Semi Bold"/>Tiến hành đặt hàng</string>
+    </TextNode>
+    <TextNode>
+      <base>Canh bí đỏ</base>
+      <string page="undefined" frame="Heading 1" nodeid="14:4158" transform="1,0,9297.5,0,1,811"><font val="Plus Jakarta Sans:Bold"/>Canh bí đỏ</string>
+    </TextNode>
+    <TextNode>
+      <base>Bí đỏ</base>
+      <string page="undefined" frame="Background" nodeid="14:4161" transform="1,0,9309.5,0,1,859"><font val="Plus Jakarta Sans:Bold"/>Bí đỏ</string>
+    </TextNode>
+    <TextNode>
+      <base>Thịt heo</base>
+      <string page="undefined" frame="Background" nodeid="14:4163" transform="1,0,9371.5,0,1,859"><font val="Plus Jakarta Sans:Bold"/>Thịt heo</string>
+    </TextNode>
+    <TextNode>
+      <base>Hành lá</base>
+      <string page="undefined" frame="Background" nodeid="14:4165" transform="1,0,9450.5,0,1,859"><font val="Plus Jakarta Sans:Bold"/>Hành lá</string>
+    </TextNode>
+    <TextNode>
+      <base>Nước mắm</base>
+      <string page="undefined" frame="Background" nodeid="14:4167" transform="1,0,9525.5,0,1,859"><font val="Plus Jakarta Sans:Bold"/>Nước mắm</string>
+    </TextNode>
+    <TextNode>
+      <base>25 Phút</base>
+      <string page="undefined" frame="Container" nodeid="14:4173" transform="1,0,9297.5,0,1,936"><font val="Plus Jakarta Sans:Bold"/>25 Phút</string>
+    </TextNode>
+    <TextNode>
+      <base>4 Người</base>
+      <string page="undefined" frame="Container" nodeid="14:4178" transform="1,0,9365.5,0,1,934"><font val="Plus Jakarta Sans:Bold"/>4 Người</string>
+    </TextNode>
+    <TextNode>
+      <base>Dễ</base>
+      <string page="undefined" frame="Container" nodeid="14:4183" transform="1,0,9435.5,0,1,936"><font val="Plus Jakarta Sans:Bold"/>Dễ</string>
+    </TextNode>
+    <TextNode>
+      <base>Nguyên liệu cần có</base>
+      <string page="undefined" frame="Heading 2" nodeid="14:4187" transform="1,0,9297.5,0,1,993"><font val="Plus Jakarta Sans:SemiBold"/>Nguyên liệu cần có</string>
+    </TextNode>
+    <TextNode>
+      <base>8 món</base>
+      <string page="undefined" frame="Container" nodeid="14:4189" transform="1,0,9563.75,0,1,999"><font val="Plus Jakarta Sans:Bold"/>8 món</string>
+    </TextNode>
+    <TextNode>
+      <base>Bí đỏ hồ lô (đã gọt vỏ)</base>
+      <string page="undefined" frame="Container" nodeid="14:4195" transform="1,0,9333.5,0,1,1037"><font val="Plus Jakarta Sans:Regular"/>Bí đỏ hồ lô (đã gọt vỏ)</string>
+    </TextNode>
+    <TextNode>
+      <base>500g</base>
+      <string page="undefined" frame="Container" nodeid="14:4197" transform="1,0,9560.5,0,1,1039"><font val="Plus Jakarta Sans:Regular"/>500g</string>
+    </TextNode>
+    <TextNode>
+      <base>Thịt nạc heo băm</base>
+      <string page="undefined" frame="Container" nodeid="14:4202" transform="1,0,9333.5,0,1,1077"><font val="Plus Jakarta Sans:Regular"/>Thịt nạc heo băm</string>
+    </TextNode>
+    <TextNode>
+      <base>200g</base>
+      <string page="undefined" frame="Container" nodeid="14:4204" transform="1,0,9560.5,0,1,1079"><font val="Plus Jakarta Sans:Regular"/>200g</string>
+    </TextNode>
+    <TextNode>
+      <base>Hành lá &amp; Ngò rí</base>
+      <string page="undefined" frame="Container" nodeid="14:4209" transform="1,0,9333.5,0,1,1117"><font val="Plus Jakarta Sans:Regular"/>Hành lá &amp; Ngò rí</string>
+    </TextNode>
+    <TextNode>
+      <base>2 nhánh</base>
+      <string page="undefined" frame="Container" nodeid="14:4211" transform="1,0,9548.5,0,1,1119"><font val="Plus Jakarta Sans:Regular"/>2 nhánh</string>
+    </TextNode>
+    <TextNode>
+      <base>Nước mắm ngon</base>
+      <string page="undefined" frame="Container" nodeid="14:4216" transform="1,0,9333.5,0,1,1157"><font val="Plus Jakarta Sans:Regular"/>Nước mắm ngon</string>
+    </TextNode>
+    <TextNode>
+      <base>1 muỗng</base>
+      <string page="undefined" frame="Container" nodeid="14:4218" transform="1,0,9544.5,0,1,1159"><font val="Plus Jakarta Sans:Regular"/>1 muỗng</string>
+    </TextNode>
+    <TextNode>
+      <base>Gia vị (Muối, Đường, Tiêu)</base>
+      <string page="undefined" frame="Container" nodeid="14:4223" transform="1,0,9333.5,0,1,1197"><font val="Plus Jakarta Sans:Regular"/>Gia vị (Muối, Đường, Tiêu)</string>
+    </TextNode>
+    <TextNode>
+      <base>Ít</base>
+      <string page="undefined" frame="Container" nodeid="14:4225" transform="1,0,9589.5,0,1,1199"><font val="Plus Jakarta Sans:Regular"/>Ít</string>
+    </TextNode>
+    <TextNode>
+      <base>Cách nấu</base>
+      <string page="undefined" frame="Heading 2" nodeid="14:4228" transform="1,0,9297.5,0,1,1261"><font val="Plus Jakarta Sans:SemiBold"/>Cách nấu</string>
+    </TextNode>
+    <TextNode>
+      <base>1</base>
+      <string page="undefined" frame="Background" nodeid="14:4234" transform="1,0,9314.275390625,0,1,1320.5"><font val="Plus Jakarta Sans:Bold"/>1</string>
+    </TextNode>
+    <TextNode>
+      <base>Sơ chế</base>
+      <string page="undefined" frame="Heading 3" nodeid="14:4237" transform="1,0,9353.5,0,1,1317"><font val="Plus Jakarta Sans:Regular"/>Sơ chế</string>
+    </TextNode>
+    <TextNode>
+      <base>Bí đỏ cắt miếng vừa ăn. Thịt heo<br id="n"/>băm ướp với chút hạt nêm, tiêu<br id="n"/>và đầu hành lá băm nhuyễn trong<br id="n"/>10 phút.</base>
+      <string page="undefined" frame="Container" nodeid="14:4239" transform="1,0,9353.5,0,1,1349"><font val="Plus Jakarta Sans:Regular"/>Bí đỏ cắt miếng vừa ăn. Thịt heo<br id="n"/>băm ướp với chút hạt nêm, tiêu<br id="n"/>và đầu hành lá băm nhuyễn trong<br id="n"/>10 phút.</string>
+    </TextNode>
+    <TextNode>
+      <base>2</base>
+      <string page="undefined" frame="Background" nodeid="14:4244" transform="1,0,9312.7197265625,0,1,1484.5"><font val="Plus Jakarta Sans:Bold"/>2</string>
+    </TextNode>
+    <TextNode>
+      <base>Xào thịt</base>
+      <string page="undefined" frame="Heading 3" nodeid="14:4247" transform="1,0,9353.5,0,1,1481"><font val="Plus Jakarta Sans:Regular"/>Xào thịt</string>
+    </TextNode>
+    <TextNode>
+      <base>Phi thơm hành tím, cho thịt băm<br id="n"/>vào xào săn. Đổ 1.2 lít nước lọc<br id="n"/>vào đun sôi, vớt bọt để nước<br id="n"/>canh trong.</base>
+      <string page="undefined" frame="Container" nodeid="14:4249" transform="1,0,9353.5,0,1,1513"><font val="Plus Jakarta Sans:Regular"/>Phi thơm hành tím, cho thịt băm<br id="n"/>vào xào săn. Đổ 1.2 lít nước lọc<br id="n"/>vào đun sôi, vớt bọt để nước<br id="n"/>canh trong.</string>
+    </TextNode>
+    <TextNode>
+      <base>3</base>
+      <string page="undefined" frame="Background" nodeid="14:4254" transform="1,0,9312.6103515625,0,1,1648.5"><font val="Plus Jakarta Sans:Bold"/>3</string>
+    </TextNode>
+    <TextNode>
+      <base>Nấu bí</base>
+      <string page="undefined" frame="Heading 3" nodeid="14:4257" transform="1,0,9353.5,0,1,1645"><font val="Plus Jakarta Sans:Regular"/>Nấu bí</string>
+    </TextNode>
+    <TextNode>
+      <base>Cho bí đỏ vào nấu đến khi bí chín<br id="n"/>mềm. Nêm nước mắm và các gia<br id="n"/>vị khác cho vừa miệng gia đình.</base>
+      <string page="undefined" frame="Container" nodeid="14:4259" transform="1,0,9353.5,0,1,1677"><font val="Plus Jakarta Sans:Regular"/>Cho bí đỏ vào nấu đến khi bí chín<br id="n"/>mềm. Nêm nước mắm và các gia<br id="n"/>vị khác cho vừa miệng gia đình.</string>
+    </TextNode>
+    <TextNode>
+      <base>4</base>
+      <string page="undefined" frame="Background" nodeid="14:4263" transform="1,0,9312.2646484375,0,1,1788.5"><font val="Plus Jakarta Sans:Bold"/>4</string>
+    </TextNode>
+    <TextNode>
+      <base>Hoàn thành</base>
+      <string page="undefined" frame="Heading 3" nodeid="14:4266" transform="1,0,9353.5,0,1,1785"><font val="Plus Jakarta Sans:Regular"/>Hoàn thành</string>
+    </TextNode>
+    <TextNode>
+      <base>Tắt bếp, rắc hành lá và ngò rí lên<br id="n"/>trên. Dùng nóng với cơm trắng<br id="n"/>rất ngon.</base>
+      <string page="undefined" frame="Container" nodeid="14:4268" transform="1,0,9353.5,0,1,1817"><font val="Plus Jakarta Sans:Regular"/>Tắt bếp, rắc hành lá và ngò rí lên<br id="n"/>trên. Dùng nóng với cơm trắng<br id="n"/>rất ngon.</string>
+    </TextNode>
+    <TextNode>
+      <base>Gợi ý khẩu phần</base>
+      <string page="undefined" frame="Heading 2" nodeid="14:4274" transform="1,0,9340.5,0,1,1949"><font val="Plus Jakarta Sans:SemiBold"/>Gợi ý khẩu phần</string>
+    </TextNode>
+    <TextNode>
+      <base>Canh bí đỏ giàu Vitamin A, tốt cho<br id="n"/>mắt và trí não. Bạn có thể thay thịt<br id="n"/>băm bằng tôm tươi băm nhuyễn để<br id="n"/>có vị ngọt thanh hơn. Ăn kèm cơm<br id="n"/>trắng và một món kho sẽ rất tròn vị.</base>
+      <string page="undefined" frame="Container" nodeid="14:4276" transform="1,0,9317.5,0,1,1989"><font val="Plus Jakarta Sans:Italic"/>Canh bí đỏ giàu Vitamin A, tốt cho<br id="n"/>mắt và trí não. Bạn có thể thay thịt<br id="n"/>băm bằng tôm tươi băm nhuyễn để<br id="n"/>có vị ngọt thanh hơn. Ăn kèm cơm<br id="n"/>trắng và một món kho sẽ rất tròn vị.</string>
+    </TextNode>
+    <TextNode>
+      <base>Thêm tất cả nguyên liệu vào giỏ</base>
+      <string page="undefined" frame="Container" nodeid="14:4281" transform="-1,0,9391.01171875,0,1,2180.5"><font val="Plus Jakarta Sans:SemiBold"/>Thêm tất cả nguyên liệu vào giỏ</string>
+    </TextNode>
+    <TextNode>
+      <base>Trang chủ</base>
+      <string page="undefined" frame="Container" nodeid="14:4288" transform="1,0,8668.8896484375,0,1,1994.5"><font val="Plus Jakarta Sans:Bold"/>Trang chủ</string>
+    </TextNode>
+    <TextNode>
+      <base>Công thức</base>
+      <string page="undefined" frame="Container" nodeid="14:4293" transform="1,0,8762.5302734375,0,1,1993.5"><font val="Plus Jakarta Sans:Bold"/>Công thức</string>
+    </TextNode>
+    <TextNode>
+      <base>Giỏ hàng</base>
+      <string page="undefined" frame="Container" nodeid="14:4298" transform="1,0,8861.6904296875,0,1,1995"><font val="Plus Jakarta Sans:Bold"/>Giỏ hàng</string>
+    </TextNode>
+    <TextNode>
+      <base>Tài khoản</base>
+      <string page="undefined" frame="Container" nodeid="14:4303" transform="1,0,8951.1904296875,0,1,1993.5"><font val="Plus Jakarta Sans:Bold"/>Tài khoản</string>
+    </TextNode>
+    <TextNode>
+      <base>Vựa Vui Vẻ</base>
+      <string page="undefined" frame="Heading 1" nodeid="14:4309" transform="1,0,8696,0,1,788"><font val="Plus Jakarta Sans:Bold"/>Vựa Vui Vẻ</string>
+    </TextNode>
+    <TextNode>
+      <base>Tất cả công thức nấu ăn</base>
+      <string page="undefined" frame="Heading 2" nodeid="14:4315" transform="1,0,8662,0,1,868"><font val="Plus Jakarta Sans:Bold"/>Tất cả công thức nấu ăn</string>
+    </TextNode>
+    <TextNode>
+      <base>Khám phá các món ăn ngon, dễ làm tại nhà</base>
+      <string page="undefined" frame="Container" nodeid="14:4317" transform="1,0,8662,0,1,904"><font val="Plus Jakarta Sans:Regular"/>Khám phá các món ăn ngon, dễ làm tại nhà</string>
+    </TextNode>
+    <TextNode>
+      <base>30p</base>
+      <string page="undefined" frame="Container" nodeid="14:4326" transform="1,0,8822.91015625,0,1,1122"><font val="Plus Jakarta Sans:Regular"/>30p</string>
+    </TextNode>
+    <TextNode>
+      <base>Canh bí đỏ thịt…<br id="n"/>bằm</base>
+      <string page="undefined" frame="Heading 3" nodeid="14:4330" transform="1,0,8674,0,1,1283.5"><font val="Plus Jakarta Sans:Regular"/>Canh bí đỏ thịt…<br id="n"/>bằm</string>
+    </TextNode>
+    <TextNode>
+      <base>Vị ngọt thanh từ bí đỏ kết<br id="n"/>hợp cùng thịt bằm.</base>
+      <string page="undefined" frame="Container" nodeid="14:4333" transform="1,0,8674,0,1,1308"><font val="Plus Jakarta Sans:Regular"/>Vị ngọt thanh từ bí đỏ kết<br id="n"/>hợp cùng thịt bằm.</string>
+    </TextNode>
+    <TextNode>
+      <base>45.000đ</base>
+      <string page="undefined" frame="Container" nodeid="14:4336" transform="1,0,8674,0,1,1356"><font val="Plus Jakarta Sans:Bold"/>45.000đ</string>
+    </TextNode>
+    <TextNode>
+      <base>Thêm</base>
+      <string page="undefined" frame="Container" nodeid="14:4341" transform="1,0,8753.75,0,1,1393"><font val="Plus Jakarta Sans:Regular"/>Thêm</string>
+    </TextNode>
+    <TextNode>
+      <base>45p</base>
+      <string page="undefined" frame="Container" nodeid="14:4349" transform="1,0,9036.8603515625,0,1,1122"><font val="Plus Jakarta Sans:Regular"/>45p</string>
+    </TextNode>
+    <TextNode>
+      <base>Cá lóc kho tộ</base>
+      <string page="undefined" frame="Heading 3" nodeid="14:4353" transform="1,0,8887,0,1,1284"><font val="Plus Jakarta Sans:Regular"/>Cá lóc kho tộ</string>
+    </TextNode>
+    <TextNode>
+      <base>Cá lóc kho đậm đà với<br id="n"/>nước màu dừa, tiêu đen.</base>
+      <string page="undefined" frame="Container" nodeid="14:4356" transform="1,0,8887,0,1,1308"><font val="Plus Jakarta Sans:Regular"/>Cá lóc kho đậm đà với<br id="n"/>nước màu dừa, tiêu đen.</string>
+    </TextNode>
+    <TextNode>
+      <base>85.000đ</base>
+      <string page="undefined" frame="Container" nodeid="14:4359" transform="1,0,8887,0,1,1356"><font val="Plus Jakarta Sans:Bold"/>85.000đ</string>
+    </TextNode>
+    <TextNode>
+      <base>Thêm</base>
+      <string page="undefined" frame="Container" nodeid="14:4364" transform="1,0,8966.75,0,1,1393"><font val="Plus Jakarta Sans:Regular"/>Thêm</string>
+    </TextNode>
+    <TextNode>
+      <base>15p</base>
+      <string page="undefined" frame="Container" nodeid="14:4372" transform="1,0,8826.4501953125,0,1,1457"><font val="Plus Jakarta Sans:Regular"/>15p</string>
+    </TextNode>
+    <TextNode>
+      <base>Rau muống xào tỏi</base>
+      <string page="undefined" frame="Heading 3" nodeid="14:4376" transform="1,0,8674,0,1,1619"><font val="Plus Jakarta Sans:Regular"/>Rau muống xào tỏi</string>
+    </TextNode>
+    <TextNode>
+      <base>Món xào đơn giản nhưng<br id="n"/>không thể thiếu.</base>
+      <string page="undefined" frame="Container" nodeid="14:4379" transform="1,0,8674,0,1,1643"><font val="Plus Jakarta Sans:Regular"/>Món xào đơn giản nhưng<br id="n"/>không thể thiếu.</string>
+    </TextNode>
+    <TextNode>
+      <base>25.000đ</base>
+      <string page="undefined" frame="Container" nodeid="14:4382" transform="1,0,8674,0,1,1691"><font val="Plus Jakarta Sans:Bold"/>25.000đ</string>
+    </TextNode>
+    <TextNode>
+      <base>Thêm</base>
+      <string page="undefined" frame="Container" nodeid="14:4387" transform="1,0,8753.75,0,1,1728"><font val="Plus Jakarta Sans:Regular"/>Thêm</string>
+    </TextNode>
+    <TextNode>
+      <base>40p</base>
+      <string page="undefined" frame="Container" nodeid="14:4395" transform="1,0,9035.7001953125,0,1,1457"><font val="Plus Jakarta Sans:Regular"/>40p</string>
+    </TextNode>
+    <TextNode>
+      <base>Canh chua cá basa</base>
+      <string page="undefined" frame="Heading 3" nodeid="14:4399" transform="1,0,8887,0,1,1619"><font val="Plus Jakarta Sans:Regular"/>Canh chua cá basa</string>
+    </TextNode>
+    <TextNode>
+      <base>Sự hòa quyện tuyệt vời<br id="n"/>giữa vị chua của me.</base>
+      <string page="undefined" frame="Container" nodeid="14:4402" transform="1,0,8887,0,1,1643"><font val="Plus Jakarta Sans:Regular"/>Sự hòa quyện tuyệt vời<br id="n"/>giữa vị chua của me.</string>
+    </TextNode>
+    <TextNode>
+      <base>75.000đ</base>
+      <string page="undefined" frame="Container" nodeid="14:4405" transform="1,0,8887,0,1,1691"><font val="Plus Jakarta Sans:Bold"/>75.000đ</string>
+    </TextNode>
+    <TextNode>
+      <base>Thêm</base>
+      <string page="undefined" frame="Container" nodeid="14:4410" transform="1,0,8966.75,0,1,1728"><font val="Plus Jakarta Sans:Regular"/>Thêm</string>
+    </TextNode>
+    <TextNode>
+      <base>Tìm kiếm món ăn...</base>
+      <string page="undefined" frame="Container" nodeid="14:4417" transform="1,0,8710,0,1,977.5"><font val="Plus Jakarta Sans:Regular"/>Tìm kiếm món ăn...</string>
+    </TextNode>
+    <TextNode>
+      <base>Tất cả</base>
+      <string page="undefined" frame="Background" nodeid="14:4426" transform="1,0,8678,0,1,1040"><font val="Plus Jakarta Sans:Bold"/>Tất cả</string>
+    </TextNode>
+    <TextNode>
+      <base>Món Nước</base>
+      <string page="undefined" frame="Background" nodeid="14:4428" transform="1,0,8752.8095703125,0,1,1040"><font val="Plus Jakarta Sans:Bold"/>Món Nước</string>
+    </TextNode>
+    <TextNode>
+      <base>Món Kho</base>
+      <string page="undefined" frame="Background" nodeid="14:4430" transform="1,0,8852.5498046875,0,1,1040"><font val="Plus Jakarta Sans:Bold"/>Món Kho</string>
+    </TextNode>
+    <TextNode>
+      <base>Món Xào</base>
+      <string page="undefined" frame="Background" nodeid="14:4432" transform="1,0,8943.4404296875,0,1,1040"><font val="Plus Jakarta Sans:Bold"/>Món Xào</string>
+    </TextNode>
+    <TextNode>
+      <base>Món Chay</base>
+      <string page="undefined" frame="Background" nodeid="14:4434" transform="1,0,9033.9501953125,0,1,1040"><font val="Plus Jakarta Sans:Bold"/>Món Chay</string>
+    </TextNode>
+    <TextNode>
+      <base>Tên người dùng</base>
+      <string page="undefined" frame="Heading 2" nodeid="14:4684" transform="1,0,10139.98046875,0,1,809"><font val="Plus Jakarta Sans:Regular"/>Tên người dùng</string>
+    </TextNode>
+    <TextNode>
+      <base>0912 345 678</base>
+      <string page="undefined" frame="Container" nodeid="14:4687" transform="1,0,10195.16015625,0,1,849"><font val="Plus Jakarta Sans:Regular"/>0912 345 678</string>
+    </TextNode>
+    <TextNode>
+      <base>email@example.com</base>
+      <string page="undefined" frame="Container" nodeid="14:4688" transform="1,0,10168.9697265625,0,1,871"><font val="Plus Jakarta Sans:Italic"/>email@example.com</string>
+    </TextNode>
+    <TextNode>
+      <base>HẠNG THÀNH VIÊN</base>
+      <string page="undefined" frame="Container" nodeid="14:4703" transform="1,0,10077,0,1,932"><font val="Plus Jakarta Sans:Regular"/>HẠNG THÀNH VIÊN</string>
+    </TextNode>
+    <TextNode>
+      <base>Thành viên Vàng</base>
+      <string page="undefined" frame="Container" nodeid="14:4705" transform="1,0,10077,0,1,948"><font val="Plus Jakarta Sans:Regular"/>Thành viên Vàng</string>
+    </TextNode>
+    <TextNode>
+      <base>ĐIỂM TÍCH LŨY</base>
+      <string page="undefined" frame="Container" nodeid="14:4708" transform="1,0,10309.330078125,0,1,932"><font val="Plus Jakarta Sans:Regular"/>ĐIỂM TÍCH LŨY</string>
+    </TextNode>
+    <TextNode>
+      <base>1,250 </base>
+      <string page="undefined" frame="Paragraph" nodeid="14:4710" transform="1,0,10335.8896484375,0,1,947.5"><font val="Plus Jakarta Sans:Regular"/>1,250 </string>
+    </TextNode>
+    <TextNode>
+      <base>Xu</base>
+      <string page="undefined" frame="Paragraph" nodeid="14:4711" transform="1,0,10386.73046875,0,1,954.5"><font val="Plus Jakarta Sans:Regular"/>Xu</string>
+    </TextNode>
+    <TextNode>
+      <base>TÀI KHOẢN</base>
+      <string page="undefined" frame="Heading 3" nodeid="14:4715" transform="1,0,10068,0,1,1013"><font val="Plus Jakarta Sans:Regular"/>TÀI KHOẢN</string>
+    </TextNode>
+    <TextNode>
+      <base>Chỉnh sửa hồ sơ</base>
+      <string page="undefined" frame="Container" nodeid="14:4723" transform="1,0,10132,0,1,1065"><font val="Plus Jakarta Sans:Regular"/>Chỉnh sửa hồ sơ</string>
+    </TextNode>
+    <TextNode>
+      <base>Đổi mật khẩu</base>
+      <string page="undefined" frame="Container" nodeid="14:4733" transform="1,0,10132,0,1,1138"><font val="Plus Jakarta Sans:Regular"/>Đổi mật khẩu</string>
+    </TextNode>
+    <TextNode>
+      <base>MUA SẮM</base>
+      <string page="undefined" frame="Heading 3" nodeid="14:4738" transform="1,0,10068,0,1,1210"><font val="Plus Jakarta Sans:Regular"/>MUA SẮM</string>
+    </TextNode>
+    <TextNode>
+      <base>Đơn hàng của tôi</base>
+      <string page="undefined" frame="Container" nodeid="14:4746" transform="1,0,10132,0,1,1262"><font val="Plus Jakarta Sans:Regular"/>Đơn hàng của tôi</string>
+    </TextNode>
+    <TextNode>
+      <base>Theo dõi vận chuyển</base>
+      <string page="undefined" frame="Container" nodeid="14:4756" transform="1,0,10132,0,1,1335"><font val="Plus Jakarta Sans:Regular"/>Theo dõi vận chuyển</string>
+    </TextNode>
+    <TextNode>
+      <base>Đánh giá của tôi</base>
+      <string page="undefined" frame="Container" nodeid="14:4766" transform="1,0,10132,0,1,1408"><font val="Plus Jakarta Sans:Regular"/>Đánh giá của tôi</string>
+    </TextNode>
+    <TextNode>
+      <base>TÍNH NĂNG</base>
+      <string page="undefined" frame="Heading 3" nodeid="14:4771" transform="1,0,10068,0,1,1480"><font val="Plus Jakarta Sans:Regular"/>TÍNH NĂNG</string>
+    </TextNode>
+    <TextNode>
+      <base>Công thức nấu ăn</base>
+      <string page="undefined" frame="Container" nodeid="14:4779" transform="1,0,10132,0,1,1532"><font val="Plus Jakarta Sans:Regular"/>Công thức nấu ăn</string>
+    </TextNode>
+    <TextNode>
+      <base>Đăng xuất</base>
+      <string page="undefined" frame="Container" nodeid="14:4786" transform="1,0,10214.16015625,0,1,1621"><font val="Plus Jakarta Sans:Regular"/>Đăng xuất</string>
+    </TextNode>
+    <TextNode>
+      <base>VỰA VUI VẺ</base>
+      <string page="undefined" frame="Heading 1" nodeid="14:4792" transform="1,0,10106,0,1,587"><font val="Plus Jakarta Sans:Regular"/>VỰA VUI VẺ</string>
+    </TextNode>
+    <TextNode>
+      <base>Trang<br id="n"/>chủ</base>
+      <string page="undefined" frame="Margin" nodeid="14:4801" transform="1,0,10068,0,1,1628.5"><font val="Plus Jakarta Sans:Regular"/>Trang<br id="n"/>chủ</string>
+    </TextNode>
+    <TextNode>
+      <base>Danh<br id="n"/>mục</base>
+      <string page="undefined" frame="Margin" nodeid="14:4806" transform="1,0,10143.41015625,0,1,1628.5"><font val="Plus Jakarta Sans:Regular"/>Danh<br id="n"/>mục</string>
+    </TextNode>
+    <TextNode>
+      <base>Công<br id="n"/>thức</base>
+      <string page="undefined" frame="Margin" nodeid="14:4811" transform="1,0,10220.5,0,1,1627.5"><font val="Plus Jakarta Sans:Regular"/>Công<br id="n"/>thức</string>
+    </TextNode>
+    <TextNode>
+      <base>Giỏ<br id="n"/>hàng</base>
+      <string page="undefined" frame="Margin" nodeid="14:4816" transform="1,0,10300.3798828125,0,1,1629.5"><font val="Plus Jakarta Sans:Regular"/>Giỏ<br id="n"/>hàng</string>
+    </TextNode>
+    <TextNode>
+      <base>Cá</base>
+      <string page="undefined" frame="Paragraph" nodeid="14:4823" transform="0.8999999761581421,0,10374.9111328125,0,0.8999999761581421,1628.39990234375"><font val="Plus Jakarta Sans:Regular"/>Cá</string>
+    </TextNode>
+    <TextNode>
+      <base>nhân</base>
+      <string page="undefined" frame="Paragraph" nodeid="14:4824" transform="0.8999999761581421,0,10374.9111328125,0,0.8999999761581421,1642.7999267578125"><font val="Plus Jakarta Sans:Regular"/>nhân</string>
+    </TextNode>
+    <TextNode>
+      <base>Đánh giá của tôi</base>
+      <string page="undefined" frame="Heading 1 - Page Title" nodeid="14:4832" transform="1,0,10612,0,1,592"><font val="Plus Jakarta Sans:Bold"/>Đánh giá của tôi</string>
+    </TextNode>
+    <TextNode>
+      <base>Trang chủ</base>
+      <string page="undefined" frame="SVG" nodeid="14:4837" transform="1,0,10568,0,1,1529"><font val="Plus Jakarta Sans:Regular"/>Trang chủ</string>
+    </TextNode>
+    <TextNode>
+      <base>Đánh giá</base>
+      <string page="undefined" frame="SVG" nodeid="14:4841" transform="1,0,10669.6669921875,0,1,1529"><font val="Plus Jakarta Sans:Bold"/>Đánh giá</string>
+    </TextNode>
+    <TextNode>
+      <base>Giỏ hàng</base>
+      <string page="undefined" frame="SVG" nodeid="14:4845" transform="1,0,10767.3330078125,0,1,1529"><font val="Plus Jakarta Sans:Regular"/>Giỏ hàng</string>
+    </TextNode>
+    <TextNode>
+      <base>Tài khoản</base>
+      <string page="undefined" frame="SVG" nodeid="14:4849" transform="1,0,10866,0,1,1529"><font val="Plus Jakarta Sans:Regular"/>Tài khoản</string>
+    </TextNode>
+    <TextNode>
+      <base>Item 0</base>
+      <string page="undefined" frame="Container" nodeid="14:4854" transform="1,0,10576,0,1,656"><font val="Plus Jakarta Sans:Bold"/>Item 0</string>
+    </TextNode>
+    <TextNode>
+      <base>Sản phẩm chất lượng tuyệt vời, dịch vụ giao hàng<br id="n"/>nhanh chóng và thân thiện.</base>
+      <string page="undefined" frame="Container" nodeid="14:4867" transform="1,0,10576,0,1,688"><font val="Plus Jakarta Sans:Regular"/>Sản phẩm chất lượng tuyệt vời, dịch vụ giao hàng<br id="n"/>nhanh chóng và thân thiện.</string>
+    </TextNode>
+    <TextNode>
+      <base>12/10/2023</base>
+      <string page="undefined" frame="Container" nodeid="14:4870" transform="1,0,10576,0,1,740"><font val="Plus Jakarta Sans:Regular"/>12/10/2023</string>
+    </TextNode>
+    <TextNode>
+      <base>Item 1</base>
+      <string page="undefined" frame="Container" nodeid="14:4873" transform="1,0,10576,0,1,800"><font val="Plus Jakarta Sans:Bold"/>Item 1</string>
+    </TextNode>
+    <TextNode>
+      <base>Sản phẩm dùng tốt, đúng như mô tả. Đóng gói rất<br id="n"/>cẩn thận.</base>
+      <string page="undefined" frame="Container" nodeid="14:4886" transform="1,0,10576,0,1,832"><font val="Plus Jakarta Sans:Regular"/>Sản phẩm dùng tốt, đúng như mô tả. Đóng gói rất<br id="n"/>cẩn thận.</string>
+    </TextNode>
+    <TextNode>
+      <base>11/10/2023</base>
+      <string page="undefined" frame="Container" nodeid="14:4889" transform="1,0,10576,0,1,884"><font val="Plus Jakarta Sans:Regular"/>11/10/2023</string>
+    </TextNode>
+    <TextNode>
+      <base>Item 2</base>
+      <string page="undefined" frame="Container" nodeid="14:4892" transform="1,0,10576,0,1,944"><font val="Plus Jakarta Sans:Bold"/>Item 2</string>
+    </TextNode>
+    <TextNode>
+      <base>Sẽ tiếp tục ủng hộ shop trong tương lai.</base>
+      <string page="undefined" frame="Container" nodeid="14:4905" transform="1,0,10576,0,1,976"><font val="Plus Jakarta Sans:Regular"/>Sẽ tiếp tục ủng hộ shop trong tương lai.</string>
+    </TextNode>
+    <TextNode>
+      <base>10/10/2023</base>
+      <string page="undefined" frame="Container" nodeid="14:4908" transform="1,0,10576,0,1,1008"><font val="Plus Jakarta Sans:Regular"/>10/10/2023</string>
+    </TextNode>
+    <TextNode>
+      <base>Item 3</base>
+      <string page="undefined" frame="Container" nodeid="14:4911" transform="1,0,10576,0,1,1068"><font val="Plus Jakarta Sans:Regular"/>Item 3</string>
+    </TextNode>
+    <TextNode>
+      <base>Item 4</base>
+      <string page="undefined" frame="Container" nodeid="14:4916" transform="1,0,10576,0,1,1136"><font val="Plus Jakarta Sans:Regular"/>Item 4</string>
+    </TextNode>
+    <TextNode>
+      <base>Item 5</base>
+      <string page="undefined" frame="Container" nodeid="14:4921" transform="1,0,10576,0,1,1204"><font val="Plus Jakarta Sans:Regular"/>Item 5</string>
+    </TextNode>
+    <TextNode>
+      <base>Item 6</base>
+      <string page="undefined" frame="Container" nodeid="14:4926" transform="1,0,10576,0,1,1272"><font val="Plus Jakarta Sans:Regular"/>Item 6</string>
+    </TextNode>
+    <TextNode>
+      <base>Item 7</base>
+      <string page="undefined" frame="Container" nodeid="14:4931" transform="1,0,10576,0,1,1340"><font val="Plus Jakarta Sans:Regular"/>Item 7</string>
+    </TextNode>
+    <TextNode>
+      <base>Item 8</base>
+      <string page="undefined" frame="Container" nodeid="14:4936" transform="1,0,10576,0,1,1408"><font val="Plus Jakarta Sans:Regular"/>Item 8</string>
+    </TextNode>
+    <TextNode>
+      <base>Item 9</base>
+      <string page="undefined" frame="Container" nodeid="14:4941" transform="1,0,10576,0,1,1476"><font val="Plus Jakarta Sans:Regular"/>Item 9</string>
+    </TextNode>
+</figma>

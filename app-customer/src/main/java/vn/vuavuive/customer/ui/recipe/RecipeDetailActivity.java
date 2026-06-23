@@ -97,9 +97,9 @@ public class RecipeDetailActivity extends AppCompatActivity {
         tvRecipeName.setText(getString(recipe, "name", "Công thức"));
         tvDescription.setText(getString(recipe, "description", ""));
         
-        tvPrepTime.setText("Chuẩn bị: " + getString(recipe, "prepTime", "--"));
-        tvCookTime.setText("Nấu: " + getString(recipe, "cookTime", "--"));
-        tvDifficulty.setText("Độ khó: " + getString(recipe, "difficulty", "--"));
+        tvPrepTime.setText(getString(recipe, "prepTime", "--"));
+        tvCookTime.setText(getString(recipe, "cookTime", "--"));
+        tvDifficulty.setText(getString(recipe, "difficulty", "--"));
 
         Glide.with(this)
                 .load(recipe.get("image"))
