@@ -15,12 +15,14 @@ import dagger.hilt.android.AndroidEntryPoint;
 import javax.inject.Inject;
 import vn.vuavuive.shared.util.SessionManager;
 import vn.vuavuive.shipper.R;
+import vn.vuavuive.shipper.data.repository.FirebaseShipperRepository;
 import vn.vuavuive.shipper.ui.main.ShipperMainActivity;
 import vn.vuavuive.shipper.viewmodel.AuthViewModel;
 
 @AndroidEntryPoint
 public class ShipperLoginActivity extends AppCompatActivity {
     @Inject SessionManager sessionManager;
+    @Inject FirebaseShipperRepository repository;
 
     private AuthViewModel authViewModel;
     private TextInputLayout tilIdentifier;
@@ -83,8 +85,8 @@ public class ShipperLoginActivity extends AppCompatActivity {
                     if (sessionManager.isShipper()) {
                         goToMain();
                     } else {
-                        sessionManager.clearSession();
-                        showError("Tai khoan khong co quyen Shipper");
+                        repository.logout(); // Firebase signOut + clearSession
+                        showError("Tài khoản không có quyền Shipper");
                     }
                     break;
                 case ERROR:

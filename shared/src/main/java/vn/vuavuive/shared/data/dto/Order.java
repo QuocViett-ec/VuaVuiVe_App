@@ -13,6 +13,9 @@ public class Order {
     @SerializedName("userId")
     private String userId;
 
+    @SerializedName("shipperId")
+    private String shipperId;
+
     @SerializedName("items")
     private List<OrderItem> items;
 
@@ -74,6 +77,9 @@ public class Order {
     @SerializedName("deliveryPhone")
     private String deliveryPhone;
 
+    @SerializedName("failReason")
+    private String failReason;
+
     @SerializedName("createdAt")
     private String createdAt;
 
@@ -88,6 +94,7 @@ public class Order {
     public String getId() { return id != null ? id : orderId; }
     public String getOrderId() { return orderId; }
     public String getUserId() { return userId; }
+    public String getShipperId() { return shipperId; }
     public List<OrderItem> getItems() { return items; }
     public DeliveryInfo getDelivery() { return delivery; }
     public PaymentDetail getPayment() {
@@ -111,6 +118,7 @@ public class Order {
     public List<String> getShipmentIds() { return shipmentIds; }
     public ReturnRequest getReturnRequest() { return returnRequest; }
     public String getNote() { return note; }
+    public String getFailReason() { return failReason; }
     public String getCreatedAt() { return createdAt; }
     public String getUpdatedAt() { return updatedAt; }
 
@@ -175,6 +183,7 @@ public class Order {
     public void setId(String id) { this.id = id; }
     public void setOrderId(String orderId) { this.orderId = orderId; }
     public void setUserId(String userId) { this.userId = userId; }
+    public void setShipperId(String shipperId) { this.shipperId = shipperId; }
     public void setItems(List<OrderItem> items) { this.items = items; }
     public void setDelivery(DeliveryInfo delivery) { this.delivery = delivery; }
     public void setPayment(PaymentDetail payment) { this.payment = payment; }
@@ -190,6 +199,7 @@ public class Order {
     public void setShipmentIds(List<String> shipmentIds) { this.shipmentIds = shipmentIds; }
     public void setReturnRequest(ReturnRequest returnRequest) { this.returnRequest = returnRequest; }
     public void setNote(String note) { this.note = note; }
+    public void setFailReason(String failReason) { this.failReason = failReason; }
     public void setDeliveryAddress(String deliveryAddress) { this.deliveryAddress = deliveryAddress; }
     public void setDeliveryName(String deliveryName) { this.deliveryName = deliveryName; }
     public void setDeliveryPhone(String deliveryPhone) { this.deliveryPhone = deliveryPhone; }
@@ -201,6 +211,11 @@ public class Order {
         this.paymentStatus = paymentStatus;
         if (payment != null) payment.setStatus(paymentStatus);
     }
+
+    // Alias setters for Firebase mapping (writes to flat delivery fields)
+    public void setRecipientName(String name) { this.deliveryName = name; }
+    public void setRecipientPhone(String phone) { this.deliveryPhone = phone; }
+    public void setRecipientAddress(String address) { this.deliveryAddress = address; }
 
     // Alias: customerId == userId for shipment creation context
     public String getCustomerId() { return userId; }

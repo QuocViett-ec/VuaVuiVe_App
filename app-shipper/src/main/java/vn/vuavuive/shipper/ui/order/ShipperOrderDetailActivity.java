@@ -5,50 +5,43 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.button.MaterialButton;
 import dagger.hilt.android.AndroidEntryPoint;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import vn.vuavuive.shipper.R;
-import vn.vuavuive.shared.data.api.OrderApi;
-import vn.vuavuive.shared.data.api.ShipperOrderApi;
-import vn.vuavuive.shared.data.dto.ApiResponse;
-import vn.vuavuive.shared.data.dto.Order;
-import vn.vuavuive.shared.data.dto.OrderItem;
-import vn.vuavuive.shared.data.dto.PaymentDetail;
-import vn.vuavuive.shared.data.dto.ShipperProfile;
-import vn.vuavuive.shared.util.SessionManager;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
 import javax.inject.Inject;
+import vn.vuavuive.shipper.R;
+import vn.vuavuive.shipper.data.repository.FirebaseShipperRepository;
+import vn.vuavuive.shared.data.dto.Order;
+import vn.vuavuive.shared.data.dto.OrderItem;
+import vn.vuavuive.shared.data.dto.PaymentDetail;
 
 /**
- * ShipperOrderDetailActivity — Chi tiết đơn hàng dành cho Shipper.
+ * ShipperOrderDetailActivity — Chi tiết đơn hàng dành cho Shipper (Firebase-based).
  *
  * Tính năng:
  * - Hiển thị đầy đủ thông tin khách hàng, địa chỉ, danh sách sản phẩm
- * - Nút Quick Call: Gọi điện trực tiếp cho khách hàng (Intent ACTION_DIAL)
- * - Nút Navigate:  Mở Google Maps chỉ đường (google.navigation:q=...)
- * - Nút cập nhật trạng thái (động theo trạng thái hiện tại của đơn):
- *     PREPARING / READY_FOR_PICKUP → "Bắt đầu giao hàng" → IN_TRANSIT
+ * - Nút Quick Call: Gọi điện trực tiếp (Intent ACTION_DIAL)
+ * - Nút Navigate: Mở Google Maps chỉ đường
+ * - Cập nhật trạng thái đơn hàng qua Firebase RTDB:
+ *     CONFIRMED / PREPARING / READY_FOR_PICKUP / SHIPPING → "Bắt đầu giao hàng" → IN_TRANSIT
  *     IN_TRANSIT → "Đã giao thành công" → DELIVERED
- *                → "Giao thất bại"      → FAILED
- *     DELIVERED / FAILED / RETURNED → Label hoàn thành, ẩn các nút action
+ *               → "Giao thất bại"       → FAILED
+ *     DELIVERED / FAILED / RETURNED → Hiển thị label kết thúc
  */
 @AndroidEntryPoint
 public class ShipperOrderDetailActivity extends AppCompatActivity {
 
-    @Inject ShipperOrderApi shipperOrderApi;
-    @Inject OrderApi orderApi;
-    @Inject SessionManager sessionManager;
+    @Inject FirebaseShipperRepository repository;
 
     private String orderId;
 
@@ -101,20 +94,22 @@ public class ShipperOrderDetailActivity extends AppCompatActivity {
         recyclerItems.setNestedScrollingEnabled(false);
     }
 
+    /** Lấy chi tiết đơn hàng từ Firebase RTDB (one-shot). */
     private void fetchAndBind() {
-        orderApi.getOrderDetail(orderId).enqueue(new Callback<ApiResponse<Order>>() {
-            @Override
-            public void onResponse(Call<ApiResponse<Order>> call, Response<ApiResponse<Order>> response) {
-                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
-                    bindOrder(response.body().getData());
-                } else {
-                    Toast.makeText(ShipperOrderDetailActivity.this,
-                            "Không tải được thông tin đơn hàng", Toast.LENGTH_SHORT).show();
-                }
-            }
-            @Override
-            public void onFailure(Call<ApiResponse<Order>> call, Throwable t) {
-                Toast.makeText(ShipperOrderDetailActivity.this, "Lỗi kết nối", Toast.LENGTH_SHORT).show();
+        repository.getOrderDetail(orderId).observe(this, result -> {
+            if (result == null) return;
+            switch (result.status) {
+                case LOADING:
+                    // Có thể hiện spinner nhỏ nếu cần
+                    break;
+                case SUCCESS:
+                    if (result.data != null) bindOrder(result.data);
+                    break;
+                case ERROR:
+                    Toast.makeText(this,
+                            result.message != null ? result.message : "Không tải được thông tin đơn hàng",
+                            Toast.LENGTH_SHORT).show();
+                    break;
             }
         });
     }
@@ -140,18 +135,24 @@ public class ShipperOrderDetailActivity extends AppCompatActivity {
         if (note != null && !note.isEmpty()) {
             tvNote.setText(note);
             layoutNote.setVisibility(View.VISIBLE);
+        } else {
+            layoutNote.setVisibility(View.GONE);
         }
 
         // ── Quick Call ───────────────────────────────────────────────
         if (phone != null && !phone.isEmpty()) {
             String finalPhone = phone.trim();
+            btnCall.setEnabled(true);
             btnCall.setOnClickListener(v ->
                     startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + finalPhone))));
+        } else {
+            btnCall.setEnabled(false);
         }
 
         // ── Navigate (Google Maps) ───────────────────────────────────
         if (address != null && !address.isEmpty()) {
             String finalAddress = address.trim();
+            btnNavigate.setEnabled(true);
             btnNavigate.setOnClickListener(v -> {
                 Uri mapsUri = Uri.parse("google.navigation:q=" + Uri.encode(finalAddress));
                 Intent mapsIntent = new Intent(Intent.ACTION_VIEW, mapsUri);
@@ -159,7 +160,6 @@ public class ShipperOrderDetailActivity extends AppCompatActivity {
                 if (mapsIntent.resolveActivity(getPackageManager()) != null) {
                     startActivity(mapsIntent);
                 } else {
-                    // Fallback: open in browser
                     Uri fallback = Uri.parse("https://www.google.com/maps/search/?api=1&query="
                             + Uri.encode(finalAddress));
                     startActivity(new Intent(Intent.ACTION_VIEW, fallback));
@@ -182,17 +182,19 @@ public class ShipperOrderDetailActivity extends AppCompatActivity {
         }
 
         // ── Action Buttons ───────────────────────────────────────────
-        setupActionButtons(order.getStatus());
+        setupActionButtons(order);
     }
 
-    private void setupActionButtons(String status) {
+    private void setupActionButtons(Order order) {
+        String status = order.getStatus();
         status = status == null ? "" : status.toUpperCase();
         btnStartDelivery.setVisibility(View.GONE);
         btnDelivered.setVisibility(View.GONE);
         btnFailed.setVisibility(View.GONE);
         tvDoneLabel.setVisibility(View.GONE);
 
-        if ("CONFIRMED".equals(status) || "PREPARING".equals(status) || "READY_FOR_PICKUP".equals(status) || "SHIPPING".equals(status)) {
+        if ("CONFIRMED".equals(status) || "PREPARING".equals(status)
+                || "READY_FOR_PICKUP".equals(status) || "SHIPPING".equals(status)) {
             btnStartDelivery.setVisibility(View.VISIBLE);
             btnStartDelivery.setOnClickListener(v ->
                     confirm("Bắt đầu giao hàng?",
@@ -207,19 +209,68 @@ public class ShipperOrderDetailActivity extends AppCompatActivity {
                             "Đơn hàng sẽ được đánh dấu là đã giao thành công.",
                             "DELIVERED"));
             btnFailed.setOnClickListener(v ->
-                    confirm("Xác nhận giao thất bại?",
-                            "Đơn hàng sẽ được đánh dấu là giao thất bại.",
-                            "FAILED"));
-
+                    showFailReasonDialog());
         } else {
             // Terminal state
-            String doneText = "DELIVERED".equals(status)
-                    ? "✅ Đơn hàng đã giao thành công"
-                    : "FAILED".equals(status) ? "❌ Đơn hàng giao thất bại"
+            String doneText = "DELIVERED".equals(status) ? "✅ Đơn hàng đã giao thành công"
+                    : "FAILED".equals(status) ? "❌ Đơn hàng giao thất bại" + 
+                      (order.getFailReason() != null && !order.getFailReason().isEmpty() ? "\nLý do: " + order.getFailReason() : "")
                     : "Đơn hàng đã kết thúc";
             tvDoneLabel.setText(doneText);
             tvDoneLabel.setVisibility(View.VISIBLE);
         }
+    }
+
+    private void showFailReasonDialog() {
+        String[] reasons = {
+            "Khách hàng không nghe máy (Gọi nhiều lần)",
+            "Sai địa chỉ giao hàng / Không tìm thấy",
+            "Khách từ chối nhận (Thay đổi ý định / Không có tiền)",
+            "Khách hẹn giao lại vào thời gian khác",
+            "Lý do khác (Nhập tay)"
+        };
+
+        final int[] selectedIndex = {0};
+
+        new AlertDialog.Builder(this)
+                .setTitle("Lý do giao hàng thất bại")
+                .setSingleChoiceItems(reasons, 0, (dialog, which) -> selectedIndex[0] = which)
+                .setPositiveButton("Xác nhận", (dialog, which) -> {
+                    String selectedReason = reasons[selectedIndex[0]];
+                    if ("Lý do khác (Nhập tay)".equals(selectedReason)) {
+                        showCustomFailReasonDialog();
+                    } else {
+                        updateStatus("FAILED", selectedReason);
+                    }
+                })
+                .setNegativeButton("Huỷ", null)
+                .show();
+    }
+
+    private void showCustomFailReasonDialog() {
+        android.widget.EditText input = new android.widget.EditText(this);
+        input.setHint("Nhập lý do chi tiết...");
+        int padding = (int) (16 * getResources().getDisplayMetrics().density);
+        android.widget.FrameLayout container = new android.widget.FrameLayout(this);
+        container.addView(input);
+        input.setLayoutParams(new android.widget.FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        ));
+        container.setPadding(padding, padding / 2, padding, padding / 2);
+
+        new AlertDialog.Builder(this)
+                .setTitle("Lý do giao hàng thất bại khác")
+                .setView(container)
+                .setPositiveButton("Gửi", (dialog, which) -> {
+                    String reason = input.getText().toString().trim();
+                    if (reason.isEmpty()) {
+                        reason = "Lý do khác";
+                    }
+                    updateStatus("FAILED", reason);
+                })
+                .setNegativeButton("Quay lại", (dialog, which) -> showFailReasonDialog())
+                .show();
     }
 
     private void confirm(String title, String message, String newStatus) {
@@ -231,36 +282,33 @@ public class ShipperOrderDetailActivity extends AppCompatActivity {
                 .show();
     }
 
+    /** Cập nhật status trực tiếp vào Firebase RTDB. */
     private void updateStatus(String newStatus) {
-        shipperOrderApi.getMyProfile().enqueue(new Callback<ApiResponse<ShipperProfile>>() {
-            @Override
-            public void onResponse(Call<ApiResponse<ShipperProfile>> call, Response<ApiResponse<ShipperProfile>> response) {
-                if (!response.isSuccessful() || response.body() == null || response.body().getData().getId() == null) {
-                    Toast.makeText(ShipperOrderDetailActivity.this, "Khong tai duoc thong tin shipper", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                shipperOrderApi.updateDeliveryStatus(response.body().getData().getId(), orderId, newStatus, "")
-                        .enqueue(new Callback<ApiResponse<Void>>() {
-                            @Override
-                            public void onResponse(Call<ApiResponse<Void>> call, Response<ApiResponse<Void>> response) {
-                                String msg = response.isSuccessful() ? "Cap nhat thanh cong" : "Cap nhat that bai";
-                                Toast.makeText(ShipperOrderDetailActivity.this, msg, Toast.LENGTH_SHORT).show();
-                                if (response.isSuccessful()) fetchAndBind();
-                            }
-                            @Override
-                            public void onFailure(Call<ApiResponse<Void>> call, Throwable t) {
-                                Toast.makeText(ShipperOrderDetailActivity.this, "Loi ket noi", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-            }
+        updateStatus(newStatus, null);
+    }
 
-            @Override
-            public void onFailure(Call<ApiResponse<ShipperProfile>> call, Throwable t) {
-                Toast.makeText(ShipperOrderDetailActivity.this, "Loi ket noi", Toast.LENGTH_SHORT).show();
+    private void updateStatus(String newStatus, String failReason) {
+        LiveData<FirebaseShipperRepository.Result<Void>> liveData =
+                repository.updateOrderStatus(orderId, newStatus, failReason);
+
+        liveData.observe(this, result -> {
+            if (result == null) return;
+            if (result.status == FirebaseShipperRepository.Result.Status.LOADING) return;
+
+            liveData.removeObservers(this); // one-shot
+
+            if (result.status == FirebaseShipperRepository.Result.Status.SUCCESS) {
+                Toast.makeText(this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
+                fetchAndBind(); // Reload để refresh UI
+            } else {
+                Toast.makeText(this,
+                        result.message != null ? result.message : "Cập nhật thất bại",
+                        Toast.LENGTH_SHORT).show();
             }
         });
     }
-    // Helpers ─────────────────────────────────────────────────────────────
+
+    // ─── Helpers ─────────────────────────────────────────────────────────────
 
     private void bindStatusBadge(String status) {
         if (status == null) return;
