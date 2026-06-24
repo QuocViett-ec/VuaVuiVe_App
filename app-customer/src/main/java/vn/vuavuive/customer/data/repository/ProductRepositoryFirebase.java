@@ -25,6 +25,7 @@ import javax.inject.Singleton;
 public class ProductRepositoryFirebase {
 
     private final DatabaseReference dbRef;
+    private java.util.Map<String, String> slugToIdMap = null;
 
     @Inject
     public ProductRepositoryFirebase() {
@@ -91,6 +92,38 @@ public class ProductRepositoryFirebase {
         MutableLiveData<AuthRepository.Result<List<Product>>> result = new MutableLiveData<>();
         result.postValue(AuthRepository.Result.loading());
 
+        if (slugToIdMap != null) {
+            fetchProductsFromFirebase(category, search, page, limit, sort, result);
+        } else {
+            dbRef.child("categories").addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    java.util.Map<String, String> map = new java.util.HashMap<>();
+                    for (DataSnapshot s : snapshot.getChildren()) {
+                        String id = s.child("id").getValue(String.class);
+                        String slug = s.child("slug").getValue(String.class);
+                        if (id != null && slug != null) {
+                            map.put(slug, id);
+                        }
+                    }
+                    slugToIdMap = map;
+                    fetchProductsFromFirebase(category, search, page, limit, sort, result);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    fetchProductsFromFirebase(category, search, page, limit, sort, result);
+                }
+            });
+        }
+
+        return result;
+    }
+
+    private void fetchProductsFromFirebase(
+            String category, String search, int page, int limit, String sort,
+            MutableLiveData<AuthRepository.Result<List<Product>>> result) {
+
         dbRef.child("products").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -105,23 +138,27 @@ public class ProductRepositoryFirebase {
                 android.util.Log.d("ProductRepositoryFirebase", "onDataChange: mapped " + products.size() + " active products.");
 
                 // 1. Filter by category (by id or slug)
-                if (category != null && !category.isEmpty() && !category.equalsIgnoreCase("Tất cả")) {
+                if (category != null && !category.isEmpty() && !category.equalsIgnoreCase("Tất cả") && !category.equalsIgnoreCase("all")) {
                     List<Product> filtered = new ArrayList<>();
+                    String targetId = slugToIdMap != null ? slugToIdMap.get(category) : null;
                     for (Product p : products) {
-                        if (category.equals(p.getCategory())) {
+                        if (category.equals(p.getCategory()) || (targetId != null && targetId.equals(p.getCategory()))) {
                             filtered.add(p);
                         }
                     }
                     products = filtered;
                 }
 
-                // 2. Filter by search query
+                // 2. Filter by search query (Accent-insensitive matching)
                 if (search != null && !search.trim().isEmpty()) {
-                    String query = search.trim().toLowerCase();
+                    String query = deAccent(search.trim()).toLowerCase();
                     List<Product> filtered = new ArrayList<>();
                     for (Product p : products) {
-                        if (p.getName() != null && p.getName().toLowerCase().contains(query)) {
-                            filtered.add(p);
+                        if (p.getName() != null) {
+                            String nameNormalized = deAccent(p.getName()).toLowerCase();
+                            if (nameNormalized.contains(query)) {
+                                filtered.add(p);
+                            }
                         }
                     }
                     products = filtered;
@@ -138,6 +175,12 @@ public class ProductRepositoryFirebase {
                             double r1 = p1.getRating() != null ? p1.getRating() : 0.0;
                             double r2 = p2.getRating() != null ? p2.getRating() : 0.0;
                             return Double.compare(r2, r1);
+                        });
+                    } else if (sort.equals("newest")) {
+                        products.sort((p1, p2) -> {
+                            String t1 = p1.getCreatedAt() != null ? p1.getCreatedAt() : "";
+                            String t2 = p2.getCreatedAt() != null ? p2.getCreatedAt() : "";
+                            return t2.compareTo(t1); // Descending order
                         });
                     }
                 }
@@ -157,8 +200,6 @@ public class ProductRepositoryFirebase {
                 result.postValue(AuthRepository.Result.error("Lỗi tải sản phẩm: " + error.getMessage()));
             }
         });
-
-        return result;
     }
 
     // ── Get Product Detail ──────────────────────────────────────────────────
@@ -345,5 +386,13 @@ public class ProductRepositoryFirebase {
                 result.postValue(AuthRepository.Result.error(task.getException() != null ? task.getException().getMessage() : "Failed to save review"));
             }
         });
+    }
+
+    private static String deAccent(String str) {
+        if (str == null) return "";
+        String nfdNormalizedString = java.text.Normalizer.normalize(str, java.text.Normalizer.Form.NFD);
+        java.util.regex.Pattern pattern = java.util.regex.Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+        String result = pattern.matcher(nfdNormalizedString).replaceAll("");
+        return result.replace('đ', 'd').replace('Đ', 'D');
     }
 }

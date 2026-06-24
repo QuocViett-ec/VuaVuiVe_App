@@ -19,4 +19,10 @@ public class ReturnRequest {
     public String getStatus() { return status; }
     public String getAdminNote() { return adminNote; }
     public String getRequestedAt() { return requestedAt; }
+
+    // Setters
+    public void setReason(String reason) { this.reason = reason; }
+    public void setStatus(String status) { this.status = status; }
+    public void setAdminNote(String adminNote) { this.adminNote = adminNote; }
+    public void setRequestedAt(String requestedAt) { this.requestedAt = requestedAt; }
 }

@@ -80,7 +80,11 @@ public class Order {
     @SerializedName("updatedAt")
     private String updatedAt;
 
+    @SerializedName("stock_restored")
+    private boolean stockRestored;
+
     // Getters
+    public boolean isStockRestored() { return stockRestored; }
     public String getId() { return id != null ? id : orderId; }
     public String getOrderId() { return orderId; }
     public String getUserId() { return userId; }
@@ -168,6 +172,30 @@ public class Order {
     }
 
     // Setters
+    public void setId(String id) { this.id = id; }
+    public void setOrderId(String orderId) { this.orderId = orderId; }
+    public void setUserId(String userId) { this.userId = userId; }
+    public void setItems(List<OrderItem> items) { this.items = items; }
+    public void setDelivery(DeliveryInfo delivery) { this.delivery = delivery; }
+    public void setPayment(PaymentDetail payment) { this.payment = payment; }
+    public void setPaymentMethod(String paymentMethod) { this.paymentMethod = paymentMethod; }
+    public void setVoucherId(String voucherId) { this.voucherId = voucherId; }
+    public void setVoucherCode(String voucherCode) { this.voucherCode = voucherCode; }
+    public void setShippingFee(double shippingFee) { this.shippingFee = shippingFee; }
+    public void setDiscount(double discount) { this.discount = discount; }
+    public void setSubtotal(double subtotal) { this.subtotal = subtotal; }
+    public void setTotalAmount(double totalAmount) { this.totalAmount = totalAmount; }
+    public void setFinalAmount(double finalAmount) { this.finalAmount = finalAmount; }
+    public void setDeliveredAt(String deliveredAt) { this.deliveredAt = deliveredAt; }
+    public void setShipmentIds(List<String> shipmentIds) { this.shipmentIds = shipmentIds; }
+    public void setReturnRequest(ReturnRequest returnRequest) { this.returnRequest = returnRequest; }
+    public void setNote(String note) { this.note = note; }
+    public void setDeliveryAddress(String deliveryAddress) { this.deliveryAddress = deliveryAddress; }
+    public void setDeliveryName(String deliveryName) { this.deliveryName = deliveryName; }
+    public void setDeliveryPhone(String deliveryPhone) { this.deliveryPhone = deliveryPhone; }
+    public void setCreatedAt(String createdAt) { this.createdAt = createdAt; }
+    public void setUpdatedAt(String updatedAt) { this.updatedAt = updatedAt; }
+    public void setStockRestored(boolean stockRestored) { this.stockRestored = stockRestored; }
     public void setStatus(String status) { this.status = status; }
     public void setPaymentStatus(String paymentStatus) {
         this.paymentStatus = paymentStatus;

@@ -16,6 +16,13 @@ import vn.vuavuive.shared.data.dto.Shipment;
 import vn.vuavuive.shared.data.dto.User;
 import vn.vuavuive.shared.data.dto.Voucher;
 
+import androidx.annotation.NonNull;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 public class MockRepository {
     private static MockRepository instance;
 
@@ -37,6 +44,172 @@ public class MockRepository {
 
     private MockRepository() {
         initMockData();
+        startFirebaseSync();
+    }
+
+    private void startFirebaseSync() {
+        try {
+            DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
+            
+            // Listen to Users
+            dbRef.child("users").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    List<User> list = new ArrayList<>();
+                    for (DataSnapshot s : snapshot.getChildren()) {
+                        User u = new User();
+                        u.setId(s.getKey());
+                        u.setEmail(s.child("email").getValue(String.class));
+                        u.setName(s.child("name").getValue(String.class));
+                        u.setPhone(s.child("phone").getValue(String.class));
+                        u.setAddress(s.child("address").getValue(String.class));
+                        
+                        String role = s.child("role").getValue(String.class);
+                        u.setRole(role != null ? role.toUpperCase() : "CUSTOMER");
+                        
+                        Boolean active = s.child("isActive").getValue(Boolean.class);
+                        if (active == null) active = s.child("is_active").getValue(Boolean.class);
+                        u.setActive(active != null ? active : true);
+                        
+                        u.setCreatedAt(s.child("created_at").getValue(String.class));
+                        u.setProvider(s.child("provider").getValue(String.class));
+                        list.add(u);
+                    }
+                    if (!list.isEmpty()) {
+                        users = list;
+                    }
+                }
+                @Override public void onCancelled(@NonNull DatabaseError error) {}
+            });
+
+            // Listen to Products
+            dbRef.child("products").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    List<Product> list = new ArrayList<>();
+                    for (DataSnapshot s : snapshot.getChildren()) {
+                        Product p = new Product();
+                        p.setId(s.child("id").getValue(String.class) != null ? s.child("id").getValue(String.class) : s.getKey());
+                        p.setName(s.child("name").getValue(String.class));
+                        p.setSlug(s.child("slug").getValue(String.class));
+                        
+                        Double sellingPrice = s.child("selling_price").getValue(Double.class);
+                        p.setPrice(sellingPrice != null ? sellingPrice : 0.0);
+                        
+                        p.setOriginalPrice(s.child("original_price").getValue(Double.class));
+                        p.setCategory(s.child("category_id").getValue(String.class));
+                        p.setSubCategory(s.child("sub_category").getValue(String.class));
+                        p.setDescription(s.child("description").getValue(String.class));
+                        
+                        String imgUrl = s.child("image_url").getValue(String.class);
+                        if (imgUrl == null) imgUrl = s.child("imageUrl").getValue(String.class);
+                        p.setImageUrl(imgUrl);
+                        
+                        Integer stock = s.child("stock_quantity").getValue(Integer.class);
+                        if (stock == null) stock = s.child("stock").getValue(Integer.class);
+                        p.setStock(stock != null ? stock : 0);
+                        
+                        p.setUnit(s.child("unit").getValue(String.class));
+                        
+                        Boolean active = s.child("is_active").getValue(Boolean.class);
+                        if (active == null) active = s.child("isActive").getValue(Boolean.class);
+                        p.setActive(active != null ? active : true);
+                        
+                        p.setRating(s.child("rating").getValue(Double.class));
+                        p.setReviewCount(s.child("review_count").getValue(Integer.class));
+                        p.setSoldCount(s.child("sold_count").getValue(Integer.class));
+                        p.setCreatedAt(s.child("created_at").getValue(String.class));
+                        list.add(p);
+                    }
+                    if (!list.isEmpty()) {
+                        products = list;
+                    }
+                }
+                @Override public void onCancelled(@NonNull DatabaseError error) {}
+            });
+
+            // Listen to Orders
+            dbRef.child("orders").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    List<Order> list = new ArrayList<>();
+                    for (DataSnapshot s : snapshot.getChildren()) {
+                        Order o = new Order();
+                        o.setId(s.child("id").getValue(String.class) != null ? s.child("id").getValue(String.class) : s.getKey());
+                        o.setOrderId(s.child("order_id").getValue(String.class));
+                        o.setUserId(s.child("user_id").getValue(String.class));
+                        
+                        String status = s.child("status").getValue(String.class);
+                        o.setStatus(status != null ? status.toUpperCase() : null);
+                        
+                        o.setNote(s.child("note").getValue(String.class));
+                        
+                        Double subtotal = s.child("subtotal_amount").getValue(Double.class);
+                        o.setSubtotal(subtotal != null ? subtotal : 0.0);
+                        
+                        Double shipping = s.child("shipping_fee").getValue(Double.class);
+                        o.setShippingFee(shipping != null ? shipping : 0.0);
+                        
+                        Double discount = s.child("discount_amount").getValue(Double.class);
+                        o.setDiscount(discount != null ? discount : 0.0);
+                        
+                        Double finalAmount = s.child("final_amount").getValue(Double.class);
+                        o.setFinalAmount(finalAmount != null ? finalAmount : 0.0);
+                        o.setTotalAmount(finalAmount != null ? finalAmount : 0.0);
+
+                        Boolean restored = s.child("stock_restored").getValue(Boolean.class);
+                        o.setStockRestored(restored != null ? restored : false);
+                        
+                        o.setCreatedAt(s.child("created_at").getValue(String.class));
+                        o.setUpdatedAt(s.child("updated_at").getValue(String.class));
+                        o.setDeliveredAt(s.child("delivered_at").getValue(String.class));
+
+                        // Delivery
+                        vn.vuavuive.shared.data.dto.DeliveryInfo delivery = new vn.vuavuive.shared.data.dto.DeliveryInfo();
+                        delivery.setName(s.child("delivery_name").getValue(String.class));
+                        delivery.setPhone(s.child("delivery_phone").getValue(String.class));
+                        delivery.setAddress(s.child("delivery_address").getValue(String.class));
+                        o.setDelivery(delivery);
+
+                        // Payment Detail
+                        vn.vuavuive.shared.data.dto.PaymentDetail payment = new vn.vuavuive.shared.data.dto.PaymentDetail();
+                        payment.setMethod(s.child("payment_method").getValue(String.class));
+                        payment.setStatus(s.child("payment_status").getValue(String.class));
+                        payment.setAmount(o.getFinalAmount());
+                        o.setPayment(payment);
+
+                        // Items
+                        List<vn.vuavuive.shared.data.dto.OrderItem> items = new ArrayList<>();
+                        DataSnapshot itemsSnap = s.child("items");
+                        if (itemsSnap.exists()) {
+                            for (DataSnapshot itemSnap : itemsSnap.getChildren()) {
+                                vn.vuavuive.shared.data.dto.OrderItem item = new vn.vuavuive.shared.data.dto.OrderItem();
+                                item.setProductId(itemSnap.child("product_id").getValue(String.class));
+                                item.setName(itemSnap.child("product_name").getValue(String.class));
+                                item.setImageUrl(itemSnap.child("image_url").getValue(String.class));
+                                item.setUnit(itemSnap.child("unit").getValue(String.class));
+                                
+                                Double price = itemSnap.child("unit_price").getValue(Double.class);
+                                item.setPrice(price != null ? price : 0.0);
+                                
+                                Integer qty = itemSnap.child("quantity").getValue(Integer.class);
+                                item.setQuantity(qty != null ? qty : 1);
+                                items.add(item);
+                            }
+                        }
+                        o.setItems(items);
+
+                        list.add(o);
+                    }
+                    if (!list.isEmpty()) {
+                        orders = list;
+                    }
+                }
+                @Override public void onCancelled(@NonNull DatabaseError error) {}
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void initMockData() {
@@ -491,6 +664,14 @@ public class MockRepository {
             if (users.get(i).getId().equals(user.getId())) {
                 users.set(i, user);
                 addAuditLog("Cập nhật thành viên", user.getName(), "Cập nhật quyền thành " + user.getRole() + ", trạng thái hoạt động: " + user.isActive());
+                try {
+                    DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
+                    dbRef.child("users").child(user.getId()).child("role").setValue(user.getRole() != null ? user.getRole().toUpperCase() : "CUSTOMER");
+                    dbRef.child("users").child(user.getId()).child("isActive").setValue(user.isActive());
+                    dbRef.child("users").child(user.getId()).child("is_active").setValue(user.isActive());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 return;
             }
         }

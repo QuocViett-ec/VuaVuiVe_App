@@ -17,13 +17,13 @@ import javax.inject.Inject;
 @HiltViewModel
 public class OrderViewModel extends ViewModel {
 
-    private final OrderRepository orderRepository;
+    private final vn.vuavuive.customer.data.repository.FirebaseOrderRepository orderRepository;
 
     // Selected voucher
     private final MutableLiveData<Voucher> selectedVoucher = new MutableLiveData<>();
 
     @Inject
-    public OrderViewModel(OrderRepository orderRepository) {
+    public OrderViewModel(vn.vuavuive.customer.data.repository.FirebaseOrderRepository orderRepository) {
         this.orderRepository = orderRepository;
     }
 
