@@ -8,6 +8,7 @@
         <domain includeSubdomains="true">localhost</domain>
         <!-- LAN IP của máy host -->
         <domain includeSubdomains="true">192.168.1.52</domain>
+        <domain includeSubdomains="true">192.168.1.215</domain>
         <domain includeSubdomains="true">192.168.88.220</domain>
     </domain-config>
 </network-security-config>

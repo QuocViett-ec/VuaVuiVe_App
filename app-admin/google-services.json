@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "100000000000",
+    "project_id": "vua-vui-ve-default",
+    "storage_bucket": "vua-vui-ve-default.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:100000000000:android:abcdef1234567890",
+        "android_client_info": {
+          "package_name": "vn.vuavuive.admin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDummyKey_Admin"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
