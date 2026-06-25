@@ -116,6 +116,10 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
                     bgTint = Color.parseColor("#339C27B0"); // Purple translucent
                     textColor = Color.parseColor("#9C27B0");
                     break;
+                case "SHIPPER":
+                    bgTint = Color.parseColor("#33FF9800"); // Orange translucent
+                    textColor = Color.parseColor("#FF9800");
+                    break;
                 default:
                     bgTint = Color.parseColor("#332196F3"); // Blue translucent for regular users
                     textColor = Color.parseColor("#2196F3");
