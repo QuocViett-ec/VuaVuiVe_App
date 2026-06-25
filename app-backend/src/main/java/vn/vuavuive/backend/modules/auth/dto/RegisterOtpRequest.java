@@ -9,13 +9,14 @@ public record RegisterOtpRequest(
         @JsonAlias("name")
         String fullName,
 
+        @NotBlank(message = "Email không được để trống")
         String email,
 
         @NotBlank(message = "Số điện thoại không được để trống")
         String phone,
 
         @NotBlank(message = "Mật khẩu không được để trống")
-        @Size(min = 6, message = "Mật khẩu tối thiểu 6 ký tự")
+        @Size(min = 6, message = "Mật khẩu phải từ 6 ký tự trở lên")
         String password,
 
         String address

@@ -31,6 +31,7 @@ public class AuthService {
     private final PendingRegistrationRepository pendingRegistrationRepository;
     private final OtpRepository otpRepository;
     private final TelegramNotificationService telegramNotificationService;
+    private final ResendEmailService resendEmailService;
 
     /**
      * Đăng ký tài khoản mới.
@@ -70,7 +71,9 @@ public class AuthService {
         pending.setPhone(request.phone());
         pending.setFullName(request.fullName());
         pending.setEmail(request.email() != null && !request.email().trim().isEmpty() ? request.email().trim() : null);
+        
         pending.setPasswordHash(passwordEncoder.encode(request.password()));
+        
         pending.setAddress(request.address());
         pending.setExpiresAt(LocalDateTime.now().plusMinutes(15)); // Pending user exists for 15 minutes
         pendingRegistrationRepository.save(pending);
@@ -86,8 +89,8 @@ public class AuthService {
         otp.setLastSentAt(LocalDateTime.now());
         otpRepository.save(otp);
 
-        // Gửi qua Telegram Bot
-        telegramNotificationService.sendOtp(request.phone(), rawOtp);
+        // Gửi qua Resend Email Service
+        resendEmailService.sendOtp(request.email(), rawOtp);
     }
 
     /**
