@@ -136,8 +136,15 @@ public class MockRepository {
                     for (DataSnapshot s : snapshot.getChildren()) {
                         Order o = new Order();
                         o.setId(s.child("id").getValue(String.class) != null ? s.child("id").getValue(String.class) : s.getKey());
-                        o.setOrderId(s.child("order_id").getValue(String.class));
-                        o.setUserId(s.child("user_id").getValue(String.class));
+                        
+                        String orderId = s.child("order_id").getValue(String.class);
+                        if (orderId == null) orderId = s.child("orderId").getValue(String.class);
+                        if (orderId == null) orderId = s.getKey();
+                        o.setOrderId(orderId);
+                        
+                        String userId = s.child("user_id").getValue(String.class);
+                        if (userId == null) userId = s.child("userId").getValue(String.class);
+                        o.setUserId(userId);
                         
                         String status = s.child("status").getValue(String.class);
                         o.setStatus(status != null ? status.toUpperCase() : null);
@@ -145,36 +152,68 @@ public class MockRepository {
                         o.setNote(s.child("note").getValue(String.class));
                         
                         Double subtotal = s.child("subtotal_amount").getValue(Double.class);
+                        if (subtotal == null) subtotal = s.child("subtotalAmount").getValue(Double.class);
                         o.setSubtotal(subtotal != null ? subtotal : 0.0);
                         
                         Double shipping = s.child("shipping_fee").getValue(Double.class);
+                        if (shipping == null) shipping = s.child("shippingFee").getValue(Double.class);
                         o.setShippingFee(shipping != null ? shipping : 0.0);
                         
                         Double discount = s.child("discount_amount").getValue(Double.class);
+                        if (discount == null) discount = s.child("discountAmount").getValue(Double.class);
                         o.setDiscount(discount != null ? discount : 0.0);
                         
                         Double finalAmount = s.child("final_amount").getValue(Double.class);
+                        if (finalAmount == null) finalAmount = s.child("finalAmount").getValue(Double.class);
+                        if (finalAmount == null) finalAmount = s.child("totalAmount").getValue(Double.class);
+                        if (finalAmount == null) finalAmount = s.child("total_amount").getValue(Double.class);
                         o.setFinalAmount(finalAmount != null ? finalAmount : 0.0);
                         o.setTotalAmount(finalAmount != null ? finalAmount : 0.0);
 
                         Boolean restored = s.child("stock_restored").getValue(Boolean.class);
+                        if (restored == null) restored = s.child("stockRestored").getValue(Boolean.class);
                         o.setStockRestored(restored != null ? restored : false);
                         
-                        o.setCreatedAt(s.child("created_at").getValue(String.class));
-                        o.setUpdatedAt(s.child("updated_at").getValue(String.class));
-                        o.setDeliveredAt(s.child("delivered_at").getValue(String.class));
+                        String createdAt = s.child("created_at").getValue(String.class);
+                        if (createdAt == null) createdAt = s.child("createdAt").getValue(String.class);
+                        o.setCreatedAt(createdAt);
+                        
+                        String updatedAt = s.child("updated_at").getValue(String.class);
+                        if (updatedAt == null) updatedAt = s.child("updatedAt").getValue(String.class);
+                        o.setUpdatedAt(updatedAt);
+                        
+                        String deliveredAt = s.child("delivered_at").getValue(String.class);
+                        if (deliveredAt == null) deliveredAt = s.child("deliveredAt").getValue(String.class);
+                        o.setDeliveredAt(deliveredAt);
 
                         // Delivery
                         vn.vuavuive.shared.data.dto.DeliveryInfo delivery = new vn.vuavuive.shared.data.dto.DeliveryInfo();
-                        delivery.setName(s.child("delivery_name").getValue(String.class));
-                        delivery.setPhone(s.child("delivery_phone").getValue(String.class));
-                        delivery.setAddress(s.child("delivery_address").getValue(String.class));
+                        String delName = s.child("delivery_name").getValue(String.class);
+                        if (delName == null) delName = s.child("deliveryName").getValue(String.class);
+                        if (delName == null) delName = s.child("recipientName").getValue(String.class);
+                        delivery.setName(delName);
+
+                        String delPhone = s.child("delivery_phone").getValue(String.class);
+                        if (delPhone == null) delPhone = s.child("deliveryPhone").getValue(String.class);
+                        if (delPhone == null) delPhone = s.child("recipientPhone").getValue(String.class);
+                        delivery.setPhone(delPhone);
+
+                        String delAddr = s.child("delivery_address").getValue(String.class);
+                        if (delAddr == null) delAddr = s.child("deliveryAddress").getValue(String.class);
+                        if (delAddr == null) delAddr = s.child("recipientAddress").getValue(String.class);
+                        delivery.setAddress(delAddr);
                         o.setDelivery(delivery);
 
                         // Payment Detail
                         vn.vuavuive.shared.data.dto.PaymentDetail payment = new vn.vuavuive.shared.data.dto.PaymentDetail();
-                        payment.setMethod(s.child("payment_method").getValue(String.class));
-                        payment.setStatus(s.child("payment_status").getValue(String.class));
+                        String payMethod = s.child("payment_method").getValue(String.class);
+                        if (payMethod == null) payMethod = s.child("paymentMethod").getValue(String.class);
+                        payment.setMethod(payMethod);
+
+                        String payStatus = s.child("payment_status").getValue(String.class);
+                        if (payStatus == null) payStatus = s.child("paymentStatus").getValue(String.class);
+                        if (payStatus == null) payStatus = s.child("payment").child("status").getValue(String.class);
+                        payment.setStatus(payStatus);
                         payment.setAmount(o.getFinalAmount());
                         o.setPayment(payment);
 
@@ -184,12 +223,22 @@ public class MockRepository {
                         if (itemsSnap.exists()) {
                             for (DataSnapshot itemSnap : itemsSnap.getChildren()) {
                                 vn.vuavuive.shared.data.dto.OrderItem item = new vn.vuavuive.shared.data.dto.OrderItem();
-                                item.setProductId(itemSnap.child("product_id").getValue(String.class));
-                                item.setName(itemSnap.child("product_name").getValue(String.class));
-                                item.setImageUrl(itemSnap.child("image_url").getValue(String.class));
+                                String prodId = itemSnap.child("product_id").getValue(String.class);
+                                if (prodId == null) prodId = itemSnap.child("productId").getValue(String.class);
+                                item.setProductId(prodId);
+                                
+                                String prodName = itemSnap.child("product_name").getValue(String.class);
+                                if (prodName == null) prodName = itemSnap.child("productName").getValue(String.class);
+                                item.setName(prodName);
+                                
+                                String imgUrl = itemSnap.child("image_url").getValue(String.class);
+                                if (imgUrl == null) imgUrl = itemSnap.child("imageUrl").getValue(String.class);
+                                item.setImageUrl(imgUrl);
+                                
                                 item.setUnit(itemSnap.child("unit").getValue(String.class));
                                 
                                 Double price = itemSnap.child("unit_price").getValue(Double.class);
+                                if (price == null) price = itemSnap.child("productPrice").getValue(Double.class);
                                 item.setPrice(price != null ? price : 0.0);
                                 
                                 Integer qty = itemSnap.child("quantity").getValue(Integer.class);
