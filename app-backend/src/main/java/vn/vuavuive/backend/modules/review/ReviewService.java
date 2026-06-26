@@ -36,7 +36,7 @@ public class ReviewService {
     /** Lấy danh sách đánh giá của sản phẩm (public) */
     public ApiResponse<List<ReviewResponse>> getProductReviews(UUID productId, int page, int size) {
         // Kiểm tra sản phẩm tồn tại
-        if (!productRepository.existsById(productId)) {
+        if (productRepository.findById(productId).isEmpty()) {
             throw AppException.notFound("Sản phẩm");
         }
 
@@ -66,7 +66,7 @@ public class ReviewService {
                 .or(() -> userRepository.findByPhone(identifier))
                 .orElseThrow(() -> AppException.notFound("Người dùng"));
 
-        Product product = productRepository.findById(request.productId())
+        Product product = productRepository.findById(request.productId().toString())
                 .orElseThrow(() -> AppException.notFound("Sản phẩm"));
 
         // Kiểm tra xem user đã đánh giá sản phẩm này chưa, nếu rồi thì cập nhật
@@ -80,8 +80,9 @@ public class ReviewService {
         }
 
         Review review = Review.builder()
-                .user(user)
-                .product(product)
+                .userId(user.getId())
+                .userName(user.getFullName())
+                .productId(product.getId())
                 .rating(request.rating())
                 .comment(request.comment())
                 .build();
@@ -100,11 +101,11 @@ public class ReviewService {
                 .or(() -> userRepository.findByPhone(identifier))
                 .orElseThrow(() -> AppException.notFound("Người dùng"));
 
-        Review review = reviewRepository.findById(reviewId)
+        Review review = reviewRepository.findById(reviewId.toString())
                 .orElseThrow(() -> AppException.notFound("Đánh giá"));
 
         // Chỉ chủ đánh giá mới được sửa (hoặc admin)
-        boolean isOwner = review.getUser().getId().equals(user.getId());
+        boolean isOwner = review.getUserId() != null && review.getUserId().equals(user.getId());
         boolean isAdmin = user.getRole().name().equals("ADMIN");
         if (!isOwner && !isAdmin) {
             throw AppException.forbidden("Bạn không có quyền sửa đánh giá này");
@@ -125,16 +126,16 @@ public class ReviewService {
                 .or(() -> userRepository.findByPhone(identifier))
                 .orElseThrow(() -> AppException.notFound("Người dùng"));
 
-        Review review = reviewRepository.findById(reviewId)
+        Review review = reviewRepository.findById(reviewId.toString())
                 .orElseThrow(() -> AppException.notFound("Đánh giá"));
 
-        boolean isOwner = review.getUser().getId().equals(user.getId());
+        boolean isOwner = review.getUserId() != null && review.getUserId().equals(user.getId());
         boolean isAdmin = user.getRole().name().equals("ADMIN");
         if (!isOwner && !isAdmin) {
             throw AppException.forbidden("Bạn không có quyền xoá đánh giá này");
         }
 
-        reviewRepository.delete(review);
+        reviewRepository.deleteById(review.getId());
     }
 
     /** Lấy rating trung bình của sản phẩm */
@@ -185,8 +186,9 @@ public class ReviewService {
                 review.setComment(comment);
             } else {
                 review = Review.builder()
-                        .user(user)
-                        .product(product)
+                        .userId(user.getId())
+                        .userName(user.getFullName())
+                        .productId(product.getId())
                         .rating(rating)
                         .comment(comment)
                         .build();
@@ -211,7 +213,7 @@ public class ReviewService {
                 .orElseThrow(() -> AppException.notFound("Đơn hàng"));
 
         for (OrderItem item : order.getOrderItems()) {
-            java.util.Optional<Review> existingReview = reviewRepository.findByUserIdAndProductId(user.getId(), item.getProduct().getId());
+            java.util.Optional<Review> existingReview = reviewRepository.findByUserIdAndProductId(user.getId(), item.getProductId());
             if (existingReview.isPresent()) {
                 return ApiResponse.success(ReviewResponse.from(existingReview.get()));
             }

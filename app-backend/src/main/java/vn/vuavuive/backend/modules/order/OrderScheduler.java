@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import vn.vuavuive.backend.modules.product.Product;
 import vn.vuavuive.backend.modules.product.ProductRepository;
+import java.util.UUID;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -44,10 +45,14 @@ public class OrderScheduler {
             try {
                 // 1. Hoàn lại tồn kho cho sản phẩm
                 for (OrderItem item : order.getOrderItems()) {
-                    Product product = item.getProduct();
-                    product.setStockQuantity(product.getStockQuantity() + item.getQuantity());
-                    productRepository.save(product);
-                    log.info("Hoàn trả tồn kho cho SP: {} (+{})", product.getName(), item.getQuantity());
+                    if (item.getProductId() != null) {
+                        Product product = productRepository.findById(item.getProductId()).orElse(null);
+                        if (product != null) {
+                            product.setStockQuantity(product.getStockQuantity() + item.getQuantity());
+                            productRepository.save(product);
+                            log.info("Hoàn trả tồn kho cho SP: {} (+{})", product.getName(), item.getQuantity());
+                        }
+                    }
                 }
 
                 // 2. Cập nhật trạng thái đơn hàng sang CANCELLED
@@ -56,7 +61,7 @@ public class OrderScheduler {
 
                 // 3. Ghi log trạng thái đơn hàng
                 OrderStatusLog statusLog = OrderStatusLog.builder()
-                        .order(order)
+                        .orderId(order.getId())
                         .status(Order.OrderStatus.CANCELLED)
                         .note("Tự động hủy đơn hàng do quá 15 phút chưa hoàn tất thanh toán.")
                         .updatedByRole("SYSTEM")

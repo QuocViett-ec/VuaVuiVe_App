@@ -1,19 +1,19 @@
 const https = require('https');
 
-https.get('https://vua-vui-ve-default-rtdb.firebaseio.com/users.json', (res) => {
+https.get('https://vua-vui-ve-default-rtdb.firebaseio.com/products.json', (res) => {
     let data = '';
     res.on('data', (chunk) => data += chunk);
     res.on('end', () => {
         try {
-            const users = JSON.parse(data);
-            const keys = Object.keys(users);
+            const products = JSON.parse(data);
+            const keys = Object.keys(products);
             if (keys.length > 0) {
-                console.log("Sample User Structure:", JSON.stringify({ key: keys[0], data: users[keys[0]] }, null, 2));
+                console.log("Sample Product Structure:", JSON.stringify({ key: keys[0], data: products[keys[0]] }, null, 2));
             } else {
-                console.log("No users found.");
+                console.log("No products found.");
             }
         } catch(e) {
-            console.log("Err parsing users:", e.message);
+            console.log("Err parsing products:", e.message);
         }
     });
 });

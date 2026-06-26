@@ -1,29 +1,86 @@
 package vn.vuavuive.backend.modules.review;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import vn.vuavuive.backend.core.FirebaseRepositoryHelper;
 
+import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Repository
-public interface ReviewRepository extends JpaRepository<Review, UUID> {
+@RequiredArgsConstructor
+public class ReviewRepository {
 
-    /** Lấy danh sách đánh giá của một sản phẩm (không ẩn), mới nhất trước */
-    @Query("SELECT r FROM Review r JOIN FETCH r.user WHERE r.product.id = :productId AND r.isHidden = false ORDER BY r.createdAt DESC")
-    Page<Review> findByProductId(@Param("productId") UUID productId, Pageable pageable);
+    private final FirebaseRepositoryHelper firebase;
 
-    /** Kiểm tra user đã đánh giá sản phẩm này chưa */
-    Optional<Review> findByUserIdAndProductId(UUID userId, UUID productId);
+    public Optional<Review> findById(String id) {
+        return Optional.ofNullable(firebase.get("reviews/" + id, Review.class));
+    }
 
-    /** Tính rating trung bình của sản phẩm */
-    @Query("SELECT COALESCE(AVG(r.rating), 0.0) FROM Review r WHERE r.product.id = :productId AND r.isHidden = false")
-    Double getAverageRatingByProductId(@Param("productId") UUID productId);
+    public List<Review> findAll() {
+        return firebase.getList("reviews", Review.class);
+    }
 
-    /** Đếm số lượng đánh giá */
-    long countByProductIdAndIsHiddenFalse(UUID productId);
+    public Review save(Review review) {
+        if (review.getId() == null) {
+            review.setId(UUID.randomUUID().toString());
+        }
+        firebase.save("reviews/" + review.getId(), review);
+        return review;
+    }
+
+    public void deleteById(String id) {
+        firebase.delete("reviews/" + id);
+    }
+
+    private <T> Page<T> paginate(List<T> list, Pageable pageable) {
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), list.size());
+        if (start > list.size()) {
+            return new PageImpl<>(List.of(), pageable, list.size());
+        }
+        return new PageImpl<>(list.subList(start, end), pageable, list.size());
+    }
+
+    public Page<Review> findByProductId(UUID productId, Pageable pageable) {
+        if (productId == null) return new PageImpl<>(List.of(), pageable, 0);
+        String prodIdStr = productId.toString();
+        List<Review> sorted = findAll().stream()
+                .filter(r -> prodIdStr.equals(r.getProductId()) && !Boolean.TRUE.equals(r.getIsHidden()))
+                .sorted(Comparator.comparing(Review::getCreatedAt, Comparator.nullsLast(String::compareTo)).reversed())
+                .collect(Collectors.toList());
+        return paginate(sorted, pageable);
+    }
+
+    public Optional<Review> findByUserIdAndProductId(String userId, String productId) {
+        if (userId == null || productId == null) return Optional.empty();
+        return findAll().stream()
+                .filter(r -> userId.equals(r.getUserId()) && productId.equals(r.getProductId()))
+                .findFirst();
+    }
+
+    public Double getAverageRatingByProductId(UUID productId) {
+        if (productId == null) return 0.0;
+        String prodIdStr = productId.toString();
+        List<Review> list = findAll().stream()
+                .filter(r -> prodIdStr.equals(r.getProductId()) && !Boolean.TRUE.equals(r.getIsHidden()))
+                .collect(Collectors.toList());
+        if (list.isEmpty()) return 0.0;
+        double sum = list.stream().mapToInt(Review::getRating).sum();
+        return sum / list.size();
+    }
+
+    public long countByProductIdAndIsHiddenFalse(UUID productId) {
+        if (productId == null) return 0;
+        String prodIdStr = productId.toString();
+        return findAll().stream()
+                .filter(r -> prodIdStr.equals(r.getProductId()) && !Boolean.TRUE.equals(r.getIsHidden()))
+                .count();
+    }
 }

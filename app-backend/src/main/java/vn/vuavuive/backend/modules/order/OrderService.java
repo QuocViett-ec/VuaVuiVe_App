@@ -95,7 +95,8 @@ public class OrderService {
             totalAmount = totalAmount.add(subtotal);
 
             OrderItem orderItem = OrderItem.builder()
-                    .product(product)
+                    .productId(product.getId())
+                    .productName(product.getName())
                     .quantity(itemReq.quantity())
                     .unitPrice(unitPrice)
                     .subtotal(subtotal)
@@ -111,7 +112,9 @@ public class OrderService {
         String recipientPhone = request.getDelivery() != null ? request.getDelivery().phone() : null;
 
         Order order = Order.builder()
-                .user(user)
+                .userId(user.getId())
+                .userName(user.getFullName())
+                .userPhone(user.getPhone())
                 .paymentMethod(request.paymentMethod())
                 .paymentStatus("MOMO".equals(request.paymentMethod()) ? Order.PaymentStatus.PENDING : Order.PaymentStatus.UNPAID)
                 .totalAmount(totalAmount)
@@ -122,12 +125,6 @@ public class OrderService {
                 .note(request.note())
                 .build();
 
-        order = orderRepository.save(order);
-
-        // Gán order_id cho từng item
-        for (OrderItem item : orderItems) {
-            item.setOrder(order);
-        }
         order.getOrderItems().addAll(orderItems);
         order = orderRepository.save(order);
 
@@ -185,7 +182,7 @@ public class OrderService {
     /**
      * Xem chi tiết một đơn hàng.
      */
-    public OrderResponse getOrderById(UUID orderId) {
+    public OrderResponse getOrderById(String orderId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> AppException.notFound("Đơn hàng"));
         return toResponse(order, null);
@@ -228,22 +225,24 @@ public class OrderService {
      * Khách hàng HỦY đơn hàng (chỉ khi còn ở trạng thái PENDING).
      */
     @Transactional(rollbackFor = Exception.class)
-    public OrderResponse cancelOrder(UUID orderId) {
+    public OrderResponse cancelOrder(String orderId) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> AppException.notFound("Đơn hàng"));
 
-        // Chỉ cho phép hủy khi còn PENDING
         if (order.getStatus() != Order.OrderStatus.PENDING) {
             throw AppException.badRequest(
                     "Không thể hủy đơn đang ở trạng thái " + order.getStatus());
         }
 
-        // Hoàn lại tồn kho
         for (OrderItem item : order.getOrderItems()) {
-            Product product = item.getProduct();
-            product.setStockQuantity(product.getStockQuantity() + item.getQuantity());
-            productRepository.save(product);
+            if (item.getProductId() != null) {
+                Product product = productRepository.findById(item.getProductId()).orElse(null);
+                if (product != null) {
+                    product.setStockQuantity(product.getStockQuantity() + item.getQuantity());
+                    productRepository.save(product);
+                }
+            }
         }
 
         order.setStatus(Order.OrderStatus.CANCELLED);
@@ -255,7 +254,7 @@ public class OrderService {
      * Admin/Staff cập nhật trạng thái đơn hàng (CONFIRMED, PREPARING, READY_FOR_PICKUP...).
      */
     @Transactional(rollbackFor = Exception.class)
-    public OrderResponse updateOrderStatus(UUID orderId, String newStatus, String note, String updatedByName) {
+    public OrderResponse updateOrderStatus(String orderId, String newStatus, String note, String updatedByName) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> AppException.notFound("Đơn hàng"));
 
@@ -272,7 +271,7 @@ public class OrderService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public OrderResponse markPaid(UUID orderId) {
+    public OrderResponse markPaid(String orderId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> AppException.notFound("Đơn hàng"));
         order.setPaymentStatus(Order.PaymentStatus.PAID);
@@ -285,7 +284,7 @@ public class OrderService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public OrderResponse markRefunded(UUID orderId) {
+    public OrderResponse markRefunded(String orderId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> AppException.notFound("Đơn hàng"));
         order.setPaymentStatus(Order.PaymentStatus.REFUNDED);
@@ -333,9 +332,13 @@ public class OrderService {
             order.setStatus(Order.OrderStatus.CANCELLED);
             // Hoàn lại tồn kho khi thanh toán thất bại
             for (OrderItem item : order.getOrderItems()) {
-                item.getProduct().setStockQuantity(
-                        item.getProduct().getStockQuantity() + item.getQuantity());
-                productRepository.save(item.getProduct());
+                if (item.getProductId() != null) {
+                    Product product = productRepository.findById(UUID.fromString(item.getProductId())).orElse(null);
+                    if (product != null) {
+                        product.setStockQuantity(product.getStockQuantity() + item.getQuantity());
+                        productRepository.save(product);
+                    }
+                }
             }
             appendStatusLog(order, Order.OrderStatus.CANCELLED,
                     "Thanh toán VNPay thất bại (mã lỗi: " + responseCode + ")", "SYSTEM", "VNPay Gateway");
@@ -382,9 +385,13 @@ public class OrderService {
         } else {
             order.setStatus(Order.OrderStatus.CANCELLED);
             for (OrderItem item : order.getOrderItems()) {
-                item.getProduct().setStockQuantity(
-                        item.getProduct().getStockQuantity() + item.getQuantity());
-                productRepository.save(item.getProduct());
+                if (item.getProductId() != null) {
+                    Product product = productRepository.findById(UUID.fromString(item.getProductId())).orElse(null);
+                    if (product != null) {
+                        product.setStockQuantity(product.getStockQuantity() + item.getQuantity());
+                        productRepository.save(product);
+                    }
+                }
             }
             appendStatusLog(order, Order.OrderStatus.CANCELLED,
                     "Thanh toán MoMo thất bại (resultCode: " + resultCode + ")", "SYSTEM", "MoMo Gateway");
@@ -394,7 +401,7 @@ public class OrderService {
 
     private void awardPointsForOrder(Order order) {
         if (order.getPointsAdded() == null || !order.getPointsAdded()) {
-            User user = order.getUser();
+            User user = order.getUserId() != null ? userRepository.findById(order.getUserId()).orElse(null) : null;
             if (user != null) {
                 BigDecimal totalAmount = order.getTotalAmount();
                 if (totalAmount != null && totalAmount.compareTo(BigDecimal.ZERO) > 0) {
@@ -437,7 +444,7 @@ public class OrderService {
     private void appendStatusLog(Order order, Order.OrderStatus status,
                                   String note, String role, String updatedByName) {
         OrderStatusLog log = OrderStatusLog.builder()
-                .order(order)
+                .orderId(order.getId())
                 .status(status)
                 .note(note)
                 .updatedByRole(role)
@@ -448,16 +455,18 @@ public class OrderService {
 
     /** Convert Order Entity -> OrderResponse DTO */
     private OrderResponse toResponse(Order order, String paymentUrl) {
-        List<OrderItemResponse> itemResponses = order.getOrderItems().stream().map(item ->
-                new OrderItemResponse(
-                        item.getProduct().getId(),
-                        item.getProduct().getName(),
-                        item.getProduct().getImageUrl(),
-                        item.getProduct().getUnit(),
-                        item.getQuantity(),
-                        item.getUnitPrice(),
-                        item.getSubtotal()
-                )).toList();
+        List<OrderItemResponse> itemResponses = order.getOrderItems().stream().map(item -> {
+            Product product = item.getProductId() != null ? productRepository.findById(item.getProductId()).orElse(null) : null;
+            return new OrderItemResponse(
+                    item.getProductId() != null ? item.getProductId() : null,
+                    item.getProductName(),
+                    product != null ? product.getImageUrl() : null,
+                    product != null ? product.getUnit() : "KG",
+                    item.getQuantity(),
+                    item.getUnitPrice(),
+                    item.getSubtotal()
+            );
+        }).toList();
 
         // Tránh lazy-loading status_logs
         List<OrderStatusLogResponse> logResponses = List.of();
@@ -482,9 +491,12 @@ public class OrderService {
         }
 
         // Ưu tiên 3 (fallback): lấy từ User account — chỉ cho đơn rất cũ không có format nào
-        if (deliveryName == null && order.getUser() != null) {
-            deliveryName  = order.getUser().getFullName();
-            deliveryPhone = order.getUser().getPhone();
+        if (deliveryName == null && order.getUserId() != null) {
+            User user = userRepository.findById(order.getUserId()).orElse(null);
+            if (user != null) {
+                deliveryName  = user.getFullName();
+                deliveryPhone = user.getPhone();
+            }
         }
 
         // Dùng biến parsedXxx để tương thích với return bên dưới
@@ -505,7 +517,7 @@ public class OrderService {
                 order.getNote(),
                 itemResponses,
                 logResponses,
-                order.getCreatedAt(),
+                order.getCreatedAt() != null ? LocalDateTime.ofInstant(java.time.Instant.parse(order.getCreatedAt()), java.time.ZoneId.systemDefault()) : null,
                 paymentUrl
         );
     }

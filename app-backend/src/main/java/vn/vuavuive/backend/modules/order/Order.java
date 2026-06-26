@@ -1,25 +1,16 @@
 package vn.vuavuive.backend.modules.order;
 
-import jakarta.persistence.*;
 import lombok.*;
 import vn.vuavuive.backend.core.BaseEntity;
-import vn.vuavuive.backend.modules.shipper.Shipper;
-import vn.vuavuive.backend.modules.user.User;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
- * Bảng ORDERS — Đơn hàng của khách.
- * Quan hệ:
- *  - user_id     : Khách hàng tạo đơn
- *  - shipper_id  : Được điền khi Admin gán Shipper vào đơn
- *  - order_items : Chi tiết các sản phẩm trong đơn
- *  - status_logs : Toàn bộ lịch sử thay đổi trạng thái
+ * Lớp Order — Đơn hàng của khách, loại bỏ JPA.
  */
-@Entity
-@Table(name = "orders")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -27,74 +18,212 @@ import java.util.List;
 @Builder
 public class Order extends BaseEntity {
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private String userId;
+    private String userName;
+    private String userPhone;
+    
+    private String shipperId;
+    private String shipperName;
 
-    /** null cho đến khi Admin gán Shipper */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "shipper_id")
-    private Shipper shipper;
-
-    /**
-     * Trạng thái đơn hàng — Tuân theo State Machine flow:
-     * PENDING -> CONFIRMED -> PREPARING -> READY_FOR_PICKUP
-     *   -> IN_TRANSIT -> DELIVERED (thành công)
-     *              |
-     *              +-> FAILED (giao thất bại, có thể thử lại)
-     *              +-> RETURNED (khách từ chối / trả hàng)
-     *              +-> CANCELLED (hủy đơn, hoàn tồn kho)
-     */
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
     @Builder.Default
     private OrderStatus status = OrderStatus.PENDING;
 
-    /** Tổng tiền trước voucher */
-    @Column(name = "total_amount", nullable = false, precision = 12, scale = 2)
-    private BigDecimal totalAmount;
+    private java.math.BigDecimal totalAmount;
+    private java.math.BigDecimal finalAmount;
 
-    /** Tổng tiền sau voucher (khách thực trả) */
-    @Column(name = "final_amount", nullable = false, precision = 12, scale = 2)
-    private BigDecimal finalAmount;
-
-    @Column(name = "payment_method", nullable = false)
     private String paymentMethod; // COD, VNPAY, MOMO
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "payment_status", nullable = false)
+    
     @Builder.Default
     private PaymentStatus paymentStatus = PaymentStatus.UNPAID;
 
-    /** Địa chỉ giao hàng (lưu lại snapshot để không bị ảnh hưởng khi user đổi địa chỉ) */
-    @Column(name = "delivery_address", columnDefinition = "TEXT")
     private String deliveryAddress;
-
-    /** Tên người nhận hàng — snapshot tại thời điểm đặt, tách riêng để dễ query & hiển thị */
-    @Column(name = "delivery_name")
     private String deliveryName;
-
-    /** Số điện thoại người nhận hàng — dùng để Shipper gọi điện */
-    @Column(name = "delivery_phone", length = 20)
     private String deliveryPhone;
-
-    @Column(name = "note")
+    
     private String note;
-
-    @Column(name = "points_added", nullable = false)
+    
     @Builder.Default
     private Boolean pointsAdded = false;
 
-    /** Chi tiết sản phẩm trong đơn */
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<OrderItem> orderItems = new ArrayList<>();
 
-    /** Lịch sử trạng thái — Timeline hiển thị cho Admin */
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    @OrderBy("createdAt ASC")
     @Builder.Default
     private List<OrderStatusLog> statusLogs = new ArrayList<>();
+
+    @com.google.firebase.database.Exclude
+    @com.fasterxml.jackson.annotation.JsonIgnore
+    public List<OrderItem> getOrderItems() { return orderItems; }
+    @com.google.firebase.database.Exclude
+    @com.fasterxml.jackson.annotation.JsonIgnore
+    public void setOrderItems(List<OrderItem> orderItems) { this.orderItems = orderItems; }
+ 
+    @com.google.firebase.database.Exclude
+    @com.fasterxml.jackson.annotation.JsonIgnore
+    public List<OrderStatusLog> getStatusLogs() { return statusLogs; }
+    @com.google.firebase.database.Exclude
+    @com.fasterxml.jackson.annotation.JsonIgnore
+    public void setStatusLogs(List<OrderStatusLog> statusLogs) { this.statusLogs = statusLogs; }
+ 
+    @com.google.firebase.database.Exclude
+    @com.fasterxml.jackson.annotation.JsonIgnore
+    public OrderStatus getStatus() { return status; }
+    @com.google.firebase.database.Exclude
+    @com.fasterxml.jackson.annotation.JsonIgnore
+    public void setStatus(OrderStatus status) { this.status = status; }
+ 
+    @com.google.firebase.database.Exclude
+    @com.fasterxml.jackson.annotation.JsonIgnore
+    public PaymentStatus getPaymentStatus() { return paymentStatus; }
+    @com.google.firebase.database.Exclude
+    @com.fasterxml.jackson.annotation.JsonIgnore
+    public void setPaymentStatus(PaymentStatus paymentStatus) { this.paymentStatus = paymentStatus; }
+
+    @com.google.firebase.database.PropertyName("status")
+    @com.fasterxml.jackson.annotation.JsonProperty("status")
+    public String getStatusString() { return status != null ? status.name() : null; }
+    @com.google.firebase.database.PropertyName("status")
+    @com.fasterxml.jackson.annotation.JsonProperty("status")
+    public void setStatusString(String status) { 
+        this.status = status != null ? OrderStatus.valueOf(status) : null; 
+    }
+
+    @com.google.firebase.database.PropertyName("payment_status")
+    @com.fasterxml.jackson.annotation.JsonProperty("payment_status")
+    public String getPaymentStatusString() { return paymentStatus != null ? paymentStatus.name() : null; }
+    @com.google.firebase.database.PropertyName("payment_status")
+    @com.fasterxml.jackson.annotation.JsonProperty("payment_status")
+    public void setPaymentStatusString(String paymentStatus) { 
+        this.paymentStatus = paymentStatus != null ? PaymentStatus.valueOf(paymentStatus) : null; 
+    }
+
+    @com.google.firebase.database.PropertyName("user_id")
+    @com.fasterxml.jackson.annotation.JsonProperty("user_id")
+    public String getUserId() { return userId; }
+    @com.google.firebase.database.PropertyName("user_id")
+    @com.fasterxml.jackson.annotation.JsonProperty("user_id")
+    public void setUserId(String userId) { this.userId = userId; }
+
+    @com.google.firebase.database.PropertyName("user_name")
+    @com.fasterxml.jackson.annotation.JsonProperty("user_name")
+    public String getUserName() { return userName; }
+    @com.google.firebase.database.PropertyName("user_name")
+    @com.fasterxml.jackson.annotation.JsonProperty("user_name")
+    public void setUserName(String userName) { this.userName = userName; }
+
+    @com.google.firebase.database.PropertyName("user_phone")
+    @com.fasterxml.jackson.annotation.JsonProperty("user_phone")
+    public String getUserPhone() { return userPhone; }
+    @com.google.firebase.database.PropertyName("user_phone")
+    @com.fasterxml.jackson.annotation.JsonProperty("user_phone")
+    public void setUserPhone(String userPhone) { this.userPhone = userPhone; }
+
+    @com.google.firebase.database.PropertyName("shipper_id")
+    @com.fasterxml.jackson.annotation.JsonProperty("shipper_id")
+    public String getShipperId() { return shipperId; }
+    @com.google.firebase.database.PropertyName("shipper_id")
+    @com.fasterxml.jackson.annotation.JsonProperty("shipper_id")
+    public void setShipperId(String shipperId) { this.shipperId = shipperId; }
+
+    @com.google.firebase.database.PropertyName("shipper_name")
+    @com.fasterxml.jackson.annotation.JsonProperty("shipper_name")
+    public String getShipperName() { return shipperName; }
+    @com.google.firebase.database.PropertyName("shipper_name")
+    @com.fasterxml.jackson.annotation.JsonProperty("shipper_name")
+    public void setShipperName(String shipperName) { this.shipperName = shipperName; }
+
+    @com.google.firebase.database.PropertyName("total_amount")
+    @com.fasterxml.jackson.annotation.JsonProperty("total_amount")
+    public java.math.BigDecimal getTotalAmount() { return totalAmount; }
+    @com.google.firebase.database.PropertyName("total_amount")
+    @com.fasterxml.jackson.annotation.JsonProperty("total_amount")
+    public void setTotalAmount(java.math.BigDecimal totalAmount) { this.totalAmount = totalAmount; }
+
+    @com.google.firebase.database.PropertyName("final_amount")
+    @com.fasterxml.jackson.annotation.JsonProperty("final_amount")
+    public java.math.BigDecimal getFinalAmount() { return finalAmount; }
+    @com.google.firebase.database.PropertyName("final_amount")
+    @com.fasterxml.jackson.annotation.JsonProperty("final_amount")
+    public void setFinalAmount(java.math.BigDecimal finalAmount) { this.finalAmount = finalAmount; }
+
+    @com.google.firebase.database.PropertyName("payment_method")
+    @com.fasterxml.jackson.annotation.JsonProperty("payment_method")
+    public String getPaymentMethod() { return paymentMethod; }
+    @com.google.firebase.database.PropertyName("payment_method")
+    @com.fasterxml.jackson.annotation.JsonProperty("payment_method")
+    public void setPaymentMethod(String paymentMethod) { this.paymentMethod = paymentMethod; }
+
+    @com.google.firebase.database.PropertyName("delivery_address")
+    @com.fasterxml.jackson.annotation.JsonProperty("delivery_address")
+    public String getDeliveryAddress() { return deliveryAddress; }
+    @com.google.firebase.database.PropertyName("delivery_address")
+    @com.fasterxml.jackson.annotation.JsonProperty("delivery_address")
+    public void setDeliveryAddress(String deliveryAddress) { this.deliveryAddress = deliveryAddress; }
+
+    @com.google.firebase.database.PropertyName("delivery_name")
+    @com.fasterxml.jackson.annotation.JsonProperty("delivery_name")
+    public String getDeliveryName() { return deliveryName; }
+    @com.google.firebase.database.PropertyName("delivery_name")
+    @com.fasterxml.jackson.annotation.JsonProperty("delivery_name")
+    public void setDeliveryName(String deliveryName) { this.deliveryName = deliveryName; }
+
+    @com.google.firebase.database.PropertyName("delivery_phone")
+    @com.fasterxml.jackson.annotation.JsonProperty("delivery_phone")
+    public String getDeliveryPhone() { return deliveryPhone; }
+    @com.google.firebase.database.PropertyName("delivery_phone")
+    @com.fasterxml.jackson.annotation.JsonProperty("delivery_phone")
+    public void setDeliveryPhone(String deliveryPhone) { this.deliveryPhone = deliveryPhone; }
+
+    @com.google.firebase.database.PropertyName("points_added")
+    @com.fasterxml.jackson.annotation.JsonProperty("points_added")
+    public Boolean getPointsAdded() { return pointsAdded; }
+    @com.google.firebase.database.PropertyName("points_added")
+    @com.fasterxml.jackson.annotation.JsonProperty("points_added")
+    public void setPointsAdded(Boolean pointsAdded) { this.pointsAdded = pointsAdded; }
+
+    @com.google.firebase.database.PropertyName("items")
+    @com.fasterxml.jackson.annotation.JsonProperty("items")
+    public Map<String, OrderItem> getItemsMap() {
+        if (orderItems == null) return null;
+        Map<String, OrderItem> map = new java.util.HashMap<>();
+        for (OrderItem item : orderItems) {
+            String key = item.getId() != null ? item.getId() : (item.getProductId() != null ? item.getProductId() : UUID.randomUUID().toString());
+            map.put(key, item);
+        }
+        return map;
+    }
+
+    @com.google.firebase.database.PropertyName("items")
+    @com.fasterxml.jackson.annotation.JsonProperty("items")
+    public void setItemsMap(Map<String, OrderItem> map) {
+        if (map == null) {
+            this.orderItems = new ArrayList<>();
+        } else {
+            this.orderItems = new ArrayList<>(map.values());
+        }
+    }
+
+    @com.google.firebase.database.PropertyName("status_logs")
+    @com.fasterxml.jackson.annotation.JsonProperty("status_logs")
+    public Map<String, OrderStatusLog> getStatusLogsMap() {
+        if (statusLogs == null) return null;
+        Map<String, OrderStatusLog> map = new java.util.HashMap<>();
+        for (OrderStatusLog log : statusLogs) {
+            String key = log.getId() != null ? log.getId() : UUID.randomUUID().toString();
+            map.put(key, log);
+        }
+        return map;
+    }
+
+    @com.google.firebase.database.PropertyName("status_logs")
+    @com.fasterxml.jackson.annotation.JsonProperty("status_logs")
+    public void setStatusLogsMap(Map<String, OrderStatusLog> map) {
+        if (map == null) {
+            this.statusLogs = new ArrayList<>();
+        } else {
+            this.statusLogs = new ArrayList<>(map.values());
+        }
+    }
 
     public enum OrderStatus {
         PENDING,
@@ -106,6 +235,9 @@ public class Order extends BaseEntity {
         DELIVERED,
         FAILED,
         RETURNED,
+        RETURN_REQUESTED,
+        RETURN_REJECTED,
+        REFUNDED,
         CANCELLED
     }
 

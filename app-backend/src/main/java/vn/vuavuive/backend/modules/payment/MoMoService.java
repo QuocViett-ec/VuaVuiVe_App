@@ -50,7 +50,7 @@ public class MoMoService {
         User user = currentUser();
         Order order = orderRepository.findById(UUID.fromString(request.orderId()))
                 .orElseThrow(() -> AppException.notFound("Don hang"));
-        if (!order.getUser().getId().equals(user.getId())) throw AppException.forbidden("Khong co quyen thanh toan don nay");
+        if (!order.getUserId().equals(user.getId())) throw AppException.forbidden("Khong co quyen thanh toan don nay");
         if (order.getPaymentStatus() == Order.PaymentStatus.PAID) throw AppException.badRequest("Don hang da thanh toan");
         if (order.getFinalAmount() == null || order.getFinalAmount().compareTo(BigDecimal.ZERO) <= 0) {
             throw AppException.badRequest("So tien thanh toan khong hop le");
@@ -96,8 +96,8 @@ public class MoMoService {
         if (body == null) throw AppException.badRequest("MoMo khong tra ve du lieu");
 
         PaymentTransaction tx = PaymentTransaction.builder()
-                .order(order)
-                .user(user)
+                .orderId(order.getId())
+                .userId(user.getId())
                 .provider("MOMO")
                 .amount(order.getFinalAmount())
                 .requestId(requestId)
@@ -130,7 +130,7 @@ public class MoMoService {
 
         PaymentTransaction tx = transactionRepository.findByRequestId(request.requestId())
                 .orElseThrow(() -> AppException.notFound("Giao dich MoMo"));
-        if (!tx.getOrder().getId().toString().equals(request.orderId())) {
+        if (!tx.getOrderId().equals(request.orderId())) {
             throw AppException.badRequest("Don hang MoMo khong khop");
         }
         if (tx.getAmount().toBigInteger().longValue() != request.amount()) {
@@ -138,7 +138,8 @@ public class MoMoService {
         }
         if (tx.getStatus() == PaymentTransaction.Status.PAID) return;
 
-        Order order = tx.getOrder();
+        Order order = orderRepository.findById(tx.getOrderId())
+                .orElseThrow(() -> AppException.notFound("Don hang"));
         tx.setTransactionId(request.transId() == null ? null : String.valueOf(request.transId()));
         tx.setResultCode(request.resultCode());
         tx.setMessage(request.message());
@@ -165,10 +166,11 @@ public class MoMoService {
         if (!mockMode) throw AppException.badRequest("MoMo mock mode is disabled");
         PaymentTransaction tx = transactionRepository.findByRequestId(requestId)
                 .orElseThrow(() -> AppException.notFound("Giao dich MoMo"));
-        if (!tx.getOrder().getId().toString().equals(orderId)) {
+        if (!tx.getOrderId().equals(orderId)) {
             throw AppException.badRequest("Don hang MoMo khong khop");
         }
-        Order order = tx.getOrder();
+        Order order = orderRepository.findById(tx.getOrderId())
+                .orElseThrow(() -> AppException.notFound("Don hang"));
         tx.setResultCode(success ? 0 : 1006);
         tx.setMessage(success ? "Mock MoMo success" : "Mock MoMo failed");
         tx.setResponseTime(System.currentTimeMillis());
@@ -191,7 +193,7 @@ public class MoMoService {
         User user = currentUser();
         Order order = orderRepository.findById(UUID.fromString(orderId))
                 .orElseThrow(() -> AppException.notFound("Don hang"));
-        if (!order.getUser().getId().equals(user.getId())) throw AppException.forbidden("Khong co quyen xem don nay");
+        if (!order.getUserId().equals(user.getId())) throw AppException.forbidden("Khong co quyen xem don nay");
 
         PaymentTransaction tx = transactionRepository
                 .findFirstByOrderAndProviderOrderByCreatedAtDesc(order, "MOMO")
@@ -247,8 +249,8 @@ public class MoMoService {
         String baseUrl = redirectUrl.replace("/return", "/mock").replace("localhost", "10.0.2.2");
         String url = baseUrl + "?orderId=" + order.getId() + "&requestId=" + requestId + "&amount=" + order.getFinalAmount().toBigInteger();
         PaymentTransaction tx = PaymentTransaction.builder()
-                .order(order)
-                .user(user)
+                .orderId(order.getId())
+                .userId(user.getId())
                 .provider("MOMO")
                 .amount(order.getFinalAmount())
                 .requestId(requestId)
@@ -282,7 +284,7 @@ public class MoMoService {
 
     private void appendStatusLog(Order order, String note) {
         statusLogRepository.save(OrderStatusLog.builder()
-                .order(order)
+                .orderId(order.getId())
                 .status(Order.OrderStatus.CONFIRMED)
                 .note(note)
                 .updatedByRole("SYSTEM")

@@ -7,32 +7,18 @@ spring:
     store-type: none
   cache:
     type: simple
-  datasource:
-    url: "jdbc:sqlite:vuavuive_v2.db?date_string_format=yyyy-MM-dd HH:mm:ss.SSS&date_class=text&busy_timeout=5000"
-    driver-class-name: org.sqlite.JDBC
-    username: sa
-    password: sa
-    hikari:
-      maximum-pool-size: 1
-      minimum-idle: 1
-
-  jpa:
-    hibernate:
-      ddl-auto: none
-    show-sql: true
-    properties:
-      hibernate:
-        dialect: org.hibernate.community.dialect.SQLiteDialect
-        format_sql: true
 
 server:
   port: 3000
 
 
 # ============================================
-#  CẤU HÌNH JWT
+#  CẤU HÌNH JWT & FIREBASE
 # ============================================
 app:
+  firebase:
+    database-url: "https://vua-vui-ve-default-rtdb.firebaseio.com"
+    config-path: "classpath:serviceAccountKey.json"
   jwt:
     secret: "vuavuive-super-secret-key-for-jwt-please-change-in-production-min-256bit"
     access-token-expiration-ms: 86400000       # 24 giờ
