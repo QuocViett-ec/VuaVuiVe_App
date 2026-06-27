@@ -38,21 +38,21 @@ public class ProductRepositoryFirebase {
         p.setId(s.child("id").getValue(String.class));
         p.setName(s.child("name").getValue(String.class));
         p.setSlug(s.child("slug").getValue(String.class));
-        
+
         Double sellingPrice = s.child("selling_price").getValue(Double.class);
         p.setPrice(sellingPrice != null ? sellingPrice : 0.0);
-        
+
         p.setOriginalPrice(s.child("original_price").getValue(Double.class));
         p.setCategory(s.child("category_id").getValue(String.class));
         p.setSubCategory(s.child("sub_category").getValue(String.class));
         p.setDescription(s.child("description").getValue(String.class));
         p.setImageUrl(s.child("image_url").getValue(String.class));
-        
+
         Integer stock = s.child("stock_quantity").getValue(Integer.class);
         p.setStock(stock != null ? stock : 0);
-        
+
         p.setUnit(s.child("unit").getValue(String.class));
-        
+
         List<String> tags = new ArrayList<>();
         DataSnapshot tagsSnap = s.child("tags");
         if (tagsSnap.exists()) {
@@ -61,10 +61,10 @@ public class ProductRepositoryFirebase {
             }
         }
         p.setTags(tags);
-        
+
         Boolean active = s.child("is_active").getValue(Boolean.class);
         p.setActive(active != null ? active : false);
-        
+
         p.setRating(s.child("rating").getValue(Double.class));
         p.setReviewCount(s.child("review_count").getValue(Integer.class));
         p.setSoldCount(s.child("sold_count").getValue(Integer.class));
@@ -127,7 +127,8 @@ public class ProductRepositoryFirebase {
         dbRef.child("products").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                android.util.Log.d("ProductRepositoryFirebase", "onDataChange: snapshot.getChildrenCount() = " + snapshot.getChildrenCount());
+                android.util.Log.d("ProductRepositoryFirebase",
+                        "onDataChange: snapshot.getChildrenCount() = " + snapshot.getChildrenCount());
                 List<Product> products = new ArrayList<>();
                 for (DataSnapshot s : snapshot.getChildren()) {
                     Product p = mapSnapshotToProduct(s);
@@ -135,14 +136,17 @@ public class ProductRepositoryFirebase {
                         products.add(p);
                     }
                 }
-                android.util.Log.d("ProductRepositoryFirebase", "onDataChange: mapped " + products.size() + " active products.");
+                android.util.Log.d("ProductRepositoryFirebase",
+                        "onDataChange: mapped " + products.size() + " active products.");
 
                 // 1. Filter by category (by id or slug)
-                if (category != null && !category.isEmpty() && !category.equalsIgnoreCase("Tất cả") && !category.equalsIgnoreCase("all")) {
+                if (category != null && !category.isEmpty() && !category.equalsIgnoreCase("Tất cả")
+                        && !category.equalsIgnoreCase("all")) {
                     List<Product> filtered = new ArrayList<>();
                     String targetId = slugToIdMap != null ? slugToIdMap.get(category) : null;
                     for (Product p : products) {
-                        if (category.equals(p.getCategory()) || (targetId != null && targetId.equals(p.getCategory()))) {
+                        if (category.equals(p.getCategory())
+                                || (targetId != null && targetId.equals(p.getCategory()))) {
                             filtered.add(p);
                         }
                     }
@@ -265,14 +269,15 @@ public class ProductRepositoryFirebase {
                     return;
                 }
                 String categoryId = detailSnapshot.child("category_id").getValue(String.class);
-                
+
                 dbRef.child("products").addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot listSnapshot) {
                         List<Product> list = new ArrayList<>();
                         for (DataSnapshot s : listSnapshot.getChildren()) {
                             Product p = mapSnapshotToProduct(s);
-                            if (categoryId != null && categoryId.equals(p.getCategory()) && !productId.equals(p.getId())) {
+                            if (categoryId != null && categoryId.equals(p.getCategory())
+                                    && !productId.equals(p.getId())) {
                                 list.add(p);
                             }
                         }
@@ -339,12 +344,13 @@ public class ProductRepositoryFirebase {
         revData.put("product_id", productId);
         revData.put("rating", rating);
         revData.put("comment", comment);
-        
+
         // Use Firebase Auth user or fallback
-        com.google.firebase.auth.FirebaseUser fbUser = com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser();
+        com.google.firebase.auth.FirebaseUser fbUser = com.google.firebase.auth.FirebaseAuth.getInstance()
+                .getCurrentUser();
         String uid = fbUser != null ? fbUser.getUid() : "guest_user";
         revData.put("user_id", uid);
-        
+
         // Fetch User profile name if available, otherwise default
         if (fbUser != null) {
             dbRef.child("users").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -369,8 +375,10 @@ public class ProductRepositoryFirebase {
         return result;
     }
 
-    private void saveReviewToFirebase(String id, Map<String, Object> data, MutableLiveData<AuthRepository.Result<Review>> result) {
-        data.put("created_at", new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", java.util.Locale.US).format(new java.util.Date()));
+    private void saveReviewToFirebase(String id, Map<String, Object> data,
+            MutableLiveData<AuthRepository.Result<Review>> result) {
+        data.put("created_at", new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", java.util.Locale.US)
+                .format(new java.util.Date()));
         dbRef.child("reviews").child(id).setValue(data).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Review r = new Review();
@@ -383,13 +391,15 @@ public class ProductRepositoryFirebase {
                 r.setCreatedAt((String) data.get("created_at"));
                 result.postValue(AuthRepository.Result.success(r));
             } else {
-                result.postValue(AuthRepository.Result.error(task.getException() != null ? task.getException().getMessage() : "Failed to save review"));
+                result.postValue(AuthRepository.Result.error(
+                        task.getException() != null ? task.getException().getMessage() : "Failed to save review"));
             }
         });
     }
 
     private static String deAccent(String str) {
-        if (str == null) return "";
+        if (str == null)
+            return "";
         String nfdNormalizedString = java.text.Normalizer.normalize(str, java.text.Normalizer.Form.NFD);
         java.util.regex.Pattern pattern = java.util.regex.Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
         String result = pattern.matcher(nfdNormalizedString).replaceAll("");

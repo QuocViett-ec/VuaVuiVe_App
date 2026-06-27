@@ -111,18 +111,76 @@ public class CheckoutActivity extends AppCompatActivity {
             return;
         }
 
-        if ("VUAVUIVE".equalsIgnoreCase(code)) {
-            double sub = getSubtotal();
-            appliedDiscount = sub * 0.15;
-            Toast.makeText(this, "Áp dụng mã thành công! Giảm 15%", Toast.LENGTH_SHORT).show();
-        } else if ("FREESHIP24".equalsIgnoreCase(code) || "FREESHIP".equalsIgnoreCase(code)) {
-            appliedDiscount = 30000;
-            Toast.makeText(this, "Áp dụng mã thành công! Miễn phí ship", Toast.LENGTH_SHORT).show();
-        } else {
-            appliedDiscount = 0;
-            Toast.makeText(this, "Mã không hợp lệ hoặc đã hết hạn", Toast.LENGTH_SHORT).show();
-        }
-        updatePriceSummary();
+        com.google.firebase.database.FirebaseDatabase.getInstance().getReference()
+            .child("vouchers")
+            .addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                @Override
+                public void onDataChange(@androidx.annotation.NonNull com.google.firebase.database.DataSnapshot snapshot) {
+                    boolean found = false;
+                    for (com.google.firebase.database.DataSnapshot s : snapshot.getChildren()) {
+                        String vCode = s.child("code").getValue(String.class);
+                        if (code.equalsIgnoreCase(vCode)) {
+                            Boolean active = s.child("isActive").getValue(Boolean.class);
+                            if (active == null) active = s.child("is_active").getValue(Boolean.class);
+                            if (active != null && !active) {
+                                Toast.makeText(CheckoutActivity.this, "Mã này đã bị vô hiệu hóa", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+
+                            Double minOrder = s.child("minOrderValue").getValue(Double.class);
+                            if (minOrder == null) minOrder = s.child("min_order_value").getValue(Double.class);
+                            double sub = getSubtotal();
+                            if (minOrder != null && sub < minOrder) {
+                                Toast.makeText(CheckoutActivity.this, "Đơn hàng chưa đạt giá trị tối thiểu: " + CurrencyFormatter.format(minOrder), Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+
+                            String type = s.child("type").getValue(String.class);
+                            Double val = s.child("value").getValue(Double.class);
+                            double valueVal = val != null ? val : 0.0;
+
+                            if ("PERCENTAGE".equalsIgnoreCase(type) || "percent".equalsIgnoreCase(type)) {
+                                appliedDiscount = sub * (valueVal / 100.0);
+                                Double cap = s.child("cap").getValue(Double.class);
+                                if (cap != null && cap > 0 && appliedDiscount > cap) {
+                                    appliedDiscount = cap;
+                                }
+                                Toast.makeText(CheckoutActivity.this, "Áp dụng mã thành công! Giảm " + (int)valueVal + "%", Toast.LENGTH_SHORT).show();
+                            } else if ("FIXED".equalsIgnoreCase(type) || "fixed".equalsIgnoreCase(type)) {
+                                appliedDiscount = valueVal;
+                                Toast.makeText(CheckoutActivity.this, "Áp dụng mã thành công! Giảm " + CurrencyFormatter.format(valueVal), Toast.LENGTH_SHORT).show();
+                            } else if ("SHIP".equalsIgnoreCase(type) || "ship".equalsIgnoreCase(type)) {
+                                appliedDiscount = 30000; // Freeship
+                                Toast.makeText(CheckoutActivity.this, "Áp dụng mã thành công! Miễn phí ship", Toast.LENGTH_SHORT).show();
+                            }
+                            found = true;
+                            break;
+                        }
+                    }
+
+                    if (!found) {
+                        // Fallback to hardcoded
+                        if ("VUAVUIVE".equalsIgnoreCase(code)) {
+                            double sub = getSubtotal();
+                            appliedDiscount = sub * 0.15;
+                            Toast.makeText(CheckoutActivity.this, "Áp dụng mã thành công! Giảm 15%", Toast.LENGTH_SHORT).show();
+                        } else if ("FREESHIP24".equalsIgnoreCase(code) || "FREESHIP".equalsIgnoreCase(code)) {
+                            appliedDiscount = 30000;
+                            Toast.makeText(CheckoutActivity.this, "Áp dụng mã thành công! Miễn phí ship", Toast.LENGTH_SHORT).show();
+                        } else {
+                            appliedDiscount = 0;
+                            Toast.makeText(CheckoutActivity.this, "Mã không hợp lệ hoặc đã hết hạn", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    updatePriceSummary();
+                }
+
+                @Override
+                public void onCancelled(@androidx.annotation.NonNull com.google.firebase.database.DatabaseError error) {
+                    Toast.makeText(CheckoutActivity.this, "Lỗi kết nối database: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
     }
 
     private void updatePriceSummary() {

@@ -138,22 +138,27 @@ public class RecipeDetailActivity extends AppCompatActivity {
         if (name.isEmpty()) return;
 
         productViewModel.getProducts(null, name, 1, 1, null).observe(this, result -> {
-            if (result != null && result.data != null && !result.data.isEmpty()) {
-                Product p = result.data.get(0);
-                CartItemEntity item = new CartItemEntity();
-                item.setProductId(p.getId());
-                item.setProductName(p.getName());
-                item.setProductPrice(p.getPrice());
-                item.setProductImageUrl(p.getImageUrl());
-                item.setProductUnit(p.getUnit());
-                item.setProductStock(p.getStock());
-                item.setQuantity(1);
-                item.setAddedAt(System.currentTimeMillis());
-                item.setSavedForLater(false);
-                cartViewModel.addItem(item);
-                Toast.makeText(this, "Đã thêm " + p.getName() + " vào giỏ", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, "Không tìm thấy sản phẩm: " + name, Toast.LENGTH_SHORT).show();
+            if (result != null && result.status != null) {
+                if (result.status.name().equals("LOADING")) {
+                    return; // Ignore loading state
+                }
+                if (result.status.name().equals("SUCCESS") && result.data != null && !result.data.isEmpty()) {
+                    Product p = result.data.get(0);
+                    CartItemEntity item = new CartItemEntity();
+                    item.setProductId(p.getId());
+                    item.setProductName(p.getName());
+                    item.setProductPrice(p.getPrice());
+                    item.setProductImageUrl(p.getImageUrl());
+                    item.setProductUnit(p.getUnit());
+                    item.setProductStock(p.getStock());
+                    item.setQuantity(1);
+                    item.setAddedAt(System.currentTimeMillis());
+                    item.setSavedForLater(false);
+                    cartViewModel.addItem(item);
+                    Toast.makeText(this, "Đã thêm " + p.getName() + " vào giỏ", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, "Không tìm thấy sản phẩm: " + name, Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

@@ -64,6 +64,8 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/recipes/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/images/**").permitAll()
+                .requestMatchers("/api/ai/**").permitAll()
                 // Webhook thanh toán từ VNPay/MoMo phải public (họ gọi vào, không có token)
                 .requestMatchers("/api/payments/vnpay/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/payments/momo/ipn").permitAll()

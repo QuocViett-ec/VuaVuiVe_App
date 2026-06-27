@@ -84,12 +84,6 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeVH> 
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) listener.onRecipeClick(recipe);
         });
-
-        if (holder.btnBuy != null) {
-            holder.btnBuy.setOnClickListener(v -> {
-                if (buyListener != null) buyListener.onBuyIngredients(recipe);
-            });
-        }
     }
 
     @Override public int getItemCount() { return displayRecipes.size(); }
@@ -97,13 +91,11 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeVH> 
     static class RecipeVH extends RecyclerView.ViewHolder {
         ImageView ivImage;
         TextView tvName;
-        View btnBuy;
 
         RecipeVH(View v) {
             super(v);
             ivImage = v.findViewById(R.id.iv_recipe);
             tvName  = v.findViewById(R.id.tv_recipe_name);
-            btnBuy  = v.findViewById(R.id.btn_buy_ingredients);
         }
     }
 }

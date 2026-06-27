@@ -175,7 +175,7 @@ public class FirebaseUserRepository {
         firebaseAuth.createUserWithEmailAndPassword(email, request.getPassword()).addOnCompleteListener(task -> {
             if (task.isSuccessful() && firebaseAuth.getCurrentUser() != null) {
                 String uid = firebaseAuth.getCurrentUser().getUid();
-                createDefaultUserProfile(uid, email, request.getPhone(), result);
+                createDefaultUserProfile(uid, request.getEmail(), request.getPhone(), result);
             } else {
                 result.postValue(AuthRepository.Result.error(task.getException() != null ? task.getException().getMessage() : "Đăng ký thất bại"));
             }
@@ -281,7 +281,7 @@ public class FirebaseUserRepository {
                 profileData.put("id", uid);
                 profileData.put("full_name", request.getName());
                 profileData.put("phone", phone);
-                profileData.put("email", email);
+                profileData.put("email", request.getEmail());
                 profileData.put("address", request.getAddress() != null ? request.getAddress() : "");
                 profileData.put("role", "CUSTOMER"); // Hardcoded to CUSTOMER
                 profileData.put("points", 0);
@@ -295,7 +295,7 @@ public class FirebaseUserRepository {
                         user.setId(uid);
                         user.setName(request.getName());
                         user.setPhone(phone);
-                        user.setEmail(email);
+                        user.setEmail(request.getEmail());
                         user.setAddress(request.getAddress());
                         user.setRole("CUSTOMER");
                         user.setActive(true);

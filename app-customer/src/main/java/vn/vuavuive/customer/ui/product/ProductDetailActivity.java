@@ -44,7 +44,8 @@ public class ProductDetailActivity extends AppCompatActivity {
     private int quantity = 1;
 
     // Views
-    private ImageView ivProduct;
+    private androidx.viewpager2.widget.ViewPager2 vpProductImages;
+    private android.widget.LinearLayout llDotsContainer;
     private TextView tvProductName, tvPrice, tvOriginalPrice, tvDiscount;
     private TextView tvRating, tvSold, tvStock, tvDescription, tvQuantity;
     private RatingBar ratingBar;
@@ -53,6 +54,8 @@ public class ProductDetailActivity extends AppCompatActivity {
     private RecyclerView rvReviews, rvSimilarProducts;
     private ReviewAdapter reviewAdapter;
     private ProductAdapter similarAdapter;
+    private View cardDetailImages;
+    private android.widget.LinearLayout llDetailImagesContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +97,8 @@ public class ProductDetailActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        ivProduct        = findViewById(R.id.iv_product);
+        vpProductImages  = findViewById(R.id.vp_product_images);
+        llDotsContainer  = findViewById(R.id.ll_dots_container);
         tvProductName    = findViewById(R.id.tv_product_name);
         tvPrice          = findViewById(R.id.tv_price);
         tvOriginalPrice  = findViewById(R.id.tv_original_price);
@@ -110,6 +114,8 @@ public class ProductDetailActivity extends AppCompatActivity {
         fabAddToCart     = findViewById(R.id.fab_add_to_cart);
         rvReviews        = findViewById(R.id.rv_reviews);
         rvSimilarProducts = findViewById(R.id.rv_similar_products);
+        cardDetailImages  = findViewById(R.id.card_detail_images);
+        llDetailImagesContainer = findViewById(R.id.ll_detail_images_container);
 
         // Reviews RecyclerView
         reviewAdapter = new ReviewAdapter(this);
@@ -244,14 +250,8 @@ public class ProductDetailActivity extends AppCompatActivity {
                 findViewById(R.id.collapsing_toolbar);
         if (ctl != null) ctl.setTitle(product.getName());
 
-        // Image
-        Glide.with(this)
-                .load(product.getImageUrl())
-                .placeholder(R.drawable.ic_image)
-                .error(R.drawable.ic_image)
-                .transition(DrawableTransitionOptions.withCrossFade(300))
-                .centerCrop()
-                .into(ivProduct);
+        // Image Slider Setup
+        setupImageSlider(product);
 
         tvProductName.setText(product.getName());
 
@@ -307,6 +307,76 @@ public class ProductDetailActivity extends AppCompatActivity {
         // Description
         tvDescription.setText(product.getDescription() != null
                 ? product.getDescription() : "Chưa có mô tả sản phẩm.");
+
+        // Setup dynamic detail images gallery
+        setupDetailImages(product);
+    }
+
+    private void setupDetailImages(Product product) {
+        if (cardDetailImages == null || llDetailImagesContainer == null) return;
+        
+        llDetailImagesContainer.removeAllViews();
+        List<Integer> detailImages = new java.util.ArrayList<>();
+        
+        String name = product.getName() != null ? product.getName().toLowerCase() : "";
+        
+        if (name.contains("bí đỏ") || name.contains("bi do")) {
+            detailImages.add(R.drawable.detail_bi_do_1);
+            detailImages.add(R.drawable.detail_bi_do_2);
+            detailImages.add(R.drawable.detail_bi_do_3);
+        } else if (name.contains("bầu sao") || name.contains("bau sao")) {
+            detailImages.add(R.drawable.detail_bau_sao_1);
+            detailImages.add(R.drawable.detail_bau_sao_2);
+            detailImages.add(R.drawable.detail_bau_sao_3);
+        } else if (name.contains("rau muống") || name.contains("rau muong")) {
+            detailImages.add(R.drawable.detail_rau_muong_1);
+            detailImages.add(R.drawable.detail_rau_muong_2);
+            detailImages.add(R.drawable.detail_rau_muong_3);
+        } else if (name.contains("khoai tây") || name.contains("khoai tay")) {
+            detailImages.add(R.drawable.detail_khoai_tay_1);
+            detailImages.add(R.drawable.detail_khoai_tay_2);
+            detailImages.add(R.drawable.detail_khoai_tay_3);
+        }
+        
+        if (!detailImages.isEmpty()) {
+            cardDetailImages.setVisibility(View.VISIBLE);
+            int sizeInDp = (int) (120 * getResources().getDisplayMetrics().density);
+            int marginInDp = (int) (8 * getResources().getDisplayMetrics().density);
+            
+            for (Integer resId : detailImages) {
+                ImageView imageView = new ImageView(this);
+                android.widget.LinearLayout.LayoutParams lp = new android.widget.LinearLayout.LayoutParams(sizeInDp, sizeInDp);
+                lp.setMarginEnd(marginInDp);
+                imageView.setLayoutParams(lp);
+                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                
+                // Rounded corners with modern border
+                imageView.setBackground(getDrawable(R.drawable.bg_rounded_card));
+                imageView.setClipToOutline(true);
+                
+                Glide.with(this)
+                        .load(resId)
+                        .placeholder(R.drawable.ic_image)
+                        .error(R.drawable.ic_image)
+                        .into(imageView);
+                
+                imageView.setOnClickListener(v -> {
+                    android.app.Dialog dialog = new android.app.Dialog(this, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+                    dialog.setContentView(R.layout.dialog_full_screen_image);
+                    ImageView ivFull = dialog.findViewById(R.id.iv_full);
+                    View btnClose = dialog.findViewById(R.id.btn_close);
+                    Glide.with(this).load(resId).into(ivFull);
+                    
+                    btnClose.setOnClickListener(v2 -> dialog.dismiss());
+                    ivFull.setOnClickListener(v2 -> dialog.dismiss());
+                    dialog.show();
+                });
+                
+                llDetailImagesContainer.addView(imageView);
+            }
+        } else {
+            cardDetailImages.setVisibility(View.GONE);
+        }
     }
 
     // ── Add to cart ────────────────────────────────────────────────────────────
@@ -340,5 +410,86 @@ public class ProductDetailActivity extends AppCompatActivity {
             meta.put("quantity", quantity);
             productViewModel.sendRecommendEvent(Constants.EVENT_ADD_TO_CART, currentProduct.getId(), meta);
         } catch (Exception ignored) {}
+    }
+
+    private void setupImageSlider(Product product) {
+        if (vpProductImages == null || llDotsContainer == null) return;
+
+        List<Object> imageList = new java.util.ArrayList<>();
+        String name = product.getName() != null ? product.getName().toLowerCase() : "";
+
+        // Add the main image URL first if it exists
+        if (product.getImageUrl() != null && !product.getImageUrl().isEmpty()) {
+            imageList.add(product.getImageUrl());
+        }
+
+        // Add additional local drawable images for the specific products
+        if (name.contains("bí đỏ") || name.contains("bi do")) {
+            imageList.add(R.drawable.detail_bi_do_1);
+            imageList.add(R.drawable.detail_bi_do_2);
+            imageList.add(R.drawable.detail_bi_do_3);
+        } else if (name.contains("bầu sao") || name.contains("bau sao")) {
+            imageList.add(R.drawable.detail_bau_sao_1);
+            imageList.add(R.drawable.detail_bau_sao_2);
+            imageList.add(R.drawable.detail_bau_sao_3);
+        } else if (name.contains("rau muống") || name.contains("rau muong")) {
+            imageList.add(R.drawable.detail_rau_muong_1);
+            imageList.add(R.drawable.detail_rau_muong_2);
+            imageList.add(R.drawable.detail_rau_muong_3);
+        } else if (name.contains("khoai tây") || name.contains("khoai tay")) {
+            imageList.add(R.drawable.detail_khoai_tay_1);
+            imageList.add(R.drawable.detail_khoai_tay_2);
+            imageList.add(R.drawable.detail_khoai_tay_3);
+        }
+
+        // If list is still empty, add default placeholder
+        if (imageList.isEmpty()) {
+            imageList.add(R.drawable.ic_image);
+        }
+
+        ProductImageAdapter adapter = new ProductImageAdapter(this, imageList);
+        vpProductImages.setAdapter(adapter);
+
+        // Setup dots indicator if we have multiple images
+        setupDots(imageList.size());
+        
+        vpProductImages.registerOnPageChangeCallback(new androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                updateDots(position, imageList.size());
+            }
+        });
+    }
+
+    private void setupDots(int count) {
+        llDotsContainer.removeAllViews();
+        if (count <= 1) return;
+
+        ImageView[] dots = new ImageView[count];
+        int dotSize = (int) (8 * getResources().getDisplayMetrics().density);
+        int margin = (int) (4 * getResources().getDisplayMetrics().density);
+
+        for (int i = 0; i < count; i++) {
+            dots[i] = new ImageView(this);
+            dots[i].setImageResource(R.drawable.banner_dot_inactive);
+            android.widget.LinearLayout.LayoutParams params = new android.widget.LinearLayout.LayoutParams(dotSize, dotSize);
+            params.setMargins(margin, 0, margin, 0);
+            llDotsContainer.addView(dots[i], params);
+        }
+        // First dot active
+        if (count > 0) {
+            ((ImageView) llDotsContainer.getChildAt(0)).setImageResource(R.drawable.banner_dot_active);
+        }
+    }
+
+    private void updateDots(int currentPosition, int count) {
+        if (llDotsContainer.getChildCount() != count) return;
+        for (int i = 0; i < count; i++) {
+            ImageView dot = (ImageView) llDotsContainer.getChildAt(i);
+            if (dot != null) {
+                dot.setImageResource(i == currentPosition ? R.drawable.banner_dot_active : R.drawable.banner_dot_inactive);
+            }
+        }
     }
 }

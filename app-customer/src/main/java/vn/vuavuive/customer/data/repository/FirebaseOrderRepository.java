@@ -641,29 +641,64 @@ public class FirebaseOrderRepository {
         return result;
     }
 
-    // ── Available Vouchers (Mock data for offline checkout) ─────────────────
+    // ── Available Vouchers (Fetch from Firebase Realtime Database) ─────────
     public LiveData<AuthRepository.Result<List<Voucher>>> getAvailableVouchers() {
         MutableLiveData<AuthRepository.Result<List<Voucher>>> result = new MutableLiveData<>();
-        List<Voucher> list = new ArrayList<>();
-        
-        Voucher v1 = new Voucher();
-        v1.setId("v1");
-        v1.setCode("VUAVUIVE");
-        v1.setNote("Giảm giá 15% tổng hóa đơn");
-        v1.setType("PERCENTAGE");
-        v1.setValue(15.0);
-        list.add(v1);
+        result.postValue(AuthRepository.Result.loading());
 
-        Voucher v2 = new Voucher();
-        v2.setId("v2");
-        v2.setCode("FREESHIP24");
-        v2.setNote("Miễn phí vận chuyển");
-        v2.setType("FIXED");
-        v2.setValue(30000.0);
-        list.add(v2);
+        dbRef.child("vouchers").addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull com.google.firebase.database.DataSnapshot snapshot) {
+                List<Voucher> list = new ArrayList<>();
+                if (snapshot.exists()) {
+                    for (com.google.firebase.database.DataSnapshot s : snapshot.getChildren()) {
+                        Voucher v = mapSnapshotToVoucher(s);
+                        if (v.isActive()) {
+                            list.add(v);
+                        }
+                    }
+                }
+                result.postValue(AuthRepository.Result.success(list));
+            }
 
-        result.postValue(AuthRepository.Result.success(list));
+            @Override
+            public void onCancelled(@NonNull com.google.firebase.database.DatabaseError error) {
+                result.postValue(AuthRepository.Result.error("Không thể tải voucher: " + error.getMessage()));
+            }
+        });
+
         return result;
+    }
+
+    private Voucher mapSnapshotToVoucher(com.google.firebase.database.DataSnapshot s) {
+        Voucher v = new Voucher();
+        v.setId(s.child("id").getValue(String.class) != null ? s.child("id").getValue(String.class) : s.getKey());
+        v.setCode(s.child("code").getValue(String.class));
+        v.setType(s.child("type").getValue(String.class));
+        
+        Double val = s.child("value").getValue(Double.class);
+        v.setValue(val != null ? val : 0.0);
+        
+        Double cap = s.child("cap").getValue(Double.class);
+        v.setCap(cap != null ? cap : 0.0);
+        
+        Double minOrder = s.child("minOrderValue").getValue(Double.class);
+        if (minOrder == null) minOrder = s.child("min_order_value").getValue(Double.class);
+        v.setMinOrderValue(minOrder != null ? minOrder : 0.0);
+        
+        Integer maxUses = s.child("maxUses").getValue(Integer.class);
+        if (maxUses == null) maxUses = s.child("max_uses").getValue(Integer.class);
+        v.setMaxUses(maxUses != null ? maxUses : 0);
+        
+        v.setStartsAt(s.child("startsAt").getValue(String.class) != null ? s.child("startsAt").getValue(String.class) : s.child("starts_at").getValue(String.class));
+        v.setExpiresAt(s.child("expiresAt").getValue(String.class) != null ? s.child("expiresAt").getValue(String.class) : s.child("expires_at").getValue(String.class));
+        
+        Boolean active = s.child("isActive").getValue(Boolean.class);
+        if (active == null) active = s.child("is_active").getValue(Boolean.class);
+        v.setActive(active != null ? active : true);
+        
+        v.setNote(s.child("note").getValue(String.class));
+        return v;
     }
 
     // ── Order Reviews ────────────────────────────────────────────────────────
