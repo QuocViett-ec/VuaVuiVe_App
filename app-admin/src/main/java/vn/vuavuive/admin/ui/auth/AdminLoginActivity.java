@@ -41,10 +41,10 @@ public class AdminLoginActivity extends AppCompatActivity {
     };
 
     private static final String[] ROLES_PASSWORDS = {
-            "Admin@123456",
-            "Staff@123456",
-            "Audit@123456",
-            "123456"
+            "Admin@123",
+            "Staff@123",
+            "Audit@123",
+            "Customer@123"
     };
 
     @Override
@@ -101,7 +101,11 @@ public class AdminLoginActivity extends AppCompatActivity {
                     startActivity(new Intent(AdminLoginActivity.this, MainActivity.class));
                     finish();
                 } else {
-                    Toast.makeText(AdminLoginActivity.this, "Đăng nhập thất bại. Kiểm tra lại thông tin!", Toast.LENGTH_SHORT).show();
+                    String errorMsg = "Đăng nhập thất bại. Kiểm tra lại thông tin!";
+                    if (response.body() != null && response.body().getMessage() != null) {
+                        errorMsg = response.body().getMessage();
+                    }
+                    Toast.makeText(AdminLoginActivity.this, errorMsg, Toast.LENGTH_LONG).show();
                 }
             }
 

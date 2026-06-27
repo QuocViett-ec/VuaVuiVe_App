@@ -38,14 +38,25 @@ public class Shipment {
     private String createdAt;
 
     public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
     public String getOrderId() { return orderId; }
+    public void setOrderId(String orderId) { this.orderId = orderId; }
     public String getCustomerId() { return customerId; }
+    public void setCustomerId(String customerId) { this.customerId = customerId; }
     public String getCarrier() { return carrier; }
+    public void setCarrier(String carrier) { this.carrier = carrier; }
     public String getTrackingNumber() { return trackingNumber; }
+    public void setTrackingNumber(String trackingNumber) { this.trackingNumber = trackingNumber; }
     public double getShippingFee() { return shippingFee; }
+    public void setShippingFee(double shippingFee) { this.shippingFee = shippingFee; }
     public String getEta() { return eta; }
+    public void setEta(String eta) { this.eta = eta; }
     public String getDeliveredAt() { return deliveredAt; }
+    public void setDeliveredAt(String deliveredAt) { this.deliveredAt = deliveredAt; }
     public String getCurrentStatus() { return currentStatus; }
+    public void setCurrentStatus(String currentStatus) { this.currentStatus = currentStatus; }
     public List<StatusEvent> getStatusHistory() { return statusHistory; }
+    public void setStatusHistory(List<StatusEvent> statusHistory) { this.statusHistory = statusHistory; }
     public String getCreatedAt() { return createdAt; }
+    public void setCreatedAt(String createdAt) { this.createdAt = createdAt; }
 }
