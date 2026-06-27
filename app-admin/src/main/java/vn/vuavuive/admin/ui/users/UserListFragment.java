@@ -86,6 +86,19 @@ public class UserListFragment extends Fragment implements UserAdapter.OnUserStat
             public void afterTextChanged(Editable s) {}
         });
 
+        binding.tabUserRole.addOnTabSelectedListener(new com.google.android.material.tabs.TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(com.google.android.material.tabs.TabLayout.Tab tab) {
+                applyFilters();
+            }
+
+            @Override
+            public void onTabUnselected(com.google.android.material.tabs.TabLayout.Tab tab) {}
+
+            @Override
+            public void onTabReselected(com.google.android.material.tabs.TabLayout.Tab tab) {}
+        });
+
         binding.btnExportUsersCsv.setOnClickListener(v -> {
             if ("audit".equals(currentUser.getRole())) {
                 Toast.makeText(getContext(), "Kiểm toán viên không có quyền xuất thành viên", Toast.LENGTH_SHORT).show();
@@ -102,6 +115,7 @@ public class UserListFragment extends Fragment implements UserAdapter.OnUserStat
     }
 
     private void applyFilters() {
+        int selectedTab = binding.tabUserRole.getSelectedTabPosition();
         List<User> filteredList = new ArrayList<>();
         for (User u : allUsers) {
             boolean matchesQuery = false;
@@ -118,7 +132,17 @@ public class UserListFragment extends Fragment implements UserAdapter.OnUserStat
                 }
             }
 
-            if (matchesQuery) {
+            boolean matchesTab = false;
+            String r = u.getRole();
+            if (selectedTab == 0) { // Khách hàng
+                matchesTab = r == null || "user".equalsIgnoreCase(r) || "customer".equalsIgnoreCase(r);
+            } else if (selectedTab == 1) { // Shipper
+                matchesTab = "shipper".equalsIgnoreCase(r);
+            } else if (selectedTab == 2) { // Nhân viên
+                matchesTab = "admin".equalsIgnoreCase(r) || "staff".equalsIgnoreCase(r) || "audit".equalsIgnoreCase(r);
+            }
+
+            if (matchesQuery && matchesTab) {
                 filteredList.add(u);
             }
         }
@@ -143,17 +167,124 @@ public class UserListFragment extends Fragment implements UserAdapter.OnUserStat
 
     // Double functionality: click to change role (admins only)
     public void onUserClick(User user) {
-        if ("audit".equals(currentUser.getRole())) {
-            Toast.makeText(getContext(), "Kiểm toán viên không có quyền chỉnh sửa thành viên", Toast.LENGTH_SHORT).show();
+        View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_user_detail, null);
+        
+        // Find views
+        android.widget.TextView tvInitials = dialogView.findViewById(R.id.tv_detail_initials);
+        android.widget.TextView tvName = dialogView.findViewById(R.id.tv_detail_name);
+        android.widget.TextView tvRole = dialogView.findViewById(R.id.tv_detail_role);
+        android.widget.TextView tvEmail = dialogView.findViewById(R.id.tv_detail_email);
+        android.widget.TextView tvPhone = dialogView.findViewById(R.id.tv_detail_phone);
+        android.widget.TextView tvAddress = dialogView.findViewById(R.id.tv_detail_address);
+        android.widget.TextView tvProvider = dialogView.findViewById(R.id.tv_detail_provider);
+        android.widget.TextView tvPoints = dialogView.findViewById(R.id.tv_detail_points);
+        android.widget.TextView tvCreatedAt = dialogView.findViewById(R.id.tv_detail_created_at);
+        android.widget.TextView tvStatus = dialogView.findViewById(R.id.tv_detail_status);
+        
+        android.widget.Button btnChangeRole = dialogView.findViewById(R.id.btn_change_role);
+        android.widget.Button btnCloseOk = dialogView.findViewById(R.id.btn_close_ok);
+        android.widget.ImageButton btnCloseDialog = dialogView.findViewById(R.id.btn_close_dialog);
+
+        // Bind data
+        tvName.setText(user.getName());
+        tvEmail.setText(user.getEmail() != null ? user.getEmail() : "N/A");
+        tvPhone.setText(user.getPhone() != null ? user.getPhone() : "N/A");
+        tvAddress.setText(user.getAddress() != null && !user.getAddress().trim().isEmpty() ? user.getAddress() : "Chưa cập nhật địa chỉ");
+        
+        String provider = user.getProvider();
+        if ("google".equalsIgnoreCase(provider)) {
+            tvProvider.setText("Google Account");
+        } else {
+            tvProvider.setText("Email & Mật khẩu (Local)");
+        }
+        
+        tvPoints.setText(user.getPoints() + " điểm");
+        tvCreatedAt.setText(user.getCreatedAt() != null ? user.getCreatedAt() : "N/A");
+        
+        if (user.isActive()) {
+            tvStatus.setText("ĐANG HOẠT ĐỘNG");
+            tvStatus.setTextColor(android.graphics.Color.parseColor("#2E7D32"));
+        } else {
+            tvStatus.setText("ĐÃ BỊ KHÓA");
+            tvStatus.setTextColor(android.graphics.Color.parseColor("#C62828"));
+        }
+
+        // Initials
+        String initials = "US";
+        if (user.getName() != null && !user.getName().trim().isEmpty()) {
+            String[] words = user.getName().trim().split("\\s+");
+            if (words.length == 1) {
+                initials = words[0].substring(0, Math.min(2, words[0].length())).toUpperCase();
+            } else {
+                initials = (words[0].substring(0, 1) + words[words.length - 1].substring(0, 1)).toUpperCase();
+            }
+        }
+        tvInitials.setText(initials);
+
+        // Set role badge styles
+        String roleText = user.getRole() != null ? user.getRole().toUpperCase() : "CUSTOMER";
+        int bgTint, textColor;
+        switch (roleText) {
+            case "ADMIN":
+                bgTint = android.graphics.Color.parseColor("#33F44336");
+                textColor = android.graphics.Color.parseColor("#F44336");
+                break;
+            case "STAFF":
+                bgTint = android.graphics.Color.parseColor("#3300BCD4");
+                textColor = android.graphics.Color.parseColor("#00BCD4");
+                break;
+            case "AUDIT":
+                bgTint = android.graphics.Color.parseColor("#339C27B0");
+                textColor = android.graphics.Color.parseColor("#9C27B0");
+                break;
+            case "SHIPPER":
+                bgTint = android.graphics.Color.parseColor("#33FF9800");
+                textColor = android.graphics.Color.parseColor("#FF9800");
+                break;
+            default:
+                bgTint = android.graphics.Color.parseColor("#332196F3");
+                textColor = android.graphics.Color.parseColor("#2196F3");
+                roleText = "CUSTOMER";
+                break;
+        }
+        tvRole.setText(roleText);
+        tvRole.setTextColor(textColor);
+        tvRole.setBackgroundTintList(android.content.res.ColorStateList.valueOf(bgTint));
+
+        // Create Dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setView(dialogView);
+        AlertDialog dialog = builder.create();
+
+        // Admin checks for "Change Role" permission
+        if ("admin".equals(currentUser.getRole())) {
+            btnChangeRole.setVisibility(View.VISIBLE);
+            btnChangeRole.setOnClickListener(v -> {
+                dialog.dismiss();
+                showChangeRoleDialog(user);
+            });
+        } else {
+            btnChangeRole.setVisibility(View.GONE);
+        }
+
+        // Close handlers
+        btnCloseOk.setOnClickListener(v -> dialog.dismiss());
+        btnCloseDialog.setOnClickListener(v -> dialog.dismiss());
+
+        dialog.show();
+    }
+
+    private void showChangeRoleDialog(User user) {
+        if (!"admin".equals(currentUser.getRole())) {
+            Toast.makeText(getContext(), "Chỉ có Admin mới được đổi quyền hạn", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        final String[] roles = {"admin", "staff", "audit", "user"};
+        final String[] roles = {"admin", "staff", "audit", "shipper", "user"};
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Thay đổi phân quyền thành viên");
         
-        // Find current selection
-        int currentSelection = 3; // default 'user'
+        int currentSelection = 4; // default 'user'
         for (int i = 0; i < roles.length; i++) {
             if (roles[i].equalsIgnoreCase(user.getRole())) {
                 currentSelection = i;

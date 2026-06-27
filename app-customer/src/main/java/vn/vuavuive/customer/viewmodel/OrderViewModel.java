@@ -17,64 +17,67 @@ import javax.inject.Inject;
 @HiltViewModel
 public class OrderViewModel extends ViewModel {
 
-    private final OrderRepository orderRepository;
+    private final vn.vuavuive.customer.data.repository.FirebaseOrderRepository firebaseOrderRepository;
+    private final OrderRepository backendOrderRepository;
 
     // Selected voucher
     private final MutableLiveData<Voucher> selectedVoucher = new MutableLiveData<>();
 
     @Inject
-    public OrderViewModel(OrderRepository orderRepository) {
-        this.orderRepository = orderRepository;
+    public OrderViewModel(vn.vuavuive.customer.data.repository.FirebaseOrderRepository firebaseOrderRepository,
+                          OrderRepository backendOrderRepository) {
+        this.firebaseOrderRepository = firebaseOrderRepository;
+        this.backendOrderRepository = backendOrderRepository;
     }
 
     public LiveData<AuthRepository.Result<List<Order>>> getOrders(String status, int page) {
-        return orderRepository.getOrders(status, page, 20);
+        return firebaseOrderRepository.getOrders(status, page, 20);
     }
 
     public LiveData<AuthRepository.Result<Order>> getOrderDetail(String orderId) {
-        return orderRepository.getOrderDetail(orderId);
+        return firebaseOrderRepository.getOrderDetail(orderId);
     }
 
     public LiveData<AuthRepository.Result<Order>> createOrder(CreateOrderRequest request) {
-        return orderRepository.createOrder(request);
+        return backendOrderRepository.createOrder(request);
     }
 
     public LiveData<AuthRepository.Result<Void>> cancelOrder(String orderId) {
-        return orderRepository.cancelOrder(orderId);
+        return firebaseOrderRepository.cancelOrder(orderId);
     }
 
     public LiveData<AuthRepository.Result<Void>> returnOrder(String orderId, String reason) {
-        return orderRepository.returnOrder(orderId, reason);
+        return firebaseOrderRepository.returnOrder(orderId, reason);
     }
 
     public LiveData<AuthRepository.Result<String>> getVnpayUrl(String orderId) {
-        return orderRepository.getVnpayUrl(orderId);
-    }
-
-    public LiveData<AuthRepository.Result<String>> getMomoUrl(String orderId) {
-        return orderRepository.getMomoUrl(orderId);
+        return backendOrderRepository.getVnpayUrl(orderId);
     }
 
     public LiveData<AuthRepository.Result<CreateMomoPaymentResponse>> createMomoPayment(
             String orderId, double amount, String userId) {
-        return orderRepository.createMomoPayment(orderId, amount, userId);
+        return backendOrderRepository.createMomoPayment(orderId, amount, userId);
     }
 
     public LiveData<AuthRepository.Result<PaymentStatusResponse>> getPaymentStatus(String orderId) {
-        return orderRepository.getPaymentStatus(orderId);
+        return backendOrderRepository.getPaymentStatus(orderId);
+    }
+
+    public LiveData<AuthRepository.Result<PaymentStatusResponse>> mockMomoSuccess(String orderId) {
+        return backendOrderRepository.mockMomoSuccess(orderId);
     }
 
     public LiveData<AuthRepository.Result<List<Voucher>>> getAvailableVouchers() {
-        return orderRepository.getAvailableVouchers();
+        return backendOrderRepository.getAvailableVouchers();
     }
 
     public LiveData<AuthRepository.Result<vn.vuavuive.shared.data.dto.Review>> submitReview(
             String orderId, java.util.List<java.util.Map<String, Object>> reviews) {
-        return orderRepository.submitReview(orderId, reviews);
+        return backendOrderRepository.submitReview(orderId, reviews);
     }
 
     public LiveData<AuthRepository.Result<vn.vuavuive.shared.data.dto.Review>> getMyReview(String orderId) {
-        return orderRepository.getMyReview(orderId);
+        return backendOrderRepository.getMyReview(orderId);
     }
 
     public MutableLiveData<Voucher> getSelectedVoucher() { return selectedVoucher; }

@@ -1,15 +1,62 @@
 package vn.vuavuive.backend.modules.user;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import vn.vuavuive.backend.core.FirebaseRepositoryHelper;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, UUID> {
-    Optional<User> findByEmail(String email);
-    Optional<User> findByPhone(String phone);
-    boolean existsByEmail(String email);
-    boolean existsByPhone(String phone);
+@RequiredArgsConstructor
+public class UserRepository {
+
+    private final FirebaseRepositoryHelper firebase;
+
+    public Optional<User> findById(String id) {
+        return Optional.ofNullable(firebase.get("users/" + id, User.class));
+    }
+
+    public Optional<User> findById(UUID id) {
+        return findById(id.toString());
+    }
+
+    public List<User> findAll() {
+        return firebase.getList("users", User.class);
+    }
+
+    public User save(User user) {
+        if (user.getId() == null) {
+            user.setId(UUID.randomUUID().toString());
+        }
+        firebase.save("users/" + user.getId(), user);
+        return user;
+    }
+
+    public void deleteById(String id) {
+        firebase.delete("users/" + id);
+    }
+
+    public Optional<User> findByEmail(String email) {
+        if (email == null) return Optional.empty();
+        return findAll().stream()
+                .filter(u -> email.equalsIgnoreCase(u.getEmail()))
+                .findFirst();
+    }
+
+    public Optional<User> findByPhone(String phone) {
+        if (phone == null) return Optional.empty();
+        return findAll().stream()
+                .filter(u -> phone.equals(u.getPhone()))
+                .findFirst();
+    }
+
+    public boolean existsByEmail(String email) {
+        return findByEmail(email).isPresent();
+    }
+
+    public boolean existsByPhone(String phone) {
+        return findByPhone(phone).isPresent();
+    }
 }

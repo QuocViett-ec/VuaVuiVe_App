@@ -18,4 +18,13 @@ public class CreateMomoPaymentResponse {
     public String getQrCodeUrl() { return qrCodeUrl; }
     public Integer getResultCode() { return resultCode; }
     public String getMessage() { return message; }
+
+    public void setOrderId(String orderId) { this.orderId = orderId; }
+    public void setRequestId(String requestId) { this.requestId = requestId; }
+    public void setAmount(double amount) { this.amount = amount; }
+    public void setPayUrl(String payUrl) { this.payUrl = payUrl; }
+    public void setDeeplink(String deeplink) { this.deeplink = deeplink; }
+    public void setQrCodeUrl(String qrCodeUrl) { this.qrCodeUrl = qrCodeUrl; }
+    public void setResultCode(Integer resultCode) { this.resultCode = resultCode; }
+    public void setMessage(String message) { this.message = message; }
 }

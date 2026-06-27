@@ -1,14 +1,11 @@
 package vn.vuavuive.backend.modules.product;
 
-import jakarta.persistence.*;
 import lombok.*;
 import vn.vuavuive.backend.core.BaseEntity;
-import vn.vuavuive.backend.modules.category.Category;
 
-import java.math.BigDecimal;
-
-@Entity
-@Table(name = "products")
+/**
+ * Lớp Product — Thông tin sản phẩm, loại bỏ JPA.
+ */
 @Getter
 @Setter
 @NoArgsConstructor
@@ -16,46 +13,75 @@ import java.math.BigDecimal;
 @Builder
 public class Product extends BaseEntity {
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id", nullable = false)
-    private Category category;
-
-    @Column(name = "name", nullable = false)
+    private String categoryId;
     private String name;
-
-    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
-
-    @Column(name = "original_price", nullable = false, precision = 12, scale = 2)
-    private BigDecimal originalPrice;
-
-    @Column(name = "selling_price", nullable = false, precision = 12, scale = 2)
-    private BigDecimal sellingPrice;
-
-    @Column(name = "stock_quantity", nullable = false)
+    
+    private java.math.BigDecimal originalPrice;
+    private java.math.BigDecimal sellingPrice;
+    
     @Builder.Default
     private Integer stockQuantity = 0;
-
-    @Column(name = "unit", nullable = false)
+    
     @Builder.Default
     private String unit = "KG";
-
-    @Column(name = "image_url")
+    
     private String imageUrl;
-
-    @Column(name = "is_active", nullable = false)
+    
     @Builder.Default
     private Boolean isActive = true;
-
-    @Column(name = "slug")
+    
     private String slug;
-
-    @Column(name = "sub_category")
     private String subCategory;
-
-    @Column(name = "tags", columnDefinition = "TEXT")
-    private String tags;
-
-    @Column(name = "external_id")
+    private Object tags;
     private String externalId;
+
+    @com.google.firebase.database.PropertyName("category_id")
+    public String getCategoryId() { return categoryId; }
+    @com.google.firebase.database.PropertyName("category_id")
+    public void setCategoryId(String categoryId) { this.categoryId = categoryId; }
+
+    @com.google.firebase.database.PropertyName("original_price")
+    public java.math.BigDecimal getOriginalPrice() { return originalPrice; }
+    @com.google.firebase.database.PropertyName("original_price")
+    public void setOriginalPrice(java.math.BigDecimal originalPrice) { this.originalPrice = originalPrice; }
+
+    @com.google.firebase.database.PropertyName("selling_price")
+    public java.math.BigDecimal getSellingPrice() { return sellingPrice; }
+    @com.google.firebase.database.PropertyName("selling_price")
+    public void setSellingPrice(java.math.BigDecimal sellingPrice) { this.sellingPrice = sellingPrice; }
+
+    @com.google.firebase.database.PropertyName("stock_quantity")
+    public Integer getStockQuantity() { return stockQuantity; }
+    @com.google.firebase.database.PropertyName("stock_quantity")
+    public void setStockQuantity(Integer stockQuantity) { 
+        if (stockQuantity != null) this.stockQuantity = stockQuantity; 
+    }
+
+    @com.google.firebase.database.PropertyName("stock")
+    public Integer getStock() { return stockQuantity; }
+    @com.google.firebase.database.PropertyName("stock")
+    public void setStock(Integer stock) { 
+        if (stock != null) this.stockQuantity = stock; 
+    }
+
+    @com.google.firebase.database.PropertyName("image_url")
+    public String getImageUrl() { return imageUrl; }
+    @com.google.firebase.database.PropertyName("image_url")
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+
+    @com.google.firebase.database.PropertyName("is_active")
+    public Boolean getIsActive() { return isActive; }
+    @com.google.firebase.database.PropertyName("is_active")
+    public void setIsActive(Boolean isActive) { this.isActive = isActive; }
+
+    @com.google.firebase.database.PropertyName("sub_category")
+    public String getSubCategory() { return subCategory; }
+    @com.google.firebase.database.PropertyName("sub_category")
+    public void setSubCategory(String subCategory) { this.subCategory = subCategory; }
+
+    @com.google.firebase.database.PropertyName("external_id")
+    public String getExternalId() { return externalId; }
+    @com.google.firebase.database.PropertyName("external_id")
+    public void setExternalId(String externalId) { this.externalId = externalId; }
 }

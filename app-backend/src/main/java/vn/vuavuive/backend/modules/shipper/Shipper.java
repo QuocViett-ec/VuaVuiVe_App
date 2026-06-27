@@ -1,16 +1,11 @@
 package vn.vuavuive.backend.modules.shipper;
 
-import jakarta.persistence.*;
 import lombok.*;
 import vn.vuavuive.backend.core.BaseEntity;
-import vn.vuavuive.backend.modules.user.User;
 
 /**
- * Bảng SHIPPERS — Lưu thông tin tài xế giao hàng.
- * Một Shipper có thể được gán vào nhiều đơn hàng theo thời gian (1 lúc chỉ 1 đơn).
+ * Lớp Shipper — Lưu thông tin tài xế giao hàng, loại bỏ JPA.
  */
-@Entity
-@Table(name = "shippers")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -18,33 +13,48 @@ import vn.vuavuive.backend.modules.user.User;
 @Builder
 public class Shipper extends BaseEntity {
 
-    @Column(name = "full_name", nullable = false)
     private String fullName;
-
-    @Column(name = "phone", nullable = false, unique = true)
     private String phone;
-
-    @Column(name = "vehicle_number")
     private String vehicleNumber;
+    private String userId;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", unique = true)
-    private User user;
-
-    /**
-     * Trạng thái hiện tại của Shipper để hệ thống phân công đơn:
-     * AVAILABLE  — Đang rảnh, có thể nhận đơn mới
-     * DELIVERING — Đang giao hàng
-     * OFFLINE    — Không hoạt động
-     */
-    @Enumerated(EnumType.STRING)
-    @Column(name = "current_status", nullable = false)
     @Builder.Default
     private Status currentStatus = Status.OFFLINE;
 
-    @Column(name = "is_active", nullable = false)
     @Builder.Default
     private Boolean isActive = true;
+
+    @com.google.firebase.database.Exclude
+    public Status getCurrentStatus() { return currentStatus; }
+    @com.google.firebase.database.Exclude
+    public void setCurrentStatus(Status currentStatus) { this.currentStatus = currentStatus; }
+
+    @com.google.firebase.database.PropertyName("current_status")
+    public String getCurrentStatusString() { return currentStatus != null ? currentStatus.name() : null; }
+    @com.google.firebase.database.PropertyName("current_status")
+    public void setCurrentStatusString(String status) { 
+        this.currentStatus = status != null ? Status.valueOf(status) : null; 
+    }
+
+    @com.google.firebase.database.PropertyName("full_name")
+    public String getFullName() { return fullName; }
+    @com.google.firebase.database.PropertyName("full_name")
+    public void setFullName(String fullName) { this.fullName = fullName; }
+
+    @com.google.firebase.database.PropertyName("vehicle_number")
+    public String getVehicleNumber() { return vehicleNumber; }
+    @com.google.firebase.database.PropertyName("vehicle_number")
+    public void setVehicleNumber(String vehicleNumber) { this.vehicleNumber = vehicleNumber; }
+
+    @com.google.firebase.database.PropertyName("user_id")
+    public String getUserId() { return userId; }
+    @com.google.firebase.database.PropertyName("user_id")
+    public void setUserId(String userId) { this.userId = userId; }
+
+    @com.google.firebase.database.PropertyName("is_active")
+    public Boolean getIsActive() { return isActive; }
+    @com.google.firebase.database.PropertyName("is_active")
+    public void setIsActive(Boolean isActive) { this.isActive = isActive; }
 
     public enum Status {
         AVAILABLE, DELIVERING, OFFLINE

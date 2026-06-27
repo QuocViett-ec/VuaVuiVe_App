@@ -15,7 +15,6 @@ import vn.vuavuive.backend.modules.order.dto.OrderResponse;
 import vn.vuavuive.backend.modules.product.dto.PagedResponse;
 
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * OrderController — API đặt hàng và quản lý đơn.
@@ -75,13 +74,13 @@ public class OrderController {
 
     @Operation(summary = "Xem chi tiết đơn hàng kèm Timeline trạng thái")
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<OrderResponse>> getOrderById(@PathVariable UUID id) {
+    public ResponseEntity<ApiResponse<OrderResponse>> getOrderById(@PathVariable String id) {
         return ResponseEntity.ok(ApiResponse.success(orderService.getOrderById(id)));
     }
 
     @Operation(summary = "Hủy đơn hàng (Chỉ được khi đơn đang PENDING)")
     @PatchMapping("/{id}/cancel")
-    public ResponseEntity<ApiResponse<OrderResponse>> cancelOrder(@PathVariable UUID id) {
+    public ResponseEntity<ApiResponse<OrderResponse>> cancelOrder(@PathVariable String id) {
         return ResponseEntity.ok(ApiResponse.success(orderService.cancelOrder(id)));
     }
 
@@ -89,7 +88,7 @@ public class OrderController {
     @PatchMapping("/{id}/status")
     @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
     public ResponseEntity<ApiResponse<OrderResponse>> updateStatus(
-            @PathVariable UUID id,
+            @PathVariable String id,
             @RequestBody Map<String, String> body) {
         String newStatus = body.get("status");
         String note      = body.getOrDefault("note", "");
@@ -101,20 +100,20 @@ public class OrderController {
     @PutMapping("/{id}/status")
     @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
     public ResponseEntity<ApiResponse<OrderResponse>> updateStatusPut(
-            @PathVariable UUID id,
+            @PathVariable String id,
             @RequestBody Map<String, String> body) {
         return updateStatus(id, body);
     }
 
     @PatchMapping("/{id}/paid")
     @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
-    public ResponseEntity<ApiResponse<OrderResponse>> markPaid(@PathVariable UUID id) {
+    public ResponseEntity<ApiResponse<OrderResponse>> markPaid(@PathVariable String id) {
         return ResponseEntity.ok(ApiResponse.success(orderService.markPaid(id)));
     }
 
     @PatchMapping("/{id}/refund")
     @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
-    public ResponseEntity<ApiResponse<OrderResponse>> markRefunded(@PathVariable UUID id) {
+    public ResponseEntity<ApiResponse<OrderResponse>> markRefunded(@PathVariable String id) {
         return ResponseEntity.ok(ApiResponse.success(orderService.markRefunded(id)));
     }
 

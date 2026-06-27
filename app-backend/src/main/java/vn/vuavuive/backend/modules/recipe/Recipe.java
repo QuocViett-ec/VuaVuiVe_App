@@ -1,36 +1,22 @@
 package vn.vuavuive.backend.modules.recipe;
 
-import jakarta.persistence.*;
 import java.util.UUID;
 
-@Entity
-@Table(name = "recipes")
+/**
+ * Lớp Recipe — Thông tin công thức nấu ăn, loại bỏ JPA.
+ */
 public class Recipe {
 
-    @Id
     private String id;
-
     private String name;
-
-    @Column(columnDefinition = "TEXT")
     private String description;
-
-    @Column(columnDefinition = "TEXT")
     private String image;
-
     private String category;
-
     private String prepTime;
-
     private String cookTime;
-
     private String difficulty;
-
-    @Column(columnDefinition = "TEXT")
-    private String ingredients; // JSON String
-
-    @Column(columnDefinition = "TEXT")
-    private String steps; // JSON String
+    private Object ingredients;
+    private Object steps;
 
     public Recipe() {
         this.id = UUID.randomUUID().toString();
@@ -60,9 +46,9 @@ public class Recipe {
     public String getDifficulty() { return difficulty; }
     public void setDifficulty(String difficulty) { this.difficulty = difficulty; }
 
-    public String getIngredients() { return ingredients; }
-    public void setIngredients(String ingredients) { this.ingredients = ingredients; }
-
-    public String getSteps() { return steps; }
-    public void setSteps(String steps) { this.steps = steps; }
+    public Object getIngredients() { return ingredients; }
+    public void setIngredients(Object ingredients) { this.ingredients = ingredients; }
+ 
+    public Object getSteps() { return steps; }
+    public void setSteps(Object steps) { this.steps = steps; }
 }

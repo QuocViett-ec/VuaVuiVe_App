@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import dagger.hilt.android.lifecycle.HiltViewModel;
-import vn.vuavuive.customer.data.repository.CartRepository;
+import vn.vuavuive.customer.data.repository.FirebaseCartRepository;
 import vn.vuavuive.customer.data.repository.AuthRepository;
 import vn.vuavuive.shared.data.local.CartItemEntity;
 import java.util.List;
@@ -13,10 +13,10 @@ import javax.inject.Inject;
 @HiltViewModel
 public class CartViewModel extends ViewModel {
 
-    private final CartRepository cartRepository;
+    private final FirebaseCartRepository cartRepository;
 
     @Inject
-    public CartViewModel(CartRepository cartRepository) {
+    public CartViewModel(FirebaseCartRepository cartRepository) {
         this.cartRepository = cartRepository;
     }
 

@@ -85,12 +85,12 @@ public class MainActivity extends AppCompatActivity {
 
     // Guest flow: login is triggered only when user chooses it.
 
-    /** Allow fragments to navigate programmatically to the products tab (now merged with Home) */
+    /** Allow fragments to navigate programmatically to the products tab */
     public void navigateToProducts() {
         if (navController != null) {
-            navController.navigate(R.id.navigation_home);
+            navController.navigate(R.id.navigation_products);
         } else if (bottomNavView != null) {
-            bottomNavView.setSelectedItemId(R.id.navigation_home);
+            bottomNavView.setSelectedItemId(R.id.navigation_products);
         }
     }
 

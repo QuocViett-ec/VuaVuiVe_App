@@ -185,26 +185,7 @@ public class OrderRepository {
 
     public LiveData<AuthRepository.Result<String>> getMomoUrl(String orderId) {
         MutableLiveData<AuthRepository.Result<String>> result = new MutableLiveData<>();
-        result.postValue(AuthRepository.Result.loading());
-
-        Map<String, String> body = new HashMap<>();
-        body.put("orderId", orderId);
-
-        paymentApi.createMoMoUrl(body).enqueue(new Callback<ApiResponse<Map<String, String>>>() {
-            @Override
-            public void onResponse(Call<ApiResponse<Map<String, String>>> call, Response<ApiResponse<Map<String, String>>> response) {
-                if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
-                    String url = response.body().getData().get("payUrl");
-                    result.postValue(AuthRepository.Result.success(url != null ? url : ""));
-                } else {
-                    result.postValue(AuthRepository.Result.error("Không tạo được liên kết MoMo"));
-                }
-            }
-            @Override
-            public void onFailure(Call<ApiResponse<Map<String, String>>> call, Throwable t) {
-                result.postValue(AuthRepository.Result.error("Lỗi kết nối"));
-            }
-        });
+        result.postValue(AuthRepository.Result.error("Khong dung endpoint MoMo cu"));
         return result;
     }
 
@@ -250,6 +231,29 @@ public class OrderRepository {
             @Override
             public void onFailure(Call<ApiResponse<PaymentStatusResponse>> call, Throwable t) {
                 result.postValue(AuthRepository.Result.error("Lỗi kết nối: " + t.getMessage()));
+            }
+        });
+        return result;
+    }
+
+    public LiveData<AuthRepository.Result<PaymentStatusResponse>> mockMomoSuccess(String orderId) {
+        MutableLiveData<AuthRepository.Result<PaymentStatusResponse>> result = new MutableLiveData<>();
+        result.postValue(AuthRepository.Result.loading());
+
+        paymentApi.mockMomoSuccess(orderId).enqueue(new Callback<ApiResponse<PaymentStatusResponse>>() {
+            @Override
+            public void onResponse(Call<ApiResponse<PaymentStatusResponse>> call,
+                                   Response<ApiResponse<PaymentStatusResponse>> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                    result.postValue(AuthRepository.Result.success(response.body().getData()));
+                } else {
+                    result.postValue(AuthRepository.Result.error("Khong the mock thanh toan MoMo"));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse<PaymentStatusResponse>> call, Throwable t) {
+                result.postValue(AuthRepository.Result.error("Loi ket noi: " + t.getMessage()));
             }
         });
         return result;

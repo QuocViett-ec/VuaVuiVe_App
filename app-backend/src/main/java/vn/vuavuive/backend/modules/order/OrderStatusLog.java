@@ -1,71 +1,55 @@
 package vn.vuavuive.backend.modules.order;
 
-import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
+import vn.vuavuive.backend.core.BaseEntity;
 import vn.vuavuive.backend.modules.order.Order.OrderStatus;
 
-import java.time.LocalDateTime;
-import java.util.UUID;
-
 /**
- * Bảng ORDER_STATUS_LOGS — Nhật ký lịch sử thay đổi trạng thái đơn hàng.
- *
- * Đây là bảng cốt lõi cho tính năng "Timeline Trạng Thái" trên màn hình Admin.
- * Mỗi khi đơn chuyển trạng thái (bởi Admin, Staff, hoặc Shipper),
- * một record mới được insert vào đây — KHÔNG xóa record cũ.
- *
- * Ví dụ hiển thị cho Admin:
- *   ✅ 14:00 - PENDING   (Tạo bởi: SYSTEM)
- *   ✅ 14:15 - CONFIRMED (Tạo bởi: ADMIN - Nguyễn Admin)
- *   ✅ 14:30 - IN_TRANSIT (Tạo bởi: SHIPPER - Trần Shipper B)
- *   ❌ 15:00 - FAILED   (Tạo bởi: SHIPPER - Ghi chú: "Gọi 3 lần không nghe máy")
+ * Lớp OrderStatusLog — Nhật ký lịch sử thay đổi trạng thái đơn hàng, loại bỏ JPA.
  */
-@Entity
-@Table(name = "order_status_logs")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class OrderStatusLog {
+public class OrderStatusLog extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id", nullable = false)
-    private Order order;
-
-    /** Trạng thái mới vừa được áp dụng */
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
+    private String orderId;
     private OrderStatus status;
-
-    /** Ghi chú giải thích lý do đổi trạng thái (bắt buộc cho FAILED/RETURNED) */
-    @Column(name = "note")
     private String note;
-
-    /** ID của người thực hiện thay đổi (Admin, Staff, hoặc Shipper) */
-    @Column(name = "updated_by_id")
-    private UUID updatedById;
-
-    /** Tên người thực hiện (hiển thị cho Admin, không cần join) */
-    @Column(name = "updated_by_name")
+    private String updatedById;
     private String updatedByName;
-
-    /**
-     * Vai trò của người thực hiện:
-     * SYSTEM  — Hệ thống tự động (Cron Job hủy đơn)
-     * ADMIN   — Quản trị viên
-     * STAFF   — Nhân viên kho
-     * SHIPPER — Tài xế giao hàng
-     */
-    @Column(name = "updated_by_role", nullable = false)
     private String updatedByRole;
 
-    @CreationTimestamp
-    @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt;
+    @com.google.firebase.database.Exclude
+    public OrderStatus getStatus() { return status; }
+    @com.google.firebase.database.Exclude
+    public void setStatus(OrderStatus status) { this.status = status; }
+
+    @com.google.firebase.database.PropertyName("status")
+    public String getStatusString() { return status != null ? status.name() : null; }
+    @com.google.firebase.database.PropertyName("status")
+    public void setStatusString(String status) { 
+        this.status = status != null ? OrderStatus.valueOf(status) : null; 
+    }
+
+    @com.google.firebase.database.PropertyName("order_id")
+    public String getOrderId() { return orderId; }
+    @com.google.firebase.database.PropertyName("order_id")
+    public void setOrderId(String orderId) { this.orderId = orderId; }
+
+    @com.google.firebase.database.PropertyName("updated_by_id")
+    public String getUpdatedById() { return updatedById; }
+    @com.google.firebase.database.PropertyName("updated_by_id")
+    public void setUpdatedById(String updatedById) { this.updatedById = updatedById; }
+
+    @com.google.firebase.database.PropertyName("updated_by_name")
+    public String getUpdatedByName() { return updatedByName; }
+    @com.google.firebase.database.PropertyName("updated_by_name")
+    public void setUpdatedByName(String updatedByName) { this.updatedByName = updatedByName; }
+
+    @com.google.firebase.database.PropertyName("updated_by_role")
+    public String getUpdatedByRole() { return updatedByRole; }
+    @com.google.firebase.database.PropertyName("updated_by_role")
+    public void setUpdatedByRole(String updatedByRole) { this.updatedByRole = updatedByRole; }
 }

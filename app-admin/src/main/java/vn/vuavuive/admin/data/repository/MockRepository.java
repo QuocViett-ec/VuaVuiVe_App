@@ -16,6 +16,13 @@ import vn.vuavuive.shared.data.dto.Shipment;
 import vn.vuavuive.shared.data.dto.User;
 import vn.vuavuive.shared.data.dto.Voucher;
 
+import androidx.annotation.NonNull;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 public class MockRepository {
     private static MockRepository instance;
 
@@ -37,6 +44,315 @@ public class MockRepository {
 
     private MockRepository() {
         initMockData();
+        startFirebaseSync();
+    }
+
+    private void startFirebaseSync() {
+        try {
+            DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
+            
+            // Listen to Users
+            dbRef.child("users").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    List<User> list = new ArrayList<>();
+                    for (DataSnapshot s : snapshot.getChildren()) {
+                        User u = new User();
+                        u.setId(s.getKey());
+                        u.setEmail(s.child("email").getValue(String.class));
+                        u.setName(s.child("name").getValue(String.class));
+                        u.setPhone(s.child("phone").getValue(String.class));
+                        u.setAddress(s.child("address").getValue(String.class));
+                        
+                        String role = s.child("role").getValue(String.class);
+                        u.setRole(role != null ? role.toUpperCase() : "CUSTOMER");
+                        
+                        Boolean active = s.child("isActive").getValue(Boolean.class);
+                        if (active == null) active = s.child("is_active").getValue(Boolean.class);
+                        u.setActive(active != null ? active : true);
+                        
+                        u.setCreatedAt(s.child("created_at").getValue(String.class));
+                        u.setProvider(s.child("provider").getValue(String.class));
+                        list.add(u);
+                    }
+                    if (!list.isEmpty()) {
+                        users = list;
+                    }
+                }
+                @Override public void onCancelled(@NonNull DatabaseError error) {}
+            });
+
+            // Listen to Products
+            dbRef.child("products").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    List<Product> list = new ArrayList<>();
+                    for (DataSnapshot s : snapshot.getChildren()) {
+                        Product p = new Product();
+                        p.setId(s.child("id").getValue(String.class) != null ? s.child("id").getValue(String.class) : s.getKey());
+                        p.setName(s.child("name").getValue(String.class));
+                        p.setSlug(s.child("slug").getValue(String.class));
+                        
+                        Double sellingPrice = s.child("selling_price").getValue(Double.class);
+                        p.setPrice(sellingPrice != null ? sellingPrice : 0.0);
+                        
+                        p.setOriginalPrice(s.child("original_price").getValue(Double.class));
+                        p.setCategory(s.child("category_id").getValue(String.class));
+                        p.setSubCategory(s.child("sub_category").getValue(String.class));
+                        p.setDescription(s.child("description").getValue(String.class));
+                        
+                        String imgUrl = s.child("image_url").getValue(String.class);
+                        if (imgUrl == null) imgUrl = s.child("imageUrl").getValue(String.class);
+                        p.setImageUrl(imgUrl);
+                        
+                        Integer stock = s.child("stock_quantity").getValue(Integer.class);
+                        if (stock == null) stock = s.child("stock").getValue(Integer.class);
+                        p.setStock(stock != null ? stock : 0);
+                        
+                        p.setUnit(s.child("unit").getValue(String.class));
+                        
+                        Boolean active = s.child("is_active").getValue(Boolean.class);
+                        if (active == null) active = s.child("isActive").getValue(Boolean.class);
+                        p.setActive(active != null ? active : true);
+                        
+                        p.setRating(s.child("rating").getValue(Double.class));
+                        p.setReviewCount(s.child("review_count").getValue(Integer.class));
+                        p.setSoldCount(s.child("sold_count").getValue(Integer.class));
+                        p.setCreatedAt(s.child("created_at").getValue(String.class));
+                        list.add(p);
+                    }
+                    if (!list.isEmpty()) {
+                        products = list;
+                    }
+                }
+                @Override public void onCancelled(@NonNull DatabaseError error) {}
+            });
+
+            // Listen to Orders
+            dbRef.child("orders").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    List<Order> list = new ArrayList<>();
+                    for (DataSnapshot s : snapshot.getChildren()) {
+                        Order o = new Order();
+                        o.setId(s.child("id").getValue(String.class) != null ? s.child("id").getValue(String.class) : s.getKey());
+                        
+                        String orderId = s.child("order_id").getValue(String.class);
+                        if (orderId == null) orderId = s.child("orderId").getValue(String.class);
+                        if (orderId == null) orderId = s.getKey();
+                        o.setOrderId(orderId);
+                        
+                        String userId = s.child("user_id").getValue(String.class);
+                        if (userId == null) userId = s.child("userId").getValue(String.class);
+                        o.setUserId(userId);
+                        
+                        String status = s.child("status").getValue(String.class);
+                        o.setStatus(status != null ? status.toUpperCase() : null);
+                        
+                        o.setNote(s.child("note").getValue(String.class));
+                        
+                        Double subtotal = s.child("subtotal_amount").getValue(Double.class);
+                        if (subtotal == null) subtotal = s.child("subtotalAmount").getValue(Double.class);
+                        o.setSubtotal(subtotal != null ? subtotal : 0.0);
+                        
+                        Double shipping = s.child("shipping_fee").getValue(Double.class);
+                        if (shipping == null) shipping = s.child("shippingFee").getValue(Double.class);
+                        o.setShippingFee(shipping != null ? shipping : 0.0);
+                        
+                        Double discount = s.child("discount_amount").getValue(Double.class);
+                        if (discount == null) discount = s.child("discountAmount").getValue(Double.class);
+                        o.setDiscount(discount != null ? discount : 0.0);
+                        
+                        Double finalAmount = s.child("final_amount").getValue(Double.class);
+                        if (finalAmount == null) finalAmount = s.child("finalAmount").getValue(Double.class);
+                        if (finalAmount == null) finalAmount = s.child("totalAmount").getValue(Double.class);
+                        if (finalAmount == null) finalAmount = s.child("total_amount").getValue(Double.class);
+                        o.setFinalAmount(finalAmount != null ? finalAmount : 0.0);
+                        o.setTotalAmount(finalAmount != null ? finalAmount : 0.0);
+
+                        Boolean restored = s.child("stock_restored").getValue(Boolean.class);
+                        if (restored == null) restored = s.child("stockRestored").getValue(Boolean.class);
+                        o.setStockRestored(restored != null ? restored : false);
+                        
+                        String createdAt = s.child("created_at").getValue(String.class);
+                        if (createdAt == null) createdAt = s.child("createdAt").getValue(String.class);
+                        o.setCreatedAt(createdAt);
+                        
+                        String updatedAt = s.child("updated_at").getValue(String.class);
+                        if (updatedAt == null) updatedAt = s.child("updatedAt").getValue(String.class);
+                        o.setUpdatedAt(updatedAt);
+                        
+                        String deliveredAt = s.child("delivered_at").getValue(String.class);
+                        if (deliveredAt == null) deliveredAt = s.child("deliveredAt").getValue(String.class);
+                        o.setDeliveredAt(deliveredAt);
+
+                        // Delivery
+                        vn.vuavuive.shared.data.dto.DeliveryInfo delivery = new vn.vuavuive.shared.data.dto.DeliveryInfo();
+                        String delName = s.child("delivery_name").getValue(String.class);
+                        if (delName == null) delName = s.child("deliveryName").getValue(String.class);
+                        if (delName == null) delName = s.child("recipientName").getValue(String.class);
+                        delivery.setName(delName);
+
+                        String delPhone = s.child("delivery_phone").getValue(String.class);
+                        if (delPhone == null) delPhone = s.child("deliveryPhone").getValue(String.class);
+                        if (delPhone == null) delPhone = s.child("recipientPhone").getValue(String.class);
+                        delivery.setPhone(delPhone);
+
+                        String delAddr = s.child("delivery_address").getValue(String.class);
+                        if (delAddr == null) delAddr = s.child("deliveryAddress").getValue(String.class);
+                        if (delAddr == null) delAddr = s.child("recipientAddress").getValue(String.class);
+                        delivery.setAddress(delAddr);
+                        o.setDelivery(delivery);
+
+                        // Payment Detail
+                        vn.vuavuive.shared.data.dto.PaymentDetail payment = new vn.vuavuive.shared.data.dto.PaymentDetail();
+                        String payMethod = s.child("payment_method").getValue(String.class);
+                        if (payMethod == null) payMethod = s.child("paymentMethod").getValue(String.class);
+                        payment.setMethod(payMethod);
+
+                        String payStatus = s.child("payment_status").getValue(String.class);
+                        if (payStatus == null) payStatus = s.child("paymentStatus").getValue(String.class);
+                        if (payStatus == null) payStatus = s.child("payment").child("status").getValue(String.class);
+                        payment.setStatus(payStatus);
+                        payment.setAmount(o.getFinalAmount());
+                        o.setPayment(payment);
+
+                        // Items
+                        List<vn.vuavuive.shared.data.dto.OrderItem> items = new ArrayList<>();
+                        DataSnapshot itemsSnap = s.child("items");
+                        if (itemsSnap.exists()) {
+                            for (DataSnapshot itemSnap : itemsSnap.getChildren()) {
+                                vn.vuavuive.shared.data.dto.OrderItem item = new vn.vuavuive.shared.data.dto.OrderItem();
+                                String prodId = itemSnap.child("product_id").getValue(String.class);
+                                if (prodId == null) prodId = itemSnap.child("productId").getValue(String.class);
+                                item.setProductId(prodId);
+                                
+                                String prodName = itemSnap.child("product_name").getValue(String.class);
+                                if (prodName == null) prodName = itemSnap.child("productName").getValue(String.class);
+                                item.setName(prodName);
+                                
+                                String imgUrl = itemSnap.child("image_url").getValue(String.class);
+                                if (imgUrl == null) imgUrl = itemSnap.child("imageUrl").getValue(String.class);
+                                item.setImageUrl(imgUrl);
+                                
+                                item.setUnit(itemSnap.child("unit").getValue(String.class));
+                                
+                                Double price = itemSnap.child("unit_price").getValue(Double.class);
+                                if (price == null) price = itemSnap.child("productPrice").getValue(Double.class);
+                                item.setPrice(price != null ? price : 0.0);
+                                
+                                Integer qty = itemSnap.child("quantity").getValue(Integer.class);
+                                item.setQuantity(qty != null ? qty : 1);
+                                items.add(item);
+                            }
+                        }
+                        o.setItems(items);
+
+                        list.add(o);
+                    }
+                    if (!list.isEmpty()) {
+                        orders = list;
+                    }
+                }
+                @Override public void onCancelled(@NonNull DatabaseError error) {}
+            });
+
+            // Listen to Vouchers
+            dbRef.child("vouchers").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    List<Voucher> list = new ArrayList<>();
+                    for (DataSnapshot s : snapshot.getChildren()) {
+                        Voucher v = new Voucher();
+                        v.setId(s.child("id").getValue(String.class) != null ? s.child("id").getValue(String.class) : s.getKey());
+                        v.setCode(s.child("code").getValue(String.class) != null ? s.child("code").getValue(String.class) : s.getKey());
+                        v.setType(s.child("type").getValue(String.class));
+                        
+                        Double val = s.child("value").getValue(Double.class);
+                        v.setValue(val != null ? val : 0.0);
+                        
+                        Double cap = s.child("cap").getValue(Double.class);
+                        v.setCap(cap != null ? cap : 0.0);
+                        
+                        Double minOrder = s.child("minOrderValue").getValue(Double.class);
+                        if (minOrder == null) minOrder = s.child("min_order_value").getValue(Double.class);
+                        v.setMinOrderValue(minOrder != null ? minOrder : 0.0);
+                        
+                        Integer maxU = s.child("maxUses").getValue(Integer.class);
+                        if (maxU == null) maxU = s.child("max_uses").getValue(Integer.class);
+                        v.setMaxUses(maxU != null ? maxU : 0);
+                        
+                        v.setStartsAt(s.child("startsAt").getValue(String.class) != null ? s.child("startsAt").getValue(String.class) : s.child("starts_at").getValue(String.class));
+                        v.setExpiresAt(s.child("expiresAt").getValue(String.class) != null ? s.child("expiresAt").getValue(String.class) : s.child("expires_at").getValue(String.class));
+                        
+                        Boolean act = s.child("isActive").getValue(Boolean.class);
+                        if (act == null) act = s.child("is_active").getValue(Boolean.class);
+                        v.setActive(act != null ? act : true);
+                        
+                        v.setNote(s.child("note").getValue(String.class));
+                        list.add(v);
+                    }
+                    if (!list.isEmpty()) {
+                        vouchers = list;
+                    }
+                }
+                @Override public void onCancelled(@NonNull DatabaseError error) {}
+            });
+
+            // Listen to Shipments
+            dbRef.child("shipments").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    List<Shipment> list = new ArrayList<>();
+                    for (DataSnapshot s : snapshot.getChildren()) {
+                        java.util.Map<String, Object> map = new java.util.HashMap<>();
+                        for (DataSnapshot child : s.getChildren()) {
+                            map.put(child.getKey(), child.getValue());
+                        }
+                        if (!map.containsKey("_id")) {
+                            map.put("_id", s.getKey());
+                        }
+                        String json = new com.google.gson.Gson().toJson(map);
+                        Shipment sh = createDtoFromJson(json, Shipment.class);
+                        list.add(sh);
+                    }
+                    if (!list.isEmpty()) {
+                        shipments = list;
+                    }
+                }
+                @Override public void onCancelled(@NonNull DatabaseError error) {}
+            });
+
+            // Listen to Audit Logs
+            dbRef.child("audit_logs").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    List<AuditLog> list = new ArrayList<>();
+                    for (DataSnapshot s : snapshot.getChildren()) {
+                        AuditLog log = new AuditLog(
+                            s.child("operatorName").getValue(String.class),
+                            s.child("role").getValue(String.class),
+                            s.child("action").getValue(String.class),
+                            s.child("target").getValue(String.class),
+                            s.child("details").getValue(String.class)
+                        );
+                        log.id = s.child("id").getValue(String.class) != null ? s.child("id").getValue(String.class) : s.getKey();
+                        log.timestamp = s.child("timestamp").getValue(String.class);
+                        list.add(log);
+                    }
+                    java.util.Collections.sort(list, (l1, l2) -> {
+                        if (l1.timestamp == null || l2.timestamp == null) return 0;
+                        return l2.timestamp.compareTo(l1.timestamp);
+                    });
+                    if (!list.isEmpty()) {
+                        auditLogs = list;
+                    }
+                }
+                @Override public void onCancelled(@NonNull DatabaseError error) {}
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void initMockData() {
@@ -429,6 +745,19 @@ public class MockRepository {
         return new com.google.gson.Gson().fromJson(json, clazz);
     }
 
+    private void writeToFirebase(String path, Object obj) {
+        try {
+            DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
+            String json = new com.google.gson.Gson().toJson(obj);
+            java.util.Map<String, Object> map = new com.google.gson.Gson().fromJson(
+                json, new com.google.gson.reflect.TypeToken<java.util.Map<String, Object>>(){}.getType()
+            );
+            dbRef.child(path).setValue(map);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     // Custom class for AuditLog
     public static class AuditLog {
         public String id;
@@ -457,7 +786,9 @@ public class MockRepository {
     public void addAuditLog(String action, String target, String details) {
         String name = currentUser != null ? currentUser.getName() : "Hệ thống";
         String role = currentUser != null ? currentUser.getRole() : "system";
-        auditLogs.add(0, new AuditLog(name, role, action, target, details));
+        AuditLog log = new AuditLog(name, role, action, target, details);
+        auditLogs.add(0, log);
+        writeToFirebase("audit_logs/" + log.id, log);
     }
 
     // Users
@@ -491,6 +822,14 @@ public class MockRepository {
             if (users.get(i).getId().equals(user.getId())) {
                 users.set(i, user);
                 addAuditLog("Cập nhật thành viên", user.getName(), "Cập nhật quyền thành " + user.getRole() + ", trạng thái hoạt động: " + user.isActive());
+                try {
+                    DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
+                    dbRef.child("users").child(user.getId()).child("role").setValue(user.getRole() != null ? user.getRole().toUpperCase() : "CUSTOMER");
+                    dbRef.child("users").child(user.getId()).child("isActive").setValue(user.isActive());
+                    dbRef.child("users").child(user.getId()).child("is_active").setValue(user.isActive());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 return;
             }
         }
@@ -540,8 +879,14 @@ public class MockRepository {
                 o.setStatus(status);
                 addAuditLog("Cập nhật đơn hàng", o.getId(), "Thay đổi trạng thái từ '" + oldStatus + "' sang '" + status + "'");
                 
+                try {
+                    FirebaseDatabase.getInstance().getReference().child("orders").child(orderId).child("status").setValue(status.toUpperCase());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
                 // Trigger auto-creation of shipment if status is confirmed/shipping
-                if ("confirmed".equals(status)) {
+                if ("confirmed".equalsIgnoreCase(status)) {
                     createShipmentForOrder(o);
                 }
                 return;
@@ -555,6 +900,12 @@ public class MockRepository {
                 String action = approved ? "Duyệt trả hàng" : "Từ chối trả hàng";
                 o.setStatus(approved ? "return_approved" : "return_rejected");
                 addAuditLog(action, o.getId(), "Ghi chú: " + note);
+                
+                try {
+                    FirebaseDatabase.getInstance().getReference().child("orders").child(orderId).child("status").setValue(o.getStatus().toUpperCase());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 return;
             }
         }
@@ -565,6 +916,12 @@ public class MockRepository {
             if (o.getId().equals(orderId)) {
                 o.setPaymentStatus("paid");
                 addAuditLog("Đánh dấu thanh toán", o.getId(), "Đánh dấu đã thanh toán thành công");
+                
+                try {
+                    FirebaseDatabase.getInstance().getReference().child("orders").child(orderId).child("payment_status").setValue("PAID");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 return;
             }
         }
@@ -577,7 +934,11 @@ public class MockRepository {
 
     public void addVoucher(Voucher v) {
         v.setCode(v.getCode().toUpperCase().trim());
+        if (v.getId() == null) {
+            v.setId("vouch-" + UUID.randomUUID().toString().substring(0, 8));
+        }
         vouchers.add(v);
+        writeToFirebase("vouchers/" + v.getCode(), v);
         addAuditLog("Tạo khuyến mãi", v.getCode(), "Mức giảm: " + v.getValue() + ", Kiểu: " + v.getType());
     }
 
@@ -585,7 +946,15 @@ public class MockRepository {
         for (int i = 0; i < vouchers.size(); i++) {
             if (vouchers.get(i).getCode().equalsIgnoreCase(oldCode)) {
                 v.setCode(v.getCode().toUpperCase().trim());
+                if (!oldCode.equalsIgnoreCase(v.getCode())) {
+                    try {
+                        FirebaseDatabase.getInstance().getReference().child("vouchers").child(oldCode).removeValue();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
                 vouchers.set(i, v);
+                writeToFirebase("vouchers/" + v.getCode(), v);
                 addAuditLog("Cập nhật khuyến mãi", v.getCode(), "Chỉnh sửa thông số voucher");
                 return;
             }
@@ -596,6 +965,11 @@ public class MockRepository {
         for (int i = 0; i < vouchers.size(); i++) {
             if (vouchers.get(i).getCode().equalsIgnoreCase(code)) {
                 Voucher v = vouchers.remove(i);
+                try {
+                    FirebaseDatabase.getInstance().getReference().child("vouchers").child(code).removeValue();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 addAuditLog("Xóa khuyến mãi", v.getCode(), "Xóa voucher khỏi hệ thống");
                 return;
             }
@@ -607,7 +981,7 @@ public class MockRepository {
         if (shipments.isEmpty()) {
             // Lazy load a couple of shipments
             for (Order o : orders) {
-                if ("confirmed".equals(o.getStatus()) || "delivered".equals(o.getStatus())) {
+                if ("confirmed".equalsIgnoreCase(o.getStatus()) || "delivered".equalsIgnoreCase(o.getStatus())) {
                     createShipmentForOrder(o);
                 }
             }
@@ -622,7 +996,7 @@ public class MockRepository {
 
         String tracking = "TRACK-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
         String carrier = "internal";
-        String status = "delivered".equals(o.getStatus()) ? "delivered" : "pending";
+        String status = "delivered".equalsIgnoreCase(o.getStatus()) ? "delivered" : "pending";
         String dateStr = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault()).format(new Date());
 
         String json = "{\n" +
@@ -646,6 +1020,7 @@ public class MockRepository {
 
         Shipment s = createDtoFromJson(json, Shipment.class);
         shipments.add(0, s);
+        writeToFirebase("shipments/" + s.getId(), s);
     }
 
     public void updateShipmentStatus(String shipmentId, String status, String note) {
@@ -687,6 +1062,7 @@ public class MockRepository {
 
                 Shipment updatedShipment = createDtoFromJson(updatedJson, Shipment.class);
                 shipments.set(i, updatedShipment);
+                writeToFirebase("shipments/" + s.getId(), updatedShipment);
                 addAuditLog("Cập nhật vận chuyển", s.getTrackingNumber(), "Cập nhật trạng thái '" + status + "', Ghi chú: " + note);
                 
                 // If shipment delivered, mark order as delivered!
@@ -708,9 +1084,9 @@ public class MockRepository {
         for (Order o : orders) {
             todayOrders++;
             monthOrders++;
-            if ("pending".equals(o.getStatus())) pending++;
-            if ("shipping".equals(o.getStatus())) shipping++;
-            if ("delivered".equals(o.getStatus())) {
+            if ("pending".equalsIgnoreCase(o.getStatus())) pending++;
+            if ("shipping".equalsIgnoreCase(o.getStatus()) || "in_transit".equalsIgnoreCase(o.getStatus())) shipping++;
+            if ("delivered".equalsIgnoreCase(o.getStatus())) {
                 revenue += o.getTotalAmount();
             }
         }

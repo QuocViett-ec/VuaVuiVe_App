@@ -12,7 +12,7 @@ import java.util.UUID;
  * và kích hoạt nút Gọi điện (Quick Call) mà không cần gọi thêm API.
  */
 public record OrderResponse(
-        UUID orderId,
+        String orderId,
         String status,
         String paymentMethod,
         String paymentStatus,

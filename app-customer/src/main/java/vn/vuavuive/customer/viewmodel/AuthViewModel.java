@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 import dagger.hilt.android.lifecycle.HiltViewModel;
+import vn.vuavuive.customer.data.repository.FirebaseUserRepository;
 import vn.vuavuive.customer.data.repository.AuthRepository;
 import vn.vuavuive.shared.data.dto.User;
 import vn.vuavuive.shared.data.dto.request.RegisterRequest;
@@ -13,12 +14,12 @@ import javax.inject.Inject;
 @HiltViewModel
 public class AuthViewModel extends ViewModel {
 
-    private final AuthRepository authRepository;
+    private final FirebaseUserRepository authRepository;
 
     private final MutableLiveData<User> currentUser = new MutableLiveData<>();
 
     @Inject
-    public AuthViewModel(AuthRepository authRepository) {
+    public AuthViewModel(FirebaseUserRepository authRepository) {
         this.authRepository = authRepository;
     }
 

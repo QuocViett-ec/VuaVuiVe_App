@@ -1,25 +1,71 @@
 package vn.vuavuive.backend.modules.category;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import vn.vuavuive.backend.core.FirebaseRepositoryHelper;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Repository
-public interface CategoryRepository extends JpaRepository<Category, UUID> {
+@RequiredArgsConstructor
+public class CategoryRepository {
 
-    /** Lấy tất cả danh mục gốc (không có danh mục cha) — Hiển thị trên trang chủ */
-    @Query("SELECT c FROM Category c WHERE c.parent IS NULL AND c.isActive = true ORDER BY c.name")
-    List<Category> findAllRootCategories();
+    private final FirebaseRepositoryHelper firebase;
 
-    /** Lấy danh mục con của một danh mục cha */
-    List<Category> findByParentIdAndIsActiveTrueOrderByName(UUID parentId);
+    public Optional<Category> findById(String id) {
+        return Optional.ofNullable(firebase.get("categories/" + id, Category.class));
+    }
 
-    /** Tìm theo slug (dùng cho URL thân thiện) */
-    Optional<Category> findBySlugAndIsActiveTrue(String slug);
+    public Optional<Category> findById(UUID id) {
+        return findById(id.toString());
+    }
 
-    boolean existsBySlug(String slug);
+    public List<Category> findAll() {
+        return firebase.getList("categories", Category.class);
+    }
+
+    public Category save(Category category) {
+        if (category.getId() == null) {
+            category.setId(UUID.randomUUID().toString());
+        }
+        firebase.save("categories/" + category.getId(), category);
+        return category;
+    }
+
+    public void deleteById(String id) {
+        firebase.delete("categories/" + id);
+    }
+
+    public List<Category> findAllRootCategories() {
+        return findAll().stream()
+                .filter(c -> c.getParentId() == null && Boolean.TRUE.equals(c.getIsActive()))
+                .sorted(Comparator.comparing(Category::getName, Comparator.nullsLast(String::compareTo)))
+                .collect(Collectors.toList());
+    }
+
+    public List<Category> findByParentIdAndIsActiveTrueOrderByName(UUID parentId) {
+        if (parentId == null) return List.of();
+        String parentIdStr = parentId.toString();
+        return findAll().stream()
+                .filter(c -> parentIdStr.equals(c.getParentId()) && Boolean.TRUE.equals(c.getIsActive()))
+                .sorted(Comparator.comparing(Category::getName, Comparator.nullsLast(String::compareTo)))
+                .collect(Collectors.toList());
+    }
+
+    public Optional<Category> findBySlugAndIsActiveTrue(String slug) {
+        if (slug == null) return Optional.empty();
+        return findAll().stream()
+                .filter(c -> slug.equals(c.getSlug()) && Boolean.TRUE.equals(c.getIsActive()))
+                .findFirst();
+    }
+
+    public boolean existsBySlug(String slug) {
+        if (slug == null) return false;
+        return findAll().stream()
+                .anyMatch(c -> slug.equals(c.getSlug()));
+    }
 }

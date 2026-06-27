@@ -105,6 +105,8 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
             if (status == null) return "—";
             switch (status.toLowerCase()) {
                 case "pending":          return "Chờ xác nhận";
+                case "pending_payment":  return "Chờ thanh toán";
+                case "pending_approval": return "Chờ admin duyệt";
                 case "confirmed":        return "Đã xác nhận";
                 case "shipping":         return "Đang giao";
                 case "delivered":        return "Đã giao";
@@ -120,6 +122,8 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
             if (status == null) return R.color.text_secondary;
             switch (status.toLowerCase()) {
                 case "pending":          return R.color.status_pending;
+                case "pending_payment":  return R.color.status_pending;
+                case "pending_approval": return R.color.status_pending;
                 case "confirmed":        return R.color.status_confirmed;
                 case "shipping":         return R.color.status_shipping;
                 case "delivered":        return R.color.status_delivered;

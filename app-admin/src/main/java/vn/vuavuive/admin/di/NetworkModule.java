@@ -13,6 +13,11 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import vn.vuavuive.admin.BuildConfig;
+import vn.vuavuive.admin.data.firebase.FirebaseAuthApi;
+import vn.vuavuive.admin.data.firebase.FirebaseProductApi;
+import vn.vuavuive.admin.data.firebase.FirebaseOrderApi;
+import vn.vuavuive.admin.data.firebase.FirebaseAdminProductApi;
+import vn.vuavuive.admin.data.firebase.FirebaseAdminOrderApi;
 import vn.vuavuive.shared.data.api.AdminChatbotApi;
 import vn.vuavuive.shared.data.api.AdminOrderApi;
 import vn.vuavuive.shared.data.api.AdminProductApi;
@@ -86,22 +91,22 @@ public class NetworkModule {
     }
 
     @Provides @Singleton
-    public AuthApi provideAuthApi(Retrofit retrofit) { return retrofit.create(AuthApi.class); }
+    public AuthApi provideAuthApi(Retrofit retrofit) { return new FirebaseAuthApi(); }
 
     @Provides @Singleton
-    public ProductApi provideProductApi(Retrofit retrofit) { return retrofit.create(ProductApi.class); }
+    public ProductApi provideProductApi(Retrofit retrofit) { return new FirebaseProductApi(); }
 
     @Provides @Singleton
-    public OrderApi provideOrderApi(Retrofit retrofit) { return retrofit.create(OrderApi.class); }
+    public OrderApi provideOrderApi(Retrofit retrofit) { return new FirebaseOrderApi(); }
 
     @Provides @Singleton
     public ShipmentApi provideShipmentApi(Retrofit retrofit) { return retrofit.create(ShipmentApi.class); }
 
     @Provides @Singleton
-    public AdminOrderApi provideAdminOrderApi(Retrofit retrofit) { return retrofit.create(AdminOrderApi.class); }
+    public AdminOrderApi provideAdminOrderApi(Retrofit retrofit) { return new FirebaseAdminOrderApi(); }
 
     @Provides @Singleton
-    public AdminProductApi provideAdminProductApi(Retrofit retrofit) { return retrofit.create(AdminProductApi.class); }
+    public AdminProductApi provideAdminProductApi(Retrofit retrofit) { return new FirebaseAdminProductApi(); }
 
     @Provides @Singleton
     public AdminUserApi provideAdminUserApi(Retrofit retrofit) { return retrofit.create(AdminUserApi.class); }

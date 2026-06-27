@@ -78,9 +78,10 @@ public class RegisterActivity extends AppCompatActivity {
         String name    = getText(etName);
         String phone   = getText(etPhone);
         String email   = getText(etEmail);
+        String address = getText(etAddress);
+
         String pass    = getText(etPassword);
         String confirm = getText(etConfirmPassword);
-        String address = getText(etAddress);
 
         boolean valid = true;
 
@@ -92,15 +93,24 @@ public class RegisterActivity extends AppCompatActivity {
             tilPhone.setError("Số điện thoại không hợp lệ (VD: 0912345678)");
             valid = false;
         }
-        if (!TextUtils.isEmpty(email) && !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        if (TextUtils.isEmpty(email)) {
+            tilEmail.setError("Email không được để trống");
+            valid = false;
+        } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             tilEmail.setError("Email không hợp lệ");
             valid = false;
         }
-        if (pass.length() < 6) {
+        if (TextUtils.isEmpty(pass)) {
+            tilPassword.setError("Mật khẩu không được để trống");
+            valid = false;
+        } else if (pass.length() < 6) {
             tilPassword.setError("Mật khẩu phải có ít nhất 6 ký tự");
             valid = false;
         }
-        if (!pass.equals(confirm)) {
+        if (TextUtils.isEmpty(confirm)) {
+            tilConfirmPassword.setError("Vui lòng xác nhận mật khẩu");
+            valid = false;
+        } else if (!pass.equals(confirm)) {
             tilConfirmPassword.setError("Mật khẩu xác nhận không khớp");
             valid = false;
         }
@@ -157,12 +167,21 @@ public class RegisterActivity extends AppCompatActivity {
         MaterialButton btnVerifyOtp = dialogView.findViewById(R.id.btn_verify_otp);
         MaterialButton btnCancelOtp = dialogView.findViewById(R.id.btn_cancel_otp);
 
-        // Subtitle text masking phone
+        // Subtitle text masking email
+        String emailStr = registerRequest.getEmail();
         String phoneStr = registerRequest.getPhone();
-        String maskedPhone = phoneStr.length() > 3 
-                ? "*******" + phoneStr.substring(phoneStr.length() - 3) 
-                : "***";
-        tvSubtitle.setText("Mã OTP đã được gửi đến " + maskedPhone + " qua Telegram. Vui lòng kiểm tra và nhập vào bên dưới.");
+        String maskedEmail = "";
+        if (emailStr != null && emailStr.contains("@")) {
+            int atIndex = emailStr.indexOf("@");
+            if (atIndex > 3) {
+                maskedEmail = emailStr.substring(0, 3) + "***" + emailStr.substring(atIndex);
+            } else {
+                maskedEmail = "***" + emailStr.substring(atIndex);
+            }
+        } else {
+            maskedEmail = emailStr;
+        }
+        tvSubtitle.setText("Mã OTP đã được gửi đến " + maskedEmail + " qua Email. Vui lòng kiểm tra và nhập vào bên dưới.");
 
         // Start 60s countdown timer
         startOtpCountdown(tvCountdown, tvResendOtp, registerRequest);

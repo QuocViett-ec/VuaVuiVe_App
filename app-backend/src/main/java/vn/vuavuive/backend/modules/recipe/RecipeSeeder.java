@@ -20,7 +20,7 @@ public class RecipeSeeder implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        if (recipeRepository.count() == 0) {
+        if (recipeRepository.findAll().isEmpty()) {
             seedRecipes();
         }
     }
@@ -562,7 +562,9 @@ public class RecipeSeeder implements CommandLineRunner {
         r.setSteps("[\"Chuẩn bị và sơ chế sạch sẽ các nguyên liệu.\", \"Sơ chế các gia vị đi kèm, cắt thái nguyên liệu vừa ăn.\", \"Bắt đầu chế biến món ăn trên lửa vừa, nêm nếm gia vị cho vừa miệng.\", \"Trình bày món ăn ra đĩa, trang trí thêm và thưởng thức khi còn nóng.\"]");
         recipes.add(r);
 
-        recipeRepository.saveAll(recipes);
+        for (Recipe recipe : recipes) {
+            recipeRepository.save(recipe);
+        }
         System.out.println("Seeded " + recipes.size() + " recipes to database.");
     }
 }

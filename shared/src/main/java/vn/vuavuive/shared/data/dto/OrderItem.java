@@ -33,4 +33,16 @@ public class OrderItem {
     public int getQuantity() { return quantity; }
     public String getUnit() { return unit; }
     public double getLineTotal() { return subtotal != null ? subtotal : price * quantity; }
+
+    public void setProductId(String productId) { this.productId = productId; }
+    public void setName(String name) { this.name = name; }
+    /** Alias of setName() for Firebase mapping compatibility */
+    public void setProductName(String name) { this.name = name; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+    public void setPrice(double price) { this.price = price; }
+    /** Alias of setPrice() for Firebase mapping compatibility */
+    public void setProductPrice(double price) { this.price = price; }
+    public void setQuantity(int quantity) { this.quantity = quantity; }
+    public void setUnit(String unit) { this.unit = unit; }
+    public void setSubtotal(Double subtotal) { this.subtotal = subtotal; }
 }

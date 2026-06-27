@@ -61,15 +61,15 @@ public class User {
     public void setAvatar(String avatar) { this.avatar = avatar; }
     public void setProvider(String provider) { this.provider = provider; }
     public void setAddress(String address) { this.address = address; }
-    public void setRole(String role) { this.role = role; }
+    public void setRole(String role) { this.role = role != null ? role.toLowerCase() : null; }
     public void setActive(boolean active) { isActive = active; }
     public void setCreatedAt(String createdAt) { this.createdAt = createdAt; }
     public void setUpdatedAt(String updatedAt) { this.updatedAt = updatedAt; }
     public void setPoints(Integer points) { this.points = points; }
 
-    public boolean isAdmin() { return "admin".equals(role); }
-    public boolean isStaff() { return "staff".equals(role); }
-    public boolean isAudit() { return "audit".equals(role); }
+    public boolean isAdmin() { return "admin".equalsIgnoreCase(role); }
+    public boolean isStaff() { return "staff".equalsIgnoreCase(role); }
+    public boolean isAudit() { return "audit".equalsIgnoreCase(role); }
     public boolean isBackoffice() { return isAdmin() || isStaff() || isAudit(); }
     public boolean isGoogleProvider() { return "google".equals(provider); }
 }

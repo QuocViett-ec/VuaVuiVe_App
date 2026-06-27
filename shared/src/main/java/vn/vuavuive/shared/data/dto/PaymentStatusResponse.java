@@ -4,6 +4,7 @@ public class PaymentStatusResponse {
     private String orderId;
     private String paymentMethod;
     private String paymentStatus;
+    private String orderStatus;
     private String transactionId;
     private double amount;
     private String message;
@@ -11,7 +12,16 @@ public class PaymentStatusResponse {
     public String getOrderId() { return orderId; }
     public String getPaymentMethod() { return paymentMethod; }
     public String getPaymentStatus() { return paymentStatus; }
+    public String getOrderStatus() { return orderStatus; }
     public String getTransactionId() { return transactionId; }
     public double getAmount() { return amount; }
     public String getMessage() { return message; }
+
+    public void setOrderId(String orderId) { this.orderId = orderId; }
+    public void setPaymentMethod(String paymentMethod) { this.paymentMethod = paymentMethod; }
+    public void setPaymentStatus(String paymentStatus) { this.paymentStatus = paymentStatus; }
+    public void setOrderStatus(String orderStatus) { this.orderStatus = orderStatus; }
+    public void setTransactionId(String transactionId) { this.transactionId = transactionId; }
+    public void setAmount(double amount) { this.amount = amount; }
+    public void setMessage(String message) { this.message = message; }
 }

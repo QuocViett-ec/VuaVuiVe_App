@@ -21,6 +21,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -76,6 +77,7 @@ public class HomeFragment extends Fragment {
     private final Handler searchHandler = new Handler();
     private Runnable searchRunnable;
     private boolean isProductLoading = false;
+    private LiveData<AuthRepository.Result<List<Product>>> productsLiveData;
 
     private static final String PREFS_HOME = "vvv_home";
     private static final String KEY_PROMO_SHOWN = "promo_shown";
@@ -209,10 +211,6 @@ public class HomeFragment extends Fragment {
                         currentProductSearch = s.toString().trim();
                         productViewModel.setSearch(currentProductSearch);
                         loadProducts(view);
-                        if (!currentProductSearch.isEmpty() && scrollView != null) {
-                            View target = view.findViewById(R.id.hsv_product_categories);
-                            if (target != null) scrollView.smoothScrollTo(0, target.getTop() - 100);
-                        }
                     };
                     searchHandler.postDelayed(searchRunnable, 400);
                 }
@@ -640,7 +638,11 @@ public class HomeFragment extends Fragment {
     private void loadProducts(View view) {
         try {
             isProductLoading = true;
-            productViewModel.loadProducts(1).observe(getViewLifecycleOwner(), result -> {
+            if (productsLiveData != null) {
+                productsLiveData.removeObservers(getViewLifecycleOwner());
+            }
+            productsLiveData = productViewModel.loadProducts(1);
+            productsLiveData.observe(getViewLifecycleOwner(), result -> {
                 isProductLoading = false;
                 if (result != null
                         && result.status == AuthRepository.Result.Status.SUCCESS

@@ -56,7 +56,7 @@ public class Voucher {
     public boolean isPercentVoucher() { return "percent".equals(type); }
     public boolean isFixedVoucher() { return "fixed".equals(type); }
 
-    // Setters for admin
+    public void setId(String id) { this.id = id; }
     public void setCode(String code) { this.code = code; }
     public void setType(String type) { this.type = type; }
     public void setValue(double value) { this.value = value; }

@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import dagger.hilt.android.lifecycle.HiltViewModel;
-import vn.vuavuive.customer.data.repository.ProductRepository;
+import vn.vuavuive.customer.data.repository.ProductRepositoryFirebase;
 import vn.vuavuive.customer.data.repository.AuthRepository;
 import vn.vuavuive.shared.data.dto.Product;
 import vn.vuavuive.shared.data.dto.Review;
@@ -14,7 +14,7 @@ import javax.inject.Inject;
 @HiltViewModel
 public class ProductViewModel extends ViewModel {
 
-    private final ProductRepository productRepository;
+    private final ProductRepositoryFirebase productRepository;
 
     // State
     private final MutableLiveData<String> selectedCategory = new MutableLiveData<>("all");
@@ -24,7 +24,7 @@ public class ProductViewModel extends ViewModel {
     private boolean isLastPage = false;
 
     @Inject
-    public ProductViewModel(ProductRepository productRepository) {
+    public ProductViewModel(ProductRepositoryFirebase productRepository) {
         this.productRepository = productRepository;
     }
 

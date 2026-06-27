@@ -16,6 +16,7 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -47,6 +48,9 @@ public class ProductListFragment extends Fragment {
     // Debounce search
     private final Handler searchHandler = new Handler();
     private Runnable searchRunnable;
+
+    private LiveData<AuthRepository.Result<List<Product>>> productsLiveData;
+    private LiveData<AuthRepository.Result<List<Product>>> nextPageLiveData;
 
     @Nullable
     @Override
@@ -258,7 +262,11 @@ public class ProductListFragment extends Fragment {
         showLoading(view, true);
         try {
             isLoading = true;
-            productViewModel.loadProducts(1).observe(getViewLifecycleOwner(), result -> {
+            if (productsLiveData != null) {
+                productsLiveData.removeObservers(getViewLifecycleOwner());
+            }
+            productsLiveData = productViewModel.loadProducts(1);
+            productsLiveData.observe(getViewLifecycleOwner(), result -> {
                 isLoading = false;
                 showLoading(view, false);
                 if (result != null
@@ -280,7 +288,11 @@ public class ProductListFragment extends Fragment {
         if (isLoading) return;
         isLoading = true;
         try {
-            productViewModel.loadNextPage().observe(getViewLifecycleOwner(), result -> {
+            if (nextPageLiveData != null) {
+                nextPageLiveData.removeObservers(getViewLifecycleOwner());
+            }
+            nextPageLiveData = productViewModel.loadNextPage();
+            nextPageLiveData.observe(getViewLifecycleOwner(), result -> {
                 isLoading = false;
                 if (result != null
                         && result.status == AuthRepository.Result.Status.SUCCESS

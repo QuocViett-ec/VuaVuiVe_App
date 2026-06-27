@@ -24,12 +24,12 @@ public interface PaymentApi {
      * Tạo URL MoMo để mở trong WebView.
      * Body: { orderId: String, returnUrl: String }
      */
-    @POST("api/payment/momo/create")
-    Call<ApiResponse<Map<String, String>>> createMoMoUrl(@Body Map<String, String> body);
-
-    @POST("api/momo/create-payment")
+    @POST("api/payments/momo")
     Call<ApiResponse<CreateMomoPaymentResponse>> createMomoPayment(@Body CreateMomoPaymentRequest request);
 
     @GET("api/payments/{orderId}/status")
     Call<ApiResponse<PaymentStatusResponse>> getPaymentStatus(@Path("orderId") String orderId);
+
+    @POST("api/payments/momo/mock-success/{orderId}")
+    Call<ApiResponse<PaymentStatusResponse>> mockMomoSuccess(@Path("orderId") String orderId);
 }

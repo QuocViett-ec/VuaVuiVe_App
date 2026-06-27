@@ -3,26 +3,28 @@ package vn.vuavuive.customer.ui.checkout;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import dagger.hilt.android.AndroidEntryPoint;
+import vn.vuavuive.customer.BuildConfig;
 import vn.vuavuive.customer.R;
 import vn.vuavuive.customer.data.repository.AuthRepository;
 import vn.vuavuive.customer.viewmodel.CartViewModel;
 import vn.vuavuive.customer.viewmodel.OrderViewModel;
-import vn.vuavuive.shared.data.dto.PaymentDetail;
 
 @AndroidEntryPoint
 public class PaymentResultActivity extends AppCompatActivity {
     private OrderViewModel orderViewModel;
     private CartViewModel cartViewModel;
     private TextView tvStatus;
+    private TextView tvHint;
     private String orderId;
-    private boolean openedPayment;
-    private boolean checkedAfterReturn;
+    private String payUrl;
+    private String deeplink;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,60 +33,86 @@ public class PaymentResultActivity extends AppCompatActivity {
         orderViewModel = new ViewModelProvider(this).get(OrderViewModel.class);
         cartViewModel = new ViewModelProvider(this).get(CartViewModel.class);
         tvStatus = findViewById(R.id.tv_payment_status);
+        tvHint = findViewById(R.id.tv_payment_hint);
+        Button btnCheck = findViewById(R.id.btn_check_payment);
         Button btnOrders = findViewById(R.id.btn_view_orders);
+        Button btnOpenPayment = findViewById(R.id.btn_open_payment);
+        Button btnMockSuccess = findViewById(R.id.btn_mock_success);
         orderId = getIntent().getStringExtra("order_id");
+        payUrl = getIntent().getStringExtra("payment_url");
+        deeplink = getIntent().getStringExtra("deeplink");
+        btnCheck.setOnClickListener(v -> checkPaymentStatus());
         btnOrders.setOnClickListener(v -> goToOrders());
+        btnOpenPayment.setOnClickListener(v -> openPayment());
+        btnMockSuccess.setVisibility(BuildConfig.DEBUG ? View.VISIBLE : View.GONE);
+        btnMockSuccess.setOnClickListener(v -> mockPaymentSuccess());
+        showStatus("Chua xac nhan thanh toan", "Hoan tat thanh toan tren trinh duyet roi bam 'Kiem tra thanh toan'.");
         openPayment();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (openedPayment && !checkedAfterReturn) {
-            checkedAfterReturn = true;
-            refreshOrder();
-        }
+        checkPaymentStatus();
     }
 
     private void openPayment() {
-        String deeplink = getIntent().getStringExtra("deeplink");
-        String payUrl = getIntent().getStringExtra("payment_url");
-        String url = deeplink != null && !deeplink.isEmpty() ? deeplink : payUrl;
+        String url = payUrl != null && !payUrl.isEmpty() ? payUrl : deeplink;
         if (url == null || url.isEmpty()) {
-            showStatus("Waiting for payment confirmation");
+            showStatus("Khong co lien ket thanh toan", "Vui long kiem tra lai giao dich.");
             return;
         }
-        openedPayment = true;
         try {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
         } catch (Exception e) {
-            if (payUrl != null && !payUrl.equals(url)) {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(payUrl)));
+            if (deeplink != null && !deeplink.isEmpty() && !deeplink.equals(url)) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(deeplink)));
             } else {
                 Toast.makeText(this, "Khong mo duoc MoMo", Toast.LENGTH_LONG).show();
             }
         }
     }
 
-    private void refreshOrder() {
-        showStatus("Waiting for payment confirmation");
-        orderViewModel.getOrderDetail(orderId).observe(this, result -> {
-            if (result.status != AuthRepository.Result.Status.SUCCESS || result.data == null) return;
-            PaymentDetail payment = result.data.getPayment();
-            String status = payment == null ? result.data.getStatus() : payment.getStatus();
-            if ("paid".equalsIgnoreCase(status)) {
-                cartViewModel.clearCart();
-                showStatus("Payment successful");
-            } else if ("failed".equalsIgnoreCase(status) || "cancelled".equalsIgnoreCase(status)) {
-                showStatus("Payment failed");
-            } else {
-                showStatus("Waiting for payment confirmation");
+    private void checkPaymentStatus() {
+        if (orderId == null || orderId.isEmpty()) {
+            return;
+        }
+        showStatus("Dang kiem tra thanh toan", "Backend se xac nhan ket qua tu MoMo.");
+        orderViewModel.getPaymentStatus(orderId).observe(this, result -> {
+            if (result.status == AuthRepository.Result.Status.SUCCESS && result.data != null) {
+                String status = result.data.getPaymentStatus();
+                String orderStatus = result.data.getOrderStatus();
+                if ("PAID".equalsIgnoreCase(status)) {
+                    cartViewModel.clearCart();
+                    showStatus("Thanh toan thanh cong",
+                            "Don hang da thanh toan va dang cho admin duyet (" + orderStatus + ").");
+                } else if ("FAILED".equalsIgnoreCase(status) || "CANCELLED".equalsIgnoreCase(status)) {
+                    showStatus("Thanh toan that bai", "Ban co the thu thanh toan lai.");
+                } else {
+                    showStatus("Thanh toan dang cho xac nhan",
+                            "Trang thai hien tai: " + status + " / " + orderStatus + ".");
+                }
+            } else if (result.status == AuthRepository.Result.Status.ERROR) {
+                showStatus("Khong kiem tra duoc thanh toan", result.message);
             }
         });
     }
 
-    private void showStatus(String text) {
+    private void mockPaymentSuccess() {
+        orderViewModel.mockMomoSuccess(orderId).observe(this, result -> {
+            if (result.status == AuthRepository.Result.Status.SUCCESS) {
+                checkPaymentStatus();
+            } else if (result.status == AuthRepository.Result.Status.ERROR) {
+                Toast.makeText(this, result.message, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void showStatus(String text, String hint) {
         tvStatus.setText(text);
+        if (tvHint != null) {
+            tvHint.setText(hint);
+        }
     }
 
     private void goToOrders() {

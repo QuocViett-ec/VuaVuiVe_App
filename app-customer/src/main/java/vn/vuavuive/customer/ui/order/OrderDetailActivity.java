@@ -133,7 +133,7 @@ public class OrderDetailActivity extends AppCompatActivity {
         btnReturnOrder.setVisibility(View.GONE);
         btnReview.setVisibility(View.GONE);
 
-        if ("pending".equals(status) || "confirmed".equals(status)) {
+        if ("pending".equals(status) || "pending_payment".equals(status) || "pending_approval".equals(status) || "confirmed".equals(status)) {
             btnCancelOrder.setVisibility(View.VISIBLE);
         }
         if ("delivered".equals(status)) {
@@ -240,6 +240,8 @@ public class OrderDetailActivity extends AppCompatActivity {
         if (status == null) return "—";
         switch (status.toLowerCase()) {
             case "pending":          return "Chờ xác nhận";
+            case "pending_payment":  return "Chờ thanh toán";
+            case "pending_approval": return "Chờ admin duyệt";
             case "confirmed":        return "Đã xác nhận";
             case "processing":       return "Đang xử lý";
             case "packed":           return "Đóng gói xong";
@@ -257,6 +259,8 @@ public class OrderDetailActivity extends AppCompatActivity {
         if (status == null) return R.color.text_secondary;
         switch (status.toLowerCase()) {
             case "pending":          return R.color.status_pending;
+            case "pending_payment":  return R.color.status_pending;
+            case "pending_approval": return R.color.status_pending;
             case "confirmed":        return R.color.status_confirmed;
             case "shipping":         return R.color.status_shipping;
             case "delivered":        return R.color.status_delivered;
