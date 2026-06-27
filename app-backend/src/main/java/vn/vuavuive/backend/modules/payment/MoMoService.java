@@ -118,6 +118,7 @@ public class MoMoService {
 
         order.setPaymentMethod("MOMO");
         order.setPaymentStatus(Order.PaymentStatus.PENDING);
+        order.setStatus(Order.OrderStatus.PENDING_PAYMENT);
         orderRepository.save(order);
 
         return new CreateMomoPaymentResponse(request.orderId(), requestId, order.getFinalAmount(),
@@ -151,8 +152,8 @@ public class MoMoService {
             tx.setStatus(PaymentTransaction.Status.PAID);
             order.setPaymentMethod("MOMO");
             order.setPaymentStatus(Order.PaymentStatus.PAID);
-            order.setStatus(Order.OrderStatus.CONFIRMED);
-            appendStatusLog(order, "Thanh toan MoMo thanh cong");
+            order.setStatus(Order.OrderStatus.PENDING_APPROVAL);
+            appendStatusLog(order, Order.OrderStatus.PENDING_APPROVAL, "Thanh toan MoMo thanh cong");
         } else {
             tx.setStatus(PaymentTransaction.Status.FAILED);
             order.setPaymentStatus(Order.PaymentStatus.FAILED);
@@ -176,9 +177,10 @@ public class MoMoService {
         tx.setResponseTime(System.currentTimeMillis());
         if (success) {
             tx.setStatus(PaymentTransaction.Status.PAID);
+            order.setPaymentMethod("MOMO");
             order.setPaymentStatus(Order.PaymentStatus.PAID);
-            order.setStatus(Order.OrderStatus.CONFIRMED);
-            appendStatusLog(order, "Thanh toan MoMo mock thanh cong");
+            order.setStatus(Order.OrderStatus.PENDING_APPROVAL);
+            appendStatusLog(order, Order.OrderStatus.PENDING_APPROVAL, "Thanh toan MoMo mock thanh cong");
         } else {
             tx.setStatus(PaymentTransaction.Status.FAILED);
             order.setPaymentStatus(Order.PaymentStatus.FAILED);
@@ -187,6 +189,17 @@ public class MoMoService {
                 requestId, orderId, tx.getAmount(), tx.getResultCode());
         transactionRepository.save(tx);
         orderRepository.save(order);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void handleMockResult(String orderId, boolean success) {
+        if (!mockMode) throw AppException.badRequest("MoMo mock mode is disabled");
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> AppException.notFound("Don hang"));
+        PaymentTransaction tx = transactionRepository
+                .findFirstByOrderAndProviderOrderByCreatedAtDesc(order, "MOMO")
+                .orElseThrow(() -> AppException.notFound("Giao dich MoMo"));
+        handleMockResult(orderId, tx.getRequestId(), success);
     }
 
     public PaymentStatusResponse getPaymentStatus(String orderId) {
@@ -199,6 +212,7 @@ public class MoMoService {
                 .findFirstByOrderAndProviderOrderByCreatedAtDesc(order, "MOMO")
                 .orElse(null);
         return new PaymentStatusResponse(orderId, order.getPaymentMethod(), order.getPaymentStatus().name(),
+                order.getStatus().name(),
                 tx == null ? null : tx.getTransactionId(),
                 tx == null ? order.getFinalAmount() : tx.getAmount(),
                 tx == null ? null : tx.getMessage());
@@ -264,6 +278,7 @@ public class MoMoService {
         transactionRepository.save(tx);
         order.setPaymentMethod("MOMO");
         order.setPaymentStatus(Order.PaymentStatus.PENDING);
+        order.setStatus(Order.OrderStatus.PENDING_PAYMENT);
         orderRepository.save(order);
         return new CreateMomoPaymentResponse(order.getId().toString(), requestId, order.getFinalAmount(),
                 url, url, url, 0, "Mock MoMo payment");
@@ -282,10 +297,10 @@ public class MoMoService {
                 .orElseThrow(() -> AppException.notFound("User"));
     }
 
-    private void appendStatusLog(Order order, String note) {
+    private void appendStatusLog(Order order, Order.OrderStatus status, String note) {
         statusLogRepository.save(OrderStatusLog.builder()
                 .orderId(order.getId())
-                .status(Order.OrderStatus.CONFIRMED)
+                .status(status)
                 .note(note)
                 .updatedByRole("SYSTEM")
                 .updatedByName("MoMo Gateway")

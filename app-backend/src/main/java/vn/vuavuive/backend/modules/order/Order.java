@@ -227,6 +227,8 @@ public class Order extends BaseEntity {
 
     public enum OrderStatus {
         PENDING,
+        PENDING_PAYMENT,
+        PENDING_APPROVAL,
         CONFIRMED,
         SHIPPING,
         PREPARING,

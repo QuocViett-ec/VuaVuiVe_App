@@ -119,7 +119,7 @@ public class OrderRepository {
         // So sánh ISO string
         String cutoffStr = cutoffTime.toInstant(ZoneOffset.UTC).toString();
         return findAll().stream()
-                .filter(o -> Order.OrderStatus.PENDING == o.getStatus())
+                .filter(o -> Order.OrderStatus.PENDING == o.getStatus() || Order.OrderStatus.PENDING_PAYMENT == o.getStatus())
                 .filter(o -> "VNPAY".equalsIgnoreCase(o.getPaymentMethod()) || "MOMO".equalsIgnoreCase(o.getPaymentMethod()))
                 .filter(o -> Order.PaymentStatus.UNPAID == o.getPaymentStatus() || Order.PaymentStatus.PENDING == o.getPaymentStatus())
                 .filter(o -> o.getCreatedAt() != null && o.getCreatedAt().compareTo(cutoffStr) < 0)

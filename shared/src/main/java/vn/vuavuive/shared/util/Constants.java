@@ -9,6 +9,8 @@ public final class Constants {
 
     // ── Order Statuses ──
     public static final String ORDER_STATUS_PENDING = "pending";
+    public static final String ORDER_STATUS_PENDING_PAYMENT = "pending_payment";
+    public static final String ORDER_STATUS_PENDING_APPROVAL = "pending_approval";
     public static final String ORDER_STATUS_CONFIRMED = "confirmed";
     public static final String ORDER_STATUS_PROCESSING = "processing";
     public static final String ORDER_STATUS_PACKED = "packed";
@@ -27,6 +29,8 @@ public final class Constants {
     // ── Payment Status ──
     public static final String PAYMENT_STATUS_PENDING = "pending";
     public static final String PAYMENT_STATUS_PAID = "paid";
+    public static final String PAYMENT_STATUS_FAILED = "failed";
+    public static final String PAYMENT_STATUS_CANCELLED = "cancelled";
     public static final String PAYMENT_STATUS_REFUNDED = "refunded";
 
     // ── User Roles ──

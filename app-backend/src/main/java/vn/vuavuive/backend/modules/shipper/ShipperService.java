@@ -130,15 +130,12 @@ public class ShipperService {
         }
 
         Order.OrderStatus currentStatus = order.getStatus();
-        // Cho phép gán shipper cho đơn ở các trạng thái hợp lý
-        if (currentStatus == Order.OrderStatus.CANCELLED
-                || currentStatus == Order.OrderStatus.DELIVERED
-                || currentStatus == Order.OrderStatus.RETURNED
-                || currentStatus == Order.OrderStatus.SHIPPING
-                || currentStatus == Order.OrderStatus.IN_TRANSIT) {
+        if (currentStatus != Order.OrderStatus.CONFIRMED
+                && currentStatus != Order.OrderStatus.PREPARING
+                && currentStatus != Order.OrderStatus.READY_FOR_PICKUP) {
             throw AppException.badRequest(
                     "Không thể gán shipper cho đơn đang ở trạng thái: " + currentStatus
-                    + ". Chỉ gán được cho đơn PENDING/CONFIRMED/PREPARING/READY_FOR_PICKUP.");
+                    + ". Chỉ gán được cho đơn CONFIRMED/PREPARING/READY_FOR_PICKUP.");
         }
 
         // Dùng PATCH để chỉ cập nhật các field thay đổi

@@ -222,7 +222,10 @@ public class Order {
 
     // Helper methods
     public boolean isCancellable() {
-        return "pending".equalsIgnoreCase(status) || "confirmed".equalsIgnoreCase(status);
+        return "pending".equalsIgnoreCase(status)
+                || "pending_payment".equalsIgnoreCase(status)
+                || "pending_approval".equalsIgnoreCase(status)
+                || "confirmed".equalsIgnoreCase(status);
     }
 
     public boolean isReturnable() {

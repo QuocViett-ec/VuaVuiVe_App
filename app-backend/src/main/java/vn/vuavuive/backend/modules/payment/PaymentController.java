@@ -13,6 +13,7 @@ import vn.vuavuive.backend.modules.payment.dto.CreateMomoPaymentResponse;
 import vn.vuavuive.backend.modules.payment.dto.MomoIpnRequest;
 import vn.vuavuive.backend.modules.payment.dto.PaymentStatusResponse;
 
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -56,9 +57,15 @@ public class PaymentController {
 
     @Operation(summary = "MoMo IPN")
     @PostMapping("/momo/ipn")
-    public ResponseEntity<Void> momoIpn(@RequestBody MomoIpnRequest request) {
+    public ResponseEntity<Map<String, Object>> momoIpn(@RequestBody MomoIpnRequest request) {
         moMoService.handleMomoIpn(request);
-        return ResponseEntity.noContent().build();
+        Map<String, Object> response = new HashMap<>();
+        response.put("resultCode", 0);
+        response.put("message", "Confirm Success");
+        response.put("orderId", request.orderId());
+        response.put("requestId", request.requestId());
+        response.put("responseTime", Instant.now().toEpochMilli());
+        return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "VNPay return")
@@ -79,9 +86,50 @@ public class PaymentController {
                 + "<p style='text-align:center;'>Order " + orderId + ". You can close this page.</p></body></html>");
     }
 
+    @Operation(summary = "MoMo mock screen")
+    @GetMapping("/momo/mock")
+    public ResponseEntity<String> momoMock(
+            @RequestParam String orderId,
+            @RequestParam String requestId,
+            @RequestParam(required = false, defaultValue = "0") String amount) {
+        String ok = "/api/payments/momo/mock-result?success=true&orderId=" + orderId + "&requestId=" + requestId;
+        String fail = "/api/payments/momo/mock-result?success=false&orderId=" + orderId + "&requestId=" + requestId;
+        return ResponseEntity.ok("<html><body style='font-family:sans-serif;text-align:center;padding:32px'>"
+                + "<h1>Mock MoMo</h1><p>Order " + orderId + "</p>"
+                + "<h2>" + amount + " VND</h2>"
+                + "<p><a href='" + ok + "'>Success</a></p>"
+                + "<p><a href='" + fail + "'>Failure</a></p></body></html>");
+    }
+
+    @Operation(summary = "MoMo mock result screen")
+    @GetMapping("/momo/mock-result")
+    public ResponseEntity<String> momoMockResult(
+            @RequestParam String orderId,
+            @RequestParam String requestId,
+            @RequestParam boolean success) {
+        moMoService.handleMockResult(orderId, requestId, success);
+        return ResponseEntity.ok("<html><body style='font-family:sans-serif;text-align:center;padding:32px'>"
+                + "<h1>" + (success ? "Payment successful" : "Payment failed") + "</h1>"
+                + "<p>You can return to the app.</p></body></html>");
+    }
+
     @Operation(summary = "Lay trang thai thanh toan")
     @GetMapping("/{orderId}/status")
     public ResponseEntity<ApiResponse<PaymentStatusResponse>> paymentStatus(@PathVariable String orderId) {
+        return ResponseEntity.ok(ApiResponse.success(moMoService.getPaymentStatus(orderId)));
+    }
+
+    @Operation(summary = "Dev-only mock MoMo success")
+    @PostMapping("/momo/mock-success/{orderId}")
+    public ResponseEntity<ApiResponse<PaymentStatusResponse>> mockMomoSuccess(@PathVariable String orderId) {
+        moMoService.handleMockResult(orderId, true);
+        return ResponseEntity.ok(ApiResponse.success(moMoService.getPaymentStatus(orderId)));
+    }
+
+    @Operation(summary = "Dev-only mock MoMo fail")
+    @PostMapping("/momo/mock-fail/{orderId}")
+    public ResponseEntity<ApiResponse<PaymentStatusResponse>> mockMomoFail(@PathVariable String orderId) {
+        moMoService.handleMockResult(orderId, false);
         return ResponseEntity.ok(ApiResponse.success(moMoService.getPaymentStatus(orderId)));
     }
 }

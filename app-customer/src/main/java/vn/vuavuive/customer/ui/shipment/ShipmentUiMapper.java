@@ -11,6 +11,10 @@ public final class ShipmentUiMapper {
         switch (status) {
             case "pending":
                 return "Cho xu ly";
+            case "pending_payment":
+                return "Cho thanh toan";
+            case "pending_approval":
+                return "Cho admin duyet";
             case "confirmed":
                 return "Da xac nhan";
             case "picked":
@@ -43,6 +47,9 @@ public final class ShipmentUiMapper {
         if (status == null) return R.color.text_secondary;
         switch (status) {
             case "pending":
+                return R.color.status_pending;
+            case "pending_payment":
+            case "pending_approval":
                 return R.color.status_pending;
             case "confirmed":
             case "picked":

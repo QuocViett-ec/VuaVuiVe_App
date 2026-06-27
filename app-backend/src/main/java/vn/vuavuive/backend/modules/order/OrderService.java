@@ -116,7 +116,8 @@ public class OrderService {
                 .userName(user.getFullName())
                 .userPhone(user.getPhone())
                 .paymentMethod(request.paymentMethod())
-                .paymentStatus("MOMO".equals(request.paymentMethod()) ? Order.PaymentStatus.PENDING : Order.PaymentStatus.UNPAID)
+                .paymentStatus(initialPaymentStatus(request.paymentMethod()))
+                .status(initialOrderStatus(request.paymentMethod()))
                 .totalAmount(totalAmount)
                 .finalAmount(finalAmount)
                 .deliveryAddress(request.deliveryAddress())  // chuỗi tổng hợp "Tên (SĐT): Địa chỉ"
@@ -129,7 +130,7 @@ public class OrderService {
         order = orderRepository.save(order);
 
         // Ghi log trạng thái PENDING ban đầu
-        appendStatusLog(order, Order.OrderStatus.PENDING, "Đơn hàng vừa được tạo", "SYSTEM", "Hệ thống");
+        appendStatusLog(order, order.getStatus(), "Đơn hàng vừa được tạo", "SYSTEM", "Hệ thống");
 
         // Tạo URL thanh toán nếu cần
         String paymentUrl = null;
@@ -230,7 +231,9 @@ public class OrderService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> AppException.notFound("Đơn hàng"));
 
-        if (order.getStatus() != Order.OrderStatus.PENDING) {
+        if (order.getStatus() != Order.OrderStatus.PENDING
+                && order.getStatus() != Order.OrderStatus.PENDING_PAYMENT
+                && order.getStatus() != Order.OrderStatus.PENDING_APPROVAL) {
             throw AppException.badRequest(
                     "Không thể hủy đơn đang ở trạng thái " + order.getStatus());
         }
@@ -276,9 +279,9 @@ public class OrderService {
                 .orElseThrow(() -> AppException.notFound("Đơn hàng"));
         order.setPaymentStatus(Order.PaymentStatus.PAID);
         awardPointsForOrder(order);
-        if (order.getStatus() == Order.OrderStatus.PENDING) {
-            order.setStatus(Order.OrderStatus.CONFIRMED);
-            appendStatusLog(order, Order.OrderStatus.CONFIRMED, "Admin xac nhan da thanh toan", "ADMIN", "Admin");
+        if (order.getStatus() == Order.OrderStatus.PENDING_PAYMENT) {
+            order.setStatus(Order.OrderStatus.PENDING_APPROVAL);
+            appendStatusLog(order, Order.OrderStatus.PENDING_APPROVAL, "Admin xac nhan da thanh toan", "ADMIN", "Admin");
         }
         return toResponse(orderRepository.save(order), null);
     }
@@ -438,6 +441,20 @@ public class OrderService {
         } catch (IllegalArgumentException e) {
             return null;
         }
+    }
+
+    private Order.PaymentStatus initialPaymentStatus(String paymentMethod) {
+        return "MOMO".equalsIgnoreCase(paymentMethod) ? Order.PaymentStatus.PENDING : Order.PaymentStatus.UNPAID;
+    }
+
+    private Order.OrderStatus initialOrderStatus(String paymentMethod) {
+        if ("MOMO".equalsIgnoreCase(paymentMethod)) {
+            return Order.OrderStatus.PENDING_PAYMENT;
+        }
+        if ("COD".equalsIgnoreCase(paymentMethod)) {
+            return Order.OrderStatus.PENDING_APPROVAL;
+        }
+        return Order.OrderStatus.PENDING;
     }
 
     /** Ghi một mốc lịch sử trạng thái vào bảng ORDER_STATUS_LOGS */

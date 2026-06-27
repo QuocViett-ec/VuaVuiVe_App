@@ -449,7 +449,10 @@ public class FirebaseOrderRepository {
                 Boolean restored = snapshot.child("stock_restored").getValue(Boolean.class);
                 boolean isRestored = restored != null ? restored : false;
 
-                if (!"PENDING".equalsIgnoreCase(currentStatus) && !"CONFIRMED".equalsIgnoreCase(currentStatus)) {
+                if (!"PENDING".equalsIgnoreCase(currentStatus)
+                        && !"PENDING_PAYMENT".equalsIgnoreCase(currentStatus)
+                        && !"PENDING_APPROVAL".equalsIgnoreCase(currentStatus)
+                        && !"CONFIRMED".equalsIgnoreCase(currentStatus)) {
                     result.postValue(AuthRepository.Result.error("Không thể hủy đơn hàng ở trạng thái hiện tại (" + currentStatus + ")"));
                     return;
                 }
@@ -606,37 +609,14 @@ public class FirebaseOrderRepository {
 
     public LiveData<AuthRepository.Result<String>> getMomoUrl(String orderId) {
         MutableLiveData<AuthRepository.Result<String>> result = new MutableLiveData<>();
-        result.postValue(AuthRepository.Result.loading());
-
-        String mockUrl = "https://example.com/api/payments/momo/return?status=PAID&orderId=" + orderId;
-        result.postValue(AuthRepository.Result.success(mockUrl));
+        result.postValue(AuthRepository.Result.error("MoMo phai duoc tao tu backend"));
         return result;
     }
 
     public LiveData<AuthRepository.Result<CreateMomoPaymentResponse>> createMomoPayment(
             String orderId, double amount, String userId) {
         MutableLiveData<AuthRepository.Result<CreateMomoPaymentResponse>> result = new MutableLiveData<>();
-        result.postValue(AuthRepository.Result.loading());
-
-        String now = getCurrentIsoString();
-        Map<String, Object> updates = new HashMap<>();
-        updates.put("payment_status", "PAID");
-        updates.put("status", "CONFIRMED");
-        updates.put("payment_method", "MOMO_MOCK");
-        updates.put("mock_payment", true);
-        updates.put("updated_at", now);
-
-        dbRef.child("orders").child(orderId).updateChildren(updates).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                CreateMomoPaymentResponse resp = new CreateMomoPaymentResponse();
-                resp.setPayUrl("https://example.com/api/payments/momo/return?status=PAID&orderId=" + orderId);
-                resp.setDeeplink("momo://payment?orderId=" + orderId);
-                result.postValue(AuthRepository.Result.success(resp));
-            } else {
-                result.postValue(AuthRepository.Result.error("Lỗi cập nhật thanh toán mock"));
-            }
-        });
-
+        result.postValue(AuthRepository.Result.error("MoMo phai duoc tao tu backend"));
         return result;
     }
 
