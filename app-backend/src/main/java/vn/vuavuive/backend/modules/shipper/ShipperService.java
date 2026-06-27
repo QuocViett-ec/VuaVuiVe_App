@@ -21,6 +21,8 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import vn.vuavuive.backend.modules.product.Product;
+import vn.vuavuive.backend.modules.product.ProductRepository;
 import java.util.UUID;
 
 @Slf4j
@@ -34,6 +36,7 @@ public class ShipperService {
     private final SimpMessagingTemplate messagingTemplate;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ProductRepository productRepository;
 
     /**
      * Tạo mới shipper (Admin)
@@ -65,7 +68,7 @@ public class ShipperService {
                 .vehicleNumber(request.vehicleNumber())
                 .currentStatus(Shipper.Status.AVAILABLE)
                 .isActive(true)
-                .user(user)
+                .userId(user.getId())
                 .build();
 
         return toResponse(shipperRepository.save(shipper));
@@ -92,7 +95,7 @@ public class ShipperService {
      * Cập nhật trạng thái hoạt động của Shipper (AVAILABLE, DELIVERING, OFFLINE)
      */
     @Transactional
-    public ShipperResponse updateShipperStatus(UUID shipperId, String statusStr) {
+    public ShipperResponse updateShipperStatus(String shipperId, String statusStr) {
         Shipper shipper = shipperRepository.findById(shipperId)
                 .orElseThrow(() -> AppException.notFound("Shipper"));
 
@@ -111,10 +114,11 @@ public class ShipperService {
     }
 
     /**
-     * Admin gán đơn hàng cho Shipper
+     * Admin gán đơn hàng cho Shipper.
+     * Dùng PATCH để chỉ cập nhật các field cần thiết → Firebase Realtime listeners nhận event ngay lập tức.
      */
     @Transactional(rollbackFor = Exception.class)
-    public void assignShipperToOrder(UUID orderId, UUID shipperId) {
+    public void assignShipperToOrder(String orderId, String shipperId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> AppException.notFound("Đơn hàng"));
 
@@ -125,92 +129,130 @@ public class ShipperService {
             throw AppException.badRequest("Shipper này hiện đang bị khóa tài khoản");
         }
 
-        Order.OrderStatus status = order.getStatus();
-        if (status != Order.OrderStatus.CONFIRMED
-                && status != Order.OrderStatus.PREPARING
-                && status != Order.OrderStatus.READY_FOR_PICKUP) {
-            throw AppException.badRequest("Chỉ gán shipper cho đơn đã xác nhận (CONFIRMED/PREPARING/READY_FOR_PICKUP)");
+        Order.OrderStatus currentStatus = order.getStatus();
+        if (currentStatus != Order.OrderStatus.CONFIRMED
+                && currentStatus != Order.OrderStatus.PREPARING
+                && currentStatus != Order.OrderStatus.READY_FOR_PICKUP) {
+            throw AppException.badRequest(
+                    "Không thể gán shipper cho đơn đang ở trạng thái: " + currentStatus
+                    + ". Chỉ gán được cho đơn CONFIRMED/PREPARING/READY_FOR_PICKUP.");
         }
 
-        order.setShipper(shipper);
-        order.setStatus(Order.OrderStatus.SHIPPING); // Chuyển sang trạng thái chuẩn bị / chuẩn bị giao
-        orderRepository.save(order);
+        // Dùng PATCH để chỉ cập nhật các field thay đổi
+        // → Firebase Realtime Database sẽ bắn event onChange ngay lập tức cho app mobile/web
+        Map<String, Object> patch = new HashMap<>();
+        patch.put("shipper_id", shipper.getId());
+        patch.put("shipper_name", shipper.getFullName() != null ? shipper.getFullName() : shipper.getPhone());
+        patch.put("status", "SHIPPING");
+        orderRepository.patch(orderId, patch);
+
+        // Cập nhật state trong memory để log
+        order.setShipperId(shipper.getId());
+        order.setShipperName(shipper.getFullName());
+        order.setStatus(Order.OrderStatus.SHIPPING);
 
         // Lưu log lịch sử trạng thái
-        appendStatusLog(order, Order.OrderStatus.SHIPPING, 
-                "Admin gán đơn hàng cho tài xế: " + shipper.getFullName(), 
+        appendStatusLog(order, Order.OrderStatus.SHIPPING,
+                "Admin gán đơn hàng cho tài xế: " + (shipper.getFullName() != null ? shipper.getFullName() : shipper.getPhone()),
                 "ADMIN", "Hệ thống");
 
+        log.info("Gán shipper {} cho đơn hàng {} thành công", shipperId, orderId);
+
         // Gửi thông báo WebSocket tới Admin Dashboard
-        notifyAdminDashboard(order, "Đã gán tài xế " + shipper.getFullName() + " cho đơn hàng.");
+        notifyAdminDashboard(order, "Đã gán tài xế " + (shipper.getFullName() != null ? shipper.getFullName() : shipper.getPhone()) + " cho đơn hàng.");
     }
 
     /**
-     * Shipper cập nhật trạng thái đơn hàng (IN_TRANSIT, DELIVERED, FAILED, RETURNED)
+     * Shipper cập nhật tiến độ giao hàng.
+     * - SHIPPING → IN_TRANSIT : Shipper đã nhận hàng, đang trên đường giao ("Đang giao")
+     * - IN_TRANSIT → DELIVERED : Giao thành công
+     * - IN_TRANSIT → FAILED    : Giao thất bại
+     * - IN_TRANSIT → RETURNED  : Hoàn hàng
+     *
+     * Dùng PATCH để Firebase Realtime listeners nhận event ngay lập tức.
      */
     @Transactional(rollbackFor = Exception.class)
-    public void updateDeliveryStatus(UUID orderId, UUID shipperId, String newStatusStr, String note) {
+    public void updateDeliveryStatus(String orderId, String shipperId, String newStatusStr, String note) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> AppException.notFound("Đơn hàng"));
 
         Shipper shipper = shipperRepository.findById(shipperId)
                 .orElseThrow(() -> AppException.notFound("Shipper"));
 
-        if (order.getShipper() == null || !order.getShipper().getId().equals(shipperId)) {
+        if (order.getShipperId() == null || !order.getShipperId().equals(shipperId)) {
             throw AppException.badRequest("Tài xế này không được phân công giao đơn hàng này!");
         }
 
         Order.OrderStatus newStatus = Order.OrderStatus.valueOf(newStatusStr.toUpperCase());
         Order.OrderStatus currentStatus = order.getStatus();
+
+        // Định nghĩa các chuyển trạng thái hợp lệ
         boolean validTransition =
-                newStatus == Order.OrderStatus.IN_TRANSIT
-                        && (currentStatus == Order.OrderStatus.SHIPPING
-                        || currentStatus == Order.OrderStatus.CONFIRMED
-                        || currentStatus == Order.OrderStatus.PREPARING
-                        || currentStatus == Order.OrderStatus.READY_FOR_PICKUP);
-        validTransition = validTransition
-                || ((newStatus == Order.OrderStatus.DELIVERED || newStatus == Order.OrderStatus.FAILED)
-                && currentStatus == Order.OrderStatus.IN_TRANSIT);
+            // Shipper nhận hàng → Đang giao
+            (newStatus == Order.OrderStatus.IN_TRANSIT
+                && (currentStatus == Order.OrderStatus.SHIPPING
+                 || currentStatus == Order.OrderStatus.CONFIRMED
+                 || currentStatus == Order.OrderStatus.PREPARING
+                 || currentStatus == Order.OrderStatus.READY_FOR_PICKUP))
+            // Đang giao → Giao thành công / Thất bại
+            || ((newStatus == Order.OrderStatus.DELIVERED || newStatus == Order.OrderStatus.FAILED)
+                && currentStatus == Order.OrderStatus.IN_TRANSIT)
+            // Đang giao → Hoàn hàng
+            || (newStatus == Order.OrderStatus.RETURNED
+                && (currentStatus == Order.OrderStatus.IN_TRANSIT || currentStatus == Order.OrderStatus.FAILED));
+
         if (!validTransition) {
-            throw AppException.badRequest("Không thể chuyển từ " + currentStatus + " sang " + newStatus);
+            throw AppException.badRequest(
+                "Không thể chuyển từ " + currentStatus + " sang " + newStatus
+                + ". Chỉ được: SHIPPING→IN_TRANSIT, IN_TRANSIT→DELIVERED/FAILED/RETURNED");
         }
 
-        // Cập nhật trạng thái đơn
-        order.setStatus(newStatus);
+        // Dùng PATCH để cập nhật realtime Firebase
+        Map<String, Object> patch = new HashMap<>();
+        patch.put("status", newStatus.name());
 
-        // Nếu giao thành công
+        String shipperDisplayName = shipper.getFullName() != null ? shipper.getFullName() : shipper.getPhone();
+
         if (newStatus == Order.OrderStatus.DELIVERED) {
-            order.setPaymentStatus(Order.PaymentStatus.PAID); // COD thanh toán thành công
+            // COD → đánh dấu đã thanh toán khi giao xong
+            patch.put("payment_status", "PAID");
             shipper.setCurrentStatus(Shipper.Status.AVAILABLE);
-        } 
-        // Nếu thất bại hoặc hoàn hàng
-        else if (newStatus == Order.OrderStatus.FAILED || newStatus == Order.OrderStatus.RETURNED) {
+        } else if (newStatus == Order.OrderStatus.FAILED || newStatus == Order.OrderStatus.RETURNED) {
             shipper.setCurrentStatus(Shipper.Status.AVAILABLE);
-            // Hoàn lại tồn kho cho sản phẩm
+            // Hoàn lại tồn kho
             for (vn.vuavuive.backend.modules.order.OrderItem item : order.getOrderItems()) {
-                item.getProduct().setStockQuantity(
-                        item.getProduct().getStockQuantity() + item.getQuantity());
+                if (item.getProductId() != null) {
+                    Product product = productRepository.findById(item.getProductId()).orElse(null);
+                    if (product != null) {
+                        product.setStockQuantity(product.getStockQuantity() + item.getQuantity());
+                        productRepository.save(product);
+                    }
+                }
             }
-        } 
-        // Đang đi giao
-        else if (newStatus == Order.OrderStatus.IN_TRANSIT) {
+        } else if (newStatus == Order.OrderStatus.IN_TRANSIT) {
+            // Shipper nhận đơn → chuyển sang "đang giao"
             shipper.setCurrentStatus(Shipper.Status.DELIVERING);
         }
 
-        orderRepository.save(order);
+        orderRepository.patch(orderId, patch);
         shipperRepository.save(shipper);
 
-        // Ghi nhận lịch sử trạng thái đơn
-        appendStatusLog(order, newStatus, note, "SHIPPER", shipper.getFullName());
+        // Cập nhật memory để ghi log
+        order.setStatus(newStatus);
+        appendStatusLog(order, newStatus,
+                note != null && !note.isBlank() ? note : "Tài xế cập nhật trạng thái: " + newStatus.name(),
+                "SHIPPER", shipperDisplayName);
 
-        // Bắn thông báo Realtime qua WebSocket cho Admin Dashboard
-        notifyAdminDashboard(order, "Tài xế " + shipper.getFullName() + " cập nhật trạng thái đơn hàng thành: " + newStatusStr);
+        log.info("Shipper {} cập nhật đơn {} từ {} → {}", shipperId, orderId, currentStatus, newStatus);
+
+        // Bắn WebSocket notification
+        notifyAdminDashboard(order, "Tài xế " + shipperDisplayName + " → " + newStatus.name());
     }
 
     /**
      * Shipper gửi vị trí tọa độ của mình realtime (để Admin theo dõi trên bản đồ)
      */
-    public void updateShipperLocation(UUID shipperId, double latitude, double longitude) {
+    public void updateShipperLocation(String shipperId, double latitude, double longitude) {
         Map<String, Object> locationData = new HashMap<>();
         locationData.put("shipperId", shipperId);
         locationData.put("latitude", latitude);
@@ -226,7 +268,7 @@ public class ShipperService {
 
     private void appendStatusLog(Order order, Order.OrderStatus status, String note, String role, String updatedByName) {
         OrderStatusLog logEntity = OrderStatusLog.builder()
-                .order(order)
+                .orderId(order.getId())
                 .status(status)
                 .note(note)
                 .updatedByRole(role)
@@ -254,7 +296,7 @@ public class ShipperService {
                 s.getVehicleNumber(),
                 s.getCurrentStatus().name(),
                 s.getIsActive(),
-                s.getUser() != null ? s.getUser().getId().toString() : null
+                s.getUserId()
         );
     }
 }

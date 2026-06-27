@@ -1,18 +1,11 @@
 package vn.vuavuive.backend.modules.review;
 
-import jakarta.persistence.*;
 import lombok.*;
 import vn.vuavuive.backend.core.BaseEntity;
-import vn.vuavuive.backend.modules.product.Product;
-import vn.vuavuive.backend.modules.user.User;
 
 /**
- * Bảng REVIEWS — Lưu đánh giá sản phẩm của khách hàng.
- * Một User có thể đánh giá nhiều sản phẩm, mỗi sản phẩm chỉ được đánh giá một lần bởi một user.
+ * Lớp Review — Lưu đánh giá sản phẩm của khách hàng, loại bỏ JPA.
  */
-@Entity
-@Table(name = "reviews",
-       uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "product_id"}))
 @Getter
 @Setter
 @NoArgsConstructor
@@ -20,21 +13,32 @@ import vn.vuavuive.backend.modules.user.User;
 @Builder
 public class Review extends BaseEntity {
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id", nullable = false)
-    private Product product;
-
-    @Column(name = "rating", nullable = false)
+    private String userId;
+    private String userName;
+    private String productId;
     private Integer rating; // 1–5
-
-    @Column(name = "comment", columnDefinition = "TEXT")
     private String comment;
 
-    @Column(name = "is_hidden", nullable = false)
     @Builder.Default
     private Boolean isHidden = false;
+
+    @com.google.firebase.database.PropertyName("user_id")
+    public String getUserId() { return userId; }
+    @com.google.firebase.database.PropertyName("user_id")
+    public void setUserId(String userId) { this.userId = userId; }
+
+    @com.google.firebase.database.PropertyName("user_name")
+    public String getUserName() { return userName; }
+    @com.google.firebase.database.PropertyName("user_name")
+    public void setUserName(String userName) { this.userName = userName; }
+
+    @com.google.firebase.database.PropertyName("product_id")
+    public String getProductId() { return productId; }
+    @com.google.firebase.database.PropertyName("product_id")
+    public void setProductId(String productId) { this.productId = productId; }
+
+    @com.google.firebase.database.PropertyName("is_hidden")
+    public Boolean getIsHidden() { return isHidden; }
+    @com.google.firebase.database.PropertyName("is_hidden")
+    public void setIsHidden(Boolean isHidden) { this.isHidden = isHidden; }
 }

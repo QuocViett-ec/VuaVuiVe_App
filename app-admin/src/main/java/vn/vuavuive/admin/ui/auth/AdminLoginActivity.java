@@ -40,6 +40,13 @@ public class AdminLoginActivity extends AppCompatActivity {
             "customer@gmail.com"
     };
 
+    private static final String[] ROLES_PASSWORDS = {
+            "Admin@123456",
+            "Staff@123456",
+            "Audit@123456",
+            "123456"
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +66,7 @@ public class AdminLoginActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 binding.etEmail.setText(ROLES_EMAILS[position]);
-                binding.etPassword.setText(position == 0 ? "Admin@123" : "123456");
+                binding.etPassword.setText(ROLES_PASSWORDS[position]);
             }
 
             @Override public void onNothingSelected(AdapterView<?> parent) {}

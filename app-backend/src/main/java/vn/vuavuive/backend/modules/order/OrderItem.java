@@ -1,19 +1,11 @@
 package vn.vuavuive.backend.modules.order;
 
-import jakarta.persistence.*;
 import lombok.*;
 import vn.vuavuive.backend.core.BaseEntity;
-import vn.vuavuive.backend.modules.product.Product;
-
-import java.math.BigDecimal;
 
 /**
- * Bảng ORDER_ITEMS — Chi tiết từng sản phẩm trong đơn hàng.
- * Lưu unit_price tại thời điểm đặt hàng để tránh bị ảnh hưởng
- * khi Admin thay đổi giá sản phẩm sau này.
+ * Lớp OrderItem — Chi tiết từng sản phẩm trong đơn hàng, loại bỏ JPA.
  */
-@Entity
-@Table(name = "order_items")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -21,22 +13,24 @@ import java.math.BigDecimal;
 @Builder
 public class OrderItem extends BaseEntity {
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id", nullable = false)
-    private Order order;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "product_id", nullable = false)
-    private Product product;
-
-    @Column(name = "quantity", nullable = false)
+    private String productId;
+    private String productName;
     private Integer quantity;
+    private java.math.BigDecimal unitPrice;
+    private java.math.BigDecimal subtotal;
 
-    /** Giá tại thời điểm đặt hàng (snapshot) — Không thay đổi dù giá SP sau này biến động */
-    @Column(name = "unit_price", nullable = false, precision = 12, scale = 2)
-    private BigDecimal unitPrice;
+    @com.google.firebase.database.PropertyName("product_id")
+    public String getProductId() { return productId; }
+    @com.google.firebase.database.PropertyName("product_id")
+    public void setProductId(String productId) { this.productId = productId; }
 
-    /** = quantity * unit_price */
-    @Column(name = "subtotal", nullable = false, precision = 12, scale = 2)
-    private BigDecimal subtotal;
+    @com.google.firebase.database.PropertyName("product_name")
+    public String getProductName() { return productName; }
+    @com.google.firebase.database.PropertyName("product_name")
+    public void setProductName(String productName) { this.productName = productName; }
+
+    @com.google.firebase.database.PropertyName("unit_price")
+    public java.math.BigDecimal getUnitPrice() { return unitPrice; }
+    @com.google.firebase.database.PropertyName("unit_price")
+    public void setUnitPrice(java.math.BigDecimal unitPrice) { this.unitPrice = unitPrice; }
 }

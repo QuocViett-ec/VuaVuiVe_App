@@ -247,6 +247,7 @@ public class CheckoutActivity extends AppCompatActivity {
                             intent.putExtra("payment_url", momoResult.data.getPayUrl());
                             intent.putExtra("deeplink", momoResult.data.getDeeplink());
                             intent.putExtra("order_id", orderId);
+                            intent.putExtra("order_total", result.data.getFinalAmount());
                             startActivity(intent);
                         } else if (momoResult.status == AuthRepository.Result.Status.ERROR) {
                             Toast.makeText(this, momoResult.message, Toast.LENGTH_LONG).show();

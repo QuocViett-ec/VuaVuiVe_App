@@ -55,17 +55,18 @@ public class CategoryService {
             throw AppException.conflict("Slug '" + slug + "' đã tồn tại");
         }
 
-        Category parent = null;
+        String parentId = null;
         if (request.parentId() != null) {
-            parent = categoryRepository.findById(request.parentId())
+            Category parent = categoryRepository.findById(request.parentId())
                     .orElseThrow(() -> AppException.notFound("Danh mục cha"));
+            parentId = parent.getId();
         }
 
         Category category = Category.builder()
                 .name(request.name())
                 .slug(slug)
                 .imageUrl(request.imageUrl())
-                .parent(parent)
+                .parentId(parentId)
                 .build();
 
         return toResponse(categoryRepository.save(category));
@@ -101,13 +102,16 @@ public class CategoryService {
     // =================== Helpers ===================
 
     private CategoryResponse toResponse(Category c) {
+        Category parent = c.getParentId() != null
+                ? categoryRepository.findById(c.getParentId()).orElse(null)
+                : null;
         return new CategoryResponse(
-                c.getId(),
+                UUID.fromString(c.getId()),
                 c.getName(),
                 c.getSlug(),
                 c.getImageUrl(),
-                c.getParent() != null ? c.getParent().getId() : null,
-                c.getParent() != null ? c.getParent().getName() : null
+                parent != null ? UUID.fromString(parent.getId()) : null,
+                parent != null ? parent.getName() : null
         );
     }
 

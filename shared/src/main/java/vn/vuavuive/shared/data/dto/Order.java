@@ -13,6 +13,9 @@ public class Order {
     @SerializedName("userId")
     private String userId;
 
+    @SerializedName("shipperId")
+    private String shipperId;
+
     @SerializedName("items")
     private List<OrderItem> items;
 
@@ -74,16 +77,24 @@ public class Order {
     @SerializedName("deliveryPhone")
     private String deliveryPhone;
 
+    @SerializedName("failReason")
+    private String failReason;
+
     @SerializedName("createdAt")
     private String createdAt;
 
     @SerializedName("updatedAt")
     private String updatedAt;
 
+    @SerializedName("stock_restored")
+    private boolean stockRestored;
+
     // Getters
+    public boolean isStockRestored() { return stockRestored; }
     public String getId() { return id != null ? id : orderId; }
     public String getOrderId() { return orderId; }
     public String getUserId() { return userId; }
+    public String getShipperId() { return shipperId; }
     public List<OrderItem> getItems() { return items; }
     public DeliveryInfo getDelivery() { return delivery; }
     public PaymentDetail getPayment() {
@@ -107,6 +118,7 @@ public class Order {
     public List<String> getShipmentIds() { return shipmentIds; }
     public ReturnRequest getReturnRequest() { return returnRequest; }
     public String getNote() { return note; }
+    public String getFailReason() { return failReason; }
     public String getCreatedAt() { return createdAt; }
     public String getUpdatedAt() { return updatedAt; }
 
@@ -168,18 +180,52 @@ public class Order {
     }
 
     // Setters
+    public void setId(String id) { this.id = id; }
+    public void setOrderId(String orderId) { this.orderId = orderId; }
+    public void setUserId(String userId) { this.userId = userId; }
+    public void setShipperId(String shipperId) { this.shipperId = shipperId; }
+    public void setItems(List<OrderItem> items) { this.items = items; }
+    public void setDelivery(DeliveryInfo delivery) { this.delivery = delivery; }
+    public void setPayment(PaymentDetail payment) { this.payment = payment; }
+    public void setPaymentMethod(String paymentMethod) { this.paymentMethod = paymentMethod; }
+    public void setVoucherId(String voucherId) { this.voucherId = voucherId; }
+    public void setVoucherCode(String voucherCode) { this.voucherCode = voucherCode; }
+    public void setShippingFee(double shippingFee) { this.shippingFee = shippingFee; }
+    public void setDiscount(double discount) { this.discount = discount; }
+    public void setSubtotal(double subtotal) { this.subtotal = subtotal; }
+    public void setTotalAmount(double totalAmount) { this.totalAmount = totalAmount; }
+    public void setFinalAmount(double finalAmount) { this.finalAmount = finalAmount; }
+    public void setDeliveredAt(String deliveredAt) { this.deliveredAt = deliveredAt; }
+    public void setShipmentIds(List<String> shipmentIds) { this.shipmentIds = shipmentIds; }
+    public void setReturnRequest(ReturnRequest returnRequest) { this.returnRequest = returnRequest; }
+    public void setNote(String note) { this.note = note; }
+    public void setFailReason(String failReason) { this.failReason = failReason; }
+    public void setDeliveryAddress(String deliveryAddress) { this.deliveryAddress = deliveryAddress; }
+    public void setDeliveryName(String deliveryName) { this.deliveryName = deliveryName; }
+    public void setDeliveryPhone(String deliveryPhone) { this.deliveryPhone = deliveryPhone; }
+    public void setCreatedAt(String createdAt) { this.createdAt = createdAt; }
+    public void setUpdatedAt(String updatedAt) { this.updatedAt = updatedAt; }
+    public void setStockRestored(boolean stockRestored) { this.stockRestored = stockRestored; }
     public void setStatus(String status) { this.status = status; }
     public void setPaymentStatus(String paymentStatus) {
         this.paymentStatus = paymentStatus;
         if (payment != null) payment.setStatus(paymentStatus);
     }
 
+    // Alias setters for Firebase mapping (writes to flat delivery fields)
+    public void setRecipientName(String name) { this.deliveryName = name; }
+    public void setRecipientPhone(String phone) { this.deliveryPhone = phone; }
+    public void setRecipientAddress(String address) { this.deliveryAddress = address; }
+
     // Alias: customerId == userId for shipment creation context
     public String getCustomerId() { return userId; }
 
     // Helper methods
     public boolean isCancellable() {
-        return "pending".equalsIgnoreCase(status) || "confirmed".equalsIgnoreCase(status);
+        return "pending".equalsIgnoreCase(status)
+                || "pending_payment".equalsIgnoreCase(status)
+                || "pending_approval".equalsIgnoreCase(status)
+                || "confirmed".equalsIgnoreCase(status);
     }
 
     public boolean isReturnable() {

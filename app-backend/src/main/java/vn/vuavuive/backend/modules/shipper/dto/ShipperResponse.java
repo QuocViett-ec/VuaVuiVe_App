@@ -3,7 +3,7 @@ package vn.vuavuive.backend.modules.shipper.dto;
 import java.util.UUID;
 
 public record ShipperResponse(
-        UUID id,
+        String id,
         String fullName,
         String phone,
         String vehicleNumber,

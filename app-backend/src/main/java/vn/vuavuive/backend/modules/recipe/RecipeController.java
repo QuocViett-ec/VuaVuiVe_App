@@ -49,22 +49,44 @@ public class RecipeController {
         map.put("cookTime", recipe.getCookTime());
         map.put("difficulty", recipe.getDifficulty());
 
-        try {
-            if (recipe.getIngredients() != null && !recipe.getIngredients().isEmpty()) {
-                List<Map<String, Object>> ingredients = objectMapper.readValue(recipe.getIngredients(), new TypeReference<List<Map<String, Object>>>() {});
-                map.put("ingredients", ingredients);
+        if (recipe.getIngredients() != null) {
+            Object ingredientsObj = recipe.getIngredients();
+            if (ingredientsObj instanceof String) {
+                String ingStr = (String) ingredientsObj;
+                if (!ingStr.isEmpty()) {
+                    try {
+                        map.put("ingredients", objectMapper.readValue(ingStr, new TypeReference<List<Map<String, Object>>>() {}));
+                    } catch (JsonProcessingException e) {
+                        map.put("ingredients", new ArrayList<>());
+                    }
+                } else {
+                    map.put("ingredients", new ArrayList<>());
+                }
             } else {
-                map.put("ingredients", new ArrayList<>());
+                map.put("ingredients", ingredientsObj);
             }
+        } else {
+            map.put("ingredients", new ArrayList<>());
+        }
 
-            if (recipe.getSteps() != null && !recipe.getSteps().isEmpty()) {
-                List<String> steps = objectMapper.readValue(recipe.getSteps(), new TypeReference<List<String>>() {});
-                map.put("steps", steps);
+        if (recipe.getSteps() != null) {
+            Object stepsObj = recipe.getSteps();
+            if (stepsObj instanceof String) {
+                String stepsStr = (String) stepsObj;
+                if (!stepsStr.isEmpty()) {
+                    try {
+                        map.put("steps", objectMapper.readValue(stepsStr, new TypeReference<List<String>>() {}));
+                    } catch (JsonProcessingException e) {
+                        map.put("steps", new ArrayList<>());
+                    }
+                } else {
+                    map.put("steps", new ArrayList<>());
+                }
             } else {
-                map.put("steps", new ArrayList<>());
+                map.put("steps", stepsObj);
             }
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
+        } else {
+            map.put("steps", new ArrayList<>());
         }
 
         return map;

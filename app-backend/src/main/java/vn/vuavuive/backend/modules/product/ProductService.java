@@ -22,6 +22,7 @@ import vn.vuavuive.backend.modules.product.dto.ProductResponse;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -121,7 +122,7 @@ public class ProductService {
                 .stockQuantity(request.stockQuantity())
                 .unit(request.unit())
                 .imageUrl(request.imageUrl())
-                .category(category)
+                .categoryId(category.getId())
                 .build();
 
         return toResponse(productRepository.save(product));
@@ -142,7 +143,7 @@ public class ProductService {
         product.setSellingPrice(request.sellingPrice());
         product.setStockQuantity(request.stockQuantity());
         product.setUnit(request.unit());
-        product.setCategory(category);
+        product.setCategoryId(category.getId());
         if (request.imageUrl() != null) product.setImageUrl(request.imageUrl());
 
         return toResponse(productRepository.save(product));
@@ -207,8 +208,12 @@ public class ProductService {
         String externalId = p.getExternalId();
         Double rating = fallbackRating(externalId != null ? externalId : String.valueOf(p.getId()));
 
+        Category category = p.getCategoryId() != null
+                ? categoryRepository.findById(p.getCategoryId()).orElse(null)
+                : null;
+
         return new ProductResponse(
-                p.getId(),
+                p.getId() != null ? UUID.fromString(p.getId()) : null,
                 p.getName(),
                 p.getSlug(),
                 p.getDescription(),
@@ -218,9 +223,9 @@ public class ProductService {
                 p.getUnit(),
                 p.getImageUrl(),
                 p.getIsActive(),
-                p.getCategory().getId(),
-                p.getCategory().getName(),
-                p.getCategory().getSlug(),
+                category != null ? UUID.fromString(category.getId()) : null,
+                category != null ? category.getName() : null,
+                category != null ? category.getSlug() : null,
                 p.getSubCategory(),
                 parseTags(p.getTags()),
                 parseExternalId(externalId),
@@ -242,14 +247,28 @@ public class ProductService {
         }
     }
 
-    private List<String> parseTags(String raw) {
-        if (raw == null || raw.isBlank()) {
+    private List<String> parseTags(Object raw) {
+        if (raw == null) {
+            return Collections.emptyList();
+        }
+        if (raw instanceof List) {
+            List<?> list = (List<?>) raw;
+            List<String> strList = new ArrayList<>();
+            for (Object item : list) {
+                if (item != null) {
+                    strList.add(item.toString());
+                }
+            }
+            return strList;
+        }
+        String str = raw.toString();
+        if (str.isBlank()) {
             return Collections.emptyList();
         }
         try {
-            return OBJECT_MAPPER.readValue(raw, new TypeReference<List<String>>() {});
+            return OBJECT_MAPPER.readValue(str, new TypeReference<List<String>>() {});
         } catch (Exception ignored) {
-            return List.of(raw);
+            return List.of(str);
         }
     }
 

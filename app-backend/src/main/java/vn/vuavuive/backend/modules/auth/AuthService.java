@@ -14,6 +14,7 @@ import vn.vuavuive.backend.modules.user.User;
 import vn.vuavuive.backend.modules.user.UserRepository;
 import vn.vuavuive.backend.security.JwtUtils;
 import java.time.LocalDateTime;
+import java.util.UUID;
 import java.util.Optional;
 import java.util.Random;
 
@@ -31,6 +32,7 @@ public class AuthService {
     private final PendingRegistrationRepository pendingRegistrationRepository;
     private final OtpRepository otpRepository;
     private final TelegramNotificationService telegramNotificationService;
+    private final ResendEmailService resendEmailService;
 
     /**
      * Đăng ký tài khoản mới.
@@ -55,7 +57,7 @@ public class AuthService {
         Optional<Otp> existingOtpOpt = otpRepository.findTopByPhoneAndTypeOrderByCreatedAtDesc(request.phone(), "REGISTER");
         if (existingOtpOpt.isPresent()) {
             Otp existingOtp = existingOtpOpt.get();
-            if (existingOtp.getLastSentAt().plusSeconds(60).isAfter(LocalDateTime.now())) {
+            if (existingOtp.getLastSentAt() != null && LocalDateTime.parse(existingOtp.getLastSentAt()).plusSeconds(60).isAfter(LocalDateTime.now())) {
                 throw new AppException(HttpStatus.TOO_MANY_REQUESTS, "Vui lòng đợi 60 giây trước khi yêu cầu gửi lại mã OTP");
             }
         }
@@ -70,9 +72,11 @@ public class AuthService {
         pending.setPhone(request.phone());
         pending.setFullName(request.fullName());
         pending.setEmail(request.email() != null && !request.email().trim().isEmpty() ? request.email().trim() : null);
+        
         pending.setPasswordHash(passwordEncoder.encode(request.password()));
+        
         pending.setAddress(request.address());
-        pending.setExpiresAt(LocalDateTime.now().plusMinutes(15)); // Pending user exists for 15 minutes
+        pending.setExpiresAt(LocalDateTime.now().plusMinutes(15).toString()); // Pending user exists for 15 minutes
         pendingRegistrationRepository.save(pending);
 
         // Lưu / Cập nhật OTP record
@@ -80,14 +84,14 @@ public class AuthService {
         otp.setPhone(request.phone());
         otp.setCodeHash(codeHash);
         otp.setType("REGISTER");
-        otp.setExpiresAt(LocalDateTime.now().plusMinutes(5)); // OTP valid for 5 mins
+        otp.setExpiresAt(LocalDateTime.now().plusMinutes(5).toString()); // OTP valid for 5 mins
         otp.setIsUsed(false);
         otp.setAttemptCount(0);
-        otp.setLastSentAt(LocalDateTime.now());
+        otp.setLastSentAt(LocalDateTime.now().toString());
         otpRepository.save(otp);
 
-        // Gửi qua Telegram Bot
-        telegramNotificationService.sendOtp(request.phone(), rawOtp);
+        // Gửi qua Resend Email Service
+        resendEmailService.sendOtp(request.email(), rawOtp);
     }
 
     /**
@@ -102,7 +106,7 @@ public class AuthService {
         if (otp.getIsUsed()) {
             throw new AppException(HttpStatus.BAD_REQUEST, "Mã OTP đã được sử dụng. Vui lòng yêu cầu mã mới.");
         }
-        if (otp.getExpiresAt().isBefore(LocalDateTime.now())) {
+        if (otp.getExpiresAt() != null && LocalDateTime.parse(otp.getExpiresAt()).isBefore(LocalDateTime.now())) {
             throw new AppException(HttpStatus.BAD_REQUEST, "Mã OTP đã hết hạn. Vui lòng yêu cầu mã mới.");
         }
         if (otp.getAttemptCount() >= 5) {
@@ -125,7 +129,7 @@ public class AuthService {
         PendingRegistration pending = pendingRegistrationRepository.findByPhone(request.phone())
                 .orElseThrow(() -> new AppException(HttpStatus.BAD_REQUEST, "Yêu cầu đăng ký đã hết hạn hoặc không tồn tại. Vui lòng thử lại."));
 
-        if (pending.getExpiresAt().isBefore(LocalDateTime.now())) {
+        if (pending.getExpiresAt() != null && LocalDateTime.parse(pending.getExpiresAt()).isBefore(LocalDateTime.now())) {
             throw new AppException(HttpStatus.BAD_REQUEST, "Yêu cầu đăng ký đã hết hạn. Vui lòng bắt đầu lại.");
         }
 
@@ -142,7 +146,7 @@ public class AuthService {
 
         // Vô hiệu hóa OTP và dọn dẹp Pending Registration
         otp.setIsUsed(true);
-        otp.setUsedAt(LocalDateTime.now());
+        otp.setUsedAt(LocalDateTime.now().toString());
         otpRepository.save(otp);
         pendingRegistrationRepository.delete(pending);
 
@@ -222,7 +226,7 @@ public class AuthService {
         String newAccessToken = jwtUtils.generateAccessToken(subject);
 
         return new AuthResponse(
-                user.getId(),
+                UUID.fromString(user.getId()),
                 user.getFullName(),
                 user.getEmail(),
                 user.getRole().name(),
@@ -241,7 +245,7 @@ public class AuthService {
         String refreshToken = jwtUtils.generateRefreshToken(subject);
 
         return new AuthResponse(
-                user.getId(),
+                UUID.fromString(user.getId()),
                 user.getFullName(),
                 user.getEmail(),
                 user.getRole().name(),

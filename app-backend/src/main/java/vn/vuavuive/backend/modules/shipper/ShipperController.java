@@ -52,7 +52,7 @@ public class ShipperController {
     @PutMapping("/{id}/status")
     @PreAuthorize("hasAnyRole('SHIPPER', 'ADMIN')")
     public ResponseEntity<ShipperResponse> updateStatus(
-            @PathVariable UUID id,
+            @PathVariable String id,
             @RequestParam String status) {
         return ResponseEntity.ok(shipperService.updateShipperStatus(id, status));
     }
@@ -61,8 +61,8 @@ public class ShipperController {
     @PostMapping("/{id}/assign/{orderId}")
     @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
     public ResponseEntity<Map<String, String>> assignOrder(
-            @PathVariable UUID id,
-            @PathVariable UUID orderId) {
+            @PathVariable String id,
+            @PathVariable String orderId) {
         shipperService.assignShipperToOrder(orderId, id);
         return ResponseEntity.ok(Map.of("message", "Gán shipper thành công"));
     }
@@ -71,8 +71,8 @@ public class ShipperController {
     @PutMapping("/{id}/orders/{orderId}/delivery")
     @PreAuthorize("hasAnyRole('SHIPPER', 'ADMIN')")
     public ResponseEntity<Map<String, String>> updateDeliveryStatus(
-            @PathVariable UUID id,
-            @PathVariable UUID orderId,
+            @PathVariable String id,
+            @PathVariable String orderId,
             @RequestParam String status,
             @RequestParam(required = false, defaultValue = "") String note) {
         shipperService.updateDeliveryStatus(orderId, id, status, note);
@@ -83,7 +83,7 @@ public class ShipperController {
     @PostMapping("/{id}/location")
     @PreAuthorize("hasAnyRole('SHIPPER', 'ADMIN')")
     public ResponseEntity<Map<String, String>> updateLocation(
-            @PathVariable UUID id,
+            @PathVariable String id,
             @RequestParam double latitude,
             @RequestParam double longitude) {
         shipperService.updateShipperLocation(id, latitude, longitude);

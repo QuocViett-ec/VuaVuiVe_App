@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "855833878900",
+    "firebase_url": "https://vua-vui-ve-default-rtdb.firebaseio.com",
+    "project_id": "vua-vui-ve",
+    "storage_bucket": "vua-vui-ve.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:855833878900:android:77cdacac7e5d7b0f5b0c21",
+        "android_client_info": {
+          "package_name": "vn.vuavuive.customer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDTkZoVvvS45QhsQgH6EphLAF6CGq0-794"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

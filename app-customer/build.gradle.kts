@@ -1,7 +1,7 @@
 plugins {
     id("com.android.application")
     id("com.google.dagger.hilt.android")
-    // id("com.google.gms.google-services")  // Uncomment sau khi thêm google-services.json
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -19,7 +19,7 @@ android {
 
     buildTypes {
         debug {
-            buildConfigField("String", "BASE_URL", "\"http://192.168.88.220:3000\"")
+            buildConfigField("String", "BASE_URL", "\"http://10.0.2.2:3000\"")
             buildConfigField("String", "PORTAL_SCOPE", "\"customer\"")
         }
         release {
@@ -89,4 +89,9 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
+
+    // Firebase SDK
+    implementation(platform("com.google.firebase:firebase-bom:33.1.1"))
+    implementation("com.google.firebase:firebase-database")
+    implementation("com.google.firebase:firebase-auth")
 }

@@ -2,22 +2,53 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
     android:orientation="vertical"
     android:padding="24dp">
 
     <TextView
         android:id="@+id/tv_payment_status"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Waiting for payment confirmation"
+        android:gravity="center"
+        android:text="Chua xac nhan thanh toan"
         android:textSize="22sp"
         android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_payment_hint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:gravity="center"
+        android:text="Hoan tat thanh toan tren trinh duyet roi quay lai day."
+        android:textSize="16sp" />
+
+    <Button
+        android:id="@+id/btn_open_payment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Mo lai trang thanh toan" />
+
+    <Button
+        android:id="@+id/btn_check_payment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="Kiem tra thanh toan" />
+
+    <Button
+        android:id="@+id/btn_mock_success"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="Mock payment success"
+        android:visibility="gone" />
 
     <Button
         android:id="@+id/btn_view_orders"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="12dp"
         android:text="View orders" />
 </LinearLayout>

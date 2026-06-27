@@ -1,58 +1,56 @@
 package vn.vuavuive.shipper.viewmodel;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import dagger.hilt.android.lifecycle.HiltViewModel;
 import javax.inject.Inject;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import vn.vuavuive.shared.data.api.AuthApi;
-import vn.vuavuive.shared.data.dto.ApiResponse;
+import vn.vuavuive.shipper.data.repository.FirebaseShipperRepository;
 import vn.vuavuive.shared.data.dto.User;
-import vn.vuavuive.shared.data.dto.request.LoginRequest;
-import vn.vuavuive.shared.util.SessionManager;
 
+/**
+ * AuthViewModel — Xử lý đăng nhập Firebase Auth cho Shipper.
+ */
 @HiltViewModel
 public class AuthViewModel extends ViewModel {
-    private final AuthApi authApi;
-    private final SessionManager sessionManager;
+
+    private final FirebaseShipperRepository repository;
 
     @Inject
-    public AuthViewModel(AuthApi authApi, SessionManager sessionManager) {
-        this.authApi = authApi;
-        this.sessionManager = sessionManager;
+    public AuthViewModel(FirebaseShipperRepository repository) {
+        this.repository = repository;
     }
 
-    public LiveData<Result<User>> login(String identifier, String password) {
-        MutableLiveData<Result<User>> out = new MutableLiveData<>();
-        out.setValue(Result.loading());
-        authApi.shipperLogin(new LoginRequest(identifier, password)).enqueue(new Callback<ApiResponse<User>>() {
-            @Override
-            public void onResponse(Call<ApiResponse<User>> call, Response<ApiResponse<User>> response) {
-                ApiResponse<User> body = response.body();
-                if (response.isSuccessful() && body != null && body.isSuccess() && body.getData() != null) {
-                    sessionManager.saveUser(body.getData());
-                    sessionManager.saveTokens(body.getAccessToken(), body.getRefreshToken());
-                    out.setValue(Result.success(body.getData()));
-                } else {
-                    out.setValue(Result.error(body != null ? body.getMessage() : "Dang nhap that bai"));
-                }
-            }
+    public LiveData<Result<User>> login(String email, String password) {
+        // Delegate to Firebase repository, map Result type
+        return mapResult(repository.login(email, password));
+    }
 
-            @Override
-            public void onFailure(Call<ApiResponse<User>> call, Throwable t) {
-                out.setValue(Result.error(t.getMessage()));
+    public boolean isLoggedIn() {
+        return repository.isLoggedIn();
+    }
+
+    public void logout() {
+        repository.logout();
+    }
+
+    /**
+     * Map FirebaseShipperRepository.Result → AuthViewModel.Result
+     * (giữ nguyên inner Result class để UI không cần thay đổi)
+     */
+    private <T> LiveData<Result<T>> mapResult(LiveData<FirebaseShipperRepository.Result<T>> source) {
+        androidx.lifecycle.MutableLiveData<Result<T>> out = new androidx.lifecycle.MutableLiveData<>();
+        source.observeForever(r -> {
+            if (r == null) return;
+            switch (r.status) {
+                case LOADING:  out.postValue(Result.loading());         break;
+                case SUCCESS:  out.postValue(Result.success(r.data));   break;
+                case ERROR:    out.postValue(Result.error(r.message));  break;
             }
         });
         return out;
     }
 
-    public boolean isLoggedIn() {
-        return sessionManager.isLoggedIn() && sessionManager.isShipper() && sessionManager.hasValidAccessToken();
-    }
-
+    // ─── Inner Result class (UI code không cần thay đổi) ────────────────────
     public static class Result<T> {
         public enum Status { LOADING, SUCCESS, ERROR }
         public final Status status;
@@ -70,3 +68,4 @@ public class AuthViewModel extends ViewModel {
         static <T> Result<T> error(String message) { return new Result<>(Status.ERROR, null, message); }
     }
 }
+

@@ -28,12 +28,12 @@ if "%MOMO_PUBLIC_BASE_URL%"=="" (
 
 if "%MOMO_PUBLIC_BASE_URL%"=="" (
   set MOCK_MOMO_MODE=true
-  set MOMO_REDIRECT_URL=http://10.0.2.2:3000/api/momo/return
-  set MOMO_IPN_URL=http://10.0.2.2:3000/api/momo/ipn
+  set MOMO_REDIRECT_URL=http://10.0.2.2:3000/api/payments/momo/return
+  set MOMO_IPN_URL=http://10.0.2.2:3000/api/payments/momo/ipn
 ) else (
   set MOCK_MOMO_MODE=false
-  set MOMO_REDIRECT_URL=%MOMO_PUBLIC_BASE_URL%/api/momo/return
-  set MOMO_IPN_URL=%MOMO_PUBLIC_BASE_URL%/api/momo/ipn
+  set MOMO_REDIRECT_URL=%MOMO_PUBLIC_BASE_URL%/api/payments/momo/return
+  set MOMO_IPN_URL=%MOMO_PUBLIC_BASE_URL%/api/payments/momo/ipn
 )
 
 echo MoMo public base URL: %MOMO_PUBLIC_BASE_URL%

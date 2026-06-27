@@ -57,8 +57,16 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
                         oldList.get(o).getId().equals(newList.get(n).getId());
             }
             @Override public boolean areContentsTheSame(int o, int n) {
-                return oldList.get(o).getId() != null &&
-                        oldList.get(o).getId().equals(newList.get(n).getId());
+                Product oldItem = oldList.get(o);
+                Product newItem = newList.get(n);
+                if (oldItem == null || newItem == null) return false;
+                return java.util.Objects.equals(oldItem.getId(), newItem.getId()) &&
+                        java.util.Objects.equals(oldItem.getName(), newItem.getName()) &&
+                        oldItem.getPrice() == newItem.getPrice() &&
+                        java.util.Objects.equals(oldItem.getOriginalPrice(), newItem.getOriginalPrice()) &&
+                        oldItem.getStock() == newItem.getStock() &&
+                        java.util.Objects.equals(oldItem.getImageUrl(), newItem.getImageUrl()) &&
+                        java.util.Objects.equals(oldItem.getUnit(), newItem.getUnit());
             }
         });
 

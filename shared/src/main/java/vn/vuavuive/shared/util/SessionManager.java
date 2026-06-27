@@ -97,12 +97,12 @@ public class SessionManager {
 
     public boolean isAdmin() {
         String role = getUserRole();
-        return "admin".equals(role);
+        return "admin".equalsIgnoreCase(role);
     }
 
     public boolean isBackoffice() {
         String role = getUserRole();
-        return "admin".equals(role) || "staff".equals(role) || "audit".equals(role);
+        return "admin".equalsIgnoreCase(role) || "staff".equalsIgnoreCase(role) || "audit".equalsIgnoreCase(role);
     }
 
     public boolean isShipper() {

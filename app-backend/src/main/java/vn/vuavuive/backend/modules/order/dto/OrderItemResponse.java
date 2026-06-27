@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 public record OrderItemResponse(
-        UUID productId,
+        String productId,
         String productName,
         String productImageUrl,
         String unit,

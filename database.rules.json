@@ -1,0 +1,64 @@
+{
+  "rules": {
+    "categories": {
+      ".read": true,
+      ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'ADMIN'"
+    },
+
+    "products": {
+      ".read": true,
+      ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'ADMIN'",
+      ".indexOn": ["category_id", "is_active", "name"]
+    },
+
+    "recipes": {
+      ".read": true,
+      ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'ADMIN'"
+    },
+
+    "reviews": {
+      ".read": true,
+      ".indexOn": ["product_id", "user_id"],
+      "$reviewId": {
+        ".write": "auth != null && newData.child('user_id').val() === auth.uid"
+      }
+    },
+
+    "users": {
+      "$uid": {
+        ".read": "auth != null && ($uid === auth.uid || root.child('users').child(auth.uid).child('role').val() === 'ADMIN')",
+        ".write": "auth != null && $uid === auth.uid",
+        "role": {
+          ".validate": "(!data.exists() && newData.val() === 'CUSTOMER') || (data.exists() && newData.val() === data.val())"
+        }
+      }
+    },
+
+    "carts": {
+      "$uid": {
+        ".read": "auth != null && $uid === auth.uid",
+        ".write": "auth != null && $uid === auth.uid"
+      }
+    },
+
+    "orders": {
+      ".indexOn": ["user_id", "status", "shipper_id", "created_at"],
+      "$orderId": {
+        ".read": "auth != null && (data.child('user_id').val() === auth.uid || data.child('shipper_id').val() === auth.uid || root.child('users').child(auth.uid).child('role').val() === 'ADMIN')",
+        ".write": "auth != null && (newData.child('user_id').val() === auth.uid || root.child('users').child(auth.uid).child('role').val() === 'ADMIN' || data.child('shipper_id').val() === auth.uid)"
+      }
+    },
+
+    "otps": {
+      ".read": false,
+      ".write": false
+    },
+
+    "shippers": {
+      "$uid": {
+        ".read": "auth != null && ($uid === auth.uid || root.child('users').child(auth.uid).child('role').val() === 'ADMIN')",
+        ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'ADMIN'"
+      }
+    }
+  }
+}
