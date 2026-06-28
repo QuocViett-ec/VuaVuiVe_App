@@ -20,31 +20,60 @@
             android:paddingBottom="40dp">
 
             <!-- ── Top Greeting ── -->
-            <TextView
-                android:id="@+id/tv_greeting_label"
+            <LinearLayout
+                android:id="@+id/ll_greeting_row"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:orientation="horizontal"
                 android:layout_marginStart="24dp"
+                android:layout_marginEnd="20dp"
                 android:layout_marginTop="32dp"
-                android:text="Chào mừng bạn đến với"
-                android:textColor="@color/text_secondary"
-                android:textSize="14sp"
+                android:gravity="center_vertical"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:id="@+id/tv_greeting_name"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:layout_marginTop="4dp"
-                android:text="VỰA VUI VẺ"
-                android:textColor="@color/primary"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:letterSpacing="0.02"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_greeting_label" />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_greeting_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Chào mừng bạn đến với"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tv_greeting_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="VỰA VUI VẺ"
+                        android:textColor="@color/primary"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.02" />
+
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/iv_app_logo"
+                    android:layout_width="200dp"
+                    android:layout_height="120dp"
+                    android:layout_marginEnd="-12dp"
+                    android:src="@drawable/app_logo"
+                    android:scaleType="fitEnd"
+                    android:adjustViewBounds="true" />
+
+
+
+
+
+            </LinearLayout>
 
             <!-- ── Membership Card ── -->
             <com.google.android.material.card.MaterialCardView
@@ -57,7 +86,7 @@
                 app:cardElevation="4dp"
                 app:cardBackgroundColor="@color/primary_dark"
                 app:strokeWidth="0dp"
-                app:layout_constraintTop_toBottomOf="@id/tv_greeting_name">
+                app:layout_constraintTop_toBottomOf="@id/ll_greeting_row">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -267,11 +296,11 @@
                     android:orientation="horizontal" />
             </HorizontalScrollView>
 
-            <!-- ── Promo Banner ── -->
+            <!-- ── Banner Slider ── -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cv_promo_banner"
                 android:layout_width="match_parent"
-                android:layout_height="140dp"
+                android:layout_height="110dp"
                 android:layout_marginHorizontal="20dp"
                 android:layout_marginTop="28dp"
                 app:cardCornerRadius="16dp"
@@ -279,58 +308,72 @@
                 app:strokeWidth="0dp"
                 app:layout_constraintTop_toBottomOf="@id/hsv_product_categories">
 
-                <FrameLayout
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/vp_banner"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/primary_dark">
+                    android:layout_height="match_parent" />
 
-                    <!-- Banner Content -->
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:padding="16dp">
-
-                        <TextView
-                            android:id="@+id/tv_banner_badge"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="🎉 SIÊU KHUYẾN MÃI TUẦN NÀY"
-                            android:textColor="@color/primary_dark"
-                            android:textSize="10sp"
-                            android:textStyle="bold"
-                            android:background="#FFD54F"
-                            android:paddingHorizontal="8dp"
-                            android:paddingVertical="4dp"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="12dp"
-                            android:layout_marginEnd="80dp"
-                            android:text="Giảm đến 46% cho toàn bộ rau củ quả hữu cơ"
-                            android:textColor="@color/white"
-                            android:textSize="17sp"
-                            android:lineSpacingExtra="4dp"
-                            android:textStyle="bold"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/tv_banner_badge" />
-
-                        <TextView
-                            android:id="@+id/tv_banner_emoji"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="🥦🍓"
-                            android:textSize="60sp"
-                            android:translationX="10dp"
-                            android:translationY="10dp"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent" />
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-                </FrameLayout>
             </com.google.android.material.card.MaterialCardView>
+
+            <!-- Dot Indicator -->
+            <LinearLayout
+                android:id="@+id/ll_banner_dots"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cv_promo_banner" />
+
+
+            <!-- ── Recipes Section ── -->
+            <LinearLayout
+                android:id="@+id/section_recipes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="24dp"
+                app:layout_constraintTop_toBottomOf="@id/ll_banner_dots">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="20dp"
+                    android:layout_marginBottom="12dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="🍳 Công thức gợi ý"
+                        android:textColor="@color/text_primary"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_view_all_recipes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Xem thêm"
+                        android:textColor="@color/primary"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:padding="8dp"
+                        android:background="?attr/selectableItemBackground" />
+                </LinearLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_recipes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clipToPadding="false"
+                    android:paddingHorizontal="14dp"
+                    android:nestedScrollingEnabled="false" />
+            </LinearLayout>
 
             <!-- ── Promo Code Section ── -->
             <LinearLayout
@@ -339,7 +382,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_marginTop="24dp"
-                app:layout_constraintTop_toBottomOf="@id/cv_promo_banner">
+                app:layout_constraintTop_toBottomOf="@id/section_recipes">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -376,6 +419,7 @@
                     android:paddingHorizontal="12dp">
 
                     <LinearLayout
+                        android:id="@+id/ll_vouchers_container"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">

@@ -49,19 +49,21 @@ public class DataSeeder implements CommandLineRunner {
     }
 
     private void seedUsers() {
-        // 1. Seed tài khoản ADMIN
-        if (!userRepository.findByEmail("admin@vuavuive.vn").isPresent()) {
-            User admin = User.builder()
+        // 1. Seed tài khoản ADMIN (Force update password)
+        User admin = userRepository.findByEmail("admin@vuavuive.vn").orElseGet(() -> {
+            User newUser = User.builder()
                     .email("admin@vuavuive.vn")
                     .fullName("Quản Trị Viên")
                     .phone("0999999999")
-                    .passwordHash(passwordEncoder.encode("Admin@123"))
                     .role(User.Role.ADMIN)
                     .isActive(true)
                     .build();
-            userRepository.save(admin);
-            log.info(">> SEED: Tạo thành công tài khoản ADMIN: admin@vuavuive.vn / Admin@123");
-        }
+            return newUser;
+        });
+        admin.setPasswordHash(passwordEncoder.encode("Admin@123"));
+        userRepository.save(admin);
+        log.info(">> SEED (FORCE): Cập nhật thành công tài khoản ADMIN: admin@vuavuive.vn / Admin@123 trên Firebase RTDB");
+
 
         // 2. Seed tài khoản CUSTOMER
         if (!userRepository.findByEmail("customer@gmail.com").isPresent()) {

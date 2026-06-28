@@ -114,7 +114,7 @@ public class AuthController {
         AuthResponse auth = authService.login(request);
         UserResponse user = authService.getUserResponse(request.identifier());
 
-        if (!"admin".equals(user.role()) && !"staff".equals(user.role()) && !"audit".equals(user.role())) {
+        if (!"admin".equalsIgnoreCase(user.role()) && !"staff".equalsIgnoreCase(user.role()) && !"audit".equalsIgnoreCase(user.role())) {
             throw new AppException(HttpStatus.FORBIDDEN, "Bạn không có quyền đăng nhập vào trang quản trị");
         }
 

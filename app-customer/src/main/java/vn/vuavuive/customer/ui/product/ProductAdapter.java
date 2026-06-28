@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
-import com.google.android.material.button.MaterialButton;
+import com.google.android.material.card.MaterialCardView;
 import vn.vuavuive.customer.R;
 import vn.vuavuive.shared.data.dto.Product;
 import vn.vuavuive.shared.util.CurrencyFormatter;
@@ -102,7 +102,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         TextView tvName, tvPrice, tvOriginalPrice, tvDiscount, tvUnit, tvRatingCount, tvSoldCount, tvHotBadge;
         RatingBar ratingBar;
         View layoutOutOfStock;
-        MaterialButton btnQuickAdd;
+        MaterialCardView btnQuickAdd;
 
         ProductViewHolder(View itemView) {
             super(itemView);

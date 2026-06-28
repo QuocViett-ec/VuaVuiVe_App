@@ -85,6 +85,7 @@
         <item name="boxCornerRadiusTopEnd">10dp</item>
         <item name="boxCornerRadiusBottomStart">10dp</item>
         <item name="boxCornerRadiusBottomEnd">10dp</item>
+        <item name="boxBackgroundColor">@color/white</item>
         <item name="hintTextColor">@color/text_secondary</item>
         <item name="android:textColorHint">@color/text_hint</item>
     </style>

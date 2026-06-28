@@ -26,6 +26,9 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
+import android.view.View;
+import android.widget.ImageView;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import dagger.hilt.android.AndroidEntryPoint;
@@ -79,6 +82,11 @@ public class HomeFragment extends Fragment {
     private boolean isProductLoading = false;
     private LiveData<AuthRepository.Result<List<Product>>> productsLiveData;
 
+    // Banner slider
+    private final Handler bannerHandler = new Handler();
+    private Runnable bannerRunnable;
+    private static final long BANNER_INTERVAL_MS = 3000;
+
     private static final String PREFS_HOME = "vvv_home";
     private static final String KEY_PROMO_SHOWN = "promo_shown";
 
@@ -104,6 +112,7 @@ public class HomeFragment extends Fragment {
         setupGreeting(view);
         setupAddressPicker(view);
         setupSearch(view);
+        setupBannerSlider(view);
         setupRecipeSection(view);
         setupProductSection(view);
         setupVouchers(view);
@@ -128,6 +137,63 @@ public class HomeFragment extends Fragment {
                 }
             });
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        bannerHandler.removeCallbacksAndMessages(null);
+    }
+
+    // ── Banner Slider Setup ─────────────────────────────────────────────────────
+    private void setupBannerSlider(View view) {
+        ViewPager2 viewPager = view.findViewById(R.id.vp_banner);
+        LinearLayout dotsContainer = view.findViewById(R.id.ll_banner_dots);
+        if (viewPager == null || dotsContainer == null) return;
+
+        List<Integer> bannerRes = new ArrayList<>();
+        bannerRes.add(R.drawable.banner_1);
+        bannerRes.add(R.drawable.banner_2);
+        bannerRes.add(R.drawable.banner_3);
+        bannerRes.add(R.drawable.banner_4);
+
+        BannerAdapter adapter = new BannerAdapter(bannerRes);
+        viewPager.setAdapter(adapter);
+
+        // Build dot indicators
+        int dotSize = (int) (8 * getResources().getDisplayMetrics().density);
+        int dotMargin = (int) (4 * getResources().getDisplayMetrics().density);
+        for (int i = 0; i < bannerRes.size(); i++) {
+            ImageView dot = new ImageView(requireContext());
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(dotSize, dotSize);
+            params.setMargins(dotMargin, 0, dotMargin, 0);
+            dot.setLayoutParams(params);
+            dot.setBackgroundResource(i == 0
+                    ? R.drawable.banner_dot_active
+                    : R.drawable.banner_dot_inactive);
+            dotsContainer.addView(dot);
+        }
+
+        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                for (int i = 0; i < dotsContainer.getChildCount(); i++) {
+                    ImageView dot = (ImageView) dotsContainer.getChildAt(i);
+                    dot.setBackgroundResource(i == position
+                            ? R.drawable.banner_dot_active
+                            : R.drawable.banner_dot_inactive);
+                }
+                // Reset auto-scroll timer
+                bannerHandler.removeCallbacks(bannerRunnable);
+                bannerHandler.postDelayed(bannerRunnable, BANNER_INTERVAL_MS);
+            }
+        });
+
+        bannerRunnable = () -> {
+            int next = (viewPager.getCurrentItem() + 1) % bannerRes.size();
+            viewPager.setCurrentItem(next, true);
+        };
+        bannerHandler.postDelayed(bannerRunnable, BANNER_INTERVAL_MS);
     }
 
     // ── Greeting Setup ─────────────────────────────────────────────────────────
@@ -269,6 +335,10 @@ public class HomeFragment extends Fragment {
 
     // ── Voucher Setup ──────────────────────────────────────────────────────────
     private void setupVouchers(View view) {
+        LinearLayout container = view.findViewById(R.id.ll_vouchers_container);
+        if (container == null) return;
+
+        // Add copy listeners for default layout views first as fallback
         View btnCopy1 = view.findViewById(R.id.btn_copy_voucher_1);
         TextView tvCode1 = view.findViewById(R.id.tv_voucher_code_1);
         if (btnCopy1 != null && tvCode1 != null) {
@@ -280,6 +350,88 @@ public class HomeFragment extends Fragment {
         if (btnCopy2 != null && tvCode2 != null) {
             btnCopy2.setOnClickListener(v -> copyToClipboard(tvCode2.getText().toString()));
         }
+
+        // Fetch vouchers dynamically from Firebase RTDB
+        com.google.firebase.database.FirebaseDatabase.getInstance().getReference()
+            .child("vouchers")
+            .addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull com.google.firebase.database.DataSnapshot snapshot) {
+                    if (getContext() == null || getView() == null) return;
+
+                    List<vn.vuavuive.shared.data.dto.Voucher> activeVouchers = new ArrayList<>();
+                    if (snapshot.exists()) {
+                        for (com.google.firebase.database.DataSnapshot s : snapshot.getChildren()) {
+                            vn.vuavuive.shared.data.dto.Voucher v = mapSnapshotToVoucher(s);
+                            if (v.isActive()) {
+                                activeVouchers.add(v);
+                            }
+                        }
+                    }
+
+                    if (!activeVouchers.isEmpty()) {
+                        container.removeAllViews();
+                        for (vn.vuavuive.shared.data.dto.Voucher v : activeVouchers) {
+                            View voucherCard = createVoucherCardView(container, v);
+                            container.addView(voucherCard);
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull com.google.firebase.database.DatabaseError error) {
+                    android.util.Log.e("HomeFragment", "Failed to load vouchers: " + error.getMessage());
+                }
+            });
+    }
+
+    private vn.vuavuive.shared.data.dto.Voucher mapSnapshotToVoucher(com.google.firebase.database.DataSnapshot s) {
+        vn.vuavuive.shared.data.dto.Voucher v = new vn.vuavuive.shared.data.dto.Voucher();
+        v.setId(s.child("id").getValue(String.class) != null ? s.child("id").getValue(String.class) : s.getKey());
+        v.setCode(s.child("code").getValue(String.class));
+        v.setType(s.child("type").getValue(String.class));
+        
+        Double val = s.child("value").getValue(Double.class);
+        v.setValue(val != null ? val : 0.0);
+        
+        Double minOrder = s.child("minOrderValue").getValue(Double.class);
+        if (minOrder == null) minOrder = s.child("min_order_value").getValue(Double.class);
+        v.setMinOrderValue(minOrder != null ? minOrder : 0.0);
+        
+        Boolean active = s.child("isActive").getValue(Boolean.class);
+        if (active == null) active = s.child("is_active").getValue(Boolean.class);
+        v.setActive(active != null ? active : true);
+        
+        v.setNote(s.child("note").getValue(String.class));
+        return v;
+    }
+
+    private View createVoucherCardView(ViewGroup parent, vn.vuavuive.shared.data.dto.Voucher voucher) {
+        View view = LayoutInflater.from(requireContext()).inflate(R.layout.item_home_voucher, parent, false);
+        TextView tvTitle = view.findViewById(R.id.tv_voucher_title);
+        TextView tvSub = view.findViewById(R.id.tv_voucher_desc);
+        TextView tvCode = view.findViewById(R.id.tv_voucher_code);
+        View btnCopy = view.findViewById(R.id.btn_copy_voucher);
+
+        String title = "";
+        if ("PERCENTAGE".equalsIgnoreCase(voucher.getType()) || "percent".equalsIgnoreCase(voucher.getType())) {
+            title = "GIẢM " + (int)voucher.getValue() + "%";
+        } else if ("FIXED".equalsIgnoreCase(voucher.getType()) || "fixed".equalsIgnoreCase(voucher.getType())) {
+            title = "GIẢM " + vn.vuavuive.shared.util.CurrencyFormatter.format(voucher.getValue());
+        } else {
+            title = "FREE SHIP";
+        }
+        tvTitle.setText(title);
+
+        String desc = voucher.getNote() != null && !voucher.getNote().isEmpty()
+                ? voucher.getNote()
+                : "Cho đơn hàng từ " + vn.vuavuive.shared.util.CurrencyFormatter.format(voucher.getMinOrderValue());
+        tvSub.setText(desc);
+
+        tvCode.setText(voucher.getCode());
+
+        btnCopy.setOnClickListener(v -> copyToClipboard(voucher.getCode()));
+        return view;
     }
 
     private void copyToClipboard(String text) {
@@ -293,10 +445,7 @@ public class HomeFragment extends Fragment {
 
     // ── Recipe Section Setup ───────────────────────────────────────────────────
     private void setupRecipeSection(View view) {
-        // Disabled since recipes section is removed from layout
-        /*
-        cgRecipeCategories = view.findViewById(R.id.cg_recipe_categories);
-        RecyclerView rvRecipes = view.findViewById(R.id.rv_recipes_home);
+        RecyclerView rvRecipes = view.findViewById(R.id.rv_recipes);
 
         if (rvRecipes != null) {
             recipeAdapter = new RecipeAdapter(requireContext(), recipe -> {
@@ -309,7 +458,14 @@ public class HomeFragment extends Fragment {
                     new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
             rvRecipes.setAdapter(recipeAdapter);
         }
-        */
+        
+        TextView tvViewAllRecipes = view.findViewById(R.id.tv_view_all_recipes);
+        if (tvViewAllRecipes != null) {
+            tvViewAllRecipes.setOnClickListener(v -> {
+                Intent intent = new Intent(requireContext(), vn.vuavuive.customer.ui.recipe.RecipeListFragmentActivity.class);
+                startActivity(intent);
+            });
+        }
     }
 
     /** Loads real recipes from the API and rebuilds the recipe category chips. */

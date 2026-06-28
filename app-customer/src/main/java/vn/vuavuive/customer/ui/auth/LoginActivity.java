@@ -73,7 +73,7 @@ public class LoginActivity extends AppCompatActivity {
 
         // Pre-fill credentials for testing
         if (etPhoneEmail != null) {
-            etPhoneEmail.setText("0912345678");
+            etPhoneEmail.setText("customer@gmail.com");
         }
         if (etPassword != null) {
             etPassword.setText("Customer@123");
