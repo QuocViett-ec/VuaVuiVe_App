@@ -11,7 +11,6 @@ spring:
 server:
   port: 3000
 
-
 # ============================================
 #  CẤU HÌNH JWT & FIREBASE
 # ============================================
@@ -32,8 +31,8 @@ app:
       tmn-code: "TFQUUGXU"        # <<< ĐỔI THÀNH MÃ SANDBOX CỦA BẠN
       secret-key: "V5IY2EZ98VHA6Q2P39VYMA7VJFK6DR6F"   # <<< ĐỔI THÀNH KEY SANDBOX
       pay-url: "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"
-      return-url: "https://lowell-intercerebral-monopodially.ngrok-free.app/api/payments/vnpay/return"
-      ipn-url: "https://lowell-intercerebral-monopodially.ngrok-free.app/api/payments/vnpay/ipn"
+      return-url: "${PUBLIC_BASE_URL:https://lowell-intercerebral-monopodially.ngrok-free.dev}/api/payments/vnpay/return"
+      ipn-url: "${PUBLIC_BASE_URL:https://lowell-intercerebral-monopodially.ngrok-free.dev}/api/payments/vnpay/ipn"
 
     momo:
       partner-code: "${MOMO_PARTNER_CODE:MOMO}"
@@ -45,6 +44,17 @@ app:
       request-type: "${MOMO_REQUEST_TYPE:captureWallet}"
       lang: "${MOMO_LANG:vi}"
       mock-mode: "${MOCK_MOMO_MODE:true}"
+      allow-mock-result: "${MOMO_ALLOW_MOCK_RESULT:true}"
+
+    zalopay:
+      app-id: "${ZALOPAY_APP_ID:2554}"
+      key1: "${ZALOPAY_KEY1:sdngKKJmqEMzvh5QQcdD2A9XBSKUNaYn}"
+      key2: "${ZALOPAY_KEY2:trMrHtvjo6myautxDUiAcYsVtaeQ8nhf}"
+      endpoint: "${ZALOPAY_ENDPOINT:https://sb-openapi.zalopay.vn/v2/create}"
+      query-endpoint: "${ZALOPAY_QUERY_ENDPOINT:https://sb-openapi.zalopay.vn/v2/query}"
+      callback-url: "${PUBLIC_BASE_URL:https://lowell-intercerebral-monopodially.ngrok-free.dev}/api/payments/zalopay/callback"
+      redirect-url: "${PUBLIC_BASE_URL:https://lowell-intercerebral-monopodially.ngrok-free.dev}/api/payments/zalopay/return"
+      mock-mode: "${ZALOPAY_MOCK_MODE:false}"
 
 # ============================================
 #  CẤU HÌNH CLOUDINARY (Lưu trữ ảnh)

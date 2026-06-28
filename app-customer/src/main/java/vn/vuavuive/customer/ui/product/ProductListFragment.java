@@ -28,10 +28,12 @@ import com.google.android.material.textfield.TextInputLayout;
 import dagger.hilt.android.AndroidEntryPoint;
 import vn.vuavuive.customer.R;
 import vn.vuavuive.customer.data.repository.AuthRepository;
+import vn.vuavuive.customer.viewmodel.CartViewModel;
 import vn.vuavuive.customer.viewmodel.CategoryViewModel;
 import vn.vuavuive.customer.viewmodel.ProductViewModel;
 import vn.vuavuive.shared.data.dto.CategoryResponse;
 import vn.vuavuive.shared.data.dto.Product;
+import vn.vuavuive.shared.data.local.CartItemEntity;
 import java.util.List;
 
 @AndroidEntryPoint
@@ -39,6 +41,7 @@ public class ProductListFragment extends Fragment {
 
     private ProductViewModel productViewModel;
     private CategoryViewModel categoryViewModel;
+    private CartViewModel cartViewModel;
     private ProductAdapter adapter;
     private boolean isLoading = false;
     private String currentCategory = "all";
@@ -64,6 +67,7 @@ public class ProductListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         productViewModel  = new ViewModelProvider(requireActivity()).get(ProductViewModel.class);
         categoryViewModel = new ViewModelProvider(requireActivity()).get(CategoryViewModel.class);
+        cartViewModel = new ViewModelProvider(requireActivity()).get(CartViewModel.class);
 
         setupSearch(view);
         setupCategoryChips(view);
@@ -221,10 +225,28 @@ public class ProductListFragment extends Fragment {
             intent.putExtra("product_id", product.getId());
             startActivity(intent);
         });
-        adapter.setAddToCartListener(product ->
-                Toast.makeText(getContext(),
-                        "✅ Đã thêm \"" + product.getName() + "\" vào giỏ",
-                        Toast.LENGTH_SHORT).show());
+        adapter.setAddToCartListener(product -> {
+            if (product == null || product.getId() == null || product.getId().isEmpty()) {
+                Toast.makeText(getContext(), "Không thêm được sản phẩm này", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            CartItemEntity item = new CartItemEntity();
+            item.setProductId(product.getId());
+            item.setQuantity(1);
+            item.setProductName(product.getName());
+            item.setProductPrice(product.getPrice());
+            item.setProductImageUrl(product.getImageUrl());
+            item.setProductUnit(product.getUnit());
+            item.setProductStock(product.getStock());
+            item.setAddedAt(System.currentTimeMillis());
+            item.setSavedForLater(false);
+            cartViewModel.addItem(item);
+
+            Toast.makeText(getContext(),
+                    "✅ Đã thêm \"" + product.getName() + "\" vào giỏ",
+                    Toast.LENGTH_SHORT).show();
+        });
 
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
         rv.setLayoutManager(layoutManager);
@@ -272,6 +294,7 @@ public class ProductListFragment extends Fragment {
                 if (result != null
                         && result.status == AuthRepository.Result.Status.SUCCESS
                         && result.data != null) {
+                    android.util.Log.d("ProductListFragment", "loadProducts: success. Data size = " + result.data.size());
                     if (adapter != null) adapter.setProducts(result.data);
                     updateEmptyState(view, result.data.isEmpty(), currentSearch.isEmpty() ? null : currentSearch);
                 } else {

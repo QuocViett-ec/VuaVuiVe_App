@@ -98,6 +98,12 @@ public class CreateOrderRequest {
         @SerializedName("subtotal")
         private double subtotal;
 
+        @SerializedName("unit")
+        private String unit;
+
+        @SerializedName("imageUrl")
+        private String imageUrl;
+
         public OrderItemRequest() {}
 
         public OrderItemRequest(String productId, int quantity) {
@@ -115,5 +121,9 @@ public class CreateOrderRequest {
         public void setPrice(double price) { this.price = price; }
         public double getSubtotal() { return subtotal; }
         public void setSubtotal(double subtotal) { this.subtotal = subtotal; }
+        public String getUnit() { return unit; }
+        public void setUnit(String unit) { this.unit = unit; }
+        public String getImageUrl() { return imageUrl; }
+        public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
     }
 }

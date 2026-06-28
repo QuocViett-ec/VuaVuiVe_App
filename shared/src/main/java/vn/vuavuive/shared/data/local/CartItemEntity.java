@@ -1,23 +1,16 @@
 package vn.vuavuive.shared.data.local;
 
-import androidx.room.Entity;
-import androidx.room.PrimaryKey;
-import androidx.annotation.NonNull;
 import vn.vuavuive.shared.data.dto.CartItem;
 
 /**
- * CartItemEntity — Offline-first cart storage.
- * Được đồng bộ lên server sau khi có kết nối mạng.
+ * CartItemEntity — In-memory model for cart items.
+ * Được đồng bộ trực tiếp với Firebase Realtime Database.
+ * (Đã xóa Room/SQLite annotations — chỉ dùng Firebase)
  */
-@Entity(tableName = "cart_items")
 public class CartItemEntity {
 
-    @PrimaryKey
-    @NonNull
     private String productId;
-
     private int quantity;
-
     private String productName;
     private double productPrice;
     private String productImageUrl;
@@ -32,9 +25,8 @@ public class CartItemEntity {
 
     public CartItemEntity() {}
 
-    @NonNull
     public String getProductId() { return productId; }
-    public void setProductId(@NonNull String productId) { this.productId = productId; }
+    public void setProductId(String productId) { this.productId = productId; }
 
     public int getQuantity() { return quantity; }
     public void setQuantity(int quantity) { this.quantity = quantity; }

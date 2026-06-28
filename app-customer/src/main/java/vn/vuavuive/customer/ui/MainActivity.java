@@ -33,8 +33,8 @@ public class MainActivity extends AppCompatActivity {
         authViewModel.checkSession().observe(this, result -> {
             if (result.status == vn.vuavuive.customer.data.repository.AuthRepository.Result.Status.SUCCESS) {
                 authViewModel.setCurrentUser(result.data);
-                // Sync cart from server
-                cartViewModel.syncFromServer();
+                // Attach Firebase cart listener after login
+                cartViewModel.onUserLoggedIn();
             } else if (result.status == vn.vuavuive.customer.data.repository.AuthRepository.Result.Status.ERROR) {
                 authViewModel.setCurrentUser(null);
                 goToLogin();

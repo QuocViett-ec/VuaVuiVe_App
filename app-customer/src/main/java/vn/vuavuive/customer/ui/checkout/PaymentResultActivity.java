@@ -25,6 +25,7 @@ public class PaymentResultActivity extends AppCompatActivity {
     private String orderId;
     private String payUrl;
     private String deeplink;
+    private String provider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,10 +42,11 @@ public class PaymentResultActivity extends AppCompatActivity {
         orderId = getIntent().getStringExtra("order_id");
         payUrl = getIntent().getStringExtra("payment_url");
         deeplink = getIntent().getStringExtra("deeplink");
+        provider = getIntent().getStringExtra("provider");
         btnCheck.setOnClickListener(v -> checkPaymentStatus());
         btnOrders.setOnClickListener(v -> goToOrders());
         btnOpenPayment.setOnClickListener(v -> openPayment());
-        btnMockSuccess.setVisibility(BuildConfig.DEBUG ? View.VISIBLE : View.GONE);
+        btnMockSuccess.setVisibility(BuildConfig.DEBUG && supportsMockSuccess() ? View.VISIBLE : View.GONE);
         btnMockSuccess.setOnClickListener(v -> mockPaymentSuccess());
         showStatus("Chua xac nhan thanh toan", "Hoan tat thanh toan tren trinh duyet roi bam 'Kiem tra thanh toan'.");
         openPayment();
@@ -68,7 +70,7 @@ public class PaymentResultActivity extends AppCompatActivity {
             if (deeplink != null && !deeplink.isEmpty() && !deeplink.equals(url)) {
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(deeplink)));
             } else {
-                Toast.makeText(this, "Khong mo duoc MoMo", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Khong mo duoc cong thanh toan", Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -77,7 +79,7 @@ public class PaymentResultActivity extends AppCompatActivity {
         if (orderId == null || orderId.isEmpty()) {
             return;
         }
-        showStatus("Dang kiem tra thanh toan", "Backend se xac nhan ket qua tu MoMo.");
+        showStatus("Dang kiem tra thanh toan", "Backend se xac nhan ket qua tu " + providerLabel() + ".");
         orderViewModel.getPaymentStatus(orderId).observe(this, result -> {
             if (result.status == AuthRepository.Result.Status.SUCCESS && result.data != null) {
                 String status = result.data.getPaymentStatus();
@@ -99,13 +101,27 @@ public class PaymentResultActivity extends AppCompatActivity {
     }
 
     private void mockPaymentSuccess() {
-        orderViewModel.mockMomoSuccess(orderId).observe(this, result -> {
+        androidx.lifecycle.LiveData<AuthRepository.Result<vn.vuavuive.shared.data.dto.PaymentStatusResponse>> call =
+                "ZALOPAY".equalsIgnoreCase(provider)
+                        ? orderViewModel.mockZaloPaySuccess(orderId)
+                        : orderViewModel.mockMomoSuccess(orderId);
+        call.observe(this, result -> {
             if (result.status == AuthRepository.Result.Status.SUCCESS) {
                 checkPaymentStatus();
             } else if (result.status == AuthRepository.Result.Status.ERROR) {
                 Toast.makeText(this, result.message, Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    private boolean supportsMockSuccess() {
+        return "MOMO".equalsIgnoreCase(provider) || "ZALOPAY".equalsIgnoreCase(provider);
+    }
+
+    private String providerLabel() {
+        if ("ZALOPAY".equalsIgnoreCase(provider)) return "ZaloPay";
+        if ("VNPAY".equalsIgnoreCase(provider)) return "VNPay";
+        return "MoMo";
     }
 
     private void showStatus(String text, String hint) {

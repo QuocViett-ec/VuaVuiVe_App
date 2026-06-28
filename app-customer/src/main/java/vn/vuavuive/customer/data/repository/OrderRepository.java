@@ -10,6 +10,8 @@ import vn.vuavuive.shared.data.api.PaymentApi;
 import vn.vuavuive.shared.data.dto.ApiResponse;
 import vn.vuavuive.shared.data.dto.CreateMomoPaymentRequest;
 import vn.vuavuive.shared.data.dto.CreateMomoPaymentResponse;
+import vn.vuavuive.shared.data.dto.CreateZaloPayPaymentRequest;
+import vn.vuavuive.shared.data.dto.CreateZaloPayPaymentResponse;
 import vn.vuavuive.shared.data.dto.Order;
 import vn.vuavuive.shared.data.dto.PaymentStatusResponse;
 import vn.vuavuive.shared.data.dto.Voucher;
@@ -236,6 +238,31 @@ public class OrderRepository {
         return result;
     }
 
+    public LiveData<AuthRepository.Result<CreateZaloPayPaymentResponse>> createZaloPayPayment(
+            String orderId, double amount, String description) {
+        MutableLiveData<AuthRepository.Result<CreateZaloPayPaymentResponse>> result = new MutableLiveData<>();
+        result.postValue(AuthRepository.Result.loading());
+
+        paymentApi.createZaloPayPayment(new CreateZaloPayPaymentRequest(orderId, amount, description))
+                .enqueue(new Callback<ApiResponse<CreateZaloPayPaymentResponse>>() {
+                    @Override
+                    public void onResponse(Call<ApiResponse<CreateZaloPayPaymentResponse>> call,
+                                           Response<ApiResponse<CreateZaloPayPaymentResponse>> response) {
+                        if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                            result.postValue(AuthRepository.Result.success(response.body().getData()));
+                        } else {
+                            result.postValue(AuthRepository.Result.error("Khong tao duoc thanh toan ZaloPay"));
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ApiResponse<CreateZaloPayPaymentResponse>> call, Throwable t) {
+                        result.postValue(AuthRepository.Result.error("Loi ket noi: " + t.getMessage()));
+                    }
+                });
+        return result;
+    }
+
     public LiveData<AuthRepository.Result<PaymentStatusResponse>> mockMomoSuccess(String orderId) {
         MutableLiveData<AuthRepository.Result<PaymentStatusResponse>> result = new MutableLiveData<>();
         result.postValue(AuthRepository.Result.loading());
@@ -248,6 +275,29 @@ public class OrderRepository {
                     result.postValue(AuthRepository.Result.success(response.body().getData()));
                 } else {
                     result.postValue(AuthRepository.Result.error("Khong the mock thanh toan MoMo"));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse<PaymentStatusResponse>> call, Throwable t) {
+                result.postValue(AuthRepository.Result.error("Loi ket noi: " + t.getMessage()));
+            }
+        });
+        return result;
+    }
+
+    public LiveData<AuthRepository.Result<PaymentStatusResponse>> mockZaloPaySuccess(String orderId) {
+        MutableLiveData<AuthRepository.Result<PaymentStatusResponse>> result = new MutableLiveData<>();
+        result.postValue(AuthRepository.Result.loading());
+
+        paymentApi.mockZaloPaySuccess(orderId).enqueue(new Callback<ApiResponse<PaymentStatusResponse>>() {
+            @Override
+            public void onResponse(Call<ApiResponse<PaymentStatusResponse>> call,
+                                   Response<ApiResponse<PaymentStatusResponse>> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                    result.postValue(AuthRepository.Result.success(response.body().getData()));
+                } else {
+                    result.postValue(AuthRepository.Result.error("Khong the mock thanh toan ZaloPay"));
                 }
             }
 

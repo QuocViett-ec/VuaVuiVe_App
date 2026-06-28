@@ -229,8 +229,8 @@ public class FirebaseOrderRepository {
                             itemVal.put("quantity", item.getQuantity());
                             itemVal.put("subtotal", item.getSubtotal());
                             // Fetch product unit/image from sessionManager or mock values (fallback)
-                            itemVal.put("unit", "gói");
-                            itemVal.put("image_url", "");
+                            itemVal.put("unit", item.getUnit() != null ? item.getUnit() : "gói");
+                            itemVal.put("image_url", item.getImageUrl() != null ? item.getImageUrl() : "");
                             itemsMap.put(item.getProductId(), itemVal);
                         }
                         orderMap.put("items", itemsMap);

@@ -1,0 +1,12 @@
+# ================================================================
+# .gitattributes — Merge strategy cho project VuaVuiVe
+# ================================================================
+# Giữ nguyên toàn bộ app-backend của nhánh hiện tại (main/QuocViet)
+# khi merge từ nhánh teammate (KhanhNhu, ThanhThao).
+# Để override khi cần: git checkout <nhánh> -- app-backend/
+# ================================================================
+app-backend/src/**                  merge=ours
+app-backend/pom.xml                 merge=ours
+app-backend/run_backend.bat         merge=ours
+app-backend/build.log               merge=ours
+app-backend/*.py                    merge=ours

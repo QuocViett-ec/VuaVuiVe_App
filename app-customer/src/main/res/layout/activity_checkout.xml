@@ -248,6 +248,16 @@
                                 android:textColor="@color/text_primary"
                                 android:paddingVertical="12dp" />
 
+                            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/divider" />
+
+                            <RadioButton
+                                android:id="@+id/rb_zalopay"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Vi dien tu ZaloPay"
+                                android:textColor="@color/text_primary"
+                                android:paddingVertical="12dp" />
+
                         </RadioGroup>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>

@@ -44,12 +44,19 @@ public class LoginActivity extends AppCompatActivity {
 
         initViews();
         setupClickListeners();
+        showSessionExpiredMessageIfNeeded();
 
         // Check if already logged in (disabled by user request to always show login)
         // if (authViewModel.isLoggedIn()) {
         //     goToMain();
         //     return;
         // }
+    }
+
+    private void showSessionExpiredMessageIfNeeded() {
+        if (getIntent().getBooleanExtra("session_expired", false)) {
+            showError("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
+        }
     }
 
     private void initViews() {

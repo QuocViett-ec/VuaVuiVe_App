@@ -180,6 +180,8 @@ public class ProductService {
         } catch (IllegalArgumentException ignored) {
             return productRepository.findByExternalIdAndIsActiveTrue(id)
                     .or(() -> productRepository.findBySlugAndIsActiveTrue(id))
+                    .or(() -> productRepository.findById(id))
+                    .filter(product -> Boolean.TRUE.equals(product.getIsActive()))
                     .orElseThrow(() -> AppException.notFound("Sản phẩm"));
         }
     }
@@ -213,7 +215,7 @@ public class ProductService {
                 : null;
 
         return new ProductResponse(
-                p.getId() != null ? UUID.fromString(p.getId()) : null,
+                p.getId(),
                 p.getName(),
                 p.getSlug(),
                 p.getDescription(),
@@ -223,7 +225,7 @@ public class ProductService {
                 p.getUnit(),
                 p.getImageUrl(),
                 p.getIsActive(),
-                category != null ? UUID.fromString(category.getId()) : null,
+                category != null ? category.getId() : null,
                 category != null ? category.getName() : null,
                 category != null ? category.getSlug() : null,
                 p.getSubCategory(),

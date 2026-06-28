@@ -23,6 +23,11 @@ public class AuthInterceptor implements Interceptor {
 
         Request original = chain.request();
 
+        if (token != null && !token.isEmpty() && !sessionManager.hasValidAccessToken()) {
+            sessionManager.clearSession();
+            token = null;
+        }
+
         // Chỉ đính kèm token nếu có, không ghi đè nếu request đã có Authorization header
         if (token != null && !token.isEmpty() && original.header("Authorization") == null) {
             Request modified = original.newBuilder()

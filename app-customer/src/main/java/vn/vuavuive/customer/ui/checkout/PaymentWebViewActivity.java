@@ -30,6 +30,7 @@ public class PaymentWebViewActivity extends AppCompatActivity {
 
     private static final String VNPAY_RETURN_URL = "/api/payments/vnpay/return";
     private static final String MOMO_RETURN_URL = "/api/payments/momo/return";
+    private static final String ZALOPAY_RETURN_URL = "/api/payments/zalopay/return";
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -89,6 +90,10 @@ public class PaymentWebViewActivity extends AppCompatActivity {
             checkMomoStatus();
             return true;
         }
+        if (url.contains(ZALOPAY_RETURN_URL)) {
+            checkMomoStatus();
+            return true;
+        }
         return false;
     }
 
@@ -101,9 +106,9 @@ public class PaymentWebViewActivity extends AppCompatActivity {
                 if ("PAID".equalsIgnoreCase(status)) {
                     handlePaymentSuccess();
                 } else if ("FAILED".equalsIgnoreCase(status) || "CANCELLED".equalsIgnoreCase(status)) {
-                    handlePaymentFailure("Thanh toan MoMo that bai");
+                    handlePaymentFailure("Thanh toan that bai");
                 } else {
-                    Toast.makeText(this, "Thanh toan MoMo dang cho xac nhan", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Thanh toan dang cho xac nhan", Toast.LENGTH_LONG).show();
                     goToOrders();
                 }
             } else if (result.status == AuthRepository.Result.Status.ERROR) {

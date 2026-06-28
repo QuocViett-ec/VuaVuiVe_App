@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 public record ProductResponse(
-        UUID id,
+        String id,
         String name,
         String slug,
         String description,
@@ -16,7 +16,7 @@ public record ProductResponse(
         String unit,
         String imageUrl,
         Boolean isActive,
-        UUID categoryId,
+        String categoryId,
         String categoryName,
         String category,
         String subCategory,
@@ -28,7 +28,7 @@ public record ProductResponse(
         Integer discountPercent
 ) {
     @JsonProperty("_id")
-    public UUID legacyId() {
+    public String legacyId() {
         return id;
     }
 

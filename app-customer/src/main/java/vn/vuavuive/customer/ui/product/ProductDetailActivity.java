@@ -309,16 +309,22 @@ public class ProductDetailActivity extends AppCompatActivity {
                 ? product.getDescription() : "Chưa có mô tả sản phẩm.");
     }
 
-    // ── Add to cart ────────────────────────────────────────────────────────────
     private void addToCart() {
-        if (currentProduct == null) return;
+        if (currentProduct == null) {
+            Toast.makeText(this, "Đang tải thông tin sản phẩm, vui lòng đợi...", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (currentProduct.getId() == null || currentProduct.getId().startsWith("11111111") || currentProduct.getId().startsWith("mock_")) {
+            Toast.makeText(this, "Không thể mua sản phẩm thử nghiệm", Toast.LENGTH_SHORT).show();
+            return;
+        }
         if (currentProduct.getStock() <= 0) {
             Toast.makeText(this, "Sản phẩm đã hết hàng", Toast.LENGTH_SHORT).show();
             return;
         }
 
         CartItemEntity item = new CartItemEntity();
-        item.setProductId(currentProduct.getId() != null ? currentProduct.getId() : "mock_" + System.currentTimeMillis());
+        item.setProductId(currentProduct.getId());
         item.setQuantity(quantity);
         item.setProductName(currentProduct.getName());
         item.setProductPrice(currentProduct.getPrice());

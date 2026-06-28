@@ -13,6 +13,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import vn.vuavuive.customer.BuildConfig;
+import vn.vuavuive.customer.util.SessionExpiryInterceptor;
 import vn.vuavuive.shared.data.api.AdminChatbotApi;
 import vn.vuavuive.shared.data.api.AdminOrderApi;
 import vn.vuavuive.shared.data.api.AdminProductApi;
@@ -57,7 +58,10 @@ public class NetworkModule {
 
     @Provides
     @Singleton
-    public OkHttpClient provideOkHttpClient(PersistentCookieJar cookieJar, SessionManager sessionManager) {
+    public OkHttpClient provideOkHttpClient(
+            PersistentCookieJar cookieJar,
+            SessionManager sessionManager,
+            SessionExpiryInterceptor sessionExpiryInterceptor) {
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(BuildConfig.DEBUG
                 ? HttpLoggingInterceptor.Level.BODY
@@ -68,6 +72,7 @@ public class NetworkModule {
                 .addInterceptor(new AuthInterceptor(sessionManager))   // << JWT token tự động
                 .addInterceptor(new PortalScopeInterceptor(BuildConfig.PORTAL_SCOPE))
                 .addInterceptor(new CsrfInterceptor())
+                .addInterceptor(sessionExpiryInterceptor)
                 .addInterceptor(logging)
                 .connectTimeout(30, TimeUnit.SECONDS)
                 .readTimeout(30, TimeUnit.SECONDS)

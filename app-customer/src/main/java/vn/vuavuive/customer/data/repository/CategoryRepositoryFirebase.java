@@ -45,11 +45,28 @@ public class CategoryRepositoryFirebase {
                     cat.setId(s.child("id").getValue(String.class));
                     cat.setName(s.child("name").getValue(String.class));
                     cat.setSlug(s.child("slug").getValue(String.class));
-                    cat.setImageUrl(s.child("image_url").getValue(String.class));
-                    cat.setParentId(s.child("parent_id").getValue(String.class));
-                    cat.setParentName(s.child("parent_name").getValue(String.class));
+                    String imageUrl = s.child("image_url").getValue(String.class);
+                    if (imageUrl == null) {
+                        imageUrl = s.child("imageUrl").getValue(String.class);
+                    }
+                    cat.setImageUrl(imageUrl);
+
+                    String parentId = s.child("parent_id").getValue(String.class);
+                    if (parentId == null) {
+                        parentId = s.child("parentId").getValue(String.class);
+                    }
+                    cat.setParentId(parentId);
+
+                    String parentName = s.child("parent_name").getValue(String.class);
+                    if (parentName == null) {
+                        parentName = s.child("parentName").getValue(String.class);
+                    }
+                    cat.setParentName(parentName);
                     
                     Boolean active = s.child("is_active").getValue(Boolean.class);
+                    if (active == null) {
+                        active = s.child("isActive").getValue(Boolean.class);
+                    }
                     cat.setActive(active != null ? active : true);
 
                     if (cat.isActive()) {

@@ -12,38 +12,55 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import vn.vuavuive.shared.data.local.CartDao;
 import vn.vuavuive.shared.data.local.CartItemEntity;
 import vn.vuavuive.shared.util.SessionManager;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+/**
+ * FirebaseCartRepository — Quản lý giỏ hàng 100% trên Firebase Realtime Database.
+ * Không còn sử dụng Room/SQLite. Dữ liệu được lưu in-memory (Map) và sync với Firebase.
+ */
 @Singleton
 public class FirebaseCartRepository {
 
     private static final String TAG = "FirebaseCartRepository";
-    private final CartDao cartDao;
+
     private final SessionManager sessionManager;
-    private final Executor executor = Executors.newSingleThreadExecutor();
     private final Handler syncHandler = new Handler(Looper.getMainLooper());
     private Runnable syncRunnable;
 
+    // ── In-memory store ─────────────────────────────────────────────────────
+    /** Map productId -> CartItemEntity (active cart items) */
+    private final Map<String, CartItemEntity> cartMap = new LinkedHashMap<>();
+    /** Map productId -> CartItemEntity (saved for later) */
+    private final Map<String, CartItemEntity> savedMap = new LinkedHashMap<>();
+
+    // ── LiveData ─────────────────────────────────────────────────────────────
+    private final MutableLiveData<List<CartItemEntity>> cartItemsLiveData = new MutableLiveData<>(new ArrayList<>());
+    private final MutableLiveData<List<CartItemEntity>> savedItemsLiveData = new MutableLiveData<>(new ArrayList<>());
+    private final MutableLiveData<Integer> cartCountLiveData = new MutableLiveData<>(0);
+
+    // ── Firebase realtime listener ────────────────────────────────────────
+    private ValueEventListener firebaseListener;
+    private String listenedUid;
+
     @Inject
-    public FirebaseCartRepository(CartDao cartDao, SessionManager sessionManager) {
-        this.cartDao = cartDao;
+    public FirebaseCartRepository(SessionManager sessionManager) {
         this.sessionManager = sessionManager;
+        attachFirebaseListener();
     }
 
+    // ── Firebase Auth Helpers ────────────────────────────────────────────────
     private boolean isUserLoggedIn() {
         return FirebaseAuth.getInstance().getCurrentUser() != null;
     }
@@ -59,132 +76,208 @@ public class FirebaseCartRepository {
         return sdf.format(new Date());
     }
 
-    // ── Local Room Database Observers ───────────────────────────────────────
-    public LiveData<List<CartItemEntity>> getCartItems() {
-        return cartDao.getCartItems();
-    }
+    // ── Attach realtime listener to Firebase ─────────────────────────────────
+    private void attachFirebaseListener() {
+        String uid = getCurrentUserUid();
+        if (uid == null) return;
+        if (uid.equals(listenedUid) && firebaseListener != null) return;
 
-    public LiveData<List<CartItemEntity>> getSavedItems() {
-        return cartDao.getSavedItems();
-    }
+        // Detach previous listener if any
+        detachFirebaseListener();
+        listenedUid = uid;
 
-    public LiveData<Integer> getCartCount() {
-        return cartDao.getCartCount();
-    }
+        DatabaseReference cartRef = FirebaseDatabase.getInstance().getReference("carts").child(uid);
+        firebaseListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                cartMap.clear();
+                savedMap.clear();
 
-    // ── Mutation methods (Local Room database first, then Firebase sync) ────
-    public void addItem(CartItemEntity item) {
-        executor.execute(() -> {
-            CartItemEntity existing = cartDao.getCartItem(item.getProductId());
-            if (existing != null) {
-                existing.setQuantity(existing.getQuantity() + item.getQuantity());
-                cartDao.upsert(existing);
-            } else {
-                cartDao.upsert(item);
+                DataSnapshot itemsSnap = snapshot.child("items");
+                if (itemsSnap.exists()) {
+                    for (DataSnapshot s : itemsSnap.getChildren()) {
+                        CartItemEntity e = mapSnapshotToEntity(s, false);
+                        if (e.getProductId() != null && !e.getProductId().isEmpty()) {
+                            cartMap.put(e.getProductId(), e);
+                        }
+                    }
+                }
+
+                DataSnapshot savedSnap = snapshot.child("saved_for_later");
+                if (savedSnap.exists()) {
+                    for (DataSnapshot s : savedSnap.getChildren()) {
+                        CartItemEntity e = mapSnapshotToEntity(s, true);
+                        if (e.getProductId() != null && !e.getProductId().isEmpty()) {
+                            savedMap.put(e.getProductId(), e);
+                        }
+                    }
+                }
+
+                notifyObservers();
             }
-            if (isUserLoggedIn()) {
-                scheduleSync();
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e(TAG, "Firebase cart listener cancelled: " + error.getMessage());
             }
-        });
+        };
+        cartRef.addValueEventListener(firebaseListener);
     }
 
-    public void updateQuantity(String productId, int quantity) {
-        executor.execute(() -> {
-            if (quantity <= 0) {
-                cartDao.delete(productId);
-            } else {
-                cartDao.updateQuantity(productId, quantity);
-            }
-            if (isUserLoggedIn()) {
-                scheduleSync();
-            }
-        });
-    }
-
-    public void removeItem(String productId) {
-        executor.execute(() -> {
-            cartDao.delete(productId);
-            if (isUserLoggedIn()) {
-                scheduleSync();
-            }
-        });
-    }
-
-    public void saveForLater(String productId) {
-        executor.execute(() -> {
-            cartDao.setSavedForLater(productId, true);
-            if (isUserLoggedIn()) {
-                scheduleSync();
-            }
-        });
-    }
-
-    public void moveToCart(String productId) {
-        executor.execute(() -> {
-            cartDao.setSavedForLater(productId, false);
-            if (isUserLoggedIn()) {
-                scheduleSync();
-            }
-        });
-    }
-
-    public void clearCart() {
-        executor.execute(() -> {
-            cartDao.deleteAll();
-            if (isUserLoggedIn()) {
-                scheduleSync();
-            }
-        });
-    }
-
-    // ── Debounced sync to Firebase ──────────────────────────────────────────
-    private void scheduleSync() {
-        if (syncRunnable != null) {
-            syncHandler.removeCallbacks(syncRunnable);
+    private void detachFirebaseListener() {
+        if (firebaseListener != null && listenedUid != null) {
+            FirebaseDatabase.getInstance().getReference("carts")
+                    .child(listenedUid).removeEventListener(firebaseListener);
+            firebaseListener = null;
+            listenedUid = null;
         }
+    }
+
+    /** Call this after login to attach listener for new user */
+    public void onUserLoggedIn() {
+        cartMap.clear();
+        savedMap.clear();
+        notifyObservers();
+        attachFirebaseListener();
+    }
+
+    /** Call this after logout to clear everything */
+    public void onUserLoggedOut() {
+        detachFirebaseListener();
+        cartMap.clear();
+        savedMap.clear();
+        notifyObservers();
+    }
+
+    // ── Push current in-memory state to Firebase ────────────────────────────
+    private void notifyObservers() {
+        cartItemsLiveData.postValue(new ArrayList<>(cartMap.values()));
+        savedItemsLiveData.postValue(new ArrayList<>(savedMap.values()));
+        cartCountLiveData.postValue(cartMap.size());
+    }
+
+    private void scheduleSync() {
+        if (syncRunnable != null) syncHandler.removeCallbacks(syncRunnable);
         syncRunnable = this::pushToFirebase;
-        syncHandler.postDelayed(syncRunnable, 500);
+        syncHandler.postDelayed(syncRunnable, 300);
     }
 
     private void pushToFirebase() {
         String uid = getCurrentUserUid();
         if (uid == null) return;
 
-        executor.execute(() -> {
-            try {
-                List<CartItemEntity> localItems = cartDao.getAllSync();
-                Map<String, Object> itemsMap = new HashMap<>();
-                Map<String, Object> savedMap = new HashMap<>();
-                String now = getCurrentIsoString();
+        String now = getCurrentIsoString();
+        Map<String, Object> itemsUpload = new HashMap<>();
+        for (CartItemEntity e : cartMap.values()) {
+            itemsUpload.put(e.getProductId(), serializeEntity(e, now));
+        }
 
-                if (localItems != null) {
-                    for (CartItemEntity e : localItems) {
-                        Map<String, Object> payload = serializeEntity(e, now);
-                        if (e.isSavedForLater()) {
-                            savedMap.put(e.getProductId(), payload);
-                        } else {
-                            itemsMap.put(e.getProductId(), payload);
-                        }
-                    }
-                }
+        Map<String, Object> savedUpload = new HashMap<>();
+        for (CartItemEntity e : savedMap.values()) {
+            savedUpload.put(e.getProductId(), serializeEntity(e, now));
+        }
 
-                DatabaseReference cartRef = FirebaseDatabase.getInstance().getReference().child("carts").child(uid);
-                if (itemsMap.isEmpty() && savedMap.isEmpty()) {
-                    cartRef.setValue(null);
-                } else {
-                    Map<String, Object> updates = new HashMap<>();
-                    updates.put("updated_at", now);
-                    updates.put("items", itemsMap.isEmpty() ? null : itemsMap);
-                    updates.put("saved_for_later", savedMap.isEmpty() ? null : savedMap);
-                    cartRef.updateChildren(updates);
-                }
-            } catch (Exception e) {
-                Log.e(TAG, "Lỗi push lên Firebase: " + e.getMessage());
-            }
-        });
+        DatabaseReference cartRef = FirebaseDatabase.getInstance().getReference("carts").child(uid);
+        if (itemsUpload.isEmpty() && savedUpload.isEmpty()) {
+            cartRef.setValue(null);
+        } else {
+            Map<String, Object> updates = new HashMap<>();
+            updates.put("updated_at", now);
+            updates.put("items", itemsUpload.isEmpty() ? null : itemsUpload);
+            updates.put("saved_for_later", savedUpload.isEmpty() ? null : savedUpload);
+            cartRef.updateChildren(updates);
+        }
     }
 
-    // ── Sync from Firebase to Room ─────────────────────────────────────────
+    // ── LiveData Observers ───────────────────────────────────────────────────
+    public LiveData<List<CartItemEntity>> getCartItems() {
+        attachFirebaseListener(); // re-attach if needed
+        return cartItemsLiveData;
+    }
+
+    public LiveData<List<CartItemEntity>> getSavedItems() {
+        return savedItemsLiveData;
+    }
+
+    public LiveData<Integer> getCartCount() {
+        return cartCountLiveData;
+    }
+
+    // ── Mutation Methods ─────────────────────────────────────────────────────
+    public void addItem(CartItemEntity item) {
+        if (item == null || item.getProductId() == null || item.getProductId().isEmpty()) return;
+
+        String pid = item.getProductId();
+        if (cartMap.containsKey(pid)) {
+            CartItemEntity existing = cartMap.get(pid);
+            existing.setQuantity(existing.getQuantity() + item.getQuantity());
+        } else {
+            cartMap.put(pid, item);
+        }
+        notifyObservers();
+        if (isUserLoggedIn()) scheduleSync();
+    }
+
+    public void updateQuantity(String productId, int quantity) {
+        if (quantity <= 0) {
+            cartMap.remove(productId);
+        } else {
+            CartItemEntity e = cartMap.get(productId);
+            if (e != null) e.setQuantity(quantity);
+        }
+        notifyObservers();
+        if (isUserLoggedIn()) scheduleSync();
+    }
+
+    public void removeItem(String productId) {
+        cartMap.remove(productId);
+        savedMap.remove(productId);
+        notifyObservers();
+        if (isUserLoggedIn()) scheduleSync();
+    }
+
+    public void saveForLater(String productId) {
+        CartItemEntity e = cartMap.remove(productId);
+        if (e != null) {
+            e.setSavedForLater(true);
+            savedMap.put(productId, e);
+            notifyObservers();
+            if (isUserLoggedIn()) scheduleSync();
+        }
+    }
+
+    public void moveToCart(String productId) {
+        CartItemEntity e = savedMap.remove(productId);
+        if (e != null) {
+            e.setSavedForLater(false);
+            cartMap.put(productId, e);
+            notifyObservers();
+            if (isUserLoggedIn()) scheduleSync();
+        }
+    }
+
+    public void clearCart() {
+        cartMap.clear();
+        notifyObservers();
+        if (isUserLoggedIn()) scheduleSync();
+    }
+
+    public void removeLegacyMockItems() {
+        // Remove any items whose productId starts with legacy prefixes
+        cartMap.entrySet().removeIf(entry ->
+                entry.getKey().startsWith("prod-") || entry.getKey().startsWith("mock_"));
+        savedMap.entrySet().removeIf(entry ->
+                entry.getKey().startsWith("prod-") || entry.getKey().startsWith("mock_"));
+        notifyObservers();
+        if (isUserLoggedIn()) scheduleSync();
+    }
+
+    /** Synchronous snapshot — safe to call from any thread */
+    public List<CartItemEntity> getCartItemsSync() {
+        return new ArrayList<>(cartMap.values());
+    }
+
+    // ── Sync from Firebase (one-shot pull) ──────────────────────────────────
     public LiveData<AuthRepository.Result<Void>> syncFromServer() {
         MutableLiveData<AuthRepository.Result<Void>> result = new MutableLiveData<>();
         String uid = getCurrentUserUid();
@@ -193,35 +286,31 @@ public class FirebaseCartRepository {
             return result;
         }
 
-        FirebaseDatabase.getInstance().getReference()
-                .child("carts").child(uid)
+        FirebaseDatabase.getInstance().getReference("carts").child(uid)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        executor.execute(() -> {
-                            try {
-                                cartDao.deleteAll();
-                                DataSnapshot itemsSnap = snapshot.child("items");
-                                if (itemsSnap.exists()) {
-                                    for (DataSnapshot itemSnap : itemsSnap.getChildren()) {
-                                        CartItemEntity entity = mapSnapshotToEntity(itemSnap, false);
-                                        cartDao.upsert(entity);
-                                    }
-                                }
+                        cartMap.clear();
+                        savedMap.clear();
 
-                                DataSnapshot savedSnap = snapshot.child("saved_for_later");
-                                if (savedSnap.exists()) {
-                                    for (DataSnapshot itemSnap : savedSnap.getChildren()) {
-                                        CartItemEntity entity = mapSnapshotToEntity(itemSnap, true);
-                                        cartDao.upsert(entity);
-                                    }
-                                }
-
-                                result.postValue(AuthRepository.Result.success(null));
-                            } catch (Exception e) {
-                                result.postValue(AuthRepository.Result.error("Lỗi ghi dữ liệu vào Room: " + e.getMessage()));
+                        DataSnapshot itemsSnap = snapshot.child("items");
+                        if (itemsSnap.exists()) {
+                            for (DataSnapshot s : itemsSnap.getChildren()) {
+                                CartItemEntity e = mapSnapshotToEntity(s, false);
+                                if (e.getProductId() != null) cartMap.put(e.getProductId(), e);
                             }
-                        });
+                        }
+
+                        DataSnapshot savedSnap = snapshot.child("saved_for_later");
+                        if (savedSnap.exists()) {
+                            for (DataSnapshot s : savedSnap.getChildren()) {
+                                CartItemEntity e = mapSnapshotToEntity(s, true);
+                                if (e.getProductId() != null) savedMap.put(e.getProductId(), e);
+                            }
+                        }
+
+                        notifyObservers();
+                        result.postValue(AuthRepository.Result.success(null));
                     }
 
                     @Override
@@ -242,123 +331,64 @@ public class FirebaseCartRepository {
             return result;
         }
 
-        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-        rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot rootSnapshot) {
-                executor.execute(() -> {
-                    try {
-                        DataSnapshot cartSnapshot = rootSnapshot.child("carts").child(uid);
-                        DataSnapshot productsSnapshot = rootSnapshot.child("products");
+        // Save current local state before pulling remote
+        Map<String, CartItemEntity> localCart = new HashMap<>(cartMap);
+        Map<String, CartItemEntity> localSaved = new HashMap<>(savedMap);
 
-                        // Map of product_id -> latest stock_quantity from products node
-                        Map<String, Integer> productStockMap = new HashMap<>();
-                        if (productsSnapshot.exists()) {
-                            for (DataSnapshot pSnap : productsSnapshot.getChildren()) {
-                                String pid = pSnap.child("id").getValue(String.class);
-                                Integer stock = pSnap.child("stock_quantity").getValue(Integer.class);
-                                if (pid != null && stock != null) {
-                                    productStockMap.put(pid, stock);
-                                }
-                            }
-                        }
-
-                        // Load remote cart items and savedItems
-                        Map<String, CartItemEntity> mergedItems = new HashMap<>();
-                        Map<String, CartItemEntity> mergedSaved = new HashMap<>();
-
-                        DataSnapshot remoteItems = cartSnapshot.child("items");
+        FirebaseDatabase.getInstance().getReference("carts").child(uid)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        // Merge remote into local
+                        DataSnapshot remoteItems = snapshot.child("items");
                         if (remoteItems.exists()) {
                             for (DataSnapshot s : remoteItems.getChildren()) {
-                                CartItemEntity entity = mapSnapshotToEntity(s, false);
-                                if (entity.getProductId() != null) {
-                                    mergedItems.put(entity.getProductId(), entity);
+                                CartItemEntity remote = mapSnapshotToEntity(s, false);
+                                if (remote.getProductId() == null) continue;
+                                String pid = remote.getProductId();
+                                if (localCart.containsKey(pid)) {
+                                    // Combine quantities, cap at stock
+                                    CartItemEntity local = localCart.get(pid);
+                                    int merged = local.getQuantity() + remote.getQuantity();
+                                    if (remote.getProductStock() > 0) {
+                                        merged = Math.min(merged, remote.getProductStock());
+                                    }
+                                    local.setQuantity(merged);
+                                } else {
+                                    localCart.put(pid, remote);
                                 }
                             }
                         }
 
-                        DataSnapshot remoteSaved = cartSnapshot.child("saved_for_later");
+                        DataSnapshot remoteSaved = snapshot.child("saved_for_later");
                         if (remoteSaved.exists()) {
                             for (DataSnapshot s : remoteSaved.getChildren()) {
-                                CartItemEntity entity = mapSnapshotToEntity(s, true);
-                                if (entity.getProductId() != null) {
-                                    mergedSaved.put(entity.getProductId(), entity);
+                                CartItemEntity remote = mapSnapshotToEntity(s, true);
+                                if (remote.getProductId() == null) continue;
+                                String pid = remote.getProductId();
+                                if (!localSaved.containsKey(pid)) {
+                                    localSaved.put(pid, remote);
                                 }
                             }
                         }
 
-                        // Load local Room cart
-                        List<CartItemEntity> localItems = cartDao.getAllSync();
-                        if (localItems != null) {
-                            for (CartItemEntity local : localItems) {
-                                String pid = local.getProductId();
-                                int latestStock = productStockMap.containsKey(pid) ? productStockMap.get(pid) : local.getProductStock();
-                                local.setProductStock(latestStock);
+                        // Update in-memory
+                        cartMap.clear();
+                        cartMap.putAll(localCart);
+                        savedMap.clear();
+                        savedMap.putAll(localSaved);
+                        notifyObservers();
 
-                                if (local.isSavedForLater()) {
-                                    if (mergedSaved.containsKey(pid)) {
-                                        CartItemEntity remote = mergedSaved.get(pid);
-                                        int mergedQty = Math.min(local.getQuantity() + remote.getQuantity(), latestStock);
-                                        remote.setQuantity(mergedQty);
-                                        remote.setProductStock(latestStock);
-                                    } else {
-                                        int qty = Math.min(local.getQuantity(), latestStock);
-                                        local.setQuantity(qty);
-                                        mergedSaved.put(pid, local);
-                                    }
-                                } else {
-                                    if (mergedItems.containsKey(pid)) {
-                                        CartItemEntity remote = mergedItems.get(pid);
-                                        int mergedQty = Math.min(local.getQuantity() + remote.getQuantity(), latestStock);
-                                        remote.setQuantity(mergedQty);
-                                        remote.setProductStock(latestStock);
-                                    } else {
-                                        int qty = Math.min(local.getQuantity(), latestStock);
-                                        local.setQuantity(qty);
-                                        mergedItems.put(pid, local);
-                                    }
-                                }
-                            }
-                        }
+                        // Push merged state to Firebase
+                        pushToFirebase();
+                        result.postValue(AuthRepository.Result.success(null));
+                    }
 
-                        // Write merged cart back to Firebase Realtime Database
-                        String now = getCurrentIsoString();
-                        Map<String, Object> cartUpdate = new HashMap<>();
-                        cartUpdate.put("updated_at", now);
-
-                        Map<String, Object> itemsUpload = new HashMap<>();
-                        for (CartItemEntity e : mergedItems.values()) {
-                            itemsUpload.put(e.getProductId(), serializeEntity(e, now));
-                        }
-                        cartUpdate.put("items", itemsUpload.isEmpty() ? null : itemsUpload);
-
-                        Map<String, Object> savedUpload = new HashMap<>();
-                        for (CartItemEntity e : mergedSaved.values()) {
-                            savedUpload.put(e.getProductId(), serializeEntity(e, now));
-                        }
-                        cartUpdate.put("saved_for_later", savedUpload.isEmpty() ? null : savedUpload);
-
-                        rootRef.child("carts").child(uid).setValue(cartUpdate).addOnCompleteListener(task -> {
-                            if (task.isSuccessful()) {
-                                syncFromServer();
-                                result.postValue(AuthRepository.Result.success(null));
-                            } else {
-                                String err = task.getException() != null ? task.getException().getMessage() : "Lỗi ghi Firebase";
-                                result.postValue(AuthRepository.Result.error(err));
-                            }
-                        });
-
-                    } catch (Exception e) {
-                        result.postValue(AuthRepository.Result.error("Lỗi merge giỏ hàng: " + e.getMessage()));
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        result.postValue(AuthRepository.Result.error("Lỗi đọc Firebase: " + error.getMessage()));
                     }
                 });
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                result.postValue(AuthRepository.Result.error("Lỗi đọc Firebase: " + error.getMessage()));
-            }
-        });
 
         return result;
     }

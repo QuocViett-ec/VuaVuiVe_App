@@ -9,6 +9,8 @@ import retrofit2.http.Path;
 import vn.vuavuive.shared.data.dto.ApiResponse;
 import vn.vuavuive.shared.data.dto.CreateMomoPaymentRequest;
 import vn.vuavuive.shared.data.dto.CreateMomoPaymentResponse;
+import vn.vuavuive.shared.data.dto.CreateZaloPayPaymentRequest;
+import vn.vuavuive.shared.data.dto.CreateZaloPayPaymentResponse;
 import vn.vuavuive.shared.data.dto.PaymentStatusResponse;
 
 public interface PaymentApi {
@@ -27,9 +29,15 @@ public interface PaymentApi {
     @POST("api/payments/momo")
     Call<ApiResponse<CreateMomoPaymentResponse>> createMomoPayment(@Body CreateMomoPaymentRequest request);
 
+    @POST("api/payments/zalopay")
+    Call<ApiResponse<CreateZaloPayPaymentResponse>> createZaloPayPayment(@Body CreateZaloPayPaymentRequest request);
+
     @GET("api/payments/{orderId}/status")
     Call<ApiResponse<PaymentStatusResponse>> getPaymentStatus(@Path("orderId") String orderId);
 
     @POST("api/payments/momo/mock-success/{orderId}")
     Call<ApiResponse<PaymentStatusResponse>> mockMomoSuccess(@Path("orderId") String orderId);
+
+    @POST("api/payments/zalopay/mock-success/{orderId}")
+    Call<ApiResponse<PaymentStatusResponse>> mockZaloPaySuccess(@Path("orderId") String orderId);
 }

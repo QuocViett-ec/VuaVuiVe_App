@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,6 +28,9 @@ public class FirebaseConfig {
     @Value("${app.firebase.config-path}")
     private String configPath;
 
+    @Value("${app.firebase.config-path}")
+    private Resource firebaseConfigResource;
+
     @Bean
     public FirebaseApp firebaseApp() {
         try {
@@ -36,19 +39,17 @@ public class FirebaseConfig {
             }
 
             log.info("Starting initialization of Firebase Admin SDK...");
-            ClassPathResource resource = new ClassPathResource("serviceAccountKey.json");
             
-            if (!resource.exists()) {
+            if (firebaseConfigResource == null || !firebaseConfigResource.exists()) {
                 log.error("=========================================================================");
-                log.error("CRITICAL ERROR: serviceAccountKey.json NOT FOUND!");
-                log.error("Please download serviceAccountKey.json from Firebase Console and place it at:");
-                log.error("app-backend/src/main/resources/serviceAccountKey.json");
+                log.error("CRITICAL ERROR: Firebase config file NOT FOUND at path: {}", configPath);
+                log.error("Please download serviceAccountKey.json from Firebase Console and place it there.");
                 log.error("=========================================================================");
-                throw new IllegalStateException("Missing serviceAccountKey.json credential file for Firebase Admin SDK.");
+                throw new IllegalStateException("Missing Firebase credential file: " + configPath);
             }
 
             GoogleCredentials credentials;
-            try (InputStream serviceAccount = resource.getInputStream()) {
+            try (InputStream serviceAccount = firebaseConfigResource.getInputStream()) {
                 try {
                     credentials = GoogleCredentials.fromStream(serviceAccount);
                 } catch (Exception e) {

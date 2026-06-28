@@ -42,6 +42,13 @@ public class UserRepository {
         if (email == null) return Optional.empty();
         return findAll().stream()
                 .filter(u -> email.equalsIgnoreCase(u.getEmail()))
+                .sorted((u1, u2) -> {
+                    boolean p1 = u1.getPasswordHash() != null && !u1.getPasswordHash().isEmpty();
+                    boolean p2 = u2.getPasswordHash() != null && !u2.getPasswordHash().isEmpty();
+                    if (p1 && !p2) return -1;
+                    if (!p1 && p2) return 1;
+                    return 0;
+                })
                 .findFirst();
     }
 
@@ -49,6 +56,13 @@ public class UserRepository {
         if (phone == null) return Optional.empty();
         return findAll().stream()
                 .filter(u -> phone.equals(u.getPhone()))
+                .sorted((u1, u2) -> {
+                    boolean p1 = u1.getPasswordHash() != null && !u1.getPasswordHash().isEmpty();
+                    boolean p2 = u2.getPasswordHash() != null && !u2.getPasswordHash().isEmpty();
+                    if (p1 && !p2) return -1;
+                    if (!p1 && p2) return 1;
+                    return 0;
+                })
                 .findFirst();
     }
 

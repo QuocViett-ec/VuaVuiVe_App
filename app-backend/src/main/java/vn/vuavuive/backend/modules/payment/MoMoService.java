@@ -3,6 +3,7 @@ package vn.vuavuive.backend.modules.payment;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.http.*;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -38,12 +39,14 @@ public class MoMoService {
     @Value("${app.payment.momo.request-type:captureWallet}") private String requestType;
     @Value("${app.payment.momo.lang:vi}") private String lang;
     @Value("${app.payment.momo.mock-mode:false}") private boolean mockMode;
+    @Value("${app.payment.momo.allow-mock-result:false}") private boolean allowMockResult;
 
     private final RestTemplate restTemplate;
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
     private final PaymentTransactionRepository transactionRepository;
     private final OrderStatusLogRepository statusLogRepository;
+    private final Environment environment;
 
     @Transactional(rollbackFor = Exception.class)
     public CreateMomoPaymentResponse createMomoPayment(CreateMomoPaymentRequest request) {
@@ -78,7 +81,7 @@ public class MoMoService {
         String signature = hmacSHA256(secretKey, rawSignature);
 
         MomoCreateRequest momoRequest = new MomoCreateRequest(
-                partnerCode, requestId, amount, request.orderId(), orderInfo, redirectUrl, ipnUrl,
+                partnerCode, accessKey, requestId, amount, request.orderId(), orderInfo, redirectUrl, ipnUrl,
                 extraData, requestType, lang, signature);
 
         ResponseEntity<MomoCreateResponse> response;
@@ -164,7 +167,7 @@ public class MoMoService {
 
     @Transactional(rollbackFor = Exception.class)
     public void handleMockResult(String orderId, String requestId, boolean success) {
-        if (!mockMode) throw AppException.badRequest("MoMo mock mode is disabled");
+        ensureMockResultAllowed();
         PaymentTransaction tx = transactionRepository.findByRequestId(requestId)
                 .orElseThrow(() -> AppException.notFound("Giao dich MoMo"));
         if (!tx.getOrderId().equals(orderId)) {
@@ -193,13 +196,20 @@ public class MoMoService {
 
     @Transactional(rollbackFor = Exception.class)
     public void handleMockResult(String orderId, boolean success) {
-        if (!mockMode) throw AppException.badRequest("MoMo mock mode is disabled");
+        ensureMockResultAllowed();
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> AppException.notFound("Don hang"));
         PaymentTransaction tx = transactionRepository
                 .findFirstByOrderAndProviderOrderByCreatedAtDesc(order, "MOMO")
                 .orElseThrow(() -> AppException.notFound("Giao dich MoMo"));
         handleMockResult(orderId, tx.getRequestId(), success);
+    }
+
+    private void ensureMockResultAllowed() {
+        if (allowMockResult || environment.matchesProfiles("dev")) {
+            return;
+        }
+        throw AppException.badRequest("MoMo mock result is disabled");
     }
 
     public PaymentStatusResponse getPaymentStatus(String orderId) {

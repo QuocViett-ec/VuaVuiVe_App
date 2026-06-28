@@ -18,6 +18,12 @@ import vn.vuavuive.admin.data.firebase.FirebaseProductApi;
 import vn.vuavuive.admin.data.firebase.FirebaseOrderApi;
 import vn.vuavuive.admin.data.firebase.FirebaseAdminProductApi;
 import vn.vuavuive.admin.data.firebase.FirebaseAdminOrderApi;
+import vn.vuavuive.admin.data.firebase.FirebaseShipmentApi;
+import vn.vuavuive.admin.data.firebase.FirebaseAdminUserApi;
+import vn.vuavuive.admin.data.firebase.FirebaseAdminVoucherApi;
+import vn.vuavuive.admin.data.firebase.FirebaseAdminShipmentApi;
+import vn.vuavuive.admin.data.firebase.FirebaseDashboardApi;
+import vn.vuavuive.admin.data.firebase.FirebaseAuditLogApi;
 import vn.vuavuive.shared.data.api.AdminChatbotApi;
 import vn.vuavuive.shared.data.api.AdminOrderApi;
 import vn.vuavuive.shared.data.api.AdminProductApi;
@@ -100,7 +106,7 @@ public class NetworkModule {
     public OrderApi provideOrderApi(Retrofit retrofit) { return new FirebaseOrderApi(); }
 
     @Provides @Singleton
-    public ShipmentApi provideShipmentApi(Retrofit retrofit) { return retrofit.create(ShipmentApi.class); }
+    public ShipmentApi provideShipmentApi(Retrofit retrofit) { return new FirebaseShipmentApi(); }
 
     @Provides @Singleton
     public AdminOrderApi provideAdminOrderApi(Retrofit retrofit) { return new FirebaseAdminOrderApi(); }
@@ -109,20 +115,20 @@ public class NetworkModule {
     public AdminProductApi provideAdminProductApi(Retrofit retrofit) { return new FirebaseAdminProductApi(); }
 
     @Provides @Singleton
-    public AdminUserApi provideAdminUserApi(Retrofit retrofit) { return retrofit.create(AdminUserApi.class); }
+    public AdminUserApi provideAdminUserApi(Retrofit retrofit) { return new FirebaseAdminUserApi(); }
 
     @Provides @Singleton
-    public AdminVoucherApi provideAdminVoucherApi(Retrofit retrofit) { return retrofit.create(AdminVoucherApi.class); }
+    public AdminVoucherApi provideAdminVoucherApi(Retrofit retrofit) { return new FirebaseAdminVoucherApi(); }
 
     @Provides @Singleton
-    public AdminShipmentApi provideAdminShipmentApi(Retrofit retrofit) { return retrofit.create(AdminShipmentApi.class); }
+    public AdminShipmentApi provideAdminShipmentApi(Retrofit retrofit) { return new FirebaseAdminShipmentApi(); }
 
     @Provides @Singleton
     public AdminChatbotApi provideAdminChatbotApi(Retrofit retrofit) { return retrofit.create(AdminChatbotApi.class); }
 
     @Provides @Singleton
-    public DashboardApi provideDashboardApi(Retrofit retrofit) { return retrofit.create(DashboardApi.class); }
+    public DashboardApi provideDashboardApi(Retrofit retrofit) { return new FirebaseDashboardApi(); }
 
     @Provides @Singleton
-    public AuditLogApi provideAuditLogApi(Retrofit retrofit) { return retrofit.create(AuditLogApi.class); }
+    public AuditLogApi provideAuditLogApi(Retrofit retrofit) { return new FirebaseAuditLogApi(); }
 }

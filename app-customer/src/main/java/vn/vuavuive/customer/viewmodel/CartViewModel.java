@@ -1,7 +1,6 @@
 package vn.vuavuive.customer.viewmodel;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import dagger.hilt.android.lifecycle.HiltViewModel;
 import vn.vuavuive.customer.data.repository.FirebaseCartRepository;
@@ -54,6 +53,25 @@ public class CartViewModel extends ViewModel {
 
     public void clearCart() {
         cartRepository.clearCart();
+    }
+
+    public void removeLegacyMockItems() {
+        cartRepository.removeLegacyMockItems();
+    }
+
+    /** Đồng bộ cart từ Firebase (gọi sau khi login) */
+    public void onUserLoggedIn() {
+        cartRepository.onUserLoggedIn();
+    }
+
+    /** Xóa cart local (gọi sau khi logout) */
+    public void onUserLoggedOut() {
+        cartRepository.onUserLoggedOut();
+    }
+
+    /** Synchronous snapshot — MUST be called from a background thread */
+    public List<CartItemEntity> getCartItemsSync() {
+        return cartRepository.getCartItemsSync();
     }
 
     public LiveData<AuthRepository.Result<Void>> syncFromServer() {

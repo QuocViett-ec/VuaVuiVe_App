@@ -25,6 +25,7 @@ public final class Constants {
     public static final String PAYMENT_COD = "cod";
     public static final String PAYMENT_VNPAY = "vnpay";
     public static final String PAYMENT_MOMO = "momo";
+    public static final String PAYMENT_ZALOPAY = "zalopay";
 
     // ── Payment Status ──
     public static final String PAYMENT_STATUS_PENDING = "pending";
@@ -89,8 +90,4 @@ public final class Constants {
     // ── SSE ──
     public static final String SSE_PATH = "/api/realtime/stream";
     public static final int SSE_RECONNECT_DELAY_MS = 5000;
-
-    // ── Room Database ──
-    public static final String DATABASE_NAME = "vvv_db";
-    public static final int DATABASE_VERSION = 1;
 }

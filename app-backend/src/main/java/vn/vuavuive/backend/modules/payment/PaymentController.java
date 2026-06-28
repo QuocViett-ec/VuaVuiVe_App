@@ -7,11 +7,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import vn.vuavuive.backend.core.ApiResponse;
+import vn.vuavuive.backend.modules.order.Order;
+import vn.vuavuive.backend.modules.order.OrderRepository;
 import vn.vuavuive.backend.modules.order.OrderService;
 import vn.vuavuive.backend.modules.payment.dto.CreateMomoPaymentRequest;
 import vn.vuavuive.backend.modules.payment.dto.CreateMomoPaymentResponse;
+import vn.vuavuive.backend.modules.payment.dto.CreateZaloPayPaymentRequest;
+import vn.vuavuive.backend.modules.payment.dto.CreateZaloPayPaymentResponse;
 import vn.vuavuive.backend.modules.payment.dto.MomoIpnRequest;
 import vn.vuavuive.backend.modules.payment.dto.PaymentStatusResponse;
+import vn.vuavuive.backend.modules.payment.dto.ZaloPayCallbackRequest;
 
 import java.time.Instant;
 import java.util.HashMap;
@@ -25,13 +30,22 @@ import java.util.Map;
 public class PaymentController {
     private final VNPayService vnPayService;
     private final MoMoService moMoService;
+    private final ZaloPayService zaloPayService;
     private final OrderService orderService;
+    private final OrderRepository orderRepository;
 
     @Operation(summary = "Tao thanh toan MoMo sandbox")
     @PostMapping("/momo")
     public ResponseEntity<ApiResponse<CreateMomoPaymentResponse>> createMomoPayment(
             @RequestBody CreateMomoPaymentRequest request) {
         return ResponseEntity.ok(ApiResponse.success(moMoService.createMomoPayment(request)));
+    }
+
+    @Operation(summary = "Tao thanh toan ZaloPay sandbox")
+    @PostMapping("/zalopay")
+    public ResponseEntity<ApiResponse<CreateZaloPayPaymentResponse>> createZaloPayPayment(
+            @RequestBody CreateZaloPayPaymentRequest request) {
+        return ResponseEntity.ok(ApiResponse.success(zaloPayService.createZaloPayPayment(request)));
     }
 
     @Operation(summary = "VNPay IPN")
@@ -86,6 +100,20 @@ public class PaymentController {
                 + "<p style='text-align:center;'>Order " + orderId + ". You can close this page.</p></body></html>");
     }
 
+    @Operation(summary = "ZaloPay callback")
+    @PostMapping("/zalopay/callback")
+    public ResponseEntity<Map<String, Object>> zaloPayCallback(@RequestBody ZaloPayCallbackRequest request) {
+        return ResponseEntity.ok(zaloPayService.handleCallback(request));
+    }
+
+    @Operation(summary = "ZaloPay return")
+    @GetMapping("/zalopay/return")
+    public ResponseEntity<String> zaloPayReturn(@RequestParam Map<String, String> params) {
+        String orderId = params.get("orderId");
+        return ResponseEntity.ok("<html><body><h1 style='text-align:center;'>ZaloPay payment returned</h1>"
+                + "<p style='text-align:center;'>Order " + orderId + ". You can close this page.</p></body></html>");
+    }
+
     @Operation(summary = "MoMo mock screen")
     @GetMapping("/momo/mock")
     public ResponseEntity<String> momoMock(
@@ -113,10 +141,42 @@ public class PaymentController {
                 + "<p>You can return to the app.</p></body></html>");
     }
 
+    @Operation(summary = "ZaloPay mock screen")
+    @GetMapping("/zalopay/mock")
+    public ResponseEntity<String> zaloPayMock(
+            @RequestParam String orderId,
+            @RequestParam String appTransId,
+            @RequestParam(required = false, defaultValue = "0") String amount) {
+        String ok = "/api/payments/zalopay/mock-result?success=true&orderId=" + orderId;
+        String fail = "/api/payments/zalopay/mock-result?success=false&orderId=" + orderId;
+        return ResponseEntity.ok("<html><body style='font-family:sans-serif;text-align:center;padding:32px'>"
+                + "<h1>Mock ZaloPay</h1><p>Order " + orderId + "</p>"
+                + "<p>AppTransId " + appTransId + "</p>"
+                + "<h2>" + amount + " VND</h2>"
+                + "<p><a href='" + ok + "'>Success</a></p>"
+                + "<p><a href='" + fail + "'>Failure</a></p></body></html>");
+    }
+
+    @Operation(summary = "ZaloPay mock result screen")
+    @GetMapping("/zalopay/mock-result")
+    public ResponseEntity<String> zaloPayMockResult(
+            @RequestParam String orderId,
+            @RequestParam boolean success) {
+        zaloPayService.handleMockResult(orderId, success);
+        return ResponseEntity.ok("<html><body style='font-family:sans-serif;text-align:center;padding:32px'>"
+                + "<h1>" + (success ? "Payment successful" : "Payment failed") + "</h1>"
+                + "<p>You can return to the app.</p></body></html>");
+    }
+
     @Operation(summary = "Lay trang thai thanh toan")
     @GetMapping("/{orderId}/status")
     public ResponseEntity<ApiResponse<PaymentStatusResponse>> paymentStatus(@PathVariable String orderId) {
-        return ResponseEntity.ok(ApiResponse.success(moMoService.getPaymentStatus(orderId)));
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> vn.vuavuive.backend.exception.AppException.notFound("Don hang"));
+        PaymentStatusResponse response = "ZALOPAY".equalsIgnoreCase(order.getPaymentMethod())
+                ? zaloPayService.getPaymentStatus(orderId)
+                : moMoService.getPaymentStatus(orderId);
+        return ResponseEntity.ok(ApiResponse.success(response));
     }
 
     @Operation(summary = "Dev-only mock MoMo success")
@@ -131,5 +191,19 @@ public class PaymentController {
     public ResponseEntity<ApiResponse<PaymentStatusResponse>> mockMomoFail(@PathVariable String orderId) {
         moMoService.handleMockResult(orderId, false);
         return ResponseEntity.ok(ApiResponse.success(moMoService.getPaymentStatus(orderId)));
+    }
+
+    @Operation(summary = "Dev-only mock ZaloPay success")
+    @PostMapping("/zalopay/mock-success/{orderId}")
+    public ResponseEntity<ApiResponse<PaymentStatusResponse>> mockZaloPaySuccess(@PathVariable String orderId) {
+        zaloPayService.handleMockResult(orderId, true);
+        return ResponseEntity.ok(ApiResponse.success(zaloPayService.getPaymentStatus(orderId)));
+    }
+
+    @Operation(summary = "Dev-only mock ZaloPay fail")
+    @PostMapping("/zalopay/mock-fail/{orderId}")
+    public ResponseEntity<ApiResponse<PaymentStatusResponse>> mockZaloPayFail(@PathVariable String orderId) {
+        zaloPayService.handleMockResult(orderId, false);
+        return ResponseEntity.ok(ApiResponse.success(zaloPayService.getPaymentStatus(orderId)));
     }
 }

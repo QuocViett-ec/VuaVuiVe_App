@@ -69,6 +69,7 @@
     <string name="label_cod">Thanh toán khi nhận hàng (COD)</string>
     <string name="label_vnpay">VNPay</string>
     <string name="label_momo">MoMo</string>
+    <string name="label_zalopay">ZaloPay</string>
     <string name="label_subtotal">Tạm tính</string>
     <string name="label_shipping_fee">Phí vận chuyển</string>
     <string name="label_discount">Giảm giá</string>

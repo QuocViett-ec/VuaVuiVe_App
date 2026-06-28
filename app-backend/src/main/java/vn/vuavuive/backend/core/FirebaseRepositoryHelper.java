@@ -21,10 +21,12 @@ public class FirebaseRepositoryHelper {
     private final HttpClient httpClient;
 
     public FirebaseRepositoryHelper(
-            @Value("${app.firebase.database-url}") String databaseUrl,
-            ObjectMapper objectMapper) {
+            @Value("${app.firebase.database-url}") String databaseUrl) {
         this.databaseUrl = databaseUrl.endsWith("/") ? databaseUrl.substring(0, databaseUrl.length() - 1) : databaseUrl;
-        this.objectMapper = objectMapper;
+        this.objectMapper = new ObjectMapper()
+                .registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule())
+                .configure(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+                .setPropertyNamingStrategy(com.fasterxml.jackson.databind.PropertyNamingStrategies.SNAKE_CASE);
         this.httpClient = HttpClient.newBuilder()
                 .connectTimeout(Duration.ofSeconds(10))
                 .build();

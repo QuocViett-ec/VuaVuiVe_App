@@ -35,10 +35,6 @@ dependencies {
     api("com.google.dagger:hilt-android:2.56.2")
     annotationProcessor("com.google.dagger:hilt-compiler:2.56.2")
 
-    // ── Local Storage: Room ──
-    api("androidx.room:room-runtime:2.6.1")
-    annotationProcessor("androidx.room:room-compiler:2.6.1")
-
     // ── Image Loading: Glide ──
     api("com.github.bumptech.glide:glide:4.16.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")

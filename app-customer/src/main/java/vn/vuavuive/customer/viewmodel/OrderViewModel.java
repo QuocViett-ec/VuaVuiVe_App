@@ -7,6 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 import vn.vuavuive.customer.data.repository.AuthRepository;
 import vn.vuavuive.customer.data.repository.OrderRepository;
 import vn.vuavuive.shared.data.dto.CreateMomoPaymentResponse;
+import vn.vuavuive.shared.data.dto.CreateZaloPayPaymentResponse;
 import vn.vuavuive.shared.data.dto.Order;
 import vn.vuavuive.shared.data.dto.PaymentStatusResponse;
 import vn.vuavuive.shared.data.dto.Voucher;
@@ -59,12 +60,21 @@ public class OrderViewModel extends ViewModel {
         return backendOrderRepository.createMomoPayment(orderId, amount, userId);
     }
 
+    public LiveData<AuthRepository.Result<CreateZaloPayPaymentResponse>> createZaloPayPayment(
+            String orderId, double amount, String description) {
+        return backendOrderRepository.createZaloPayPayment(orderId, amount, description);
+    }
+
     public LiveData<AuthRepository.Result<PaymentStatusResponse>> getPaymentStatus(String orderId) {
         return backendOrderRepository.getPaymentStatus(orderId);
     }
 
     public LiveData<AuthRepository.Result<PaymentStatusResponse>> mockMomoSuccess(String orderId) {
         return backendOrderRepository.mockMomoSuccess(orderId);
+    }
+
+    public LiveData<AuthRepository.Result<PaymentStatusResponse>> mockZaloPaySuccess(String orderId) {
+        return backendOrderRepository.mockZaloPaySuccess(orderId);
     }
 
     public LiveData<AuthRepository.Result<List<Voucher>>> getAvailableVouchers() {

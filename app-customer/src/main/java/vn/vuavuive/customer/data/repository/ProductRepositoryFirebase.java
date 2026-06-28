@@ -32,6 +32,38 @@ public class ProductRepositoryFirebase {
         this.dbRef = FirebaseDatabase.getInstance().getReference();
     }
 
+    private Double getSafeDouble(DataSnapshot childSnap) {
+        if (!childSnap.exists()) return null;
+        Object val = childSnap.getValue();
+        if (val instanceof Number) {
+            return ((Number) val).doubleValue();
+        }
+        if (val instanceof String) {
+            try {
+                return Double.parseDouble((String) val);
+            } catch (NumberFormatException e) {
+                return null;
+            }
+        }
+        return null;
+    }
+
+    private Integer getSafeInt(DataSnapshot childSnap) {
+        if (!childSnap.exists()) return null;
+        Object val = childSnap.getValue();
+        if (val instanceof Number) {
+            return ((Number) val).intValue();
+        }
+        if (val instanceof String) {
+            try {
+                return Integer.parseInt((String) val);
+            } catch (NumberFormatException e) {
+                return null;
+            }
+        }
+        return null;
+    }
+
     // ── Map Firebase Snapshot to Product Model ──────────────────────────────
     private Product mapSnapshotToProduct(DataSnapshot s) {
         Product p = new Product();
@@ -39,16 +71,40 @@ public class ProductRepositoryFirebase {
         p.setName(s.child("name").getValue(String.class));
         p.setSlug(s.child("slug").getValue(String.class));
         
-        Double sellingPrice = s.child("selling_price").getValue(Double.class);
+        Double sellingPrice = getSafeDouble(s.child("selling_price"));
+        if (sellingPrice == null) {
+            sellingPrice = getSafeDouble(s.child("sellingPrice"));
+        }
         p.setPrice(sellingPrice != null ? sellingPrice : 0.0);
         
-        p.setOriginalPrice(s.child("original_price").getValue(Double.class));
-        p.setCategory(s.child("category_id").getValue(String.class));
+        Double originalPrice = getSafeDouble(s.child("original_price"));
+        if (originalPrice == null) {
+            originalPrice = getSafeDouble(s.child("originalPrice"));
+        }
+        p.setOriginalPrice(originalPrice);
+        
+        String categoryId = s.child("category_id").getValue(String.class);
+        if (categoryId == null) {
+            categoryId = s.child("categoryId").getValue(String.class);
+        }
+        p.setCategory(categoryId);
+        
         p.setSubCategory(s.child("sub_category").getValue(String.class));
         p.setDescription(s.child("description").getValue(String.class));
-        p.setImageUrl(s.child("image_url").getValue(String.class));
         
-        Integer stock = s.child("stock_quantity").getValue(Integer.class);
+        String imageUrl = s.child("image_url").getValue(String.class);
+        if (imageUrl == null) {
+            imageUrl = s.child("imageUrl").getValue(String.class);
+        }
+        p.setImageUrl(imageUrl);
+        
+        Integer stock = getSafeInt(s.child("stock_quantity"));
+        if (stock == null) {
+            stock = getSafeInt(s.child("stockQuantity"));
+        }
+        if (stock == null) {
+            stock = getSafeInt(s.child("stock"));
+        }
         p.setStock(stock != null ? stock : 0);
         
         p.setUnit(s.child("unit").getValue(String.class));
@@ -63,12 +119,30 @@ public class ProductRepositoryFirebase {
         p.setTags(tags);
         
         Boolean active = s.child("is_active").getValue(Boolean.class);
+        if (active == null) {
+            active = s.child("isActive").getValue(Boolean.class);
+        }
         p.setActive(active != null ? active : false);
         
-        p.setRating(s.child("rating").getValue(Double.class));
-        p.setReviewCount(s.child("review_count").getValue(Integer.class));
-        p.setSoldCount(s.child("sold_count").getValue(Integer.class));
-        p.setCreatedAt(s.child("created_at").getValue(String.class));
+        p.setRating(getSafeDouble(s.child("rating")));
+        
+        Integer reviewCount = getSafeInt(s.child("review_count"));
+        if (reviewCount == null) {
+            reviewCount = getSafeInt(s.child("reviewCount"));
+        }
+        p.setReviewCount(reviewCount);
+        
+        Integer soldCount = getSafeInt(s.child("sold_count"));
+        if (soldCount == null) {
+            soldCount = getSafeInt(s.child("soldCount"));
+        }
+        p.setSoldCount(soldCount);
+        
+        String createdAt = s.child("created_at").getValue(String.class);
+        if (createdAt == null) {
+            createdAt = s.child("createdAt").getValue(String.class);
+        }
+        p.setCreatedAt(createdAt);
         return p;
     }
 

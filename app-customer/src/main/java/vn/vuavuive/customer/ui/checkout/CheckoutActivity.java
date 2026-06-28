@@ -44,6 +44,12 @@ public class CheckoutActivity extends AppCompatActivity {
     private android.widget.LinearLayout layoutDiscount;
     private double appliedDiscount = 0;
 
+    /**
+     * Guard flags cho trường hợp race condition với giỏ hàng.
+     * cartLoaded  = true sau khi LiveData đã trả về lần đầu.
+     * cartItems   = các items được trả về (có thể empty nếu giỏ hàng thực sự trống).
+     */
+    private boolean cartLoaded = false;
     private List<CartItemEntity> cartItems = new ArrayList<>();
 
     @Override
@@ -51,10 +57,10 @@ public class CheckoutActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_checkout);
 
-        orderViewModel = new ViewModelProvider(this).get(OrderViewModel.class);
-        cartViewModel  = new ViewModelProvider(this).get(CartViewModel.class);
+        orderViewModel   = new ViewModelProvider(this).get(OrderViewModel.class);
+        cartViewModel    = new ViewModelProvider(this).get(CartViewModel.class);
         productViewModel = new ViewModelProvider(this).get(ProductViewModel.class);
-        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
+        authViewModel    = new ViewModelProvider(this).get(AuthViewModel.class);
 
         if (!authViewModel.isLoggedIn()) {
             Toast.makeText(this, R.string.login_required_checkout, Toast.LENGTH_SHORT).show();
@@ -68,41 +74,73 @@ public class CheckoutActivity extends AppCompatActivity {
         setupPlaceOrder();
     }
 
+    // ── Views ─────────────────────────────────────────────────────────────────
+
     private void initViews() {
-        etName      = findViewById(R.id.et_receiver_name);
-        etPhone     = findViewById(R.id.et_receiver_phone);
-        etAddress   = findViewById(R.id.et_delivery_address);
-        etVoucher   = findViewById(R.id.et_voucher_code);
+        etName          = findViewById(R.id.et_receiver_name);
+        etPhone         = findViewById(R.id.et_receiver_phone);
+        etAddress       = findViewById(R.id.et_delivery_address);
+        etVoucher       = findViewById(R.id.et_voucher_code);
         btnApplyVoucher = findViewById(R.id.btn_apply_voucher);
-        etNote      = findViewById(R.id.et_note);
+        etNote          = findViewById(R.id.et_note);
         rgPaymentMethod = findViewById(R.id.rg_payment_method);
-        btnPlaceOrder = findViewById(R.id.btn_place_order);
-        progressBar  = findViewById(R.id.progress_bar);
-        tvSubtotal    = findViewById(R.id.tv_subtotal);
-        tvShippingFee = findViewById(R.id.tv_shipping_fee);
-        tvDiscount    = findViewById(R.id.tv_discount);
-        tvTotal       = findViewById(R.id.tv_total);
-        layoutDiscount = findViewById(R.id.layout_discount);
+        btnPlaceOrder   = findViewById(R.id.btn_place_order);
+        progressBar     = findViewById(R.id.progress_bar);
+        tvSubtotal      = findViewById(R.id.tv_subtotal);
+        tvShippingFee   = findViewById(R.id.tv_shipping_fee);
+        tvDiscount      = findViewById(R.id.tv_discount);
+        tvTotal         = findViewById(R.id.tv_total);
+        layoutDiscount  = findViewById(R.id.layout_discount);
 
         if (btnApplyVoucher != null) {
             btnApplyVoucher.setOnClickListener(v -> applyVoucherCode());
         }
     }
 
+    // ── Cart observation ──────────────────────────────────────────────────────
+
     private void observeCart() {
+        // Disable button cho đến khi Firebase LiveData có dữ liệu — tránh race condition
+        // khi người dùng bấm "Đặt hàng" trước khi LiveData được gọi lần đầu.
+        if (btnPlaceOrder != null) btnPlaceOrder.setEnabled(false);
+
         cartViewModel.getCartItems().observe(this, items -> {
-            cartItems = items != null ? items : new ArrayList<>();
+            cartItems  = items != null ? items : new ArrayList<>();
+            cartLoaded = true;
             updatePriceSummary();
+            // Re-enable once we have real data (and loading spinner is not active)
+            if (btnPlaceOrder != null && progressBar != null
+                    && progressBar.getVisibility() != View.VISIBLE) {
+                btnPlaceOrder.setEnabled(true);
+            }
         });
     }
 
+    // ── Price summary ─────────────────────────────────────────────────────────
+
     private double getSubtotal() {
-        double subtotal = 0;
-        for (CartItemEntity ci : cartItems) {
-            subtotal += ci.getLineTotal();
-        }
-        return subtotal;
+        double total = 0;
+        for (CartItemEntity ci : cartItems) total += ci.getLineTotal();
+        return total;
     }
+
+    private void updatePriceSummary() {
+        double subtotal    = getSubtotal();
+        double shippingFee = 30_000;
+        double discount    = appliedDiscount;
+        double total       = Math.max(subtotal + shippingFee - discount, 0);
+
+        if (tvSubtotal   != null) tvSubtotal.setText(CurrencyFormatter.format(subtotal));
+        if (tvShippingFee != null) tvShippingFee.setText(CurrencyFormatter.format(shippingFee));
+        if (tvDiscount   != null) {
+            tvDiscount.setText("-" + CurrencyFormatter.format(discount));
+            if (layoutDiscount != null)
+                layoutDiscount.setVisibility(discount > 0 ? View.VISIBLE : View.GONE);
+        }
+        if (tvTotal != null) tvTotal.setText(CurrencyFormatter.format(total));
+    }
+
+    // ── Voucher ───────────────────────────────────────────────────────────────
 
     private void applyVoucherCode() {
         String code = getText(etVoucher);
@@ -110,13 +148,11 @@ public class CheckoutActivity extends AppCompatActivity {
             Toast.makeText(this, "Vui lòng nhập mã", Toast.LENGTH_SHORT).show();
             return;
         }
-
         if ("VUAVUIVE".equalsIgnoreCase(code)) {
-            double sub = getSubtotal();
-            appliedDiscount = sub * 0.15;
+            appliedDiscount = getSubtotal() * 0.15;
             Toast.makeText(this, "Áp dụng mã thành công! Giảm 15%", Toast.LENGTH_SHORT).show();
         } else if ("FREESHIP24".equalsIgnoreCase(code) || "FREESHIP".equalsIgnoreCase(code)) {
-            appliedDiscount = 30000;
+            appliedDiscount = 30_000;
             Toast.makeText(this, "Áp dụng mã thành công! Miễn phí ship", Toast.LENGTH_SHORT).show();
         } else {
             appliedDiscount = 0;
@@ -125,29 +161,7 @@ public class CheckoutActivity extends AppCompatActivity {
         updatePriceSummary();
     }
 
-    private void updatePriceSummary() {
-        double subtotal = getSubtotal();
-        double shippingFee = 30000; // default 30k
-        double discount = appliedDiscount;
-        double total = subtotal + shippingFee - discount;
-        if (total < 0) total = 0;
-
-        if (tvSubtotal != null) {
-            tvSubtotal.setText(CurrencyFormatter.format(subtotal));
-        }
-        if (tvShippingFee != null) {
-            tvShippingFee.setText(CurrencyFormatter.format(shippingFee));
-        }
-        if (tvDiscount != null) {
-            tvDiscount.setText("-" + CurrencyFormatter.format(discount));
-            if (layoutDiscount != null) {
-                layoutDiscount.setVisibility(discount > 0 ? View.VISIBLE : View.GONE);
-            }
-        }
-        if (tvTotal != null) {
-            tvTotal.setText(CurrencyFormatter.format(total));
-        }
-    }
+    // ── Place-order ───────────────────────────────────────────────────────────
 
     private void setupPlaceOrder() {
         btnPlaceOrder.setOnClickListener(v -> placeOrder());
@@ -162,16 +176,44 @@ public class CheckoutActivity extends AppCompatActivity {
             Toast.makeText(this, "Vui lòng điền đầy đủ thông tin giao hàng", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (cartItems.isEmpty()) {
-            Toast.makeText(this, "Giỏ hàng trống", Toast.LENGTH_SHORT).show();
+
+        // ── Belt-and-suspenders guard ────────────────────────────────────────
+        // cartLoaded should already be true (button was disabled until LiveData fired),
+        // but defend against rare re-entrancy / orientation-change edge cases.
+        if (!cartLoaded || cartItems.isEmpty()) {
+            setLoading(true);
+            new Thread(() -> {
+                List<CartItemEntity> syncItems = cartViewModel.getCartItemsSync();
+                runOnUiThread(() -> {
+                    setLoading(false);
+                    if (syncItems == null || syncItems.isEmpty()) {
+                        Toast.makeText(this,
+                                "Giỏ hàng trống — vui lòng thêm sản phẩm trước",
+                                Toast.LENGTH_SHORT).show();
+                    } else {
+                        cartItems  = new ArrayList<>(syncItems);
+                        cartLoaded = true;
+                        updatePriceSummary();
+                        doPlaceOrder(name, phone, address);
+                    }
+                });
+            }).start();
             return;
         }
 
+        doPlaceOrder(name, phone, address);
+    }
+
+    /**
+     * The actual ordering logic — only called after {@code cartItems} is guaranteed non-empty.
+     */
+    private void doPlaceOrder(String name, String phone, String address) {
         // Determine payment method
-        String method = "cod";
+        String method = Constants.PAYMENT_COD;
         int selectedId = rgPaymentMethod.getCheckedRadioButtonId();
-        if (selectedId == R.id.rb_vnpay) method = "vnpay";
-        else if (selectedId == R.id.rb_momo) method = "momo";
+        if      (selectedId == R.id.rb_vnpay)   method = Constants.PAYMENT_VNPAY;
+        else if (selectedId == R.id.rb_momo)    method = Constants.PAYMENT_MOMO;
+        else if (selectedId == R.id.rb_zalopay) method = Constants.PAYMENT_ZALOPAY;
 
         // Build request
         CreateOrderRequest request = new CreateOrderRequest();
@@ -191,27 +233,27 @@ public class CheckoutActivity extends AppCompatActivity {
             oi.setQuantity(ci.getQuantity());
             oi.setPrice(ci.getProductPrice());
             oi.setSubtotal(ci.getLineTotal());
+            oi.setUnit(ci.getProductUnit());
+            oi.setImageUrl(ci.getProductImageUrl());
             items.add(oi);
             subtotal += ci.getLineTotal();
         }
         request.setItems(items);
         request.setSubtotal(subtotal);
-        request.setShippingFee(30000); // default 30k
+        request.setShippingFee(30_000);
 
         String voucher = getText(etVoucher);
         if (!voucher.isEmpty()) {
             request.setVoucherCode(voucher);
             request.setDiscount(appliedDiscount);
         }
-
         String note = getText(etNote);
         if (!note.isEmpty()) request.setNote(note);
 
-        double total = subtotal + 30000 - appliedDiscount;
-        if (total < 0) total = 0;
+        double total = Math.max(subtotal + 30_000 - appliedDiscount, 0);
         request.setTotalAmount(total);
 
-        Map<String, String> paymentMap = new java.util.HashMap<>();
+        Map<String, String> paymentMap = new HashMap<>();
         paymentMap.put("method", method);
         request.setPayment(paymentMap);
 
@@ -222,50 +264,80 @@ public class CheckoutActivity extends AppCompatActivity {
             if (result.status == AuthRepository.Result.Status.SUCCESS && result.data != null) {
                 String orderId = result.data.getId() != null ? result.data.getId() : result.data.getOrderId();
                 trackPurchaseEvents(orderId);
-                if ("cod".equals(finalMethod)) {
-                    // Clear cart & show success
+
+                if (Constants.PAYMENT_COD.equals(finalMethod)) {
                     cartViewModel.clearCart();
                     Toast.makeText(this, "Đặt hàng thành công!", Toast.LENGTH_LONG).show();
                     finish();
-                } else if ("vnpay".equals(finalMethod)) {
-                    // Get VNPay URL
+
+                } else if (Constants.PAYMENT_VNPAY.equals(finalMethod)) {
                     orderViewModel.getVnpayUrl(orderId).observe(this, urlResult -> {
                         if (urlResult.status == AuthRepository.Result.Status.SUCCESS) {
                             Intent intent = new Intent(this, PaymentWebViewActivity.class);
                             intent.putExtra("payment_url", urlResult.data);
                             intent.putExtra("order_id", orderId);
+                            intent.putExtra("provider", "VNPAY");
                             startActivity(intent);
                         }
                     });
-                } else if ("momo".equals(finalMethod)) {
+
+                } else if (Constants.PAYMENT_MOMO.equals(finalMethod)) {
                     setLoading(true);
                     orderViewModel.createMomoPayment(
-                            orderId, result.data.getFinalAmount(), result.data.getUserId()).observe(this, momoResult -> {
-                        setLoading(false);
-                        if (momoResult.status == AuthRepository.Result.Status.SUCCESS && momoResult.data != null) {
-                            Intent intent = new Intent(this, PaymentResultActivity.class);
-                            intent.putExtra("payment_url", momoResult.data.getPayUrl());
-                            intent.putExtra("deeplink", momoResult.data.getDeeplink());
-                            intent.putExtra("order_id", orderId);
-                            intent.putExtra("order_total", result.data.getFinalAmount());
-                            startActivity(intent);
-                        } else if (momoResult.status == AuthRepository.Result.Status.ERROR) {
-                            Toast.makeText(this, momoResult.message, Toast.LENGTH_LONG).show();
-                        }
-                    });
+                            orderId, result.data.getFinalAmount(), result.data.getUserId())
+                            .observe(this, momoResult -> {
+                                setLoading(false);
+                                if (momoResult.status == AuthRepository.Result.Status.SUCCESS
+                                        && momoResult.data != null) {
+                                    Intent intent = new Intent(this, PaymentResultActivity.class);
+                                    intent.putExtra("payment_url", momoResult.data.getPayUrl());
+                                    intent.putExtra("deeplink",    momoResult.data.getDeeplink());
+                                    intent.putExtra("order_id",    orderId);
+                                    intent.putExtra("order_total", result.data.getFinalAmount());
+                                    intent.putExtra("provider",    "MOMO");
+                                    startActivity(intent);
+                                } else if (momoResult.status == AuthRepository.Result.Status.ERROR) {
+                                    Toast.makeText(this, momoResult.message, Toast.LENGTH_LONG).show();
+                                }
+                            });
+
+                } else if (Constants.PAYMENT_ZALOPAY.equals(finalMethod)) {
+                    setLoading(true);
+                    orderViewModel.createZaloPayPayment(
+                            orderId,
+                            result.data.getFinalAmount(),
+                            "Thanh toan don hang Vua Vui Ve: " + orderId)
+                            .observe(this, zaloPayResult -> {
+                                setLoading(false);
+                                if (zaloPayResult.status == AuthRepository.Result.Status.SUCCESS
+                                        && zaloPayResult.data != null) {
+                                    Intent intent = new Intent(this, PaymentResultActivity.class);
+                                    intent.putExtra("payment_url", zaloPayResult.data.getOrderUrl());
+                                    intent.putExtra("deeplink",    zaloPayResult.data.getZpTransToken());
+                                    intent.putExtra("order_id",    orderId);
+                                    intent.putExtra("order_total", result.data.getFinalAmount());
+                                    intent.putExtra("provider",    "ZALOPAY");
+                                    startActivity(intent);
+                                } else if (zaloPayResult.status == AuthRepository.Result.Status.ERROR) {
+                                    Toast.makeText(this, zaloPayResult.message, Toast.LENGTH_LONG).show();
+                                }
+                            });
                 }
+
             } else if (result.status == AuthRepository.Result.Status.ERROR) {
                 Toast.makeText(this, result.message, Toast.LENGTH_LONG).show();
             }
         });
     }
 
+    // ── Helpers ───────────────────────────────────────────────────────────────
+
     private void trackPurchaseEvents(String orderId) {
         if (cartItems == null || cartItems.isEmpty()) return;
         for (CartItemEntity item : cartItems) {
-            java.util.Map<String, Object> meta = new HashMap<>();
+            Map<String, Object> meta = new HashMap<>();
             meta.put("quantity", item.getQuantity());
-            meta.put("orderId", orderId);
+            meta.put("orderId",  orderId);
             productViewModel.sendRecommendEvent(Constants.EVENT_PURCHASE, item.getProductId(), meta);
         }
     }
@@ -275,7 +347,7 @@ public class CheckoutActivity extends AppCompatActivity {
     }
 
     private void setLoading(boolean loading) {
-        btnPlaceOrder.setEnabled(!loading);
-        progressBar.setVisibility(loading ? View.VISIBLE : View.GONE);
+        if (btnPlaceOrder != null) btnPlaceOrder.setEnabled(!loading);
+        if (progressBar   != null) progressBar.setVisibility(loading ? View.VISIBLE : View.GONE);
     }
 }

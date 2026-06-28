@@ -263,14 +263,11 @@ public class MockDataProvider {
         return reviews;
     }
 
-    // ─── Mock Product Detail by ID ─────────────────────────────────────────────
     public static Product getMockProductById(String productId) {
         for (Product p : getMockProducts()) {
             if (productId != null && productId.equals(p.getId())) return p;
         }
-        // Return first as fallback
-        List<Product> all = getMockProducts();
-        return all.isEmpty() ? null : all.get(0);
+        return null;
     }
 
     // ─── Helper: Create Product ────────────────────────────────────────────────
