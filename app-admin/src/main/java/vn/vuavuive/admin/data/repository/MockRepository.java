@@ -625,10 +625,10 @@ public class MockRepository {
                 "    \"note\": \"\"\n" +
                 "  },\n" +
                 "  \"payment\": {\n" +
-                "    \"method\": \"vnpay\",\n" +
+                "    \"method\": \"momo\",\n" +
                 "    \"status\": \"paid\",\n" +
-                "    \"gateway\": \"vnpay\",\n" +
-                "    \"transactionId\": \"VNPAY12948194\",\n" +
+                "    \"gateway\": \"momo\",\n" +
+                "    \"transactionId\": \"MOMO12948194\",\n" +
                 "    \"amount\": 104000,\n" +
                 "    \"transactionTime\": \"2026-05-21T15:21:30Z\"\n" +
                 "  },\n" +

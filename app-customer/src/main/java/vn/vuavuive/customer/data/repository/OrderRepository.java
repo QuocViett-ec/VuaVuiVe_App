@@ -158,33 +158,6 @@ public class OrderRepository {
         });
         return result;
     }
-
-    // ── Payment URL ────────────────────────────────────────────────────────
-    public LiveData<AuthRepository.Result<String>> getVnpayUrl(String orderId) {
-        MutableLiveData<AuthRepository.Result<String>> result = new MutableLiveData<>();
-        result.postValue(AuthRepository.Result.loading());
-
-        Map<String, String> body = new HashMap<>();
-        body.put("orderId", orderId);
-
-        paymentApi.createVNPayUrl(body).enqueue(new Callback<ApiResponse<Map<String, String>>>() {
-            @Override
-            public void onResponse(Call<ApiResponse<Map<String, String>>> call, Response<ApiResponse<Map<String, String>>> response) {
-                if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
-                    String url = response.body().getData().get("paymentUrl");
-                    result.postValue(AuthRepository.Result.success(url != null ? url : ""));
-                } else {
-                    result.postValue(AuthRepository.Result.error("Không tạo được liên kết VNPay"));
-                }
-            }
-            @Override
-            public void onFailure(Call<ApiResponse<Map<String, String>>> call, Throwable t) {
-                result.postValue(AuthRepository.Result.error("Lỗi kết nối"));
-            }
-        });
-        return result;
-    }
-
     public LiveData<AuthRepository.Result<String>> getMomoUrl(String orderId) {
         MutableLiveData<AuthRepository.Result<String>> result = new MutableLiveData<>();
         result.postValue(AuthRepository.Result.error("Khong dung endpoint MoMo cu"));

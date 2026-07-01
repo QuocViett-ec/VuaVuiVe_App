@@ -32,5 +32,9 @@ public record ProductRequest(
         String imageUrl,
 
         @NotNull(message = "Danh mục không được để trống")
-        UUID categoryId
+        UUID categoryId,
+
+        @com.fasterxml.jackson.annotation.JsonProperty("isActive")
+        @com.fasterxml.jackson.annotation.JsonAlias({"is_active", "active"})
+        Boolean isActive
 ) {}

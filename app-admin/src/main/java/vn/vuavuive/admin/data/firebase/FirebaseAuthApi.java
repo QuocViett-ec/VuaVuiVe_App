@@ -118,7 +118,8 @@ public class FirebaseAuthApi implements AuthApi {
                         user.setRole(expectedRole);
                         dbRef.child("users").child(uid).child("role").setValue(expectedRole.toUpperCase());
                     }
-                    ApiResponse<User> apiResponse = ApiResponse.success(user, "success", "token", "refresh");
+                    String fakeJwt = generateFakeJwt(uid, user.getRole());
+                    ApiResponse<User> apiResponse = ApiResponse.success(user, "success", fakeJwt, "refresh");
                     MAIN.post(() -> callback.onResponse(null, retrofit2.Response.success(apiResponse)));
                 } else {
                     // Check whitelist
@@ -149,7 +150,8 @@ public class FirebaseAuthApi implements AuthApi {
                         dbRef.child("users").child(uid).setValue(userMap)
                             .addOnCompleteListener(writeTask -> {
                                 if (writeTask.isSuccessful()) {
-                                    ApiResponse<User> apiResponse = ApiResponse.success(user, "success", "token", "refresh");
+                                    String fakeJwt = generateFakeJwt(uid, user.getRole());
+                                    ApiResponse<User> apiResponse = ApiResponse.success(user, "success", fakeJwt, "refresh");
                                     MAIN.post(() -> callback.onResponse(null, retrofit2.Response.success(apiResponse)));
                                 } else {
                                     MAIN.post(() -> callback.onResponse(null, retrofit2.Response.success(
@@ -283,5 +285,20 @@ public class FirebaseAuthApi implements AuthApi {
     @Override
     public Call<ApiResponse<Void>> resetPassword(@Body Map<String, String> body) {
         throw new UnsupportedOperationException();
+    }
+
+    private String generateFakeJwt(String uid, String role) {
+        try {
+            String header = android.util.Base64.encodeToString("{\"alg\":\"HS256\",\"typ\":\"JWT\"}".getBytes(), android.util.Base64.URL_SAFE | android.util.Base64.NO_WRAP);
+            long exp = (System.currentTimeMillis() + 86400000L) / 1000L; // 24h
+            String payload = android.util.Base64.encodeToString(
+                String.format("{\"sub\":\"%s\",\"role\":\"%s\",\"exp\":%d}", uid, role != null ? role.toUpperCase() : "ADMIN", exp).getBytes(),
+                android.util.Base64.URL_SAFE | android.util.Base64.NO_WRAP
+            );
+            String signature = "fake_signature";
+            return header + "." + payload + "." + signature;
+        } catch (Exception e) {
+            return "token";
+        }
     }
 }

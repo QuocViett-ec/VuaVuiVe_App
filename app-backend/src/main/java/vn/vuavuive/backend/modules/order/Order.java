@@ -31,7 +31,7 @@ public class Order extends BaseEntity {
     private java.math.BigDecimal totalAmount;
     private java.math.BigDecimal finalAmount;
 
-    private String paymentMethod; // COD, VNPAY, MOMO
+    private String paymentMethod; // COD, MOMO, ZALOPAY
     
     @Builder.Default
     private PaymentStatus paymentStatus = PaymentStatus.UNPAID;

@@ -66,10 +66,11 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/images/**").permitAll()
                 .requestMatchers("/api/ai/**").permitAll()
-                // Webhook thanh toán từ VNPay/MoMo phải public (họ gọi vào, không có token)
-                .requestMatchers("/api/payments/vnpay/**").permitAll()
+                // Webhook thanh toán từ MoMo/ZaloPay phải public (họ gọi vào, không có token)
                 .requestMatchers(HttpMethod.POST, "/api/payments/momo/ipn").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/payments/momo/return", "/api/payments/momo/mock", "/api/payments/momo/mock-result").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/payments/zalopay/callback").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/payments/zalopay/return", "/api/payments/zalopay/mock", "/api/payments/zalopay/mock-result").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/momo/ipn").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/momo/return", "/api/momo/mock", "/api/momo/mock-result").permitAll()
 

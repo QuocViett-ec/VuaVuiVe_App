@@ -114,7 +114,7 @@ public class ChatActivity extends AppCompatActivity {
             return Arrays.asList("🛒 Mua ngay", "📦 Tra cứu đơn hàng", "🥦 Xem sản phẩm");
         } else if (r.contains("đơn") || r.contains("giao hàng") || r.contains("ship")) {
             return Arrays.asList("🎁 Khuyến mãi", "🥩 Mua thêm", "💳 Thanh toán");
-        } else if (r.contains("thanh toán") || r.contains("momo") || r.contains("vnpay")) {
+        } else if (r.contains("thanh toán") || r.contains("momo") || r.contains("zalopay")) {
             return Arrays.asList("📦 Đơn hàng của tôi", "🎁 Xem khuyến mãi", "🥦 Mua sắm tiếp");
         } else {
             return Arrays.asList("🥦 Rau củ quả", "🥩 Thịt & hải sản", "🍳 Gợi ý món ăn");

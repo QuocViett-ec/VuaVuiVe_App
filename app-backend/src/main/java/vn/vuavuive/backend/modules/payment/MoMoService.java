@@ -12,10 +12,13 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import vn.vuavuive.backend.exception.AppException;
 import vn.vuavuive.backend.modules.order.Order;
+import vn.vuavuive.backend.modules.order.OrderItem;
 import vn.vuavuive.backend.modules.order.OrderRepository;
 import vn.vuavuive.backend.modules.order.OrderStatusLog;
 import vn.vuavuive.backend.modules.order.OrderStatusLogRepository;
 import vn.vuavuive.backend.modules.payment.dto.*;
+import vn.vuavuive.backend.modules.product.Product;
+import vn.vuavuive.backend.modules.product.ProductRepository;
 import vn.vuavuive.backend.modules.user.User;
 import vn.vuavuive.backend.modules.user.UserRepository;
 
@@ -46,6 +49,7 @@ public class MoMoService {
     private final UserRepository userRepository;
     private final PaymentTransactionRepository transactionRepository;
     private final OrderStatusLogRepository statusLogRepository;
+    private final ProductRepository productRepository;
     private final Environment environment;
 
     @Transactional(rollbackFor = Exception.class)
@@ -155,11 +159,14 @@ public class MoMoService {
             tx.setStatus(PaymentTransaction.Status.PAID);
             order.setPaymentMethod("MOMO");
             order.setPaymentStatus(Order.PaymentStatus.PAID);
-            order.setStatus(Order.OrderStatus.PENDING_APPROVAL);
-            appendStatusLog(order, Order.OrderStatus.PENDING_APPROVAL, "Thanh toan MoMo thanh cong");
+            order.setStatus(Order.OrderStatus.CONFIRMED);
+            appendStatusLog(order, Order.OrderStatus.CONFIRMED, "Thanh toan MoMo thanh cong");
         } else {
             tx.setStatus(PaymentTransaction.Status.FAILED);
             order.setPaymentStatus(Order.PaymentStatus.FAILED);
+            order.setStatus(Order.OrderStatus.CANCELLED);
+            restoreStock(order);
+            appendStatusLog(order, Order.OrderStatus.CANCELLED, "Thanh toan MoMo that bai");
         }
         transactionRepository.save(tx);
         orderRepository.save(order);
@@ -182,11 +189,14 @@ public class MoMoService {
             tx.setStatus(PaymentTransaction.Status.PAID);
             order.setPaymentMethod("MOMO");
             order.setPaymentStatus(Order.PaymentStatus.PAID);
-            order.setStatus(Order.OrderStatus.PENDING_APPROVAL);
-            appendStatusLog(order, Order.OrderStatus.PENDING_APPROVAL, "Thanh toan MoMo mock thanh cong");
+            order.setStatus(Order.OrderStatus.CONFIRMED);
+            appendStatusLog(order, Order.OrderStatus.CONFIRMED, "Thanh toan MoMo mock thanh cong");
         } else {
             tx.setStatus(PaymentTransaction.Status.FAILED);
             order.setPaymentStatus(Order.PaymentStatus.FAILED);
+            order.setStatus(Order.OrderStatus.CANCELLED);
+            restoreStock(order);
+            appendStatusLog(order, Order.OrderStatus.CANCELLED, "Thanh toan MoMo mock that bai");
         }
         log.info("MoMo mock result requestId={}, orderId={}, amount={}, resultCode={}",
                 requestId, orderId, tx.getAmount(), tx.getResultCode());
@@ -246,7 +256,7 @@ public class MoMoService {
         return hmacSHA256(secretKey, rawSignature).equals(p.signature());
     }
 
-    // Backward-compatible helper for any old VNPay-like caller still compiled in this project.
+    // Backward-compatible helper for older callers still compiled in this project.
     public boolean validateIpnSignature(Map<String, Object> params) {
         return validateIpnSignature(new MomoIpnRequest(
                 str(params, "partnerCode"), str(params, "orderId"), str(params, "requestId"),
@@ -315,6 +325,20 @@ public class MoMoService {
                 .updatedByRole("SYSTEM")
                 .updatedByName("MoMo Gateway")
                 .build());
+    }
+
+    private void restoreStock(Order order) {
+        for (OrderItem item : order.getOrderItems()) {
+            if (item.getProductId() == null) {
+                continue;
+            }
+            Product product = productRepository.findById(item.getProductId()).orElse(null);
+            if (product == null) {
+                continue;
+            }
+            product.setStockQuantity(product.getStockQuantity() + item.getQuantity());
+            productRepository.save(product);
+        }
     }
 
     private String hmacSHA256(String key, String data) {

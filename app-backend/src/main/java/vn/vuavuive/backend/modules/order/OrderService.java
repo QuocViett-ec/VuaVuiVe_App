@@ -11,7 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 import vn.vuavuive.backend.exception.AppException;
 import vn.vuavuive.backend.modules.order.dto.*;
 import vn.vuavuive.backend.modules.payment.MoMoService;
-import vn.vuavuive.backend.modules.payment.VNPayService;
+import vn.vuavuive.backend.modules.payment.ZaloPayService;
+import vn.vuavuive.backend.modules.payment.dto.CreateMomoPaymentRequest;
+import vn.vuavuive.backend.modules.payment.dto.CreateZaloPayPaymentRequest;
 import vn.vuavuive.backend.modules.product.Product;
 import vn.vuavuive.backend.modules.product.ProductRepository;
 import vn.vuavuive.backend.modules.product.dto.PagedResponse;
@@ -43,8 +45,8 @@ public class OrderService {
     private final UserRepository userRepository;
     private final OrderStatusLogRepository statusLogRepository;
     private final ShipperRepository shipperRepository;
-    private final VNPayService vnPayService;
     private final MoMoService moMoService;
+    private final ZaloPayService zaloPayService;
 
     /**
      * TẠO ĐƠN HÀNG — Đây là hàm quan trọng nhất, được bảo vệ bởi @Transactional.
@@ -56,7 +58,7 @@ public class OrderService {
      * 4. TRỪ tồn kho (pessimistic: khóa row để tránh race condition)
      * 5. Tạo Order và OrderItems trong DB
      * 6. Ghi Log trạng thái PENDING
-     * 7. Nếu VNPAY/MOMO: Tạo URL thanh toán trả về cho App
+     * 7. Nếu MOMO/ZALOPAY: Tạo URL thanh toán trả về cho App
      * 8. Nếu lỗi bất kỳ bước nào → toàn bộ ROLLBACK
      */
     @Transactional(rollbackFor = Exception.class)
@@ -134,10 +136,21 @@ public class OrderService {
 
         // Tạo URL thanh toán nếu cần
         String paymentUrl = null;
-        if ("VNPAY".equals(request.paymentMethod())) {
-            paymentUrl = vnPayService.createPaymentUrl(
-                    order.getId().toString(), order.getFinalAmount(), clientIp);
-            log.info("Tạo VNPay URL cho đơn {}", order.getId());
+        if ("MOMO".equals(request.paymentMethod())) {
+            paymentUrl = moMoService.createMomoPayment(new CreateMomoPaymentRequest(
+                    order.getId(),
+                    order.getFinalAmount(),
+                    "Thanh toan don hang Vua Vui Ve: " + order.getId(),
+                    user.getId()
+            )).payUrl();
+            order = orderRepository.findById(order.getId()).orElse(order);
+        } else if ("ZALOPAY".equals(request.paymentMethod())) {
+            paymentUrl = zaloPayService.createZaloPayPayment(new CreateZaloPayPaymentRequest(
+                    order.getId(),
+                    order.getFinalAmount(),
+                    "Thanh toan don hang Vua Vui Ve: " + order.getId()
+            )).orderUrl();
+            order = orderRepository.findById(order.getId()).orElse(order);
         }
 
         log.info("Đơn hàng {} đã được tạo bởi user {}", order.getId(), email);
@@ -268,6 +281,9 @@ public class OrderService {
         order.setStatus(status);
         if (status == Order.OrderStatus.DELIVERED) {
             awardPointsForOrder(order);
+            if ("COD".equalsIgnoreCase(order.getPaymentMethod())) {
+                order.setPaymentStatus(Order.PaymentStatus.PAID);
+            }
         }
         appendStatusLog(order, status, note, "ADMIN", updatedByName);
         return toResponse(orderRepository.save(order), null);
@@ -295,63 +311,7 @@ public class OrderService {
     }
 
     /**
-     * Xử lý khi VNPay IPN gọi về — Cập nhật trạng thái thanh toán.
-     * Được gọi từ PaymentController khi VNPay xác nhận thanh toán.
-     */
-    @Transactional(rollbackFor = Exception.class)
-    public void handleVNPayIpn(String orderId, String responseCode) {
-        Order order = orderRepository.findById(UUID.fromString(orderId))
-                .orElseThrow(() -> AppException.notFound("Đơn hàng"));
-
-        // 1. Nếu đơn đã thanh toán trước đó (trùng lặp IPN) -> Bỏ qua
-        if (order.getPaymentStatus() == Order.PaymentStatus.PAID) {
-            log.info("VNPay IPN: Đơn {} đã được cập nhật thanh toán trước đó. Bỏ qua.", orderId);
-            return;
-        }
-
-        // 2. Nếu đơn hàng đã bị hủy trước đó (do hết hạn hoặc khách hủy)
-        if (order.getStatus() == Order.OrderStatus.CANCELLED) {
-            if ("00".equals(responseCode)) {
-                order.setPaymentStatus(Order.PaymentStatus.PAID);
-                orderRepository.save(order);
-                appendStatusLog(order, Order.OrderStatus.CANCELLED,
-                        "Nhận thanh toán thành công từ VNPay nhưng đơn hàng đã bị hủy trước đó.", "SYSTEM", "VNPay Gateway");
-                log.warn("VNPay IPN: Đơn {} đã bị hủy trước đó nhưng lại nhận được thanh toán thành công.", orderId);
-            } else {
-                log.info("VNPay IPN: Đơn {} đã bị hủy từ trước và giao dịch thanh toán thất bại. Bỏ qua.", orderId);
-            }
-            return;
-        }
-
-        // 3. Xử lý cho đơn hàng PENDING bình thường
-        if ("00".equals(responseCode)) {
-            order.setPaymentStatus(Order.PaymentStatus.PAID);
-            order.setStatus(Order.OrderStatus.CONFIRMED);
-            awardPointsForOrder(order);
-            appendStatusLog(order, Order.OrderStatus.CONFIRMED,
-                    "Thanh toán VNPay thành công", "SYSTEM", "VNPay Gateway");
-            log.info("VNPay IPN: Đơn {} thanh toán thành công", orderId);
-        } else {
-            order.setStatus(Order.OrderStatus.CANCELLED);
-            // Hoàn lại tồn kho khi thanh toán thất bại
-            for (OrderItem item : order.getOrderItems()) {
-                if (item.getProductId() != null) {
-                    Product product = productRepository.findById(UUID.fromString(item.getProductId())).orElse(null);
-                    if (product != null) {
-                        product.setStockQuantity(product.getStockQuantity() + item.getQuantity());
-                        productRepository.save(product);
-                    }
-                }
-            }
-            appendStatusLog(order, Order.OrderStatus.CANCELLED,
-                    "Thanh toán VNPay thất bại (mã lỗi: " + responseCode + ")", "SYSTEM", "VNPay Gateway");
-            log.warn("VNPay IPN: Đơn {} thanh toán THẤT BẠI, responseCode={}", orderId, responseCode);
-        }
-        orderRepository.save(order);
-    }
-
-    /**
-     * Xử lý MoMo IPN — Tương tự VNPay, resultCode=0 là thành công.
+     * Xử lý MoMo IPN, resultCode=0 là thành công.
      */
     @Transactional(rollbackFor = Exception.class)
     public void handleMoMoIpn(String orderId, String resultCode) {
@@ -444,17 +404,22 @@ public class OrderService {
     }
 
     private Order.PaymentStatus initialPaymentStatus(String paymentMethod) {
-        return "MOMO".equalsIgnoreCase(paymentMethod) ? Order.PaymentStatus.PENDING : Order.PaymentStatus.UNPAID;
+        return isOnlinePayment(paymentMethod) ? Order.PaymentStatus.PENDING : Order.PaymentStatus.UNPAID;
     }
 
     private Order.OrderStatus initialOrderStatus(String paymentMethod) {
-        if ("MOMO".equalsIgnoreCase(paymentMethod)) {
+        if (isOnlinePayment(paymentMethod)) {
             return Order.OrderStatus.PENDING_PAYMENT;
         }
         if ("COD".equalsIgnoreCase(paymentMethod)) {
             return Order.OrderStatus.PENDING_APPROVAL;
         }
         return Order.OrderStatus.PENDING;
+    }
+
+    private boolean isOnlinePayment(String paymentMethod) {
+        return "MOMO".equalsIgnoreCase(paymentMethod)
+                || "ZALOPAY".equalsIgnoreCase(paymentMethod);
     }
 
     /** Ghi một mốc lịch sử trạng thái vào bảng ORDER_STATUS_LOGS */

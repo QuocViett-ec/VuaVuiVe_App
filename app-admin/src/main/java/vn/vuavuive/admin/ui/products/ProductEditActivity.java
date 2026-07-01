@@ -366,6 +366,7 @@ public class ProductEditActivity extends AppCompatActivity {
         body.put("unit", unit);
         body.put("imageUrl", selectedImageUrl);
         body.put("categoryId", categoryId);
+        body.put("isActive", binding.switchIsActive.isChecked());
 
         Call<Product> call = existingProduct != null
                 ? adminProductApi.updateProduct(existingProduct.getId(), body)

@@ -1,6 +1,6 @@
 # ============================================
 #  MÔI TRƯỜNG PHÁT TRIỂN (DEV / SANDBOX)
-#  Dùng để test local với Ngrok + Sandbox VNPay/MoMo
+#  Dùng để test local với Ngrok + Sandbox MoMo/ZaloPay
 # ============================================
 spring:
   session:
@@ -27,13 +27,6 @@ app:
 #  CẤU HÌNH THANH TOÁN (SANDBOX)
 # ============================================
   payment:
-    vnpay:
-      tmn-code: "TFQUUGXU"        # <<< ĐỔI THÀNH MÃ SANDBOX CỦA BẠN
-      secret-key: "V5IY2EZ98VHA6Q2P39VYMA7VJFK6DR6F"   # <<< ĐỔI THÀNH KEY SANDBOX
-      pay-url: "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"
-      return-url: "${PUBLIC_BASE_URL:https://lowell-intercerebral-monopodially.ngrok-free.dev}/api/payments/vnpay/return"
-      ipn-url: "${PUBLIC_BASE_URL:https://lowell-intercerebral-monopodially.ngrok-free.dev}/api/payments/vnpay/ipn"
-
     momo:
       partner-code: "${MOMO_PARTNER_CODE:MOMO}"
       access-key: "${MOMO_ACCESS_KEY:}"
@@ -54,7 +47,7 @@ app:
       query-endpoint: "${ZALOPAY_QUERY_ENDPOINT:https://sb-openapi.zalopay.vn/v2/query}"
       callback-url: "${PUBLIC_BASE_URL:https://lowell-intercerebral-monopodially.ngrok-free.dev}/api/payments/zalopay/callback"
       redirect-url: "${PUBLIC_BASE_URL:https://lowell-intercerebral-monopodially.ngrok-free.dev}/api/payments/zalopay/return"
-      mock-mode: "${ZALOPAY_MOCK_MODE:false}"
+      mock-mode: "${ZALOPAY_MOCK_MODE:true}"
 
 # ============================================
 #  CẤU HÌNH CLOUDINARY (Lưu trữ ảnh)

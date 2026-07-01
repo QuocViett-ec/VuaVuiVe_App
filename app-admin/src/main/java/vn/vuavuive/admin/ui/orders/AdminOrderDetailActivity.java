@@ -44,11 +44,11 @@ public class AdminOrderDetailActivity extends AppCompatActivity {
             "pending", "confirmed", "in_transit", "delivered", "cancelled"
     );
     private static final List<String> STATUS_DISPLAY = Arrays.asList(
-            "Chờ duyệt (Pending)", 
-            "Đã xác nhận (Confirmed)", 
-            "Đang giao hàng (Shipping)", 
-            "Đã giao hàng (Delivered)", 
-            "Đã hủy đơn (Cancelled)"
+            "Chờ duyệt",
+            "Đã xác nhận",
+            "Đang giao",
+            "Đã giao",
+            "Đã hủy"
     );
 
     @Override

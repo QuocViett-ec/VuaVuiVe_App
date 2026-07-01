@@ -15,20 +15,30 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.google.android.material.tabs.TabLayout;
-import dagger.hilt.android.AndroidEntryPoint;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
 import vn.vuavuive.customer.R;
 import vn.vuavuive.customer.data.repository.AuthRepository;
 import vn.vuavuive.customer.viewmodel.OrderViewModel;
+import vn.vuavuive.shared.data.dto.Order;
 
-@AndroidEntryPoint
 public class OrderListFragment extends Fragment {
+
+    private static final String TAB_ALL = "all";
+    private static final String TAB_PENDING = "pending_group";
+    private static final String TAB_SHIPPING = "shipping_group";
+    private static final String TAB_DELIVERED = "delivered";
+    private static final String TAB_CANCELLED = "cancelled";
 
     private OrderViewModel orderViewModel;
     private OrderAdapter orderAdapter;
-    private String currentStatus = null; // null = all
+    private String currentTab = TAB_ALL;
     private ProgressBar progressBar;
 
-    @Nullable @Override
+    @Nullable
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_order_list, container, false);
@@ -45,6 +55,12 @@ public class OrderListFragment extends Fragment {
         setupSwipeRefresh(view);
         loadOrders();
         setupHeaderSearch(view);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (isAdded()) loadOrders();
     }
 
     private void setupHeaderSearch(View view) {
@@ -64,26 +80,35 @@ public class OrderListFragment extends Fragment {
                     if (getActivity() instanceof vn.vuavuive.customer.ui.MainActivity) {
                         ((vn.vuavuive.customer.ui.MainActivity) getActivity()).navigateToProducts();
                     }
-                } catch (Exception ignored) {}
+                } catch (Exception ignored) {
+                }
             });
         }
     }
 
     private void setupTabs(View view) {
         TabLayout tabLayout = view.findViewById(R.id.tab_layout);
-        String[] tabs = {"Tất cả", "Chờ xác nhận", "Đang giao", "Đã giao", "Đã hủy"};
-        String[] statuses = {null, "pending", "shipping", "delivered", "cancelled"};
+        String[] tabs = {"Tat ca", "Cho xac nhan", "Dang giao", "Da giao", "Da huy"};
+        String[] keys = {TAB_ALL, TAB_PENDING, TAB_SHIPPING, TAB_DELIVERED, TAB_CANCELLED};
 
-        for (String tab : tabs) tabLayout.addTab(tabLayout.newTab().setText(tab));
+        for (String tab : tabs) {
+            tabLayout.addTab(tabLayout.newTab().setText(tab));
+        }
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                currentStatus = statuses[tab.getPosition()];
+                currentTab = keys[tab.getPosition()];
                 loadOrders();
             }
-            @Override public void onTabUnselected(TabLayout.Tab tab) {}
-            @Override public void onTabReselected(TabLayout.Tab tab) {}
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
         });
     }
 
@@ -108,21 +133,71 @@ public class OrderListFragment extends Fragment {
     }
 
     private void loadOrders() {
+        if (progressBar == null || !isAdded() || getView() == null) return;
+
         progressBar.setVisibility(View.VISIBLE);
-        orderViewModel.getOrders(currentStatus, 1).observe(getViewLifecycleOwner(), result -> {
+        orderViewModel.getOrders(null, 1).observe(getViewLifecycleOwner(), result -> {
             progressBar.setVisibility(View.GONE);
             if (result.status == AuthRepository.Result.Status.SUCCESS && result.data != null) {
-                orderAdapter.setOrders(result.data);
-                // Show/hide empty state wrapper
-                View layoutEmpty = requireView().findViewById(R.id.layout_empty);
-                if (layoutEmpty != null) {
-                    layoutEmpty.setVisibility(result.data.isEmpty() ? View.VISIBLE : View.GONE);
-                } else {
-                    // Fallback: tv_empty directly
-                    TextView tvEmpty = requireView().findViewById(R.id.tv_empty);
-                    if (tvEmpty != null) tvEmpty.setVisibility(result.data.isEmpty() ? View.VISIBLE : View.GONE);
-                }
+                List<Order> filtered = filterOrders(result.data);
+                orderAdapter.setOrders(filtered);
+                updateEmptyState(filtered.isEmpty());
+            } else if (result.status == AuthRepository.Result.Status.ERROR) {
+                orderAdapter.setOrders(Collections.emptyList());
+                updateEmptyState(true);
             }
         });
+    }
+
+    private List<Order> filterOrders(List<Order> orders) {
+        if (TAB_ALL.equals(currentTab)) return orders;
+
+        List<Order> filtered = new ArrayList<>();
+        for (Order order : orders) {
+            if (matchesCurrentTab(order)) {
+                filtered.add(order);
+            }
+        }
+        return filtered;
+    }
+
+    private boolean matchesCurrentTab(Order order) {
+        String status = order.getStatus() == null
+                ? ""
+                : order.getStatus().toLowerCase(Locale.ROOT);
+
+        switch (currentTab) {
+            case TAB_PENDING:
+                return "pending".equals(status)
+                        || "pending_payment".equals(status)
+                        || "pending_approval".equals(status)
+                        || "confirmed".equals(status)
+                        || "preparing".equals(status)
+                        || "ready_for_pickup".equals(status);
+            case TAB_SHIPPING:
+                return "shipping".equals(status) || "in_transit".equals(status);
+            case TAB_DELIVERED:
+                return "delivered".equals(status);
+            case TAB_CANCELLED:
+                return "cancelled".equals(status) || "failed".equals(status);
+            default:
+                return true;
+        }
+    }
+
+    private void updateEmptyState(boolean empty) {
+        View root = getView();
+        if (root == null) return;
+
+        View layoutEmpty = root.findViewById(R.id.layout_empty);
+        if (layoutEmpty != null) {
+            layoutEmpty.setVisibility(empty ? View.VISIBLE : View.GONE);
+            return;
+        }
+
+        TextView tvEmpty = root.findViewById(R.id.tv_empty);
+        if (tvEmpty != null) {
+            tvEmpty.setVisibility(empty ? View.VISIBLE : View.GONE);
+        }
     }
 }

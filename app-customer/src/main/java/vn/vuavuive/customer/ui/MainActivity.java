@@ -2,14 +2,16 @@ package vn.vuavuive.customer.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import androidx.annotation.IdRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
+import androidx.navigation.NavOptions;
 import androidx.navigation.fragment.NavHostFragment;
-import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import dagger.hilt.android.AndroidEntryPoint;
 import vn.vuavuive.customer.R;
+import vn.vuavuive.customer.data.repository.AuthRepository;
 import vn.vuavuive.customer.viewmodel.AuthViewModel;
 import vn.vuavuive.customer.viewmodel.CartViewModel;
 
@@ -29,13 +31,11 @@ public class MainActivity extends AppCompatActivity {
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
         cartViewModel = new ViewModelProvider(this).get(CartViewModel.class);
 
-        // Check session
         authViewModel.checkSession().observe(this, result -> {
-            if (result.status == vn.vuavuive.customer.data.repository.AuthRepository.Result.Status.SUCCESS) {
+            if (result.status == AuthRepository.Result.Status.SUCCESS) {
                 authViewModel.setCurrentUser(result.data);
-                // Attach Firebase cart listener after login
                 cartViewModel.onUserLoggedIn();
-            } else if (result.status == vn.vuavuive.customer.data.repository.AuthRepository.Result.Status.ERROR) {
+            } else if (result.status == AuthRepository.Result.Status.ERROR) {
                 authViewModel.setCurrentUser(null);
                 goToLogin();
             }
@@ -43,8 +43,6 @@ public class MainActivity extends AppCompatActivity {
 
         setupNavigation();
         observeCartCount();
-
-        // Handle deep-link từ PaymentWebViewActivity
         handleNavigateIntent(getIntent());
     }
 
@@ -55,26 +53,61 @@ public class MainActivity extends AppCompatActivity {
         handleNavigateIntent(intent);
     }
 
-    private void handleNavigateIntent(Intent intent) {
-        if (intent == null) return;
-        String navigateTo = intent.getStringExtra("navigate_to");
-        if ("orders".equals(navigateTo) && navController != null) {
-            navController.navigate(R.id.navigation_orders);
-        }
-    }
-
     private void setupNavigation() {
         bottomNavView = findViewById(R.id.bottom_nav_view);
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.nav_host_fragment);
-        if (navHostFragment != null) {
-            navController = navHostFragment.getNavController();
-            NavigationUI.setupWithNavController(bottomNavView, navController);
+        if (navHostFragment == null) return;
+
+        navController = navHostFragment.getNavController();
+        bottomNavView.setOnItemSelectedListener(item -> {
+            navigateToDestination(item.getItemId());
+            return true;
+        });
+
+        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+            int id = destination.getId();
+            if (id == R.id.navigation_home
+                    || id == R.id.navigation_products
+                    || id == R.id.navigation_cart
+                    || id == R.id.navigation_orders
+                    || id == R.id.navigation_account) {
+                if (bottomNavView.getSelectedItemId() != id) {
+                    bottomNavView.getMenu().findItem(id).setChecked(true);
+                }
+            }
+        });
+
+        bottomNavView.setSelectedItemId(R.id.navigation_products);
+    }
+
+    private void handleNavigateIntent(Intent intent) {
+        if (intent == null) return;
+        String navigateTo = intent.getStringExtra("navigate_to");
+        if ("orders".equals(navigateTo) && bottomNavView != null) {
+            bottomNavView.setSelectedItemId(R.id.navigation_orders);
+            intent.removeExtra("navigate_to");
         }
+    }
+
+    private void navigateToDestination(@IdRes int destinationId) {
+        if (navController == null) return;
+        if (navController.getCurrentDestination() != null
+                && navController.getCurrentDestination().getId() == destinationId) {
+            return;
+        }
+
+        NavOptions options = new NavOptions.Builder()
+                .setLaunchSingleTop(true)
+                .setRestoreState(true)
+                .setPopUpTo(navController.getGraph().getStartDestinationId(), false, true)
+                .build();
+        navController.navigate(destinationId, null, options);
     }
 
     private void observeCartCount() {
         cartViewModel.getCartCount().observe(this, count -> {
+            if (bottomNavView == null) return;
             if (count != null && count > 0) {
                 bottomNavView.getOrCreateBadge(R.id.navigation_cart).setNumber(count);
             } else {
@@ -83,14 +116,11 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    // Guest flow: login is triggered only when user chooses it.
-
-    /** Allow fragments to navigate programmatically to the products tab */
     public void navigateToProducts() {
-        if (navController != null) {
-            navController.navigate(R.id.navigation_products);
-        } else if (bottomNavView != null) {
+        if (bottomNavView != null) {
             bottomNavView.setSelectedItemId(R.id.navigation_products);
+        } else {
+            navigateToDestination(R.id.navigation_products);
         }
     }
 

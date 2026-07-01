@@ -43,13 +43,6 @@ app:
 #  CẤU HÌNH THANH TOÁN (SANDBOX)
 # ============================================
   payment:
-    vnpay:
-      tmn-code: "YOUR_VNPAY_TMN_CODE"
-      secret-key: "YOUR_VNPAY_SECRET_KEY"
-      pay-url: "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"
-      return-url: "https://localhost:3000/api/payments/vnpay/return"
-      ipn-url: "https://localhost:3000/api/payments/vnpay/ipn"
-
     momo:
       partner-code: "YOUR_MOMO_PARTNER_CODE"
       access-key: "YOUR_MOMO_ACCESS_KEY"

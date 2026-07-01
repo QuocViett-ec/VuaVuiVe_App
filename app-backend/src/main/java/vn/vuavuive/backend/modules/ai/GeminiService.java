@@ -155,8 +155,8 @@ public class GeminiService {
         }
 
         // Thanh toán
-        if (q.contains("thanh toán") || q.contains("payment") || q.contains("momo") || q.contains("vnpay") || q.contains("cod") || q.contains("tiền mặt") || q.contains("chuyển khoản")) {
-            return "💳 **Phương thức thanh toán tại Vựa Vui Vẻ**\n\nBên mình hỗ trợ:\n• 💵 **COD** — Thanh toán tiền mặt khi nhận hàng\n• 📱 **MoMo** — Ví điện tử, nhanh và tiện\n• 🏦 **VNPay** — Cổng thanh toán ngân hàng\n\nTất cả đều an toàn và bảo mật. Bạn muốn thanh toán theo hình thức nào?";
+        if (q.contains("thanh toán") || q.contains("payment") || q.contains("momo") || q.contains("zalopay") || q.contains("cod") || q.contains("tiền mặt") || q.contains("chuyển khoản")) {
+            return "💳 **Phương thức thanh toán tại Vựa Vui Vẻ**\n\nBên mình hỗ trợ:\n• 💵 **COD** — Thanh toán tiền mặt khi nhận hàng\n• 📱 **MoMo** — Ví điện tử, nhanh và tiện\n• 🏦 **ZaloPay** — Ví điện tử ZaloPay\n\nTất cả đều an toàn và bảo mật. Bạn muốn thanh toán theo hình thức nào?";
         }
 
         // Sản phẩm hữu cơ / sạch / VietGAP

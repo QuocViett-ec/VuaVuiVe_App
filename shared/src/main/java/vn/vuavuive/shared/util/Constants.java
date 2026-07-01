@@ -23,7 +23,6 @@ public final class Constants {
 
     // ── Payment Methods ──
     public static final String PAYMENT_COD = "cod";
-    public static final String PAYMENT_VNPAY = "vnpay";
     public static final String PAYMENT_MOMO = "momo";
     public static final String PAYMENT_ZALOPAY = "zalopay";
 

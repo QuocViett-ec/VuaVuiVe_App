@@ -581,32 +581,6 @@ public class FirebaseOrderRepository {
 
         return result;
     }
-
-    // ── Mock VNPay and MoMo Payment Flow ─────────────────────────────────────
-    public LiveData<AuthRepository.Result<String>> getVnpayUrl(String orderId) {
-        MutableLiveData<AuthRepository.Result<String>> result = new MutableLiveData<>();
-        result.postValue(AuthRepository.Result.loading());
-
-        String now = getCurrentIsoString();
-        Map<String, Object> updates = new HashMap<>();
-        updates.put("payment_status", "PAID");
-        updates.put("status", "CONFIRMED");
-        updates.put("payment_method", "VNPAY_MOCK");
-        updates.put("mock_payment", true);
-        updates.put("updated_at", now);
-
-        dbRef.child("orders").child(orderId).updateChildren(updates).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                String mockUrl = "https://example.com/api/payments/vnpay/return?vnp_ResponseCode=00&orderId=" + orderId;
-                result.postValue(AuthRepository.Result.success(mockUrl));
-            } else {
-                result.postValue(AuthRepository.Result.error("Lỗi cập nhật thanh toán mock"));
-            }
-        });
-
-        return result;
-    }
-
     public LiveData<AuthRepository.Result<String>> getMomoUrl(String orderId) {
         MutableLiveData<AuthRepository.Result<String>> result = new MutableLiveData<>();
         result.postValue(AuthRepository.Result.error("MoMo phai duoc tao tu backend"));

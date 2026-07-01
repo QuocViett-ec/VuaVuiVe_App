@@ -51,10 +51,21 @@ public class ProductRepository {
         return new PageImpl<>(list.subList(start, end), pageable, list.size());
     }
 
+    private boolean shouldBypassActiveFilter() {
+        org.springframework.security.core.Authentication auth = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || !auth.isAuthenticated()) {
+            return false;
+        }
+        return auth.getAuthorities().stream()
+                .map(org.springframework.security.core.GrantedAuthority::getAuthority)
+                .anyMatch(role -> role.equals("ROLE_ADMIN") || role.equals("ROLE_STAFF") || role.equals("ROLE_AUDIT"));
+    }
+
     public Page<Product> findByNameContainingIgnoreCaseAndIsActiveTrue(String name, Pageable pageable) {
         String lowerName = name == null ? "" : name.toLowerCase();
+        boolean bypass = shouldBypassActiveFilter();
         List<Product> filtered = findAll().stream()
-                .filter(p -> Boolean.TRUE.equals(p.getIsActive()) && p.getName() != null && p.getName().toLowerCase().contains(lowerName))
+                .filter(p -> (bypass || Boolean.TRUE.equals(p.getIsActive())) && p.getName() != null && p.getName().toLowerCase().contains(lowerName))
                 .collect(Collectors.toList());
         return paginate(filtered, pageable);
     }
@@ -62,23 +73,26 @@ public class ProductRepository {
     public Page<Product> findByCategoryIdAndIsActiveTrue(UUID categoryId, Pageable pageable) {
         if (categoryId == null) return new PageImpl<>(List.of(), pageable, 0);
         String catIdStr = categoryId.toString();
+        boolean bypass = shouldBypassActiveFilter();
         List<Product> filtered = findAll().stream()
-                .filter(p -> catIdStr.equals(p.getCategoryId()) && Boolean.TRUE.equals(p.getIsActive()))
+                .filter(p -> catIdStr.equals(p.getCategoryId()) && (bypass || Boolean.TRUE.equals(p.getIsActive())))
                 .collect(Collectors.toList());
         return paginate(filtered, pageable);
     }
 
     public Page<Product> findAvailableProducts(Pageable pageable) {
+        boolean bypass = shouldBypassActiveFilter();
         List<Product> filtered = findAll().stream()
-                .filter(p -> Boolean.TRUE.equals(p.getIsActive()) && p.getStockQuantity() != null && p.getStockQuantity() > 0)
+                .filter(p -> (bypass || (Boolean.TRUE.equals(p.getIsActive()) && p.getStockQuantity() != null && p.getStockQuantity() > 0)))
                 .collect(Collectors.toList());
         return paginate(filtered, pageable);
     }
 
     public Page<Product> searchCatalogForApp(String category, String search, Pageable pageable) {
         String searchLower = search == null ? "" : search.toLowerCase();
+        boolean bypass = shouldBypassActiveFilter();
         List<Product> filtered = findAll().stream()
-                .filter(p -> Boolean.TRUE.equals(p.getIsActive()) && p.getStockQuantity() != null && p.getStockQuantity() > 0)
+                .filter(p -> (bypass || (Boolean.TRUE.equals(p.getIsActive()) && p.getStockQuantity() != null && p.getStockQuantity() > 0)))
                 .filter(p -> {
                     if (category == null || category.isEmpty() || "all".equalsIgnoreCase(category)) {
                         return true;
@@ -99,15 +113,17 @@ public class ProductRepository {
 
     public Optional<Product> findByExternalIdAndIsActiveTrue(String externalId) {
         if (externalId == null) return Optional.empty();
+        boolean bypass = shouldBypassActiveFilter();
         return findAll().stream()
-                .filter(p -> externalId.equals(p.getExternalId()) && Boolean.TRUE.equals(p.getIsActive()))
+                .filter(p -> externalId.equals(p.getExternalId()) && (bypass || Boolean.TRUE.equals(p.getIsActive())))
                 .findFirst();
     }
 
     public Optional<Product> findBySlugAndIsActiveTrue(String slug) {
         if (slug == null) return Optional.empty();
+        boolean bypass = shouldBypassActiveFilter();
         return findAll().stream()
-                .filter(p -> slug.equals(p.getSlug()) && Boolean.TRUE.equals(p.getIsActive()))
+                .filter(p -> slug.equals(p.getSlug()) && (bypass || Boolean.TRUE.equals(p.getIsActive())))
                 .findFirst();
     }
 }

@@ -32,11 +32,11 @@ public class OrderViewModel extends ViewModel {
     }
 
     public LiveData<AuthRepository.Result<List<Order>>> getOrders(String status, int page) {
-        return firebaseOrderRepository.getOrders(status, page, 20);
+        return backendOrderRepository.getOrders(status, page, 20);
     }
 
     public LiveData<AuthRepository.Result<Order>> getOrderDetail(String orderId) {
-        return firebaseOrderRepository.getOrderDetail(orderId);
+        return backendOrderRepository.getOrderDetail(orderId);
     }
 
     public LiveData<AuthRepository.Result<Order>> createOrder(CreateOrderRequest request) {
@@ -44,15 +44,11 @@ public class OrderViewModel extends ViewModel {
     }
 
     public LiveData<AuthRepository.Result<Void>> cancelOrder(String orderId) {
-        return firebaseOrderRepository.cancelOrder(orderId);
+        return backendOrderRepository.cancelOrder(orderId);
     }
 
     public LiveData<AuthRepository.Result<Void>> returnOrder(String orderId, String reason) {
         return firebaseOrderRepository.returnOrder(orderId, reason);
-    }
-
-    public LiveData<AuthRepository.Result<String>> getVnpayUrl(String orderId) {
-        return backendOrderRepository.getVnpayUrl(orderId);
     }
 
     public LiveData<AuthRepository.Result<CreateMomoPaymentResponse>> createMomoPayment(

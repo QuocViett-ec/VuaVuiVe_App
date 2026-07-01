@@ -201,8 +201,8 @@ public class ZaloPayService {
             tx.setMessage("ZaloPay payment successful");
             order.setPaymentMethod("ZALOPAY");
             order.setPaymentStatus(Order.PaymentStatus.PAID);
-            order.setStatus(Order.OrderStatus.PENDING_APPROVAL);
-            appendStatusLog(order, Order.OrderStatus.PENDING_APPROVAL, "Thanh toan ZaloPay thanh cong");
+            order.setStatus(Order.OrderStatus.CONFIRMED);
+            appendStatusLog(order, Order.OrderStatus.CONFIRMED, "Thanh toan ZaloPay thanh cong");
         } else {
             markFailed(order, tx, "Thanh toan ZaloPay that bai", status);
         }
@@ -231,8 +231,8 @@ public class ZaloPayService {
             tx.setMessage("Mock ZaloPay success");
             order.setPaymentMethod("ZALOPAY");
             order.setPaymentStatus(Order.PaymentStatus.PAID);
-            order.setStatus(Order.OrderStatus.PENDING_APPROVAL);
-            appendStatusLog(order, Order.OrderStatus.PENDING_APPROVAL, "Thanh toan ZaloPay mock thanh cong");
+            order.setStatus(Order.OrderStatus.CONFIRMED);
+            appendStatusLog(order, Order.OrderStatus.CONFIRMED, "Thanh toan ZaloPay mock thanh cong");
         } else {
             markFailed(order, tx, "Mock ZaloPay failed", -1);
         }

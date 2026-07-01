@@ -45,7 +45,7 @@ Dữ liệu kiểm thử mặc định được tự động khởi tạo bởi 
 | Vai trò (Role) | Email | Mật khẩu | Ứng dụng khuyên dùng | Mục đích kiểm thử |
 | :--- | :--- | :--- | :--- | :--- |
 | **Admin** | `admin@vuavuive.vn` | `Admin@123` | **app-admin** | Quản lý sản phẩm, đơn hàng, khách hàng, cấu hình khuyến mãi/voucher, theo dõi log và chat hỗ trợ. |
-| **Customer** | `customer@gmail.com` | `Customer@123` | **app-customer** | Đặt hàng, quản lý giỏ hàng, thanh toán qua VNPay/MoMo Sandbox, xem lịch sử mua hàng, chat AI. |
+| **Customer** | `customer@gmail.com` | `Customer@123` | **app-customer** | Đặt hàng, quản lý giỏ hàng, thanh toán qua MoMo/ZaloPay Sandbox, xem lịch sử mua hàng, chat AI. |
 | **Shipper** | `shipper@gmail.com` | `Shipper@123` | **Shipper Client / Postman** | Nhận đơn hàng, cập nhật trạng thái vận chuyển và giao hàng. |
 
 ---

@@ -120,7 +120,6 @@ public class PaymentResultActivity extends AppCompatActivity {
 
     private String providerLabel() {
         if ("ZALOPAY".equalsIgnoreCase(provider)) return "ZaloPay";
-        if ("VNPAY".equalsIgnoreCase(provider)) return "VNPay";
         return "MoMo";
     }
 

@@ -7,7 +7,7 @@ import java.util.UUID;
 
 /**
  * DTO phản hồi đơn hàng — Trả về App Android sau khi tạo đơn hoặc xem đơn.
- * Nếu paymentMethod là VNPAY/MOMO, trường paymentUrl sẽ có giá trị để App mở WebView.
+ * Nếu paymentMethod là MOMO/ZALOPAY, trường paymentUrl sẽ có giá trị để App mở WebView.
  * deliveryName & deliveryPhone được thêm vào để Shipper App hiển thị thông tin khách hàng
  * và kích hoạt nút Gọi điện (Quick Call) mà không cần gọi thêm API.
  */
@@ -27,6 +27,6 @@ public record OrderResponse(
         List<OrderItemResponse> items,
         List<OrderStatusLogResponse> statusTimeline,
         LocalDateTime createdAt,
-        /** URL thanh toán VNPay/MoMo — null nếu là COD */
+        /** URL thanh toán MoMo/ZaloPay — null nếu là COD */
         String paymentUrl
 ) {}

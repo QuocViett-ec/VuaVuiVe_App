@@ -40,7 +40,7 @@ public class OrderController {
 
     private final OrderService orderService;
 
-    @Operation(summary = "Tạo đơn hàng mới — Trả về paymentUrl nếu dùng VNPay/MoMo")
+    @Operation(summary = "Tạo đơn hàng mới — Trả về paymentUrl nếu dùng MoMo/ZaloPay")
     @PostMapping
     public ResponseEntity<ApiResponse<OrderResponse>> createOrder(
             @Valid @RequestBody CreateOrderRequest request,

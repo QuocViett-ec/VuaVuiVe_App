@@ -99,7 +99,11 @@ public class CreateOrderRequest {
         if (method == null || method.trim().isEmpty()) {
             return "COD";
         }
-        return method.trim().toUpperCase(); // "COD", "VNPAY", "MOMO"
+        String normalized = method.trim().toUpperCase();
+        if (!"COD".equals(normalized) && !"MOMO".equals(normalized) && !"ZALOPAY".equals(normalized)) {
+            throw new IllegalArgumentException("Phuong thuc thanh toan khong hop le");
+        }
+        return normalized;
     }
 
     /**

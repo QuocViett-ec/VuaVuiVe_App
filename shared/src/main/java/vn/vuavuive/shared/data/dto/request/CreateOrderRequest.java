@@ -17,7 +17,7 @@ public class CreateOrderRequest {
     private Map<String, String> payment;
 
     @SerializedName("paymentMethod")
-    private String paymentMethod;  // "cod", "vnpay", "momo"
+    private String paymentMethod;  // "cod", "momo", "zalopay"
 
     @SerializedName("voucherCode")
     private String voucherCode;

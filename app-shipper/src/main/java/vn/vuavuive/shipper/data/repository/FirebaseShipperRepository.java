@@ -132,7 +132,7 @@ public class FirebaseShipperRepository {
      * FirebaseAuth tự refresh token nên chỉ cần check currentUser != null và role trong session.
      */
     public boolean isLoggedIn() {
-        return auth.getCurrentUser() != null && sessionManager.isLoggedIn() && sessionManager.isShipper();
+        return auth.getCurrentUser() != null && sessionManager.isShipper();
     }
 
     /**

@@ -211,8 +211,7 @@ public class CheckoutActivity extends AppCompatActivity {
         // Determine payment method
         String method = Constants.PAYMENT_COD;
         int selectedId = rgPaymentMethod.getCheckedRadioButtonId();
-        if      (selectedId == R.id.rb_vnpay)   method = Constants.PAYMENT_VNPAY;
-        else if (selectedId == R.id.rb_momo)    method = Constants.PAYMENT_MOMO;
+        if      (selectedId == R.id.rb_momo)    method = Constants.PAYMENT_MOMO;
         else if (selectedId == R.id.rb_zalopay) method = Constants.PAYMENT_ZALOPAY;
 
         // Build request
@@ -269,17 +268,6 @@ public class CheckoutActivity extends AppCompatActivity {
                     cartViewModel.clearCart();
                     Toast.makeText(this, "Đặt hàng thành công!", Toast.LENGTH_LONG).show();
                     finish();
-
-                } else if (Constants.PAYMENT_VNPAY.equals(finalMethod)) {
-                    orderViewModel.getVnpayUrl(orderId).observe(this, urlResult -> {
-                        if (urlResult.status == AuthRepository.Result.Status.SUCCESS) {
-                            Intent intent = new Intent(this, PaymentWebViewActivity.class);
-                            intent.putExtra("payment_url", urlResult.data);
-                            intent.putExtra("order_id", orderId);
-                            intent.putExtra("provider", "VNPAY");
-                            startActivity(intent);
-                        }
-                    });
 
                 } else if (Constants.PAYMENT_MOMO.equals(finalMethod)) {
                     setLoading(true);

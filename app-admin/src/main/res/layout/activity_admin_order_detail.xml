@@ -283,7 +283,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
-                        android:text="VNPAY"
+                        android:text="MOMO"
                         android:textColor="@color/text_primary"
                         android:textSize="14sp"
                         android:textStyle="bold" />
@@ -331,7 +331,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
-                        android:text="VNPAY12948194"
+                        android:text="MOMO12948194"
                         android:textColor="@color/text_primary"
                         android:textSize="13sp" />
                 </RelativeLayout>

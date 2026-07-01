@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,8 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import dagger.hilt.android.AndroidEntryPoint;
 import vn.vuavuive.customer.R;
 import vn.vuavuive.customer.data.repository.AuthRepository;
-import vn.vuavuive.customer.viewmodel.OrderViewModel;
 import vn.vuavuive.customer.ui.review.ReviewBottomSheetDialogFragment;
+import vn.vuavuive.customer.viewmodel.OrderViewModel;
 import vn.vuavuive.shared.data.dto.Order;
 import vn.vuavuive.shared.data.dto.OrderItem;
 import vn.vuavuive.shared.util.CurrencyFormatter;
@@ -53,24 +52,22 @@ public class OrderDetailActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        tvOrderId         = findViewById(R.id.tv_order_id);
-        tvStatus          = findViewById(R.id.tv_status);
-        tvOrderDate       = findViewById(R.id.tv_order_date);
-        tvReceiverName    = findViewById(R.id.tv_receiver_name);
-        tvReceiverPhone   = findViewById(R.id.tv_receiver_phone);
+        tvOrderId = findViewById(R.id.tv_order_id);
+        tvStatus = findViewById(R.id.tv_status);
+        tvOrderDate = findViewById(R.id.tv_order_date);
+        tvReceiverName = findViewById(R.id.tv_receiver_name);
+        tvReceiverPhone = findViewById(R.id.tv_receiver_phone);
         tvDeliveryAddress = findViewById(R.id.tv_delivery_address);
-        tvPaymentMethod   = findViewById(R.id.tv_payment_method);
-        tvTotal           = findViewById(R.id.tv_total);
-        btnCancelOrder    = findViewById(R.id.btn_cancel_order);
-        btnReturnOrder    = findViewById(R.id.btn_return_order);
-        btnReview         = findViewById(R.id.btn_review);
-        rvOrderItems      = findViewById(R.id.rv_order_items);
+        tvPaymentMethod = findViewById(R.id.tv_payment_method);
+        tvTotal = findViewById(R.id.tv_total);
+        btnCancelOrder = findViewById(R.id.btn_cancel_order);
+        btnReturnOrder = findViewById(R.id.btn_return_order);
+        btnReview = findViewById(R.id.btn_review);
+        rvOrderItems = findViewById(R.id.rv_order_items);
 
-        // Back button
         View btnBack = findViewById(R.id.btn_back);
         if (btnBack != null) btnBack.setOnClickListener(v -> finish());
 
-        // Order items RecyclerView
         orderItemAdapter = new OrderItemAdapter(this);
         rvOrderItems.setLayoutManager(new LinearLayoutManager(this));
         rvOrderItems.setAdapter(orderItemAdapter);
@@ -83,47 +80,40 @@ public class OrderDetailActivity extends AppCompatActivity {
                 currentOrder = result.data;
                 bindOrder(result.data);
             } else if (result.status == AuthRepository.Result.Status.ERROR) {
-                Toast.makeText(this, "Không thể tải chi tiết đơn hàng", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Khong the tai chi tiet don hang", Toast.LENGTH_SHORT).show();
                 finish();
             }
         });
     }
 
     private void bindOrder(Order order) {
-        // Header
-        String displayId = order.getOrderId() != null ? order.getOrderId() : "#" + order.getId().substring(0, 8).toUpperCase();
+        String displayId = order.getOrderId() != null
+                ? order.getOrderId()
+                : "#" + order.getId().substring(0, 8).toUpperCase();
         tvOrderId.setText(displayId);
         tvStatus.setText(getStatusLabel(order.getStatus()));
         tvStatus.setTextColor(getResources().getColor(getStatusColor(order.getStatus()), null));
 
         if (order.getCreatedAt() != null && order.getCreatedAt().length() >= 10) {
-            tvOrderDate.setText("Đặt lúc: " + order.getCreatedAt().replace("T", " ").substring(0, 16));
+            tvOrderDate.setText("Dat luc: " + order.getCreatedAt().replace("T", " ").substring(0, 16));
         }
 
-        // Delivery info
-        String recipientName = order.getRecipientName();
-        String recipientPhone = order.getRecipientPhone();
-        String recipientAddress = order.getRecipientAddress();
+        tvReceiverName.setText(order.getRecipientName() != null ? order.getRecipientName() : "-");
+        tvReceiverPhone.setText(order.getRecipientPhone() != null ? order.getRecipientPhone() : "-");
+        tvDeliveryAddress.setText(order.getRecipientAddress() != null ? order.getRecipientAddress() : "-");
 
-        tvReceiverName.setText(recipientName != null ? recipientName : "—");
-        tvReceiverPhone.setText(recipientPhone != null ? recipientPhone : "—");
-        tvDeliveryAddress.setText(recipientAddress != null ? recipientAddress : "—");
-
-        // Payment
         if (order.getPayment() != null) {
             String method = order.getPayment().getMethod();
             tvPaymentMethod.setText(getPaymentLabel(method) + " - " + getPaymentStatusLabel(order.getPayment().getStatus()));
         } else {
-            tvPaymentMethod.setText("—");
+            tvPaymentMethod.setText("-");
         }
         tvTotal.setText(CurrencyFormatter.format(order.getFinalAmount()));
 
-        // Order items
         if (order.getItems() != null) {
             orderItemAdapter.setItems(order.getItems());
         }
 
-        // Action buttons
         updateActionButtons(order);
     }
 
@@ -133,7 +123,10 @@ public class OrderDetailActivity extends AppCompatActivity {
         btnReturnOrder.setVisibility(View.GONE);
         btnReview.setVisibility(View.GONE);
 
-        if ("pending".equals(status) || "pending_payment".equals(status) || "pending_approval".equals(status) || "confirmed".equals(status)) {
+        if ("pending".equals(status)
+                || "pending_payment".equals(status)
+                || "pending_approval".equals(status)
+                || "confirmed".equals(status)) {
             btnCancelOrder.setVisibility(View.VISIBLE);
         }
         if ("delivered".equals(status)) {
@@ -143,10 +136,6 @@ public class OrderDetailActivity extends AppCompatActivity {
     }
 
     private void setupActions() {
-        btnCancelOrder = findViewById(R.id.btn_cancel_order);
-        btnReturnOrder = findViewById(R.id.btn_return_order);
-        btnReview      = findViewById(R.id.btn_review);
-
         btnCancelOrder.setOnClickListener(v -> showCancelDialog());
         btnReturnOrder.setOnClickListener(v -> showReturnDialog());
         btnReview.setOnClickListener(v -> showReviewDialog());
@@ -154,13 +143,13 @@ public class OrderDetailActivity extends AppCompatActivity {
 
     private void showCancelDialog() {
         new AlertDialog.Builder(this)
-                .setTitle("Hủy đơn hàng")
-                .setMessage("Bạn có chắc muốn hủy đơn hàng này không?")
-                .setPositiveButton("Hủy đơn", (d, w) -> {
+                .setTitle("Huy don hang")
+                .setMessage("Ban co chac muon huy don hang nay khong?")
+                .setPositiveButton("Huy don", (d, w) -> {
                     if (currentOrder != null) {
                         orderViewModel.cancelOrder(currentOrder.getId()).observe(this, result -> {
                             if (result.status == AuthRepository.Result.Status.SUCCESS) {
-                                Toast.makeText(this, "Đơn hàng đã được hủy", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(this, "Don hang da duoc huy", Toast.LENGTH_SHORT).show();
                                 finish();
                             } else if (result.status == AuthRepository.Result.Status.ERROR) {
                                 Toast.makeText(this, result.message, Toast.LENGTH_SHORT).show();
@@ -168,26 +157,26 @@ public class OrderDetailActivity extends AppCompatActivity {
                         });
                     }
                 })
-                .setNegativeButton("Đóng", null)
+                .setNegativeButton("Dong", null)
                 .show();
     }
 
     private void showReturnDialog() {
         EditText etReason = new EditText(this);
-        etReason.setHint("Lý do trả hàng...");
+        etReason.setHint("Ly do tra hang...");
         new AlertDialog.Builder(this)
-                .setTitle("Yêu cầu trả hàng")
+                .setTitle("Yeu cau tra hang")
                 .setView(etReason)
-                .setPositiveButton("Gửi yêu cầu", (d, w) -> {
+                .setPositiveButton("Gui yeu cau", (d, w) -> {
                     String reason = etReason.getText().toString().trim();
                     if (reason.isEmpty()) {
-                        Toast.makeText(this, "Vui lòng nhập lý do", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Vui long nhap ly do", Toast.LENGTH_SHORT).show();
                         return;
                     }
                     if (currentOrder != null) {
                         orderViewModel.returnOrder(currentOrder.getId(), reason).observe(this, result -> {
                             if (result.status == AuthRepository.Result.Status.SUCCESS) {
-                                Toast.makeText(this, "Đã gửi yêu cầu trả hàng", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(this, "Da gui yeu cau tra hang", Toast.LENGTH_SHORT).show();
                                 finish();
                             } else if (result.status == AuthRepository.Result.Status.ERROR) {
                                 Toast.makeText(this, result.message, Toast.LENGTH_SHORT).show();
@@ -195,7 +184,7 @@ public class OrderDetailActivity extends AppCompatActivity {
                         });
                     }
                 })
-                .setNegativeButton("Đóng", null)
+                .setNegativeButton("Dong", null)
                 .show();
     }
 
@@ -235,58 +224,86 @@ public class OrderDetailActivity extends AppCompatActivity {
         sheet.show(getSupportFragmentManager(), "review_sheet");
     }
 
-    // Helpers
     private String getStatusLabel(String status) {
-        if (status == null) return "—";
+        if (status == null) return "-";
         switch (status.toLowerCase()) {
-            case "pending":          return "Chờ xác nhận";
-            case "pending_payment":  return "Chờ thanh toán";
-            case "pending_approval": return "Chờ admin duyệt";
-            case "confirmed":        return "Đã xác nhận";
-            case "processing":       return "Đang xử lý";
-            case "packed":           return "Đóng gói xong";
-            case "shipping":         return "Đang giao";
-            case "delivered":        return "Đã giao";
-            case "cancelled":        return "Đã hủy";
-            case "return_requested": return "Yêu cầu trả";
-            case "returned":         return "Đã trả";
-            case "refunded":         return "Đã hoàn tiền";
-            default:                 return status;
+            case "pending":
+                return "Cho xac nhan";
+            case "pending_payment":
+                return "Cho thanh toan";
+            case "pending_approval":
+                return "Cho admin duyet";
+            case "confirmed":
+                return "Da xac nhan";
+            case "processing":
+                return "Dang xu ly";
+            case "packed":
+                return "Dong goi xong";
+            case "shipping":
+            case "in_transit":
+                return "Dang giao";
+            case "delivered":
+                return "Da giao";
+            case "cancelled":
+                return "Da huy";
+            case "return_requested":
+                return "Yeu cau tra";
+            case "returned":
+                return "Da tra";
+            case "refunded":
+                return "Da hoan tien";
+            default:
+                return status;
         }
     }
 
     private int getStatusColor(String status) {
         if (status == null) return R.color.text_secondary;
         switch (status.toLowerCase()) {
-            case "pending":          return R.color.status_pending;
-            case "pending_payment":  return R.color.status_pending;
-            case "pending_approval": return R.color.status_pending;
-            case "confirmed":        return R.color.status_confirmed;
-            case "shipping":         return R.color.status_shipping;
-            case "delivered":        return R.color.status_delivered;
-            case "cancelled":        return R.color.status_cancelled;
-            default:                 return R.color.status_return;
+            case "pending":
+            case "pending_payment":
+            case "pending_approval":
+                return R.color.status_pending;
+            case "confirmed":
+                return R.color.status_confirmed;
+            case "shipping":
+            case "in_transit":
+                return R.color.status_shipping;
+            case "delivered":
+                return R.color.status_delivered;
+            case "cancelled":
+                return R.color.status_cancelled;
+            default:
+                return R.color.status_return;
         }
     }
 
     private String getPaymentLabel(String method) {
-        if (method == null) return "—";
+        if (method == null) return "-";
         method = method.toLowerCase();
         switch (method) {
-            case "cod":   return "Thanh toán khi nhận hàng (COD)";
-            case "vnpay": return "VNPay";
-            case "momo":  return "MoMo";
-            default:      return method.toUpperCase();
+            case "cod":
+                return "Thanh toan khi nhan hang (COD)";
+            case "momo":
+                return "MoMo";
+            case "zalopay":
+                return "ZaloPay";
+            default:
+                return method.toUpperCase();
         }
     }
 
     private String getPaymentStatusLabel(String status) {
         if (status == null) return "Pending";
         switch (status.toLowerCase()) {
-            case "paid": return "Paid";
-            case "failed": return "Failed";
-            case "cancelled": return "Cancelled";
-            default: return "Pending";
+            case "paid":
+                return "Paid";
+            case "failed":
+                return "Failed";
+            case "cancelled":
+                return "Cancelled";
+            default:
+                return "Pending";
         }
     }
 }

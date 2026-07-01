@@ -24,7 +24,7 @@ public class OpenApiConfig {
                 .info(new Info()
                         .title("Vựa Vui Vẻ Backend API Document")
                         .description("Tài liệu API hệ thống TMĐT thực phẩm tươi sống, nông sản sạch Vựa Vui Vẻ. "
-                                + "Hệ thống hỗ trợ Đặt hàng, Thanh toán VNPay/MoMo Webhook, Realtime Shipper Tracking qua WebSockets, và Chatbot Gemini AI.")
+                                + "Hệ thống hỗ trợ Đặt hàng, Thanh toán MoMo/ZaloPay Webhook, Realtime Shipper Tracking qua WebSockets, và Chatbot Gemini AI.")
                         .version("1.0.0")
                         .contact(new Contact()
                                 .name("Vua Vui Ve Team")

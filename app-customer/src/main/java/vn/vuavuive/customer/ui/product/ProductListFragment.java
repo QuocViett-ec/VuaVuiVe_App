@@ -279,7 +279,6 @@ public class ProductListFragment extends Fragment {
         });
     }
 
-    // ── Load products from API only — no mock data ─────────────────────────────
     private void loadProducts(View view) {
         showLoading(view, true);
         try {
@@ -289,10 +288,13 @@ public class ProductListFragment extends Fragment {
             }
             productsLiveData = productViewModel.loadProducts(1);
             productsLiveData.observe(getViewLifecycleOwner(), result -> {
+                if (result == null) return;
+                if (result.status == AuthRepository.Result.Status.LOADING) {
+                    return; // Keep isLoading = true
+                }
                 isLoading = false;
                 showLoading(view, false);
-                if (result != null
-                        && result.status == AuthRepository.Result.Status.SUCCESS
+                if (result.status == AuthRepository.Result.Status.SUCCESS
                         && result.data != null) {
                     android.util.Log.d("ProductListFragment", "loadProducts: success. Data size = " + result.data.size());
                     if (adapter != null) adapter.setProducts(result.data);
@@ -316,10 +318,14 @@ public class ProductListFragment extends Fragment {
             }
             nextPageLiveData = productViewModel.loadNextPage();
             nextPageLiveData.observe(getViewLifecycleOwner(), result -> {
+                if (result == null) return;
+                if (result.status == AuthRepository.Result.Status.LOADING) {
+                    return; // Keep isLoading = true
+                }
                 isLoading = false;
-                if (result != null
-                        && result.status == AuthRepository.Result.Status.SUCCESS
+                if (result.status == AuthRepository.Result.Status.SUCCESS
                         && result.data != null && !result.data.isEmpty()) {
+                    android.util.Log.d("ProductListFragment", "loadNextPageFromApi: success. Loaded " + result.data.size() + " products.");
                     if (adapter != null) adapter.appendProducts(result.data);
                 }
             });

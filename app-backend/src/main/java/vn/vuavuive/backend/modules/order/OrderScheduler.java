@@ -25,7 +25,7 @@ public class OrderScheduler {
     private final OrderStatusLogRepository statusLogRepository;
 
     /**
-     * Tự động quét và hủy đơn hàng thanh toán online (VNPAY/MOMO)
+     * Tự động quét và hủy đơn hàng thanh toán online (MOMO/ZALOPAY)
      * mà khách hàng không thực hiện thanh toán sau 15 phút.
      * Chạy mỗi 1 phút.
      */

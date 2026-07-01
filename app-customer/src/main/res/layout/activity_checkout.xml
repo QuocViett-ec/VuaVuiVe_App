@@ -231,16 +231,6 @@
                             <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/divider" />
 
                             <RadioButton
-                                android:id="@+id/rb_vnpay"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="Ví điện tử VNPay"
-                                android:textColor="@color/text_primary"
-                                android:paddingVertical="12dp" />
-
-                            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/divider" />
-
-                            <RadioButton
                                 android:id="@+id/rb_momo"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"

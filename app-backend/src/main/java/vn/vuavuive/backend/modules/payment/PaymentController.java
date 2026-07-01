@@ -22,13 +22,12 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
-@Tag(name = "Payments", description = "VNPay callbacks and MoMo sandbox payment APIs")
+@Tag(name = "Payments", description = "MoMo and ZaloPay payment APIs")
 @Slf4j
 @RestController
 @RequestMapping("/api/payments")
 @RequiredArgsConstructor
 public class PaymentController {
-    private final VNPayService vnPayService;
     private final MoMoService moMoService;
     private final ZaloPayService zaloPayService;
     private final OrderService orderService;
@@ -48,27 +47,6 @@ public class PaymentController {
         return ResponseEntity.ok(ApiResponse.success(zaloPayService.createZaloPayPayment(request)));
     }
 
-    @Operation(summary = "VNPay IPN")
-    @GetMapping("/vnpay/ipn")
-    public ResponseEntity<Map<String, String>> vnpayIpn(@RequestParam Map<String, String> params) {
-        Map<String, String> response = new HashMap<>();
-        try {
-            if (!vnPayService.validateIpnSignature(params)) {
-                response.put("RspCode", "97");
-                response.put("Message", "Signature failed");
-                return ResponseEntity.ok(response);
-            }
-            orderService.handleVNPayIpn(params.get("vnp_TxnRef"), params.get("vnp_ResponseCode"));
-            response.put("RspCode", "00");
-            response.put("Message", "Confirm Success");
-        } catch (Exception e) {
-            log.error("Loi xu ly VNPay IPN", e);
-            response.put("RspCode", "99");
-            response.put("Message", "Unknown error");
-        }
-        return ResponseEntity.ok(response);
-    }
-
     @Operation(summary = "MoMo IPN")
     @PostMapping("/momo/ipn")
     public ResponseEntity<Map<String, Object>> momoIpn(@RequestBody MomoIpnRequest request) {
@@ -80,16 +58,6 @@ public class PaymentController {
         response.put("requestId", request.requestId());
         response.put("responseTime", Instant.now().toEpochMilli());
         return ResponseEntity.ok(response);
-    }
-
-    @Operation(summary = "VNPay return")
-    @GetMapping("/vnpay/return")
-    public ResponseEntity<String> vnpayReturn(@RequestParam Map<String, String> params) {
-        String responseCode = params.get("vnp_ResponseCode");
-        String orderId = params.get("vnp_TxnRef");
-        String text = "00".equals(responseCode) ? "VNPay payment returned" : "VNPay payment failed or cancelled";
-        return ResponseEntity.ok("<html><body><h1 style='text-align:center;'>" + text
-                + "</h1><p style='text-align:center;'>Order " + orderId + "</p></body></html>");
     }
 
     @Operation(summary = "MoMo return")
@@ -181,29 +149,41 @@ public class PaymentController {
 
     @Operation(summary = "Dev-only mock MoMo success")
     @PostMapping("/momo/mock-success/{orderId}")
-    public ResponseEntity<ApiResponse<PaymentStatusResponse>> mockMomoSuccess(@PathVariable String orderId) {
+    public ResponseEntity<ApiResponse<Map<String, Object>>> mockMomoSuccess(@PathVariable String orderId) {
         moMoService.handleMockResult(orderId, true);
-        return ResponseEntity.ok(ApiResponse.success(moMoService.getPaymentStatus(orderId)));
+        return ResponseEntity.ok(ApiResponse.success(mockStatus(orderId)));
     }
 
     @Operation(summary = "Dev-only mock MoMo fail")
     @PostMapping("/momo/mock-fail/{orderId}")
-    public ResponseEntity<ApiResponse<PaymentStatusResponse>> mockMomoFail(@PathVariable String orderId) {
+    public ResponseEntity<ApiResponse<Map<String, Object>>> mockMomoFail(@PathVariable String orderId) {
         moMoService.handleMockResult(orderId, false);
-        return ResponseEntity.ok(ApiResponse.success(moMoService.getPaymentStatus(orderId)));
+        return ResponseEntity.ok(ApiResponse.success(mockStatus(orderId)));
     }
 
     @Operation(summary = "Dev-only mock ZaloPay success")
     @PostMapping("/zalopay/mock-success/{orderId}")
-    public ResponseEntity<ApiResponse<PaymentStatusResponse>> mockZaloPaySuccess(@PathVariable String orderId) {
+    public ResponseEntity<ApiResponse<Map<String, Object>>> mockZaloPaySuccess(@PathVariable String orderId) {
         zaloPayService.handleMockResult(orderId, true);
-        return ResponseEntity.ok(ApiResponse.success(zaloPayService.getPaymentStatus(orderId)));
+        return ResponseEntity.ok(ApiResponse.success(mockStatus(orderId)));
     }
 
     @Operation(summary = "Dev-only mock ZaloPay fail")
     @PostMapping("/zalopay/mock-fail/{orderId}")
-    public ResponseEntity<ApiResponse<PaymentStatusResponse>> mockZaloPayFail(@PathVariable String orderId) {
+    public ResponseEntity<ApiResponse<Map<String, Object>>> mockZaloPayFail(@PathVariable String orderId) {
         zaloPayService.handleMockResult(orderId, false);
-        return ResponseEntity.ok(ApiResponse.success(zaloPayService.getPaymentStatus(orderId)));
+        return ResponseEntity.ok(ApiResponse.success(mockStatus(orderId)));
+    }
+
+    private Map<String, Object> mockStatus(String orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> vn.vuavuive.backend.exception.AppException.notFound("Don hang"));
+        Map<String, Object> data = new HashMap<>();
+        data.put("orderId", order.getId());
+        data.put("paymentMethod", order.getPaymentMethod());
+        data.put("paymentStatus", order.getPaymentStatus().name());
+        data.put("status", order.getStatus().name());
+        data.put("amount", order.getFinalAmount());
+        return data;
     }
 }

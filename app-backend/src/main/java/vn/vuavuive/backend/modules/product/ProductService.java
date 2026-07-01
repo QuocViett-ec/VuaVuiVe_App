@@ -98,11 +98,20 @@ public class ProductService {
         return toPagedResponse(products);
     }
 
-    @Cacheable(value = "products", key = "#id")
+    private boolean isAdminOrStaff() {
+        org.springframework.security.core.Authentication auth = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || !auth.isAuthenticated()) {
+            return false;
+        }
+        return auth.getAuthorities().stream()
+                .map(org.springframework.security.core.GrantedAuthority::getAuthority)
+                .anyMatch(role -> role.equals("ROLE_ADMIN") || role.equals("ROLE_STAFF") || role.equals("ROLE_AUDIT"));
+    }
+
     public ProductResponse getProductById(UUID id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> AppException.notFound("Sản phẩm"));
-        if (!Boolean.TRUE.equals(product.getIsActive())) {
+        if (!isAdminOrStaff() && !Boolean.TRUE.equals(product.getIsActive())) {
             throw AppException.notFound("Sản phẩm");
         }
         return toResponse(product);
@@ -123,6 +132,7 @@ public class ProductService {
                 .unit(request.unit())
                 .imageUrl(request.imageUrl())
                 .categoryId(category.getId())
+                .isActive(request.isActive() != null ? request.isActive() : true)
                 .build();
 
         return toResponse(productRepository.save(product));
@@ -131,6 +141,7 @@ public class ProductService {
     @Transactional
     @CacheEvict(value = {"products", "product-page"}, allEntries = true)
     public ProductResponse updateProduct(UUID id, ProductRequest request) {
+        System.out.println("DEBUG UPDATEPRODUCT: id=" + id + ", request=" + request + ", request.isActive()=" + request.isActive());
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> AppException.notFound("Sản phẩm"));
 
@@ -145,6 +156,7 @@ public class ProductService {
         product.setUnit(request.unit());
         product.setCategoryId(category.getId());
         if (request.imageUrl() != null) product.setImageUrl(request.imageUrl());
+        if (request.isActive() != null) product.setIsActive(request.isActive());
 
         return toResponse(productRepository.save(product));
     }
@@ -171,17 +183,17 @@ public class ProductService {
         if (id == null || id.isBlank()) {
             throw AppException.notFound("Sản phẩm");
         }
-
+        boolean bypass = isAdminOrStaff();
         try {
             UUID uuid = UUID.fromString(id);
             return productRepository.findById(uuid)
-                    .filter(product -> Boolean.TRUE.equals(product.getIsActive()))
+                    .filter(product -> bypass || Boolean.TRUE.equals(product.getIsActive()))
                     .orElseThrow(() -> AppException.notFound("Sản phẩm"));
         } catch (IllegalArgumentException ignored) {
             return productRepository.findByExternalIdAndIsActiveTrue(id)
                     .or(() -> productRepository.findBySlugAndIsActiveTrue(id))
                     .or(() -> productRepository.findById(id))
-                    .filter(product -> Boolean.TRUE.equals(product.getIsActive()))
+                    .filter(product -> bypass || Boolean.TRUE.equals(product.getIsActive()))
                     .orElseThrow(() -> AppException.notFound("Sản phẩm"));
         }
     }

@@ -15,6 +15,7 @@ public record ProductResponse(
         Integer stockQuantity,
         String unit,
         String imageUrl,
+        @JsonProperty("isActive")
         Boolean isActive,
         String categoryId,
         String categoryName,

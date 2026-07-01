@@ -17,7 +17,7 @@ Dưới đây là khung sườn (outline) chi tiết để bạn viết báo cá
   - Quản lý tồn kho real-time tránh hiện tượng lệch kho (out of stock).
   - Tích hợp chatbot hỗ trợ khách hàng và xuất báo cáo kiểm toán hoạt động.
 * **2.2. Phân quyền người dùng (Role-based Access)**:
-  - **Khách hàng (Customer)**: Đăng ký/đăng nhập (chuẩn hóa điện thoại), xem sản phẩm, quản lý giỏ hàng offline, đặt hàng, thanh toán online (MoMo, VNPay), phản hồi đánh giá.
+  - **Khách hàng (Customer)**: Đăng ký/đăng nhập (chuẩn hóa điện thoại), xem sản phẩm, quản lý giỏ hàng offline, đặt hàng, thanh toán online (MoMo, ZaloPay), phản hồi đánh giá.
   - **Quản trị viên (Admin/Staff/Audit)**: Dashboard thống kê doanh thu, quản lý danh mục, sản phẩm, duyệt đơn hàng và yêu cầu trả hàng, phân quyền shipper.
   - **Tài xế giao hàng (Shipper)**: Cập nhật trạng thái online, nhận đơn được gán, định vị và cập nhật trạng thái giao hàng (Thành công/Thất bại kèm lý do).
 

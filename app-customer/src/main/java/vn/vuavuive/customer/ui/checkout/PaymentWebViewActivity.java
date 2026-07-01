@@ -28,7 +28,6 @@ public class PaymentWebViewActivity extends AppCompatActivity {
     private String provider;
     private boolean checkingStatus;
 
-    private static final String VNPAY_RETURN_URL = "/api/payments/vnpay/return";
     private static final String MOMO_RETURN_URL = "/api/payments/momo/return";
     private static final String ZALOPAY_RETURN_URL = "/api/payments/zalopay/return";
 
@@ -80,12 +79,6 @@ public class PaymentWebViewActivity extends AppCompatActivity {
 
     private boolean handleUrl(String url) {
         if (url == null) return false;
-        if (url.contains(VNPAY_RETURN_URL) || url.contains("/api/payment/vnpay/return")) {
-            String responseCode = Uri.parse(url).getQueryParameter("vnp_ResponseCode");
-            if ("00".equals(responseCode)) handlePaymentSuccess();
-            else handlePaymentFailure("Thanh toan VNPay that bai (code: " + responseCode + ")");
-            return true;
-        }
         if (url.contains(MOMO_RETURN_URL) || url.contains("/api/payment/momo/return")) {
             checkMomoStatus();
             return true;

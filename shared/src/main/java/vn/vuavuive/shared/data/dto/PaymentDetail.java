@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class PaymentDetail {
     @SerializedName("method")
-    private String method;  // "cod", "vnpay", "momo"
+    private String method;  // "cod", "momo", "zalopay"
 
     @SerializedName("status")
     private String status;  // "pending", "paid", "refunded"
@@ -33,6 +33,5 @@ public class PaymentDetail {
 
     public boolean isPaid() { return "paid".equals(status); }
     public boolean isCOD() { return "cod".equals(method); }
-    public boolean isVNPay() { return "vnpay".equals(method); }
     public boolean isMoMo() { return "momo".equals(method); }
 }
