@@ -62,6 +62,11 @@ public class EditProfileActivity extends AppCompatActivity {
                 etAddress.setText(user.getAddress());
             }
         });
+        authViewModel.checkSession().observe(this, result -> {
+            if (result.status == AuthRepository.Result.Status.SUCCESS && result.data != null) {
+                authViewModel.setCurrentUser(result.data);
+            }
+        });
     }
 
     private void setupSave() {

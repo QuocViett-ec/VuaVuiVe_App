@@ -94,4 +94,7 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.1.1"))
     implementation("com.google.firebase:firebase-database")
     implementation("com.google.firebase:firebase-auth")
+
+    // osmdroid for map picker
+    implementation("org.osmdroid:osmdroid-android:6.1.18")
 }

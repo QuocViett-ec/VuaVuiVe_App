@@ -13,7 +13,6 @@ public record RegisterRequest(
         String fullName,
 
         @Email(message = "Email không hợp lệ")
-        @NotBlank(message = "Email không được để trống")
         String email,
 
         @NotBlank(message = "Số điện thoại không được để trống")

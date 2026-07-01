@@ -85,7 +85,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
-                    android:hint="Họ và tên"
+                    android:hint="Họ và tên *"
+                    app:hintTextColor="@color/error"
                     app:startIconDrawable="@drawable/ic_person">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -101,7 +102,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
-                    android:hint="Số điện thoại"
+                    android:hint="Số điện thoại *"
+                    app:hintTextColor="@color/error"
                     app:startIconDrawable="@drawable/ic_phone">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -117,7 +119,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
-                    android:hint="Email"
+                    android:hint="Email (tuỳ chọn)"
                     app:startIconDrawable="@drawable/ic_email">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -133,8 +135,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
-                    android:hint="Địa chỉ giao hàng"
-                    app:startIconDrawable="@drawable/ic_location">
+                    android:hint="Địa chỉ giao hàng (tuỳ chọn)"
+                    app:startIconDrawable="@drawable/ic_location"
+                    app:endIconMode="custom"
+                    app:endIconDrawable="@drawable/ic_location">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/et_address"
@@ -149,7 +153,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
-                    android:hint="Mật khẩu"
+                    android:hint="Mật khẩu *"
+                    app:hintTextColor="@color/error"
                     app:passwordToggleEnabled="true"
                     app:startIconDrawable="@drawable/ic_lock">
 
@@ -166,7 +171,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="24dp"
-                    android:hint="Xác nhận mật khẩu"
+                    android:hint="Xác nhận mật khẩu *"
+                    app:hintTextColor="@color/error"
                     app:passwordToggleEnabled="true"
                     app:startIconDrawable="@drawable/ic_lock">
 
