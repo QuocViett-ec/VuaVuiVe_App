@@ -52,6 +52,9 @@ public class FirebaseAdminOrderApi implements AdminOrderApi {
         o.setId(s.child("id").getValue(String.class) != null ? s.child("id").getValue(String.class) : s.getKey());
         o.setOrderId(s.child("order_id").getValue(String.class));
         o.setUserId(s.child("user_id").getValue(String.class));
+        String shipperId = s.child("shipper_id").getValue(String.class);
+        if (shipperId == null) shipperId = s.child("shipperId").getValue(String.class);
+        o.setShipperId(shipperId);
         
         String status = s.child("status").getValue(String.class);
         o.setStatus(status != null ? status.toUpperCase() : null);
@@ -235,6 +238,100 @@ public class FirebaseAdminOrderApi implements AdminOrderApi {
     @Override
     public Call<ResponseBody> exportOrders() {
         return new FirebaseCall<>(ResponseBody.create("id,status,total\n", okhttp3.MediaType.parse("text/csv")));
+    }
+
+    @Override
+    public Call<Map<String, String>> assignShipper(String orderId, String shipperId) {
+        return new Call<Map<String, String>>() {
+            @Override public Response<Map<String, String>> execute() { throw new UnsupportedOperationException(); }
+            @Override
+            public void enqueue(@NonNull Callback<Map<String, String>> callback) {
+                dbRef.child("users").child(shipperId).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot userSnap) {
+                        if (!userSnap.exists() || !"SHIPPER".equalsIgnoreCase(userSnap.child("role").getValue(String.class))) {
+                            callback.onResponse(null, Response.success(Collections.singletonMap("error", "Shipper khong hop le")));
+                            return;
+                        }
+                        Boolean active = userSnap.child("is_active").getValue(Boolean.class);
+                        if (active == null) active = userSnap.child("isActive").getValue(Boolean.class);
+                        if (Boolean.FALSE.equals(active)) {
+                            callback.onResponse(null, Response.success(Collections.singletonMap("error", "Shipper dang bi khoa")));
+                            return;
+                        }
+
+                        String name = userSnap.child("name").getValue(String.class);
+                        if (name == null || name.isEmpty()) name = userSnap.child("full_name").getValue(String.class);
+                        if (name == null || name.isEmpty()) name = userSnap.child("email").getValue(String.class);
+                        final String shipperName = name;
+
+                        dbRef.child("orders").child(orderId).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot orderSnap) {
+                                if (!orderSnap.exists()) {
+                                    callback.onResponse(null, Response.success(Collections.singletonMap("error", "Order not found")));
+                                    return;
+                                }
+                                String status = orderSnap.child("status").getValue(String.class);
+                                if (!isAssignableStatus(status)) {
+                                    callback.onResponse(null, Response.success(Collections.singletonMap("error", "Trang thai don khong cho gan shipper")));
+                                    return;
+                                }
+
+                                String now = getCurrentIsoString();
+                                Map<String, Object> updates = new HashMap<>();
+                                updates.put("shipper_id", shipperId);
+                                updates.put("shipperId", shipperId);
+                                updates.put("shipper_name", shipperName);
+                                updates.put("shipperName", shipperName);
+                                updates.put("status", "SHIPPING");
+                                updates.put("updated_at", now);
+
+                                String logUuid = UUID.randomUUID().toString();
+                                Map<String, Object> logMap = new HashMap<>();
+                                logMap.put("id", logUuid);
+                                logMap.put("status", "SHIPPING");
+                                logMap.put("note", "Gan shipper: " + (shipperName != null ? shipperName : shipperId));
+                                logMap.put("updated_by", getCurrentUserUid() != null ? getCurrentUserUid() : "");
+                                logMap.put("updated_by_role", "ADMIN");
+                                logMap.put("created_at", now);
+                                updates.put("status_logs/" + logUuid, logMap);
+
+                                dbRef.child("orders").child(orderId).updateChildren(updates).addOnCompleteListener(task -> {
+                                    if (task.isSuccessful()) {
+                                        callback.onResponse(null, Response.success(Collections.singletonMap("message", "Gan shipper thanh cong")));
+                                    } else {
+                                        callback.onResponse(null, Response.success(Collections.singletonMap("error", "Khong gan duoc shipper")));
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+                                callback.onResponse(null, Response.success(Collections.singletonMap("error", error.getMessage())));
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        callback.onResponse(null, Response.success(Collections.singletonMap("error", error.getMessage())));
+                    }
+                });
+            }
+            @Override public boolean isExecuted() { return false; }
+            @Override public void cancel() {}
+            @Override public boolean isCanceled() { return false; }
+            @NonNull @Override public Call<Map<String, String>> clone() { return this; }
+            @NonNull @Override public okhttp3.Request request() { return new okhttp3.Request.Builder().url("https://firebase").build(); }
+            @NonNull @Override public okio.Timeout timeout() { return okio.Timeout.NONE; }
+        };
+    }
+
+    private boolean isAssignableStatus(String status) {
+        if (status == null) return false;
+        String s = status.toUpperCase(Locale.US);
+        return "CONFIRMED".equals(s) || "PREPARING".equals(s) || "READY_FOR_PICKUP".equals(s) || "SHIPPING".equals(s);
     }
 
     @Override
