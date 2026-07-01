@@ -176,7 +176,7 @@ public class AdminOrderListFragment extends Fragment implements OrderAdapter.OnO
             } else if ("returns".equals(currentStatusFilter)) {
                 matchesStatus = status.startsWith("return");
             } else if ("shipping".equals(currentStatusFilter)) {
-                matchesStatus = "shipping".equals(status) || "shipped".equals(status);
+                matchesStatus = "shipping".equals(status) || "shipped".equals(status) || "in_transit".equals(status);
             } else {
                 matchesStatus = currentStatusFilter.equals(status);
             }

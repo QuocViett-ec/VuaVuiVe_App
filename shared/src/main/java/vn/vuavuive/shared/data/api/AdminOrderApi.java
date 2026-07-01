@@ -34,6 +34,12 @@ public interface AdminOrderApi {
     @Streaming
     Call<ResponseBody> exportOrders();
 
+    @POST("api/shippers/{shipperId}/assign/{orderId}")
+    Call<Map<String, String>> assignShipper(
+            @Path("orderId") String orderId,
+            @Path("shipperId") String shipperId
+    );
+
     @PUT("api/orders/{id}/status")
     Call<ApiResponse<Order>> updateOrderStatus(
             @Path("id") String id,

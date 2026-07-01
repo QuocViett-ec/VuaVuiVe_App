@@ -20,6 +20,7 @@ import retrofit2.Response;
 import vn.vuavuive.admin.R;
 import vn.vuavuive.admin.databinding.ActivityAdminOrderDetailBinding;
 import vn.vuavuive.shared.data.api.AdminOrderApi;
+import vn.vuavuive.shared.data.api.AdminUserApi;
 import vn.vuavuive.shared.data.api.OrderApi;
 import vn.vuavuive.shared.data.dto.ApiResponse;
 import vn.vuavuive.shared.data.dto.Order;
@@ -33,19 +34,25 @@ public class AdminOrderDetailActivity extends AppCompatActivity {
 
     @Inject OrderApi orderApi;
     @Inject AdminOrderApi adminOrderApi;
+    @Inject AdminUserApi adminUserApi;
     @Inject SessionManager sessionManager;
 
     private ActivityAdminOrderDetailBinding binding;
     private Order order;
     private User currentUser;
+    private User selectedShipper;
+    private final List<User> shippers = new ArrayList<>();
     private boolean isInitialSpinnerLoad = true;
 
     private static final List<String> STATUS_CODES = Arrays.asList(
-            "pending", "confirmed", "in_transit", "delivered", "cancelled"
+            "pending", "confirmed", "preparing", "ready_for_pickup", "shipping", "in_transit", "delivered", "cancelled"
     );
     private static final List<String> STATUS_DISPLAY = Arrays.asList(
             "Chờ duyệt",
             "Đã xác nhận",
+            "Đang chuẩn bị",
+            "Sẵn sàng lấy hàng",
+            "Đã gán shipper",
             "Đang giao",
             "Đã giao",
             "Đã hủy"
@@ -218,7 +225,10 @@ public class AdminOrderDetailActivity extends AppCompatActivity {
         // 7. Status Spinner configuration
         setupStatusSpinner();
 
-        // 8. Return request handling
+        // 8. Shipper assignment
+        setupShipperAssignment(orderId);
+
+        // 9. Return request handling
         setupReturnRequest();
     }
 
@@ -284,6 +294,105 @@ public class AdminOrderDetailActivity extends AppCompatActivity {
             @Override
             public void onNothingSelected(AdapterView<?> parent) {}
         });
+    }
+
+    private void setupShipperAssignment(String orderId) {
+        boolean readOnly = "audit".equals(currentUser.getRole());
+        binding.spinnerShipper.setEnabled(false);
+        binding.btnAssignShipper.setEnabled(false);
+        binding.btnAssignShipper.setText(readOnly ? "READ ONLY" : "GAN SHIPPER");
+        binding.tvCurrentShipper.setText(order.getShipperId() != null && !order.getShipperId().isEmpty()
+                ? "Shipper hien tai: " + order.getShipperId()
+                : "Chua gan shipper");
+
+        if (readOnly) return;
+
+        adminUserApi.getUsers(1, 200, null, "SHIPPER").enqueue(new Callback<ApiResponse<List<User>>>() {
+            @Override
+            public void onResponse(@NonNull Call<ApiResponse<List<User>>> call,
+                                   @NonNull Response<ApiResponse<List<User>>> response) {
+                shippers.clear();
+                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()
+                        && response.body().getData() != null) {
+                    for (User shipper : response.body().getData()) {
+                        if (shipper.isActive()) shippers.add(shipper);
+                    }
+                }
+
+                List<String> labels = new ArrayList<>();
+                int selectedIndex = 0;
+                for (int i = 0; i < shippers.size(); i++) {
+                    User shipper = shippers.get(i);
+                    String label = (shipper.getName() != null ? shipper.getName() : shipper.getEmail())
+                            + (shipper.getPhone() != null ? " - " + shipper.getPhone() : "");
+                    labels.add(label);
+                    if (shipper.getId() != null && shipper.getId().equals(order.getShipperId())) {
+                        selectedIndex = i;
+                        binding.tvCurrentShipper.setText("Shipper hien tai: " + label);
+                    }
+                }
+
+                if (labels.isEmpty()) labels.add("Khong co shipper active");
+
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(AdminOrderDetailActivity.this,
+                        android.R.layout.simple_spinner_item, labels);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                binding.spinnerShipper.setAdapter(adapter);
+                binding.spinnerShipper.setSelection(selectedIndex);
+
+                selectedShipper = shippers.isEmpty() ? null : shippers.get(selectedIndex);
+                boolean assignable = !shippers.isEmpty() && isAssignableStatus(order.getStatus());
+                binding.spinnerShipper.setEnabled(assignable);
+                binding.btnAssignShipper.setEnabled(assignable);
+
+                binding.spinnerShipper.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        selectedShipper = position < shippers.size() ? shippers.get(position) : null;
+                    }
+
+                    @Override public void onNothingSelected(AdapterView<?> parent) {}
+                });
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ApiResponse<List<User>>> call, @NonNull Throwable t) {
+                Toast.makeText(AdminOrderDetailActivity.this, "Khong tai duoc danh sach shipper: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        binding.btnAssignShipper.setOnClickListener(v -> {
+            if (selectedShipper == null) {
+                Toast.makeText(this, "Vui long chon shipper", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            adminOrderApi.assignShipper(order.getId(), selectedShipper.getId()).enqueue(new Callback<java.util.Map<String, String>>() {
+                @Override
+                public void onResponse(@NonNull Call<java.util.Map<String, String>> call,
+                                       @NonNull Response<java.util.Map<String, String>> response) {
+                    java.util.Map<String, String> body = response.body();
+                    if (response.isSuccessful() && body != null && !body.containsKey("error")) {
+                        Toast.makeText(AdminOrderDetailActivity.this, "Da gan shipper", Toast.LENGTH_SHORT).show();
+                        loadOrderDetails(orderId);
+                    } else {
+                        Toast.makeText(AdminOrderDetailActivity.this,
+                                body != null && body.get("error") != null ? body.get("error") : "Khong gan duoc shipper",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<java.util.Map<String, String>> call, @NonNull Throwable t) {
+                    Toast.makeText(AdminOrderDetailActivity.this, "Loi gan shipper: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
+    }
+
+    private boolean isAssignableStatus(String status) {
+        if (status == null) return false;
+        String s = status.toLowerCase();
+        return "confirmed".equals(s) || "preparing".equals(s) || "ready_for_pickup".equals(s) || "shipping".equals(s);
     }
 
     private void setupReturnRequest() {
