@@ -65,16 +65,18 @@
 | # | Bước | Kết quả mong đợi | ✅/❌ |
 |---|------|-------------------|-------|
 | 1 | Bấm lần lượt 5 tab dưới | Dashboard → Đơn hàng → Sản phẩm → Voucher → Chat, không crash | |
-| 2 | Ở Dashboard, kéo xuống xem stats | Dữ liệu hiện, hoặc "đang tải" nếu chưa có | |
-| 3 | Ở Dashboard, bấm nút "Quản lý thành viên" | Chuyển sang UserListFragment | |
+| 2 | Ở Dashboard, kéo xuống xem stats | Dữ liệu hiện, hoặc không crash nếu API lỗi | |
+| 3 | Ở Dashboard, bấm nút "Quản lý thành viên" | Chuyển sang UserListFragment (Staff bị chặn) | |
 | 4 | Ở Dashboard, bấm nút "Vận chuyển" | Chuyển sang ShipmentListFragment | |
-| 5 | Bấm Home (recent apps) → quay lại | App không crash, session giữ nguyên | |
+| 5 | Ở Dashboard, bấm nút "Nhật ký" | Chuyển sang AuditLogFragment (Staff bị chặn) | |
+| 6 | Ở Dashboard, bấm nút "Báo cáo" | Dialog chọn xuất CSV (Audit bị chặn 1 số option) | |
+| 7 | Bấm Home (recent apps) → quay lại | App không crash, session giữ nguyên | |
 
 ### Test Customer App
 
 | # | Bước | Kết quả mong đợi | ✅/❌ |
 |---|------|-------------------|-------|
-| 1 | App mở → tab Products được chọn mặc định | ✓ Có sản phẩm hiển thị | |
+| 1 | Mở app Customer | App mở → tab **Home** được chọn mặc định | |
 | 2 | Bấm tab: Home → Products → Cart → Orders → Account | Chuyển tab mượt, không crash | |
 | 3 | Tab Cart: giỏ trống → hiện empty state | "Giỏ hàng trống" + nút "Mua sắm ngay" | |
 | 4 | Tab Orders: chưa có đơn → hiện empty state | "Chưa có đơn hàng" | |

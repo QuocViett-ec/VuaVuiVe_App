@@ -29,7 +29,7 @@ public class AdminLoginActivity extends AppCompatActivity {
 
     private ActivityAdminLoginBinding binding;
 
-    // Chỉ hiện 3 role hợp lệ cho backoffice — đã xoá "Customer" vì không có quyền đăng nhập
+    // Chỉ hiện 3 role hợp lệ cho backoffice 
     private static final String[] ROLES_DISPLAY = {
             "Admin", "Staff", "Audit"
     };
