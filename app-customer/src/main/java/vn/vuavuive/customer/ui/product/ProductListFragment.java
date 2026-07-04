@@ -221,6 +221,10 @@ public class ProductListFragment extends Fragment {
         if (rv == null) return;
 
         adapter = new ProductAdapter(getContext(), product -> {
+            if (product == null || product.getId() == null || product.getId().isEmpty()) {
+                Toast.makeText(getContext(), "Không mở được sản phẩm này", Toast.LENGTH_SHORT).show();
+                return;
+            }
             Intent intent = new Intent(getContext(), ProductDetailActivity.class);
             intent.putExtra("product_id", product.getId());
             startActivity(intent);
@@ -228,6 +232,11 @@ public class ProductListFragment extends Fragment {
         adapter.setAddToCartListener(product -> {
             if (product == null || product.getId() == null || product.getId().isEmpty()) {
                 Toast.makeText(getContext(), "Không thêm được sản phẩm này", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (product.getStock() <= 0) {
+                Toast.makeText(getContext(), "Sản phẩm đã hết hàng", Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -243,8 +252,9 @@ public class ProductListFragment extends Fragment {
             item.setSavedForLater(false);
             cartViewModel.addItem(item);
 
+            String productName = product.getName() != null ? product.getName() : "sản phẩm";
             Toast.makeText(getContext(),
-                    "✅ Đã thêm \"" + product.getName() + "\" vào giỏ",
+                    "✅ Đã thêm \"" + productName + "\" vào giỏ",
                     Toast.LENGTH_SHORT).show();
         });
 
@@ -301,6 +311,11 @@ public class ProductListFragment extends Fragment {
                     updateEmptyState(view, result.data.isEmpty(), currentSearch.isEmpty() ? null : currentSearch);
                 } else {
                     updateEmptyState(view, true, currentSearch.isEmpty() ? null : currentSearch);
+                    if (result.status == AuthRepository.Result.Status.ERROR && isAdded()) {
+                        Toast.makeText(getContext(),
+                                result.message != null ? result.message : "Không thể tải sản phẩm",
+                                Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
         } catch (Exception e) {
@@ -369,5 +384,13 @@ public class ProductListFragment extends Fragment {
                 loadProducts(view);
             });
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        searchHandler.removeCallbacks(searchRunnable);
+        if (productsLiveData != null) productsLiveData.removeObservers(getViewLifecycleOwner());
+        if (nextPageLiveData != null) nextPageLiveData.removeObservers(getViewLifecycleOwner());
+        super.onDestroyView();
     }
 }

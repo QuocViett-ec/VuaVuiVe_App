@@ -1,6 +1,7 @@
 package vn.vuavuive.admin.ui.products;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -53,6 +54,7 @@ public class AdminProductListFragment extends Fragment implements ProductAdapter
     private boolean currentLowStockFilter = false;
     private String currentSearchQuery = "";
     private User currentUser;
+    private boolean syncingCategoryFilter = false;
 
     private static final String[] SPINNER_DISPLAY_NAMES = {
             "Tat ca", "Rau cu", "Trai cay", "Thit", "Do uong", "Do kho",
@@ -90,8 +92,10 @@ public class AdminProductListFragment extends Fragment implements ProductAdapter
         binding.spinnerFilterCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (syncingCategoryFilter || position < 0 || position >= SPINNER_KEYS.length) return;
                 currentCategoryFilter = SPINNER_KEYS[position];
-                applyFilters();
+                updateChipSelection(currentCategoryFilter);
+                loadProducts();
             }
             @Override public void onNothingSelected(AdapterView<?> parent) {}
         });
@@ -124,7 +128,7 @@ public class AdminProductListFragment extends Fragment implements ProductAdapter
         binding.chipDry.setOnClickListener(v -> selectCategory("dry"));
         binding.fabAddProduct.setOnClickListener(v -> {
             if (isAudit()) {
-                Toast.makeText(getContext(), "Read-only account", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Tài khoản chỉ đọc, không thể thêm sản phẩm", Toast.LENGTH_SHORT).show();
                 return;
             }
             startActivity(new Intent(getContext(), ProductEditActivity.class));
@@ -179,7 +183,20 @@ public class AdminProductListFragment extends Fragment implements ProductAdapter
     private void selectCategory(String category) {
         currentCategoryFilter = category;
         updateChipSelection(category);
+        int position = categoryPosition(category);
+        if (position >= 0 && binding.spinnerFilterCategory.getSelectedItemPosition() != position) {
+            syncingCategoryFilter = true;
+            binding.spinnerFilterCategory.setSelection(position);
+            syncingCategoryFilter = false;
+        }
         loadProducts();
+    }
+
+    private int categoryPosition(String category) {
+        for (int i = 0; i < SPINNER_KEYS.length; i++) {
+            if (SPINNER_KEYS[i].equals(category)) return i;
+        }
+        return -1;
     }
 
     private void updateChipSelection(String selectedCategory) {
@@ -218,7 +235,7 @@ public class AdminProductListFragment extends Fragment implements ProductAdapter
     @Override
     public void onProductClick(Product product) {
         if (product == null || product.getId() == null || product.getId().isEmpty()) {
-            Toast.makeText(getContext(), "San pham khong hop le", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Sản phẩm không hợp lệ", Toast.LENGTH_SHORT).show();
             return;
         }
         Intent intent = new Intent(getContext(), ProductEditActivity.class);
@@ -229,11 +246,11 @@ public class AdminProductListFragment extends Fragment implements ProductAdapter
     @Override
     public void onProductLongClick(Product product) {
         if (isAudit()) {
-            Toast.makeText(getContext(), "Read-only account", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Tài khoản chỉ đọc, không thể xóa sản phẩm", Toast.LENGTH_SHORT).show();
             return;
         }
         if (product == null || product.getId() == null || product.getId().isEmpty()) {
-            Toast.makeText(getContext(), "San pham khong hop le", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Sản phẩm không hợp lệ", Toast.LENGTH_SHORT).show();
             return;
         }
         new AlertDialog.Builder(getContext())
@@ -273,6 +290,8 @@ public class AdminProductListFragment extends Fragment implements ProductAdapter
     }
 
     private void exportProductsCsv() {
+        Context context = getContext();
+        if (context == null) return;
         try {
             StringBuilder csv = new StringBuilder("Ma SP,Ten,Danh muc,Don vi,Gia,Ton kho,Kich hoat\n");
             for (Product p : allProducts) {
@@ -290,14 +309,14 @@ public class AdminProductListFragment extends Fragment implements ProductAdapter
             values.put(MediaStore.Downloads.DISPLAY_NAME, filename);
             values.put(MediaStore.Downloads.MIME_TYPE, "text/csv");
             values.put(MediaStore.Downloads.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS);
-            Uri uri = requireContext().getContentResolver().insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values);
+            Uri uri = context.getContentResolver().insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values);
             if (uri == null) return;
-            try (OutputStream os = requireContext().getContentResolver().openOutputStream(uri)) {
+            try (OutputStream os = context.getContentResolver().openOutputStream(uri)) {
                 if (os != null) os.write(csv.toString().getBytes(StandardCharsets.UTF_8));
             }
-            Toast.makeText(getContext(), "Da luu " + filename, Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "Đã lưu " + filename, Toast.LENGTH_LONG).show();
         } catch (Exception e) {
-            Toast.makeText(getContext(), "Loi CSV: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Lỗi CSV: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 

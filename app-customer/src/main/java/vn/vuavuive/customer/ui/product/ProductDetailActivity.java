@@ -14,7 +14,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.google.android.material.button.MaterialButton;
 import dagger.hilt.android.AndroidEntryPoint;
 import javax.inject.Inject;
@@ -197,16 +196,13 @@ public class ProductDetailActivity extends AppCompatActivity {
 
     // ── API loading (non-blocking, enhances mock if available) ─────────────────
     private void tryLoadFromApi(String productId) {
-        try {
             productViewModel.getProductDetail(productId).observe(this, result -> {
                 if (result != null
                         && result.status == AuthRepository.Result.Status.SUCCESS
                         && result.data != null) {
                     currentProduct = result.data;
                     bindProduct(result.data);
-                    try {
-                        productViewModel.sendRecommendEvent(Constants.EVENT_VIEW_PRODUCT, productId, null);
-                    } catch (Exception ignored) {}
+                    productViewModel.sendRecommendEvent(Constants.EVENT_VIEW_PRODUCT, productId, null);
                 }
             });
 
@@ -219,9 +215,6 @@ public class ProductDetailActivity extends AppCompatActivity {
                     similarAdapter.setProducts(result.data);
                 }
             });
-        } catch (Exception e) {
-            // API unavailable — mock data already shown
-        }
     }
 
     public void refreshReviews() {
@@ -232,7 +225,6 @@ public class ProductDetailActivity extends AppCompatActivity {
     }
 
     private void refreshReviews(String productId) {
-        try {
             productViewModel.getProductReviews(productId).observe(this, result -> {
                 if (result != null
                         && result.status == AuthRepository.Result.Status.SUCCESS
@@ -240,7 +232,6 @@ public class ProductDetailActivity extends AppCompatActivity {
                     reviewAdapter.setReviews(result.data);
                 }
             });
-        } catch (Exception ignored) {}
     }
 
     // ── Bind product data to views ─────────────────────────────────────────────
@@ -248,12 +239,13 @@ public class ProductDetailActivity extends AppCompatActivity {
         // Collapsing toolbar title
         com.google.android.material.appbar.CollapsingToolbarLayout ctl =
                 findViewById(R.id.collapsing_toolbar);
-        if (ctl != null) ctl.setTitle(product.getName());
+        String productName = product.getName() != null ? product.getName() : "";
+        if (ctl != null) ctl.setTitle(productName);
 
         // Image Slider Setup
         setupImageSlider(product);
 
-        tvProductName.setText(product.getName());
+        tvProductName.setText(productName);
 
         // Price
         String priceUnit = CurrencyFormatter.format(product.getPrice())
@@ -384,7 +376,8 @@ public class ProductDetailActivity extends AppCompatActivity {
             Toast.makeText(this, "Đang tải thông tin sản phẩm, vui lòng đợi...", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (currentProduct.getId() == null || currentProduct.getId().startsWith("11111111") || currentProduct.getId().startsWith("mock_")) {
+        String id = currentProduct.getId();
+        if (id == null || id.startsWith("11111111") || id.startsWith("mock_")) {
             Toast.makeText(this, "Không thể mua sản phẩm thử nghiệm", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -394,7 +387,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         }
 
         CartItemEntity item = new CartItemEntity();
-        item.setProductId(currentProduct.getId());
+        item.setProductId(id);
         item.setQuantity(quantity);
         item.setProductName(currentProduct.getName());
         item.setProductPrice(currentProduct.getPrice());
@@ -414,7 +407,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         try {
             java.util.Map<String, Object> meta = new java.util.HashMap<>();
             meta.put("quantity", quantity);
-            productViewModel.sendRecommendEvent(Constants.EVENT_ADD_TO_CART, currentProduct.getId(), meta);
+            productViewModel.sendRecommendEvent(Constants.EVENT_ADD_TO_CART, id, meta);
         } catch (Exception ignored) {}
     }
 

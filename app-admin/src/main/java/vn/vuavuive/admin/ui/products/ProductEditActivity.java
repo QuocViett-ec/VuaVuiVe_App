@@ -68,12 +68,12 @@ public class ProductEditActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         currentUser = sessionManager.getUser();
-        if (currentUser != null && currentUser.getRole() != null) {
-            currentUser.setRole(currentUser.getRole().toLowerCase());
-        }
         if (currentUser == null) {
             finish();
             return;
+        }
+        if (currentUser.getRole() != null) {
+            currentUser.setRole(currentUser.getRole().toLowerCase(Locale.ROOT));
         }
 
         productId = getIntent().getStringExtra("PRODUCT_ID");
@@ -106,7 +106,7 @@ public class ProductEditActivity extends AppCompatActivity {
                 List<CategoryResponse> body = api != null ? api.getData() : null;
                 if (!response.isSuccessful() || body == null || body.isEmpty()) {
                     Log.w(TAG, "Category load failed HTTP " + response.code() + ": " + errorBody(response));
-                    Toast.makeText(ProductEditActivity.this, "Khong tai duoc danh muc", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ProductEditActivity.this, "Không tải được danh mục", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 categories.clear();
@@ -127,7 +127,7 @@ public class ProductEditActivity extends AppCompatActivity {
             public void onFailure(Call<ApiResponse<List<CategoryResponse>>> call, Throwable t) {
                 if (isFinishing() || isDestroyed()) return;
                 Log.w(TAG, "Category load error", t);
-                Toast.makeText(ProductEditActivity.this, "Loi tai danh muc", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ProductEditActivity.this, "Lỗi tải danh mục", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -162,12 +162,12 @@ public class ProductEditActivity extends AppCompatActivity {
                     binding.btnChooseImage.setText("Chon anh tu Gallery");
                     ApiResponse<UploadResponse> body = response.body();
                     if (response.isSuccessful() && body != null && body.isSuccess()
-                            && body.getData() != null && body.getData().getUrl() != null) {
+                        && body.getData() != null && body.getData().getUrl() != null) {
                         selectedImageUrl = body.getData().getUrl();
-                        Toast.makeText(ProductEditActivity.this, "Da tai anh", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ProductEditActivity.this, "Tải ảnh thành công", Toast.LENGTH_SHORT).show();
                     } else {
                         Log.w(TAG, "Upload failed HTTP " + response.code() + ": " + errorBody(response));
-                        Toast.makeText(ProductEditActivity.this, "Tai anh that bai", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ProductEditActivity.this, "Tải ảnh thất bại", Toast.LENGTH_SHORT).show();
                     }
                 }
 
@@ -179,7 +179,7 @@ public class ProductEditActivity extends AppCompatActivity {
                     binding.btnChooseImage.setEnabled(true);
                     binding.btnChooseImage.setText("Chon anh tu Gallery");
                     Log.w(TAG, "Upload error", t);
-                    Toast.makeText(ProductEditActivity.this, "Loi tai anh: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ProductEditActivity.this, "Tải ảnh thất bại: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
         } catch (Exception e) {
@@ -188,7 +188,7 @@ public class ProductEditActivity extends AppCompatActivity {
             binding.btnChooseImage.setEnabled(true);
             binding.btnChooseImage.setText("Chon anh tu Gallery");
             Log.w(TAG, "Cannot read image", e);
-            Toast.makeText(this, "Khong doc duoc anh", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Không đọc được ảnh", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -222,7 +222,7 @@ public class ProductEditActivity extends AppCompatActivity {
                     bindProduct(existingProduct);
                     return;
                 }
-                Toast.makeText(ProductEditActivity.this, "Khong tim thay san pham", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ProductEditActivity.this, "Không tìm thấy sản phẩm", Toast.LENGTH_SHORT).show();
                 finish();
             }
 
@@ -274,7 +274,7 @@ public class ProductEditActivity extends AppCompatActivity {
     }
 
     private void enforceRolePermissions() {
-        if (!"audit".equals(currentUser.getRole())) return;
+        if (currentUser == null || !"audit".equalsIgnoreCase(currentUser.getRole())) return;
         binding.etProductName.setEnabled(false);
         binding.etProductPrice.setEnabled(false);
         binding.etProductOriginalPrice.setEnabled(false);
@@ -285,19 +285,19 @@ public class ProductEditActivity extends AppCompatActivity {
         binding.spinnerProductCategory.setEnabled(false);
         binding.switchIsActive.setEnabled(false);
         binding.btnChooseImage.setVisibility(View.GONE);
-        binding.btnSaveProduct.setText("READ ONLY");
+        binding.btnSaveProduct.setText("CHỈ ĐỌC");
         binding.btnSaveProduct.setOnClickListener(v ->
-                Toast.makeText(this, "Tai khoan audit chi duoc xem", Toast.LENGTH_SHORT).show());
+                Toast.makeText(this, "Tài khoản chỉ đọc, không thể chỉnh sửa sản phẩm", Toast.LENGTH_SHORT).show());
     }
 
     private void saveProduct() {
         if (!binding.btnSaveProduct.isEnabled()) return;
         if (imageUploading) {
-            Toast.makeText(this, "Cho tai anh xong", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Vui lòng đợi ảnh tải xong", Toast.LENGTH_SHORT).show();
             return;
         }
         if (pendingImageUri != null && (selectedImageUrl == null || selectedImageUrl.isEmpty())) {
-            Toast.makeText(this, "Anh chua tai len thanh cong", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Ảnh chưa tải lên thành công", Toast.LENGTH_SHORT).show();
             return;
         }
         String name = binding.etProductName.getText().toString().trim();
@@ -308,7 +308,7 @@ public class ProductEditActivity extends AppCompatActivity {
         String desc = binding.etProductDescription.getText().toString().trim();
 
         if (name.isEmpty()) {
-            binding.etProductName.setError("Nhap ten san pham");
+            binding.etProductName.setError("Vui lòng nhập tên sản phẩm");
             return;
         }
 
@@ -317,7 +317,7 @@ public class ProductEditActivity extends AppCompatActivity {
             price = Double.parseDouble(priceStr);
             if (price <= 0) throw new NumberFormatException();
         } catch (NumberFormatException e) {
-            binding.etProductPrice.setError("Gia khong hop le");
+            binding.etProductPrice.setError("Giá bán không hợp lệ (phải > 0)");
             return;
         }
 
@@ -326,11 +326,11 @@ public class ProductEditActivity extends AppCompatActivity {
             try {
                 originalPrice = Double.parseDouble(origPriceStr);
                 if (originalPrice < price) {
-                    binding.etProductOriginalPrice.setError("Gia goc phai >= gia ban");
+                    binding.etProductOriginalPrice.setError("Giá gốc phải lớn hơn hoặc bằng giá bán");
                     return;
                 }
             } catch (NumberFormatException e) {
-                binding.etProductOriginalPrice.setError("Gia goc khong hop le");
+                binding.etProductOriginalPrice.setError("Giá gốc không hợp lệ");
                 return;
             }
         }
@@ -340,21 +340,21 @@ public class ProductEditActivity extends AppCompatActivity {
             stock = Integer.parseInt(stockStr);
             if (stock < 0) throw new NumberFormatException();
         } catch (NumberFormatException e) {
-            binding.etProductStock.setError("Ton kho khong hop le");
+            binding.etProductStock.setError("Tồn kho không hợp lệ (phải ≥ 0)");
             return;
         }
         if (unit.isEmpty()) {
-            binding.etProductUnit.setError("Nhap don vi");
+            binding.etProductUnit.setError("Vui lòng nhập đơn vị (kg, hộp, bó...)");
             return;
         }
         if (existingProduct != null && (existingProduct.getId() == null || existingProduct.getId().isEmpty())) {
-            Toast.makeText(this, "San pham khong hop le", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Sản phẩm không hợp lệ", Toast.LENGTH_SHORT).show();
             return;
         }
 
         String categoryId = selectedCategoryId();
         if (categoryId == null) {
-            Toast.makeText(this, "Chua co danh muc hop le", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Danh mục chưa tải xong, vui lòng đợi...", Toast.LENGTH_SHORT).show();
             return;
         }
         Map<String, Object> body = new HashMap<>();
@@ -378,11 +378,11 @@ public class ProductEditActivity extends AppCompatActivity {
                 if (isFinishing() || isDestroyed()) return;
                 binding.btnSaveProduct.setEnabled(true);
                 if (response.isSuccessful()) {
-                    Toast.makeText(ProductEditActivity.this, "Da luu san pham", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ProductEditActivity.this, "Đã lưu sản phẩm thành công", Toast.LENGTH_SHORT).show();
                     finish();
                 } else {
                     Log.w(TAG, "Save failed HTTP " + response.code() + ": " + errorBody(response));
-                    Toast.makeText(ProductEditActivity.this, "Luu that bai", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ProductEditActivity.this, "Lưu sản phẩm thất bại, vui lòng thử lại", Toast.LENGTH_SHORT).show();
                 }
             }
 
