@@ -2,6 +2,7 @@ package vn.vuavuive.customer.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
 import androidx.annotation.IdRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -56,7 +57,11 @@ public class MainActivity extends AppCompatActivity {
         bottomNavView = findViewById(R.id.bottom_nav_view);
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.nav_host_fragment);
-        if (navHostFragment == null) return;
+        if (navHostFragment == null) {
+            Toast.makeText(this, "Khong tim thay navigation host", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
 
         navController = navHostFragment.getNavController();
         bottomNavView.setOnItemSelectedListener(item -> {

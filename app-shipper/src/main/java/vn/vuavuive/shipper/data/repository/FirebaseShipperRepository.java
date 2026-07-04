@@ -308,8 +308,14 @@ public class FirebaseShipperRepository {
         if (currentUser == null) return;
 
         String status = isOnline ? "AVAILABLE" : "OFFLINE";
-        dbRef.child("users").child(currentUser.getUid())
-                .child("onlineStatus")
+        DatabaseReference statusRef = dbRef.child("users").child(currentUser.getUid())
+                .child("onlineStatus");
+        if (isOnline) {
+            statusRef.onDisconnect().setValue("OFFLINE");
+        } else {
+            statusRef.onDisconnect().cancel();
+        }
+        statusRef
                 .setValue(status)
                 .addOnFailureListener(e -> Log.e(TAG, "updateOnlineStatus failed", e));
     }

@@ -2,11 +2,13 @@ package vn.vuavuive.admin.ui.dashboard;
 
 import android.app.AlertDialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,6 +50,8 @@ import vn.vuavuive.shared.util.SessionManager;
 
 @AndroidEntryPoint
 public class DashboardFragment extends Fragment {
+    private static final String TAG = "DashboardFragment";
+
     @Inject AdminOrderApi adminOrderApi;
     @Inject AdminProductApi adminProductApi;
     @Inject SessionManager sessionManager;
@@ -103,18 +107,24 @@ public class DashboardFragment extends Fragment {
         adminOrderApi.getOrders("pending", 0, 3, null, null).enqueue(new Callback<ApiResponse<List<Order>>>() {
             @Override
             public void onResponse(@NonNull Call<ApiResponse<List<Order>>> call, @NonNull Response<ApiResponse<List<Order>>> response) {
+                if (!isUiReady()) return;
                 if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
                     orderAdapter.updateData(response.body().getData());
                 }
+                binding.swipeRefresh.setRefreshing(false);
             }
             @Override
-            public void onFailure(@NonNull Call<ApiResponse<List<Order>>> call, @NonNull Throwable t) {}
+            public void onFailure(@NonNull Call<ApiResponse<List<Order>>> call, @NonNull Throwable t) {
+                Log.e(TAG, "load pending orders failed", t);
+                showLoadError();
+            }
         });
 
         // Fetch real low stock products
         adminProductApi.getAllProducts(1, 100, "", "all").enqueue(new Callback<ApiResponse<List<Product>>>() {
             @Override
             public void onResponse(@NonNull Call<ApiResponse<List<Product>>> call, @NonNull Response<ApiResponse<List<Product>>> response) {
+                if (!isUiReady()) return;
                 if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
                     List<Product> lowStock = new ArrayList<>();
                     for (Product p : response.body().getData()) {
@@ -125,12 +135,24 @@ public class DashboardFragment extends Fragment {
                     }
                     productAdapter.updateData(lowStock);
                 }
+                binding.swipeRefresh.setRefreshing(false);
             }
             @Override
-            public void onFailure(@NonNull Call<ApiResponse<List<Product>>> call, @NonNull Throwable t) {}
+            public void onFailure(@NonNull Call<ApiResponse<List<Product>>> call, @NonNull Throwable t) {
+                Log.e(TAG, "load low stock products failed", t);
+                showLoadError();
+            }
         });
+    }
 
+    private boolean isUiReady() {
+        return isAdded() && binding != null;
+    }
+
+    private void showLoadError() {
+        if (!isUiReady()) return;
         binding.swipeRefresh.setRefreshing(false);
+        Toast.makeText(getContext(), "Khong tai duoc du lieu moi nhat", Toast.LENGTH_SHORT).show();
     }
 
     private void setupListeners() {
@@ -164,6 +186,7 @@ public class DashboardFragment extends Fragment {
         binding.btnShortcutUsers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (currentUser == null) return;
                 if ("staff".equals(currentUser.getRole())) {
                     Toast.makeText(getContext(), "Nhân viên không có quyền quản lý thành viên", Toast.LENGTH_SHORT).show();
                     return;
@@ -186,6 +209,7 @@ public class DashboardFragment extends Fragment {
         binding.btnShortcutAudit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (currentUser == null) return;
                 if ("staff".equals(currentUser.getRole())) {
                     Toast.makeText(getContext(), "Nhân viên không có quyền xem nhật ký hoạt động", Toast.LENGTH_SHORT).show();
                     return;
@@ -205,6 +229,7 @@ public class DashboardFragment extends Fragment {
     }
 
     private void showExportDialog() {
+        if (!isUiReady() || currentUser == null) return;
         final String[] options = {"Báo cáo Đơn hàng", "Báo cáo Sản phẩm", "Báo cáo Thành viên"};
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Xuất báo cáo CSV hệ thống");
@@ -244,25 +269,28 @@ public class DashboardFragment extends Fragment {
     }
 
     private void exportCsv(String filename, String content) {
+        if (!isUiReady()) return;
+        Context context = getContext();
+        if (context == null) return;
         try {
             ContentValues values = new ContentValues();
             values.put(MediaStore.Downloads.DISPLAY_NAME, filename);
             values.put(MediaStore.Downloads.MIME_TYPE, "text/csv");
             values.put(MediaStore.Downloads.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS);
 
-            Uri uri = getContext().getContentResolver().insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values);
+            Uri uri = context.getContentResolver().insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values);
             if (uri != null) {
-                try (OutputStream os = getContext().getContentResolver().openOutputStream(uri)) {
+                try (OutputStream os = context.getContentResolver().openOutputStream(uri)) {
                     if (os != null) {
                         os.write(content.getBytes(StandardCharsets.UTF_8));
                         os.flush();
-                        Toast.makeText(getContext(), "Xuất báo cáo " + filename + " vào Downloads folder thành công!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, "Xuất báo cáo " + filename + " vào Downloads folder thành công!", Toast.LENGTH_LONG).show();
                         MockRepository.getInstance().addAuditLog("Xuất báo cáo CSV", filename, "Xuất thành công tập tin " + filename);
                     }
                 }
             }
         } catch (Exception e) {
-            Toast.makeText(getContext(), "Lỗi khi lưu báo cáo: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Lỗi khi lưu báo cáo: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 

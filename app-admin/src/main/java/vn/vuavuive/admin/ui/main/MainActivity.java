@@ -80,11 +80,21 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment)
-                .commit();
+                .commitAllowingStateLoss();
     }
 
     public void navigateToMenu(int menuId) {
         binding.bottomNav.setSelectedItemId(menuId);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (isFinishing()) return;
+        if (sessionManager == null) return;
+        if (!sessionManager.isLoggedIn() || !sessionManager.isBackoffice()) {
+            logout();
+        }
     }
 
     private void logout() {
