@@ -1,6 +1,7 @@
 package vn.vuavuive.shared.data.dto;
 
 import com.google.gson.annotations.SerializedName;
+import java.util.Locale;
 
 public class User {
     @SerializedName("_id")
@@ -25,7 +26,7 @@ public class User {
     private String address;
 
     @SerializedName("role")
-    private String role;  // "user", "admin", "staff", "audit"
+    private String role;  // "user"/"customer", "admin", "staff", "audit", "shipper"
 
     @SerializedName("isActive")
     private boolean isActive;
@@ -47,7 +48,7 @@ public class User {
     public String getAvatar() { return avatar; }
     public String getProvider() { return provider; }
     public String getAddress() { return address; }
-    public String getRole() { return role; }
+    public String getRole() { return role != null ? role.toLowerCase(Locale.US) : null; }
     public boolean isActive() { return isActive; }
     public String getCreatedAt() { return createdAt; }
     public String getUpdatedAt() { return updatedAt; }
@@ -71,5 +72,6 @@ public class User {
     public boolean isStaff() { return "staff".equalsIgnoreCase(role); }
     public boolean isAudit() { return "audit".equalsIgnoreCase(role); }
     public boolean isBackoffice() { return isAdmin() || isStaff() || isAudit(); }
-    public boolean isGoogleProvider() { return "google".equals(provider); }
+    public boolean isShipper() { return "shipper".equalsIgnoreCase(role); }
+    public boolean isGoogleProvider() { return "google".equalsIgnoreCase(provider); }
 }

@@ -37,7 +37,7 @@ public class ShipperMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         // Kiểm tra session Firebase: currentUser != null + role SHIPPER
-        if (!repository.isLoggedIn()) {
+        if (!repository.isLoggedIn() || !sessionManager.isShipper()) {
             goToLogin();
             return;
         }
@@ -100,5 +100,11 @@ public class ShipperMainActivity extends AppCompatActivity {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        repository.updateOnlineStatus(false);
+        super.onDestroy();
     }
 }

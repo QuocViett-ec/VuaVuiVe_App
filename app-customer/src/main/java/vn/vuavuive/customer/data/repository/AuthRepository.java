@@ -42,8 +42,10 @@ public class AuthRepository {
                 if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
                     ApiResponse<User> body = response.body();
                     User user = body.getData();
-                    sessionManager.saveUser(user);
-                    sessionManager.saveTokens(body.getAccessToken(), body.getRefreshToken());
+                    if (!sessionManager.saveSession(user, body.getAccessToken(), body.getRefreshToken())) {
+                        result.postValue(Result.error("Phan hoi dang nhap khong hop le"));
+                        return;
+                    }
                     result.postValue(Result.success(user));
                 } else {
                     String msg = extractError(response);
@@ -69,8 +71,10 @@ public class AuthRepository {
                 if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
                     ApiResponse<User> body = response.body();
                     User user = body.getData();
-                    sessionManager.saveUser(user);
-                    sessionManager.saveTokens(body.getAccessToken(), body.getRefreshToken());
+                    if (!sessionManager.saveSession(user, body.getAccessToken(), body.getRefreshToken())) {
+                        result.postValue(Result.error("Phan hoi dang ky khong hop le"));
+                        return;
+                    }
                     result.postValue(Result.success(user));
                 } else {
                     result.postValue(Result.error(extractError(response)));
@@ -121,8 +125,10 @@ public class AuthRepository {
                 if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
                     ApiResponse<User> apiResponse = response.body();
                     User user = apiResponse.getData();
-                    sessionManager.saveUser(user);
-                    sessionManager.saveTokens(apiResponse.getAccessToken(), apiResponse.getRefreshToken());
+                    if (!sessionManager.saveSession(user, apiResponse.getAccessToken(), apiResponse.getRefreshToken())) {
+                        result.postValue(Result.error("Phan hoi xac thuc khong hop le"));
+                        return;
+                    }
                     result.postValue(Result.success(user));
                 } else {
                     result.postValue(Result.error(extractError(response)));
@@ -144,6 +150,11 @@ public class AuthRepository {
             public void onResponse(Call<ApiResponse<User>> call, Response<ApiResponse<User>> response) {
                 if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
                     User user = response.body().getData();
+                    if (user == null) {
+                        sessionManager.clearSession();
+                        result.postValue(Result.error("Chua dang nhap"));
+                        return;
+                    }
                     sessionManager.saveUser(user);
                     result.postValue(Result.success(user));
                 } else {
@@ -278,6 +289,10 @@ public class AuthRepository {
             public void onResponse(Call<ApiResponse<User>> call, Response<ApiResponse<User>> response) {
                 if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
                     User user = response.body().getData();
+                    if (user == null) {
+                        result.postValue(Result.error("Phan hoi cap nhat khong hop le"));
+                        return;
+                    }
                     sessionManager.saveUser(user);
                     result.postValue(Result.success(user));
                 } else {

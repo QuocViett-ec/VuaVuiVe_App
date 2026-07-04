@@ -100,15 +100,19 @@ public class FirebaseShipperRepository {
                                     user.setRole("SHIPPER");
 
                                     // Lưu session
-                                    sessionManager.saveUser(user);
                                     // Dùng Firebase UID token làm access token
                                     firebaseUser.getIdToken(false).addOnSuccessListener(tokenResult -> {
                                         String idToken = tokenResult.getToken();
-                                        sessionManager.saveTokens(idToken, null);
-                                        out.setValue(Result.success(user));
+                                        if (sessionManager.saveSession(user, idToken, null)) {
+                                            out.setValue(Result.success(user));
+                                        } else {
+                                            logout();
+                                            out.setValue(Result.error("Phien dang nhap khong hop le"));
+                                        }
                                     }).addOnFailureListener(e -> {
-                                        // Token fetch thất bại nhưng user vẫn ok
-                                        out.setValue(Result.success(user));
+                                        // Token bat buoc de kiem tra session het han.
+                                        logout();
+                                        out.setValue(Result.error("Khong lay duoc token dang nhap"));
                                     });
                                 }
 
@@ -132,7 +136,7 @@ public class FirebaseShipperRepository {
      * FirebaseAuth tự refresh token nên chỉ cần check currentUser != null và role trong session.
      */
     public boolean isLoggedIn() {
-        return auth.getCurrentUser() != null && sessionManager.isShipper();
+        return auth.getCurrentUser() != null && sessionManager.isLoggedIn() && sessionManager.isShipper();
     }
 
     /**

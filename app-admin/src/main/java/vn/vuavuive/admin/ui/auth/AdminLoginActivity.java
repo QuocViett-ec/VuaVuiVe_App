@@ -30,7 +30,7 @@ public class AdminLoginActivity extends AppCompatActivity {
     private ActivityAdminLoginBinding binding;
 
     private static final String[] ROLES_DISPLAY = {
-            "Admin", "Staff", "Audit", "Customer (blocked)"
+            "Admin", "Staff", "Audit", "Customer"
     };
 
     private static final String[] ROLES_EMAILS = {
@@ -88,22 +88,24 @@ public class AdminLoginActivity extends AppCompatActivity {
             @Override
             public void onResponse(@NonNull Call<ApiResponse<User>> call, @NonNull Response<ApiResponse<User>> response) {
                 binding.btnLogin.setEnabled(true);
-                if (response.isSuccessful() && response.body() != null && response.body().isSuccess() && response.body().getData() != null) {
-                    User user = response.body().getData();
-                    String accessToken = response.body().getAccessToken();
-                    String refreshToken = response.body().getRefreshToken();
-                    
-                    if (accessToken != null) {
-                        sessionManager.saveTokens(accessToken, refreshToken != null ? refreshToken : "");
+                ApiResponse<User> body = response.body();
+                if (response.isSuccessful() && body != null && body.isSuccess() && body.getData() != null) {
+                    User user = body.getData();
+                    if (!user.isBackoffice()) {
+                        Toast.makeText(AdminLoginActivity.this, "Tai khoan khong co quyen backoffice", Toast.LENGTH_LONG).show();
+                        return;
                     }
-                    sessionManager.saveUser(user);
+                    if (!sessionManager.saveSession(user, body.getAccessToken(), body.getRefreshToken())) {
+                        Toast.makeText(AdminLoginActivity.this, "Phien dang nhap khong hop le", Toast.LENGTH_LONG).show();
+                        return;
+                    }
                     MockRepository.getInstance().setCurrentUser(user);
                     startActivity(new Intent(AdminLoginActivity.this, MainActivity.class));
                     finish();
                 } else {
                     String errorMsg = "Đăng nhập thất bại. Kiểm tra lại thông tin!";
-                    if (response.body() != null && response.body().getMessage() != null) {
-                        errorMsg = response.body().getMessage();
+                    if (body != null && body.getMessage() != null) {
+                        errorMsg = body.getMessage();
                     }
                     Toast.makeText(AdminLoginActivity.this, errorMsg, Toast.LENGTH_LONG).show();
                 }

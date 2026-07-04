@@ -35,11 +35,12 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        currentUser = sessionManager.getUser();
-        if (currentUser != null && currentUser.getRole() != null) {
-            currentUser.setRole(currentUser.getRole().toLowerCase());
+        if (!sessionManager.isLoggedIn() || !sessionManager.isBackoffice()) {
+            logout();
+            return;
         }
-        if (currentUser == null || !sessionManager.isLoggedIn() || !currentUser.isBackoffice()) {
+        currentUser = sessionManager.getUser();
+        if (currentUser == null) {
             logout();
             return;
         }
@@ -48,7 +49,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupUI() {
-        binding.tvRoleBadge.setText(currentUser.getRole().toUpperCase());
+        String role = currentUser.getRole();
+        binding.tvRoleBadge.setText(role != null ? role.toUpperCase() : "BACKOFFICE");
         binding.ivLogout.setOnClickListener(v -> logout());
         binding.bottomNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override

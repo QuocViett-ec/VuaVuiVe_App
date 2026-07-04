@@ -3,6 +3,7 @@ package vn.vuavuive.customer.ui.auth;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -111,6 +112,12 @@ public class LoginActivity extends AppCompatActivity {
             tilPhoneEmail.setError("Vui lòng nhập số điện thoại hoặc email");
             valid = false;
         }
+        if (!TextUtils.isEmpty(phoneOrEmail)
+                && phoneOrEmail.contains("@")
+                && !Patterns.EMAIL_ADDRESS.matcher(phoneOrEmail).matches()) {
+            tilPhoneEmail.setError("Email khong hop le");
+            valid = false;
+        }
         if (TextUtils.isEmpty(password)) {
             tilPassword.setError("Vui lòng nhập mật khẩu");
             valid = false;
@@ -120,12 +127,17 @@ public class LoginActivity extends AppCompatActivity {
         setLoading(true);
 
         authViewModel.login(phoneOrEmail, password).observe(this, result -> {
+            if (result == null) return;
             switch (result.status) {
                 case LOADING:
                     setLoading(true);
                     break;
                 case SUCCESS:
                     setLoading(false);
+                    if (result.data == null) {
+                        showError("Phan hoi dang nhap khong hop le");
+                        return;
+                    }
                     goToMain();
                     break;
                 case ERROR:

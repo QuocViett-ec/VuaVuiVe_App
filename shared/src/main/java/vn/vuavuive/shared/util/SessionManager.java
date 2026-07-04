@@ -28,19 +28,35 @@ public class SessionManager {
     }
 
     public void saveUser(User user) {
+        if (user == null) return;
         prefs.edit()
                 .putString(KEY_USER, gson.toJson(user))
                 .putBoolean(KEY_IS_LOGGED_IN, true)
                 .apply();
     }
 
+    public boolean saveSession(User user, String accessToken, String refreshToken) {
+        if (user == null || accessToken == null || accessToken.isEmpty()) return false;
+        prefs.edit()
+                .putString(KEY_USER, gson.toJson(user))
+                .putString(KEY_ACCESS_TOKEN, accessToken)
+                .putString(KEY_REFRESH_TOKEN, refreshToken != null ? refreshToken : "")
+                .putBoolean(KEY_IS_LOGGED_IN, true)
+                .apply();
+        return true;
+    }
+
     public void saveTokens(String accessToken, String refreshToken) {
         SharedPreferences.Editor editor = prefs.edit();
         if (accessToken != null && !accessToken.isEmpty()) {
             editor.putString(KEY_ACCESS_TOKEN, accessToken);
+        } else {
+            editor.remove(KEY_ACCESS_TOKEN);
         }
         if (refreshToken != null && !refreshToken.isEmpty()) {
             editor.putString(KEY_REFRESH_TOKEN, refreshToken);
+        } else {
+            editor.remove(KEY_REFRESH_TOKEN);
         }
         editor.apply();
     }
@@ -48,7 +64,11 @@ public class SessionManager {
     public User getUser() {
         String userJson = prefs.getString(KEY_USER, null);
         if (userJson == null) return null;
-        return gson.fromJson(userJson, User.class);
+        try {
+            return gson.fromJson(userJson, User.class);
+        } catch (Exception ignored) {
+            return null;
+        }
     }
 
     public boolean isLoggedIn() {
@@ -57,10 +77,7 @@ public class SessionManager {
 
     public void clearSession() {
         prefs.edit()
-                .remove(KEY_USER)
-                .remove(KEY_ACCESS_TOKEN)
-                .remove(KEY_REFRESH_TOKEN)
-                .putBoolean(KEY_IS_LOGGED_IN, false)
+                .clear()
                 .apply();
     }
 
@@ -107,6 +124,6 @@ public class SessionManager {
 
     public boolean isShipper() {
         String role = getUserRole();
-        return "SHIPPER".equalsIgnoreCase(role);
+        return "shipper".equalsIgnoreCase(role);
     }
 }
