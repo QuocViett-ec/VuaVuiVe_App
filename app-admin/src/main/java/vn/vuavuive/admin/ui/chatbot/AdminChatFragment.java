@@ -109,6 +109,7 @@ public class AdminChatFragment extends Fragment implements ChatAdapter.OnQuickRe
         
         // Simulate thinking animation or immediate state check
         handler.postDelayed(() -> {
+            if (binding == null || adapter == null) return;
             String reply;
             List<String> replies = new ArrayList<>();
 
@@ -254,6 +255,7 @@ public class AdminChatFragment extends Fragment implements ChatAdapter.OnQuickRe
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        handler.removeCallbacksAndMessages(null);
         binding = null;
     }
 }

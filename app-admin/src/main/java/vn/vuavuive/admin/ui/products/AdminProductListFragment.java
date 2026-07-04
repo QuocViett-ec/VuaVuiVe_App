@@ -133,11 +133,13 @@ public class AdminProductListFragment extends Fragment implements ProductAdapter
     }
 
     private void loadProducts() {
+        if (!isUiReady()) return;
         binding.swipeRefresh.setRefreshing(true);
         // Call real API
         adminProductApi.getAllProducts(1, 100, "", currentCategoryFilter).enqueue(new Callback<ApiResponse<List<Product>>>() {
             @Override
             public void onResponse(@NonNull Call<ApiResponse<List<Product>>> call, @NonNull Response<ApiResponse<List<Product>>> response) {
+                if (!isUiReady()) return;
                 binding.swipeRefresh.setRefreshing(false);
                 if (response.isSuccessful() && response.body() != null && response.body().isSuccess() && response.body().getData() != null) {
                     allProducts = new ArrayList<>(response.body().getData());
@@ -149,6 +151,7 @@ public class AdminProductListFragment extends Fragment implements ProductAdapter
 
             @Override
             public void onFailure(@NonNull Call<ApiResponse<List<Product>>> call, @NonNull Throwable t) {
+                if (!isUiReady()) return;
                 binding.swipeRefresh.setRefreshing(false);
                 Toast.makeText(getContext(), "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
@@ -156,7 +159,7 @@ public class AdminProductListFragment extends Fragment implements ProductAdapter
     }
 
     private void applyFilters() {
-        if (binding == null || adapter == null || allProducts == null) return;
+        if (!isUiReady() || adapter == null || allProducts == null) return;
         List<Product> filteredList = new ArrayList<>();
         String q = currentSearchQuery.toLowerCase(Locale.getDefault());
         for (Product p : allProducts) {
@@ -180,7 +183,7 @@ public class AdminProductListFragment extends Fragment implements ProductAdapter
     }
 
     private void updateChipSelection(String selectedCategory) {
-        if (binding == null) return;
+        if (!isUiReady()) return;
         setChipUnselected(binding.chipAll);
         setChipUnselected(binding.chipFruit);
         setChipUnselected(binding.chipVeg);
@@ -258,7 +261,11 @@ public class AdminProductListFragment extends Fragment implements ProductAdapter
     @Override
     public void onResume() {
         super.onResume();
-        if (binding != null && adapter != null) loadProducts();
+        if (isUiReady() && adapter != null) loadProducts();
+    }
+
+    private boolean isUiReady() {
+        return isAdded() && binding != null;
     }
 
     private boolean isAudit() {

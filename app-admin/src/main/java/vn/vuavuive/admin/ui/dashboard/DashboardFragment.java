@@ -40,6 +40,7 @@ import vn.vuavuive.admin.ui.shipments.ShipmentListFragment;
 import vn.vuavuive.admin.ui.users.UserListFragment;
 import vn.vuavuive.shared.data.api.AdminOrderApi;
 import vn.vuavuive.shared.data.api.AdminProductApi;
+import vn.vuavuive.shared.data.api.DashboardApi;
 import vn.vuavuive.shared.data.dto.ApiResponse;
 import vn.vuavuive.shared.data.dto.DashboardStats;
 import vn.vuavuive.shared.data.dto.Order;
@@ -54,6 +55,7 @@ public class DashboardFragment extends Fragment {
 
     @Inject AdminOrderApi adminOrderApi;
     @Inject AdminProductApi adminProductApi;
+    @Inject DashboardApi dashboardApi;
     @Inject SessionManager sessionManager;
 
     private FragmentDashboardBinding binding;
@@ -101,6 +103,7 @@ public class DashboardFragment extends Fragment {
         binding.tvStatOrders.setText(stats.getTotalOrders() + " đơn");
         binding.tvStatRevenue.setText(CurrencyFormatter.formatVnd(stats.getTotalRevenue()));
         binding.tvStatUsers.setText(stats.getTotalUsers() + " users");
+        loadFirebaseStats();
         binding.tvStatPending.setText(stats.getPendingCount() + " đơn");
 
         // Fetch real pending orders
@@ -143,6 +146,30 @@ public class DashboardFragment extends Fragment {
                 showLoadError();
             }
         });
+    }
+
+    private void loadFirebaseStats() {
+        dashboardApi.getStats().enqueue(new Callback<ApiResponse<DashboardStats>>() {
+            @Override
+            public void onResponse(@NonNull Call<ApiResponse<DashboardStats>> call, @NonNull Response<ApiResponse<DashboardStats>> response) {
+                if (!isUiReady()) return;
+                if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                    bindStats(response.body().getData());
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ApiResponse<DashboardStats>> call, @NonNull Throwable t) {
+                Log.e(TAG, "load dashboard stats failed", t);
+            }
+        });
+    }
+
+    private void bindStats(DashboardStats stats) {
+        binding.tvStatOrders.setText(stats.getTotalOrders() + " don");
+        binding.tvStatRevenue.setText(CurrencyFormatter.formatVnd(stats.getTotalRevenue()));
+        binding.tvStatUsers.setText(stats.getTotalUsers() + " users");
+        binding.tvStatPending.setText(stats.getPendingCount() + " don");
     }
 
     private boolean isUiReady() {

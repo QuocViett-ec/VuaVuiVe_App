@@ -143,11 +143,13 @@ public class AdminOrderListFragment extends Fragment implements OrderAdapter.OnO
     }
 
     private void loadOrders() {
+        if (!isUiReady()) return;
         binding.swipeRefresh.setRefreshing(true);
         // Call the real API
         adminOrderApi.getOrders("all", 0, 100, null, null).enqueue(new Callback<ApiResponse<List<Order>>>() {
             @Override
             public void onResponse(@NonNull Call<ApiResponse<List<Order>>> call, @NonNull Response<ApiResponse<List<Order>>> response) {
+                if (!isUiReady()) return;
                 binding.swipeRefresh.setRefreshing(false);
                 if (response.isSuccessful() && response.body() != null && response.body().isSuccess() && response.body().getData() != null) {
                     allOrders = new ArrayList<>(response.body().getData());
@@ -159,6 +161,7 @@ public class AdminOrderListFragment extends Fragment implements OrderAdapter.OnO
 
             @Override
             public void onFailure(@NonNull Call<ApiResponse<List<Order>>> call, @NonNull Throwable t) {
+                if (!isUiReady()) return;
                 binding.swipeRefresh.setRefreshing(false);
                 Toast.makeText(getContext(), "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
@@ -166,6 +169,7 @@ public class AdminOrderListFragment extends Fragment implements OrderAdapter.OnO
     }
 
     private void applyFilters() {
+        if (!isUiReady() || adapter == null) return;
         List<Order> filteredList = new ArrayList<>();
         for (Order o : allOrders) {
             String status = o.getStatus() == null ? "" : o.getStatus().toLowerCase(Locale.getDefault());
@@ -177,6 +181,8 @@ public class AdminOrderListFragment extends Fragment implements OrderAdapter.OnO
                 matchesStatus = status.startsWith("return");
             } else if ("shipping".equals(currentStatusFilter)) {
                 matchesStatus = "shipping".equals(status) || "shipped".equals(status) || "in_transit".equals(status);
+            } else if ("pending".equals(currentStatusFilter)) {
+                matchesStatus = "pending".equals(status) || "pending_payment".equals(status) || "pending_approval".equals(status);
             } else {
                 matchesStatus = currentStatusFilter.equals(status);
             }
@@ -204,6 +210,10 @@ public class AdminOrderListFragment extends Fragment implements OrderAdapter.OnO
         adapter.updateData(filteredList);
     }
 
+    private boolean isUiReady() {
+        return isAdded() && binding != null;
+    }
+
     // Callbacks from Adapter
     @Override
     public void onOrderClick(Order order) {
@@ -227,7 +237,7 @@ public class AdminOrderListFragment extends Fragment implements OrderAdapter.OnO
     @Override
     public void onResume() {
         super.onResume();
-        loadOrders(); // Refresh in-memory changes when coming back from Detail
+        if (isUiReady()) loadOrders(); // Refresh in-memory changes when coming back from Detail
     }
 
     private void showBulkUpdateDialog() {

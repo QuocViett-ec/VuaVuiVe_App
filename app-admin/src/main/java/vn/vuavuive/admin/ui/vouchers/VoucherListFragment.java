@@ -65,9 +65,14 @@ public class VoucherListFragment extends Fragment implements VoucherAdapter.OnVo
     }
 
     private void loadVouchers() {
+        if (!isUiReady()) return;
         allVouchers = new ArrayList<>(MockRepository.getInstance().getVouchers());
         adapter.updateData(allVouchers);
         binding.swipeRefresh.setRefreshing(false);
+    }
+
+    private boolean isUiReady() {
+        return isAdded() && binding != null;
     }
 
     // Callback from VoucherAdapter
@@ -84,7 +89,7 @@ public class VoucherListFragment extends Fragment implements VoucherAdapter.OnVo
     @Override
     public void onResume() {
         super.onResume();
-        loadVouchers();
+        if (isUiReady()) loadVouchers();
     }
 
     @Override

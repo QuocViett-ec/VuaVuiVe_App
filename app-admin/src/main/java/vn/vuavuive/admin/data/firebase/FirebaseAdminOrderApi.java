@@ -47,6 +47,16 @@ public class FirebaseAdminOrderApi implements AdminOrderApi {
         return sdf.format(new Date());
     }
 
+    private boolean matchesStatus(@Nullable String filter, @Nullable String orderStatus) {
+        if (filter == null || filter.isEmpty() || "all".equalsIgnoreCase(filter)) return true;
+        if ("pending".equalsIgnoreCase(filter)) {
+            return "pending".equalsIgnoreCase(orderStatus)
+                    || "pending_payment".equalsIgnoreCase(orderStatus)
+                    || "pending_approval".equalsIgnoreCase(orderStatus);
+        }
+        return filter.equalsIgnoreCase(orderStatus);
+    }
+
     private Order mapSnapshotToOrder(DataSnapshot s) {
         Order o = new Order();
         o.setId(s.child("id").getValue(String.class) != null ? s.child("id").getValue(String.class) : s.getKey());
@@ -170,11 +180,7 @@ public class FirebaseAdminOrderApi implements AdminOrderApi {
                             Order o = mapSnapshotToOrder(s);
                             
                             // Filter by status
-                            if (status != null && !status.isEmpty() && !"all".equalsIgnoreCase(status)) {
-                                if (!status.equalsIgnoreCase(o.getStatus())) {
-                                    continue;
-                                }
-                            }
+                            if (!matchesStatus(status, o.getStatus())) continue;
                             
                             // Filter by date range (lexicographically since ISO format is used)
                             if (from != null && !from.isEmpty() && o.getCreatedAt() != null) {
