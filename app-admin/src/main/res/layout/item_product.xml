@@ -46,26 +46,46 @@
                     android:id="@+id/tv_product_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_toStartOf="@id/tv_status"
+                    android:layout_toStartOf="@id/layout_item_actions"
                     android:text="Cà chua bi hữu cơ Đà Lạt"
                     android:textColor="@color/text_primary"
                     android:textSize="14sp"
                     android:textStyle="bold"
                     android:maxLines="2" />
 
-                <TextView
-                    android:id="@+id/tv_status"
+                <LinearLayout
+                    android:id="@+id/layout_item_actions"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:background="@drawable/bg_card_light"
-                    android:backgroundTint="@color/success_translucent"
-                    android:paddingHorizontal="6dp"
-                    android:paddingVertical="2dp"
-                    android:text="ACTIVE"
-                    android:textColor="@color/success"
-                    android:textSize="8sp"
-                    android:textStyle="bold" />
+                    android:layout_alignParentTop="true"
+                    android:gravity="end|center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_card_light"
+                        android:backgroundTint="@color/success_translucent"
+                        android:paddingHorizontal="6dp"
+                        android:paddingVertical="2dp"
+                        android:text="ACTIVE"
+                        android:textColor="@color/success"
+                        android:textSize="8sp"
+                        android:textStyle="bold" />
+
+                    <ImageButton
+                        android:id="@+id/btn_delete_product"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_marginStart="8dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="Xóa sản phẩm"
+                        android:padding="7dp"
+                        android:src="@drawable/ic_delete"
+                        app:tint="@color/error" />
+                </LinearLayout>
             </RelativeLayout>
 
             <TextView

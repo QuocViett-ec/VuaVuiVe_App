@@ -95,12 +95,13 @@ public class FirebaseAdminProductApi implements AdminProductApi {
             public void enqueue(@NonNull Callback<ApiResponse<List<Product>>> callback) {
                 dbRef.child("products").addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        List<Product> list = new ArrayList<>();
-                        for (DataSnapshot s : snapshot.getChildren()) {
-                            Product p = mapSnapshotToProduct(s);
-                            list.add(p);
-                        }
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                List<Product> list = new ArrayList<>();
+                for (DataSnapshot s : snapshot.getChildren()) {
+                    if (Boolean.TRUE.equals(s.child("deleted").getValue(Boolean.class))) continue;
+                    Product p = mapSnapshotToProduct(s);
+                    list.add(p);
+                }
 
                         // Filter by category
                         if (category != null && !category.isEmpty() && !"all".equalsIgnoreCase(category)) {
@@ -180,6 +181,7 @@ public class FirebaseAdminProductApi implements AdminProductApi {
         String unit = (String) body.get("unit");
         String imageUrl = (String) body.get("imageUrl");
         String categoryId = (String) body.get("categoryId");
+        boolean active = !body.containsKey("isActive") || Boolean.TRUE.equals(body.get("isActive"));
 
         Map<String, Object> pMap = new HashMap<>();
         pMap.put("id", id);
@@ -192,8 +194,8 @@ public class FirebaseAdminProductApi implements AdminProductApi {
         pMap.put("unit", unit);
         pMap.put("image_url", imageUrl);
         pMap.put("category_id", categoryId);
-        pMap.put("is_active", true);
-        pMap.put("isActive", true);
+        pMap.put("is_active", active);
+        pMap.put("isActive", active);
         pMap.put("rating", 5.0);
         pMap.put("review_count", 0);
         pMap.put("sold_count", 0);
@@ -202,6 +204,7 @@ public class FirebaseAdminProductApi implements AdminProductApi {
         final Double finalOriginalPrice = originalPrice;
         final Double finalSellingPrice = sellingPrice;
         final Integer finalStock = stock;
+        final boolean finalActive = active;
 
         return new Call<Product>() {
             @Override public Response<Product> execute() { throw new UnsupportedOperationException(); }
@@ -220,7 +223,7 @@ public class FirebaseAdminProductApi implements AdminProductApi {
                         p.setImageUrl(imageUrl);
                         p.setStock(finalStock != null ? finalStock : 0);
                         p.setUnit(unit);
-                        p.setActive(true);
+                        p.setActive(finalActive);
                         callback.onResponse(this, Response.success(p));
                     } else {
                         callback.onFailure(this, new Exception("Firebase write failed"));
@@ -262,6 +265,7 @@ public class FirebaseAdminProductApi implements AdminProductApi {
         String unit = (String) body.get("unit");
         String imageUrl = (String) body.get("imageUrl");
         String categoryId = (String) body.get("categoryId");
+        Boolean active = body.get("isActive") instanceof Boolean ? (Boolean) body.get("isActive") : null;
 
         Map<String, Object> updates = new HashMap<>();
         if (name != null) {
@@ -275,10 +279,15 @@ public class FirebaseAdminProductApi implements AdminProductApi {
         if (unit != null) updates.put("unit", unit);
         if (imageUrl != null) updates.put("image_url", imageUrl);
         if (categoryId != null) updates.put("category_id", categoryId);
+        if (active != null) {
+            updates.put("is_active", active);
+            updates.put("isActive", active);
+        }
 
         final Double finalOriginalPrice = originalPrice;
         final Double finalSellingPrice = sellingPrice;
         final Integer finalStock = stock;
+        final Boolean finalActive = active;
 
         return new Call<Product>() {
             @Override public Response<Product> execute() { throw new UnsupportedOperationException(); }
@@ -297,7 +306,7 @@ public class FirebaseAdminProductApi implements AdminProductApi {
                         p.setImageUrl(imageUrl);
                         p.setStock(finalStock != null ? finalStock : 0);
                         p.setUnit(unit);
-                        p.setActive(true);
+                        p.setActive(finalActive != null ? finalActive : true);
                         callback.onResponse(this, Response.success(p));
                     } else {
                         callback.onFailure(this, new Exception("Firebase update failed"));
@@ -322,6 +331,7 @@ public class FirebaseAdminProductApi implements AdminProductApi {
                 Map<String, Object> updates = new HashMap<>();
                 updates.put("is_active", false);
                 updates.put("isActive", false);
+                updates.put("deleted", true);
                 dbRef.child("products").child(id).updateChildren(updates).addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         callback.onResponse(this, Response.success(null));

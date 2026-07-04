@@ -26,6 +26,7 @@ public class ProductRepositoryFirebase {
 
     private final DatabaseReference dbRef;
     private java.util.Map<String, String> slugToIdMap = null;
+    private ValueEventListener productsListener;
 
     @Inject
     public ProductRepositoryFirebase() {
@@ -198,12 +199,16 @@ public class ProductRepositoryFirebase {
             String category, String search, int page, int limit, String sort,
             MutableLiveData<AuthRepository.Result<List<Product>>> result) {
 
-        dbRef.child("products").addListenerForSingleValueEvent(new ValueEventListener() {
+        if (productsListener != null) {
+            dbRef.child("products").removeEventListener(productsListener);
+        }
+        productsListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 android.util.Log.d("ProductRepositoryFirebase", "onDataChange: snapshot.getChildrenCount() = " + snapshot.getChildrenCount());
                 List<Product> products = new ArrayList<>();
                 for (DataSnapshot s : snapshot.getChildren()) {
+                    if (Boolean.TRUE.equals(s.child("deleted").getValue(Boolean.class))) continue;
                     Product p = mapSnapshotToProduct(s);
                     if (p.isActive()) {
                         products.add(p);
@@ -273,10 +278,18 @@ public class ProductRepositoryFirebase {
             public void onCancelled(@NonNull DatabaseError error) {
                 result.postValue(AuthRepository.Result.error("Lỗi tải sản phẩm: " + error.getMessage()));
             }
-        });
+        };
+        dbRef.child("products").addValueEventListener(productsListener);
     }
 
     // ── Get Product Detail ──────────────────────────────────────────────────
+    public void clearProductsListener() {
+        if (productsListener != null) {
+            dbRef.child("products").removeEventListener(productsListener);
+            productsListener = null;
+        }
+    }
+
     public LiveData<AuthRepository.Result<Product>> getProductDetail(String productId) {
         MutableLiveData<AuthRepository.Result<Product>> result = new MutableLiveData<>();
         result.postValue(AuthRepository.Result.loading());
@@ -285,7 +298,16 @@ public class ProductRepositoryFirebase {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    result.postValue(AuthRepository.Result.success(mapSnapshotToProduct(snapshot)));
+                    if (Boolean.TRUE.equals(snapshot.child("deleted").getValue(Boolean.class))) {
+                        result.postValue(AuthRepository.Result.error("Không tìm thấy sản phẩm"));
+                        return;
+                    }
+                    Product product = mapSnapshotToProduct(snapshot);
+                    if (product.isActive()) {
+                        result.postValue(AuthRepository.Result.success(product));
+                    } else {
+                        result.postValue(AuthRepository.Result.error("Không tìm thấy sản phẩm"));
+                    }
                 } else {
                     result.postValue(AuthRepository.Result.error("Không tìm thấy sản phẩm"));
                 }
@@ -345,8 +367,9 @@ public class ProductRepositoryFirebase {
                     public void onDataChange(@NonNull DataSnapshot listSnapshot) {
                         List<Product> list = new ArrayList<>();
                         for (DataSnapshot s : listSnapshot.getChildren()) {
+                            if (Boolean.TRUE.equals(s.child("deleted").getValue(Boolean.class))) continue;
                             Product p = mapSnapshotToProduct(s);
-                            if (categoryId != null && categoryId.equals(p.getCategory()) && !productId.equals(p.getId())) {
+                            if (p.isActive() && categoryId != null && categoryId.equals(p.getCategory()) && !productId.equals(p.getId())) {
                                 list.add(p);
                             }
                         }
@@ -378,7 +401,11 @@ public class ProductRepositoryFirebase {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 List<Product> list = new ArrayList<>();
                 for (DataSnapshot s : snapshot.getChildren()) {
-                    list.add(mapSnapshotToProduct(s));
+                    if (Boolean.TRUE.equals(s.child("deleted").getValue(Boolean.class))) continue;
+                    Product product = mapSnapshotToProduct(s);
+                    if (product.isActive()) {
+                        list.add(product);
+                    }
                 }
                 Collections.shuffle(list);
                 int count = Math.min(n, list.size());

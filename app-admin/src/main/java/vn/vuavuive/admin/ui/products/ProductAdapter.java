@@ -112,22 +112,33 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
                     .centerCrop()
                     .into(binding.ivProductImage);
 
+            binding.btnDeleteProduct.setOnClickListener(v -> {
+                int position = getBindingAdapterPosition();
+                if (position == RecyclerView.NO_POSITION || listener == null) return;
+                listener.onProductLongClick(products.get(position));
+            });
+
             // Click hooks
             itemView.setOnClickListener(v -> {
+                int position = getBindingAdapterPosition();
+                if (position == RecyclerView.NO_POSITION) return;
+                Product current = products.get(position);
                 if (listener != null) {
-                    listener.onProductClick(product);
+                    listener.onProductClick(current);
                 } else {
-                    if (product.getId() == null || product.getId().isEmpty()) return;
+                    if (current.getId() == null || current.getId().isEmpty()) return;
                     // Default behavior: launch edit
                     Intent intent = new Intent(itemView.getContext(), ProductEditActivity.class);
-                    intent.putExtra("PRODUCT_ID", product.getId());
+                    intent.putExtra("PRODUCT_ID", current.getId());
                     itemView.getContext().startActivity(intent);
                 }
             });
 
             itemView.setOnLongClickListener(v -> {
+                int position = getBindingAdapterPosition();
+                if (position == RecyclerView.NO_POSITION) return true;
                 if (listener != null) {
-                    listener.onProductLongClick(product);
+                    listener.onProductLongClick(products.get(position));
                     return true;
                 }
                 return false;

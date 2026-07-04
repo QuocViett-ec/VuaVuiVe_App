@@ -1,5 +1,6 @@
 package vn.vuavuive.admin.ui.products;
 
+import android.content.ActivityNotFoundException;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -134,8 +135,32 @@ public class ProductEditActivity extends AppCompatActivity {
 
     private void setupListeners() {
         binding.btnBack.setOnClickListener(v -> finish());
-        binding.btnChooseImage.setOnClickListener(v -> imagePickerLauncher.launch("image/*"));
+        binding.btnChooseImage.setOnClickListener(v -> {
+            try {
+                imagePickerLauncher.launch("image/*");
+            } catch (ActivityNotFoundException e) {
+                Toast.makeText(this, "Không mở được Gallery, hãy nhập URL ảnh", Toast.LENGTH_SHORT).show();
+            }
+        });
+        binding.etProductImageUrl.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) applyImageUrl();
+        });
         binding.btnSaveProduct.setOnClickListener(v -> saveProduct());
+    }
+
+    private void applyImageUrl() {
+        String url = binding.etProductImageUrl.getText() != null
+                ? binding.etProductImageUrl.getText().toString().trim()
+                : "";
+        if (url.isEmpty()) return;
+        if (!url.startsWith("http://") && !url.startsWith("https://")) {
+            binding.etProductImageUrl.setError("URL ảnh phải bắt đầu bằng http:// hoặc https://");
+            return;
+        }
+        binding.etProductImageUrl.setError(null);
+        pendingImageUri = null;
+        selectedImageUrl = url;
+        loadImagePreview(url);
     }
 
     private void uploadSelectedImage(Uri uri) {
@@ -164,6 +189,7 @@ public class ProductEditActivity extends AppCompatActivity {
                     if (response.isSuccessful() && body != null && body.isSuccess()
                         && body.getData() != null && body.getData().getUrl() != null) {
                         selectedImageUrl = body.getData().getUrl();
+                        binding.etProductImageUrl.setText(selectedImageUrl);
                         Toast.makeText(ProductEditActivity.this, "Tải ảnh thành công", Toast.LENGTH_SHORT).show();
                     } else {
                         Log.w(TAG, "Upload failed HTTP " + response.code() + ": " + errorBody(response));
@@ -249,6 +275,7 @@ public class ProductEditActivity extends AppCompatActivity {
         if (product.getTags() != null) binding.etProductTags.setText(String.join(", ", product.getTags()));
         selectCategoryForProduct(product);
         selectedImageUrl = product.getImageUrl();
+        binding.etProductImageUrl.setText(selectedImageUrl);
         loadImagePreview(selectedImageUrl);
     }
 
@@ -282,6 +309,7 @@ public class ProductEditActivity extends AppCompatActivity {
         binding.etProductUnit.setEnabled(false);
         binding.etProductDescription.setEnabled(false);
         binding.etProductTags.setEnabled(false);
+        binding.etProductImageUrl.setEnabled(false);
         binding.spinnerProductCategory.setEnabled(false);
         binding.switchIsActive.setEnabled(false);
         binding.btnChooseImage.setVisibility(View.GONE);
@@ -295,6 +323,17 @@ public class ProductEditActivity extends AppCompatActivity {
         if (imageUploading) {
             Toast.makeText(this, "Vui lòng đợi ảnh tải xong", Toast.LENGTH_SHORT).show();
             return;
+        }
+        String imageUrl = binding.etProductImageUrl.getText() != null
+                ? binding.etProductImageUrl.getText().toString().trim()
+                : "";
+        if (!imageUrl.isEmpty()) {
+            if (!imageUrl.startsWith("http://") && !imageUrl.startsWith("https://")) {
+                binding.etProductImageUrl.setError("URL ảnh phải bắt đầu bằng http:// hoặc https://");
+                return;
+            }
+            pendingImageUri = null;
+            selectedImageUrl = imageUrl;
         }
         if (pendingImageUri != null && (selectedImageUrl == null || selectedImageUrl.isEmpty())) {
             Toast.makeText(this, "Ảnh chưa tải lên thành công", Toast.LENGTH_SHORT).show();

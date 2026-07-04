@@ -40,6 +40,10 @@ public class ProductViewModel extends ViewModel {
         return productRepository.getProducts(cat, q, page, 20, sort);
     }
 
+    public void clearProductsListener() {
+        productRepository.clearProductsListener();
+    }
+
     public LiveData<AuthRepository.Result<List<Product>>> refreshProducts() {
         return loadProducts(1);
     }

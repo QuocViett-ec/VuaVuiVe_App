@@ -254,24 +254,29 @@ public class AdminProductListFragment extends Fragment implements ProductAdapter
             return;
         }
         new AlertDialog.Builder(getContext())
-                .setTitle("Xoa san pham")
+                .setTitle("Xóa sản phẩm")
                 .setMessage(product.getName())
-                .setPositiveButton("Xoa", (dialog, which) ->
+                .setPositiveButton("Xóa", (dialog, which) ->
                         adminProductApi.deleteProduct(product.getId()).enqueue(new Callback<Void>() {
                             @Override
                             public void onResponse(@NonNull Call<Void> call,
                                                    @NonNull Response<Void> response) {
                                 if (binding == null || !isAdded()) return;
-                                Toast.makeText(getContext(), "Da xoa san pham", Toast.LENGTH_SHORT).show();
-                                loadProducts();
+                                if (response.isSuccessful()) {
+                                    allProducts.removeIf(p -> product.getId().equals(p.getId()));
+                                    applyFilters();
+                                    Toast.makeText(getContext(), "Đã xóa sản phẩm", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(getContext(), "Xóa thất bại (HTTP " + response.code() + ")", Toast.LENGTH_SHORT).show();
+                                }
                             }
                             @Override
                             public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
                                 if (binding == null || !isAdded()) return;
-                                Toast.makeText(getContext(), "Loi xoa: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), "Lỗi xóa: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         }))
-                .setNegativeButton("Huy", null)
+                .setNegativeButton("Hủy", null)
                 .show();
     }
 

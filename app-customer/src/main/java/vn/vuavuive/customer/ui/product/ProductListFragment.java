@@ -391,6 +391,7 @@ public class ProductListFragment extends Fragment {
         searchHandler.removeCallbacks(searchRunnable);
         if (productsLiveData != null) productsLiveData.removeObservers(getViewLifecycleOwner());
         if (nextPageLiveData != null) nextPageLiveData.removeObservers(getViewLifecycleOwner());
+        if (productViewModel != null) productViewModel.clearProductsListener();
         super.onDestroyView();
     }
 }

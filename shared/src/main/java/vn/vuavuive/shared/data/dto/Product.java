@@ -40,7 +40,7 @@ public class Product {
     @SerializedName("tags")
     private List<String> tags;
 
-    @SerializedName("isActive")
+    @SerializedName(value = "isActive", alternate = {"is_active", "active"})
     private boolean isActive;
 
     @SerializedName("externalId")
