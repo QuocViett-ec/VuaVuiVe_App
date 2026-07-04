@@ -30,7 +30,7 @@ public record UserResponse(
             user.getEmail(),
             user.getAvatarUrl() != null ? user.getAvatarUrl() : "",
             "local",
-            "",
+            user.getAddress() != null ? user.getAddress() : "",
             roleStr,
             user.getIsActive(),
             user.getCreatedAt() != null ? user.getCreatedAt().toString() : null,

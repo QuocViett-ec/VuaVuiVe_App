@@ -200,6 +200,18 @@ public class AccountFragment extends Fragment {
         if (btnLogout != null) btnLogout.setVisibility(View.GONE);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (authViewModel != null && authViewModel.isLoggedIn()) {
+            authViewModel.checkSession().observe(getViewLifecycleOwner(), result -> {
+                if (result.status == vn.vuavuive.customer.data.repository.AuthRepository.Result.Status.SUCCESS && result.data != null) {
+                    authViewModel.setCurrentUser(result.data);
+                }
+            });
+        }
+    }
+
     private void navigateIfLoggedIn(Runnable action) {
         if (!authViewModel.isLoggedIn()) {
             startActivity(new Intent(requireContext(), LoginActivity.class));

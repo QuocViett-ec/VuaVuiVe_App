@@ -22,6 +22,7 @@ public class User extends BaseEntity {
     private Role role = Role.CUSTOMER;
     
     private String avatarUrl;
+    private String address;
     
     @Builder.Default
     private Integer points = 0;

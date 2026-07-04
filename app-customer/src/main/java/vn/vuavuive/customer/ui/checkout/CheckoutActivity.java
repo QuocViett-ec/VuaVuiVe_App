@@ -74,6 +74,16 @@ public class CheckoutActivity extends AppCompatActivity {
         setupPlaceOrder();
     }
 
+    private final androidx.activity.result.ActivityResultLauncher<Intent> mapPickerLauncher =
+            registerForActivityResult(new androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == android.app.Activity.RESULT_OK && result.getData() != null) {
+                    String address = result.getData().getStringExtra(MapPickerActivity.EXTRA_ADDRESS);
+                    if (address != null && !address.isEmpty() && etAddress != null) {
+                        etAddress.setText(address);
+                    }
+                }
+            });
+
     // ── Views ─────────────────────────────────────────────────────────────────
 
     private void initViews() {
@@ -94,6 +104,14 @@ public class CheckoutActivity extends AppCompatActivity {
 
         if (btnApplyVoucher != null) {
             btnApplyVoucher.setOnClickListener(v -> applyVoucherCode());
+        }
+
+        com.google.android.material.textfield.TextInputLayout tilAddress = findViewById(R.id.til_delivery_address);
+        if (tilAddress != null) {
+            tilAddress.setEndIconOnClickListener(v -> {
+                Intent intent = new Intent(this, MapPickerActivity.class);
+                mapPickerLauncher.launch(intent);
+            });
         }
     }
 

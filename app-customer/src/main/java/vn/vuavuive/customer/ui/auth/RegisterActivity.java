@@ -17,6 +17,10 @@ import vn.vuavuive.customer.R;
 import vn.vuavuive.customer.ui.MainActivity;
 import vn.vuavuive.customer.viewmodel.AuthViewModel;
 import vn.vuavuive.shared.data.dto.request.RegisterRequest;
+import android.text.TextWatcher;
+import android.text.Editable;
+import android.view.KeyEvent;
+import android.widget.EditText;
 
 @AndroidEntryPoint
 public class RegisterActivity extends AppCompatActivity {
@@ -67,9 +71,26 @@ public class RegisterActivity extends AppCompatActivity {
         if (btnBack != null) btnBack.setOnClickListener(v -> finish());
     }
 
+    private final androidx.activity.result.ActivityResultLauncher<Intent> mapPickerLauncher =
+            registerForActivityResult(new androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == android.app.Activity.RESULT_OK && result.getData() != null) {
+                    String address = result.getData().getStringExtra(vn.vuavuive.customer.ui.checkout.MapPickerActivity.EXTRA_ADDRESS);
+                    if (address != null && !address.isEmpty() && etAddress != null) {
+                        etAddress.setText(address);
+                    }
+                }
+            });
+
     private void setupClickListeners() {
         btnRegister.setOnClickListener(v -> attemptRegister());
         tvLoginLink.setOnClickListener(v -> finish());
+        
+        if (tilAddress != null) {
+            tilAddress.setEndIconOnClickListener(v -> {
+                Intent intent = new Intent(this, vn.vuavuive.customer.ui.checkout.MapPickerActivity.class);
+                mapPickerLauncher.launch(intent);
+            });
+        }
     }
 
     private void attemptRegister() {
@@ -93,10 +114,7 @@ public class RegisterActivity extends AppCompatActivity {
             tilPhone.setError("Số điện thoại không hợp lệ (VD: 0912345678)");
             valid = false;
         }
-        if (TextUtils.isEmpty(email)) {
-            tilEmail.setError("Email không được để trống");
-            valid = false;
-        } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        if (!TextUtils.isEmpty(email) && !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             tilEmail.setError("Email không hợp lệ");
             valid = false;
         }
@@ -160,14 +178,23 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
         TextView tvSubtitle = dialogView.findViewById(R.id.tv_dialog_subtitle);
-        TextInputEditText etOtp = dialogView.findViewById(R.id.et_otp);
+        EditText etOtp1 = dialogView.findViewById(R.id.et_otp1);
+        EditText etOtp2 = dialogView.findViewById(R.id.et_otp2);
+        EditText etOtp3 = dialogView.findViewById(R.id.et_otp3);
+        EditText etOtp4 = dialogView.findViewById(R.id.et_otp4);
+        EditText etOtp5 = dialogView.findViewById(R.id.et_otp5);
+        EditText etOtp6 = dialogView.findViewById(R.id.et_otp6);
+        EditText[] otpFields = new EditText[]{etOtp1, etOtp2, etOtp3, etOtp4, etOtp5, etOtp6};
+
+        setupOtpInputAutoMovement(otpFields);
+
         TextView tvOtpError = dialogView.findViewById(R.id.tv_otp_error);
         TextView tvCountdown = dialogView.findViewById(R.id.tv_countdown);
         TextView tvResendOtp = dialogView.findViewById(R.id.tv_resend_otp);
         MaterialButton btnVerifyOtp = dialogView.findViewById(R.id.btn_verify_otp);
         MaterialButton btnCancelOtp = dialogView.findViewById(R.id.btn_cancel_otp);
 
-        // Subtitle text masking email
+        // Subtitle text masking email & phone
         String emailStr = registerRequest.getEmail();
         String phoneStr = registerRequest.getPhone();
         String maskedEmail = "";
@@ -178,16 +205,29 @@ public class RegisterActivity extends AppCompatActivity {
             } else {
                 maskedEmail = "***" + emailStr.substring(atIndex);
             }
-        } else {
-            maskedEmail = emailStr;
         }
-        tvSubtitle.setText("Mã OTP đã được gửi đến " + maskedEmail + " qua Email. Vui lòng kiểm tra và nhập vào bên dưới.");
+        String maskedPhone = "";
+        if (phoneStr != null && phoneStr.length() >= 7) {
+            maskedPhone = phoneStr.substring(0, 3) + "****" + phoneStr.substring(phoneStr.length() - 3);
+        } else {
+            maskedPhone = phoneStr;
+        }
+
+        if (emailStr != null && !emailStr.trim().isEmpty()) {
+            tvSubtitle.setText("Chúng tôi đã gửi một mã xác thực gồm 6 chữ số đến " + maskedPhone + " và email " + maskedEmail + ". Vui lòng nhập mã để tiếp tục.");
+        } else {
+            tvSubtitle.setText("Chúng tôi đã gửi một mã xác thực gồm 6 chữ số đến số điện thoại " + maskedPhone + ". Vui lòng nhập mã để tiếp tục.");
+        }
 
         // Start 60s countdown timer
         startOtpCountdown(tvCountdown, tvResendOtp, registerRequest);
 
         btnVerifyOtp.setOnClickListener(v -> {
-            String otpCode = etOtp.getText() != null ? etOtp.getText().toString().trim() : "";
+            StringBuilder sb = new StringBuilder();
+            for (EditText et : otpFields) {
+                sb.append(et.getText().toString().trim());
+            }
+            String otpCode = sb.toString();
             if (otpCode.length() != 6) {
                 tvOtpError.setText("Vui lòng nhập đầy đủ mã OTP 6 số");
                 tvOtpError.setVisibility(View.VISIBLE);
@@ -267,7 +307,8 @@ public class RegisterActivity extends AppCompatActivity {
         countDownTimer = new android.os.CountDownTimer(60000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                tvCountdown.setText("Gửi lại sau: " + (millisUntilFinished / 1000) + "s");
+                long seconds = millisUntilFinished / 1000;
+                tvCountdown.setText("Gửi lại mã(" + String.format(java.util.Locale.getDefault(), "00:%02d", seconds) + ")");
             }
 
             @Override
@@ -276,6 +317,56 @@ public class RegisterActivity extends AppCompatActivity {
                 tvResendOtp.setVisibility(View.VISIBLE);
             }
         }.start();
+    }
+
+    private void setupOtpInputAutoMovement(EditText[] otpFields) {
+        for (int i = 0; i < 6; i++) {
+            final int index = i;
+            otpFields[i].addTextChangedListener(new TextWatcher() {
+                private boolean isSelfChange = false;
+
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if (isSelfChange) return;
+                    String text = s.toString();
+                    if (text.length() >= 6) {
+                        isSelfChange = true;
+                        String cleanOtp = text.replaceAll("\\D", "");
+                        if (cleanOtp.length() > 6) cleanOtp = cleanOtp.substring(0, 6);
+                        for (int j = 0; j < cleanOtp.length(); j++) {
+                            otpFields[j].setText(String.valueOf(cleanOtp.charAt(j)));
+                        }
+                        if (cleanOtp.length() > 0) {
+                            otpFields[Math.min(cleanOtp.length() - 1, 5)].requestFocus();
+                        }
+                        isSelfChange = false;
+                        return;
+                    }
+                    if (text.length() == 1) {
+                        if (index < 5) {
+                            otpFields[index + 1].requestFocus();
+                        }
+                    }
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {}
+            });
+
+            otpFields[i].setOnKeyListener((v, keyCode, event) -> {
+                if (keyCode == KeyEvent.KEYCODE_DEL && event.getAction() == KeyEvent.ACTION_DOWN) {
+                    if (otpFields[index].getText().length() == 0 && index > 0) {
+                        otpFields[index - 1].setText("");
+                        otpFields[index - 1].requestFocus();
+                        return true;
+                    }
+                }
+                return false;
+            });
+        }
     }
 
     @Override

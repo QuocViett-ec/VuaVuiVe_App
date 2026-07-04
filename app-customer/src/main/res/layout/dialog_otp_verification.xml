@@ -22,7 +22,7 @@
         android:id="@+id/tv_dialog_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Xác thực mã OTP"
+        android:text="Kiểm tra tin nhắn của bạn"
         android:textColor="@color/text_primary"
         android:textSize="22sp"
         android:textStyle="bold"
@@ -32,38 +32,110 @@
         android:id="@+id/tv_dialog_subtitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Mã OTP đã được gửi qua Telegram. Vui lòng kiểm tra và nhập vào bên dưới."
+        android:text="Chúng tôi đã gửi một mã xác thực gồm 6 chữ số đến số điện thoại. Vui lòng nhập mã để tiếp tục."
         android:textColor="@color/text_secondary"
         android:textSize="14sp"
         android:gravity="center"
+        android:lineSpacingMultiplier="1.2"
         android:layout_marginBottom="32dp" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_otp"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+    <!-- 6 digit OTP input container -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        app:boxCornerRadiusTopStart="16dp"
-        app:boxCornerRadiusBottomStart="16dp"
-        app:boxCornerRadiusTopEnd="16dp"
-        app:boxCornerRadiusBottomEnd="16dp"
-        app:boxStrokeColor="@color/primary">
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginBottom="16dp">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_otp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+        <EditText
+            android:id="@+id/et_otp1"
+            android:layout_width="46dp"
+            android:layout_height="54dp"
+            android:background="@drawable/bg_otp_digit_box"
             android:gravity="center"
             android:inputType="number"
-            android:maxLength="6"
-            android:textSize="28sp"
-            android:letterSpacing="0.4"
-            android:textColor="@color/text_primary"
-            android:paddingVertical="16dp"
+            android:maxLength="1"
+            android:textSize="22sp"
             android:textStyle="bold"
+            android:textColor="@color/text_primary"
+            android:layout_marginHorizontal="4dp"
+            android:nextFocusForward="@id/et_otp2"
             android:maxLines="1" />
-    </com.google.android.material.textfield.TextInputLayout>
+
+        <EditText
+            android:id="@+id/et_otp2"
+            android:layout_width="46dp"
+            android:layout_height="54dp"
+            android:background="@drawable/bg_otp_digit_box"
+            android:gravity="center"
+            android:inputType="number"
+            android:maxLength="1"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_primary"
+            android:layout_marginHorizontal="4dp"
+            android:nextFocusForward="@id/et_otp3"
+            android:maxLines="1" />
+
+        <EditText
+            android:id="@+id/et_otp3"
+            android:layout_width="46dp"
+            android:layout_height="54dp"
+            android:background="@drawable/bg_otp_digit_box"
+            android:gravity="center"
+            android:inputType="number"
+            android:maxLength="1"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_primary"
+            android:layout_marginHorizontal="4dp"
+            android:nextFocusForward="@id/et_otp4"
+            android:maxLines="1" />
+
+        <EditText
+            android:id="@+id/et_otp4"
+            android:layout_width="46dp"
+            android:layout_height="54dp"
+            android:background="@drawable/bg_otp_digit_box"
+            android:gravity="center"
+            android:inputType="number"
+            android:maxLength="1"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_primary"
+            android:layout_marginHorizontal="4dp"
+            android:nextFocusForward="@id/et_otp5"
+            android:maxLines="1" />
+
+        <EditText
+            android:id="@+id/et_otp5"
+            android:layout_width="46dp"
+            android:layout_height="54dp"
+            android:background="@drawable/bg_otp_digit_box"
+            android:gravity="center"
+            android:inputType="number"
+            android:maxLength="1"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_primary"
+            android:layout_marginHorizontal="4dp"
+            android:nextFocusForward="@id/et_otp6"
+            android:maxLines="1" />
+
+        <EditText
+            android:id="@+id/et_otp6"
+            android:layout_width="46dp"
+            android:layout_height="54dp"
+            android:background="@drawable/bg_otp_digit_box"
+            android:gravity="center"
+            android:inputType="number"
+            android:maxLength="1"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_primary"
+            android:layout_marginHorizontal="4dp"
+            android:maxLines="1" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/tv_otp_error"
@@ -74,6 +146,14 @@
         android:visibility="gone"
         android:layout_marginBottom="16dp"
         android:gravity="center" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bạn không nhận được mã?"
+        android:textColor="@color/text_secondary"
+        android:textSize="14sp"
+        android:layout_marginBottom="4dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -86,9 +166,10 @@
             android:id="@+id/tv_countdown"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Gửi lại sau: 60s"
-            android:textColor="@color/text_secondary"
-            android:textSize="14sp" />
+            android:text="Gửi lại mã(01:00)"
+            android:textColor="@color/primary"
+            android:textStyle="bold"
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/tv_resend_otp"
@@ -97,8 +178,7 @@
             android:text="Gửi lại mã"
             android:textColor="@color/primary"
             android:textStyle="bold"
-            android:textSize="14sp"
-            android:layout_marginStart="8dp"
+            android:textSize="15sp"
             android:clickable="true"
             android:focusable="true"
             android:visibility="gone" />
@@ -120,7 +200,7 @@
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:text="Hủy"
+        android:text="HỦY"
         android:textColor="@color/text_secondary"
         android:textSize="16sp" />
 

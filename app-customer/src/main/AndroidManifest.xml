@@ -63,6 +63,11 @@
             android:parentActivityName=".ui.MainActivity" />
 
         <activity
+            android:name=".ui.checkout.MapPickerActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.checkout.CheckoutActivity" />
+
+        <activity
             android:name=".ui.checkout.PaymentWebViewActivity"
             android:exported="false"
             android:parentActivityName=".ui.checkout.CheckoutActivity" />

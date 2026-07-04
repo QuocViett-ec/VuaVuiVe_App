@@ -9,7 +9,6 @@ public record RegisterOtpRequest(
         @JsonAlias("name")
         String fullName,
 
-        @NotBlank(message = "Email không được để trống")
         String email,
 
         @NotBlank(message = "Số điện thoại không được để trống")

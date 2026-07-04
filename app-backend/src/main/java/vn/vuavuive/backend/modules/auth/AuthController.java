@@ -190,6 +190,52 @@ public class AuthController {
         return ResponseEntity.ok(apiResponse);
     }
 
+    @Operation(summary = "Cập nhật thông tin tài khoản")
+    @PutMapping("/profile")
+    public ResponseEntity<ApiResponse<UserResponse>> updateProfile(@RequestBody java.util.Map<String, Object> body) {
+        org.springframework.security.core.Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated() ||
+                "anonymousUser".equals(authentication.getPrincipal())) {
+            throw new AppException(HttpStatus.UNAUTHORIZED, "Chưa đăng nhập");
+        }
+        String emailOrPhone = authentication.getName();
+        String name = (String) body.get("name");
+        String phone = (String) body.get("phone");
+        String address = (String) body.get("address");
+
+        UserResponse user = authService.updateProfile(emailOrPhone, name, phone, address);
+
+        ApiResponse<UserResponse> apiResponse = ApiResponse.<UserResponse>builder()
+                .success(true)
+                .message("Cập nhật thông tin thành công")
+                .data(user)
+                .build();
+        return ResponseEntity.ok(apiResponse);
+    }
+
+    @Operation(summary = "Đổi mật khẩu")
+    @PutMapping("/password")
+    public ResponseEntity<ApiResponse<Void>> changePassword(@RequestBody java.util.Map<String, String> body) {
+        org.springframework.security.core.Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated() ||
+                "anonymousUser".equals(authentication.getPrincipal())) {
+            throw new AppException(HttpStatus.UNAUTHORIZED, "Chưa đăng nhập");
+        }
+        String emailOrPhone = authentication.getName();
+        String oldPassword = body.get("oldPassword");
+        String newPassword = body.get("newPassword");
+
+        authService.changePassword(emailOrPhone, oldPassword, newPassword);
+
+        ApiResponse<Void> apiResponse = ApiResponse.<Void>builder()
+                .success(true)
+                .message("Đổi mật khẩu thành công")
+                .build();
+        return ResponseEntity.ok(apiResponse);
+    }
+
     @Operation(
         summary = "Làm mới Access Token",
         description = "App Android gọi khi Access Token hết hạn (15 phút). " +
