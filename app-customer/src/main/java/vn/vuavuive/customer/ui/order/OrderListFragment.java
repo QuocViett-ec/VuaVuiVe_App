@@ -28,6 +28,7 @@ public class OrderListFragment extends Fragment {
 
     private static final String TAB_ALL = "all";
     private static final String TAB_PENDING = "pending_group";
+    private static final String TAB_CONFIRMED = "confirmed_group";
     private static final String TAB_SHIPPING = "shipping_group";
     private static final String TAB_DELIVERED = "delivered";
     private static final String TAB_CANCELLED = "cancelled";
@@ -88,8 +89,8 @@ public class OrderListFragment extends Fragment {
 
     private void setupTabs(View view) {
         TabLayout tabLayout = view.findViewById(R.id.tab_layout);
-        String[] tabs = {"Tat ca", "Cho xac nhan", "Dang giao", "Da giao", "Da huy"};
-        String[] keys = {TAB_ALL, TAB_PENDING, TAB_SHIPPING, TAB_DELIVERED, TAB_CANCELLED};
+        String[] tabs = {"Tất cả", "Chờ xác nhận", "Đã xác nhận", "Đang giao", "Đã giao", "Đã hủy"};
+        String[] keys = {TAB_ALL, TAB_PENDING, TAB_CONFIRMED, TAB_SHIPPING, TAB_DELIVERED, TAB_CANCELLED};
 
         for (String tab : tabs) {
             tabLayout.addTab(tabLayout.newTab().setText(tab));
@@ -170,8 +171,9 @@ public class OrderListFragment extends Fragment {
             case TAB_PENDING:
                 return "pending".equals(status)
                         || "pending_payment".equals(status)
-                        || "pending_approval".equals(status)
-                        || "confirmed".equals(status)
+                        || "pending_approval".equals(status);
+            case TAB_CONFIRMED:
+                return "confirmed".equals(status)
                         || "preparing".equals(status)
                         || "ready_for_pickup".equals(status);
             case TAB_SHIPPING:

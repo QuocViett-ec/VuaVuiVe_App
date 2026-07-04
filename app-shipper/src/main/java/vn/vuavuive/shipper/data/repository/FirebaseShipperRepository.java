@@ -265,24 +265,34 @@ public class FirebaseShipperRepository {
         FirebaseUser currentUser = auth.getCurrentUser();
         String uid = currentUser != null ? currentUser.getUid() : "unknown";
 
+        String now = getCurrentIsoTime();
         Map<String, Object> updates = new HashMap<>();
         updates.put("orders/" + orderId + "/status", newStatus);
-        updates.put("orders/" + orderId + "/updatedAt", getCurrentIsoTime());
+        updates.put("orders/" + orderId + "/updated_at", now);
+        updates.put("orders/" + orderId + "/updatedAt", now);
+        if ("DELIVERED".equalsIgnoreCase(newStatus)) {
+            updates.put("orders/" + orderId + "/delivered_at", now);
+            updates.put("orders/" + orderId + "/deliveredAt", now);
+        }
         if (failReason != null) {
             updates.put("orders/" + orderId + "/failReason", failReason);
+            updates.put("orders/" + orderId + "/fail_reason", failReason);
         }
 
         // Ghi log
-        String logKey = dbRef.child("orders").child(orderId).child("statusLogs").push().getKey();
+        String logKey = dbRef.child("orders").child(orderId).child("status_logs").push().getKey();
         if (logKey != null) {
             Map<String, Object> logEntry = new HashMap<>();
             logEntry.put("status", newStatus);
             logEntry.put("changedBy", uid);
-            logEntry.put("changedAt", getCurrentIsoTime());
+            logEntry.put("changedAt", now);
+            logEntry.put("changed_at", now);
             logEntry.put("role", "SHIPPER");
             if (failReason != null) {
                 logEntry.put("failReason", failReason);
+                logEntry.put("fail_reason", failReason);
             }
+            updates.put("orders/" + orderId + "/status_logs/" + logKey, logEntry);
             updates.put("orders/" + orderId + "/statusLogs/" + logKey, logEntry);
         }
 
@@ -341,10 +351,10 @@ public class FirebaseShipperRepository {
             // Shipper ID
             o.setShipperId(stringVal(s, "shipperId", "shipper_id"));
 
-            // Recipient info
-            o.setRecipientName(stringVal(s, "recipient_name", "recipientName"));
-            o.setRecipientPhone(stringVal(s, "recipient_phone", "recipientPhone"));
-            o.setRecipientAddress(stringVal(s, "recipient_address", "recipientAddress", "deliveryAddress"));
+            // Recipient info: customer orders store these as delivery_*.
+            o.setRecipientName(stringVal(s, "recipient_name", "recipientName", "delivery_name", "deliveryName", "delivery/name"));
+            o.setRecipientPhone(stringVal(s, "recipient_phone", "recipientPhone", "delivery_phone", "deliveryPhone", "delivery/phone"));
+            o.setRecipientAddress(stringVal(s, "recipient_address", "recipientAddress", "delivery_address", "deliveryAddress", "delivery/address"));
             o.setNote(stringVal(s, "note"));
             o.setFailReason(stringVal(s, "failReason", "fail_reason"));
             o.setPaymentMethod(stringVal(s, "paymentMethod", "payment_method"));
@@ -362,13 +372,16 @@ public class FirebaseShipperRepository {
                     vn.vuavuive.shared.data.dto.OrderItem item = new vn.vuavuive.shared.data.dto.OrderItem();
                     item.setProductId(stringVal(itemSnap, "productId", "product_id"));
                     item.setProductName(stringVal(itemSnap, "productName", "product_name", "name"));
-                    item.setImageUrl(stringVal(itemSnap, "imageUrl", "image_url", "image"));
+                    item.setImageUrl(stringVal(itemSnap, "imageUrl", "image_url", "productImageUrl", "product_image_url", "image"));
 
                     Integer qty = intVal(itemSnap, "quantity");
                     if (qty != null) item.setQuantity(qty);
 
-                    Double price = doubleVal(itemSnap, "price", "productPrice", "unit_price");
+                    Double price = doubleVal(itemSnap, "price", "productPrice", "unit_price", "unitPrice");
                     if (price != null) item.setProductPrice(price);
+
+                    Double subtotal = doubleVal(itemSnap, "subtotal", "lineTotal");
+                    if (subtotal != null) item.setSubtotal(subtotal);
 
                     items.add(item);
                 }

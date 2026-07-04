@@ -18,6 +18,7 @@ import vn.vuavuive.shared.data.dto.Order;
 import vn.vuavuive.shared.data.dto.PaymentDetail;
 import java.text.NumberFormat;
 import java.util.Locale;
+import java.util.Objects;
 
 /**
  * ShipperOrderAdapter — RecyclerView Adapter hiển thị card đơn hàng cho Shipper.
@@ -34,7 +35,12 @@ public class ShipperOrderAdapter extends ListAdapter<Order, ShipperOrderAdapter.
         }
         @Override
         public boolean areContentsTheSame(@NonNull Order a, @NonNull Order b) {
-            return a.getStatus() != null && a.getStatus().equals(b.getStatus());
+            return Objects.equals(a.getStatus(), b.getStatus())
+                    && Objects.equals(a.getUpdatedAt(), b.getUpdatedAt())
+                    && Objects.equals(a.getRecipientName(), b.getRecipientName())
+                    && Objects.equals(a.getRecipientPhone(), b.getRecipientPhone())
+                    && Objects.equals(a.getRecipientAddress(), b.getRecipientAddress())
+                    && a.getFinalAmount() == b.getFinalAmount();
         }
     };
 

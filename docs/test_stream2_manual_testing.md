@@ -155,7 +155,7 @@
 | 7 | Bấm "Gán Shipper" → chọn shipper từ dropdown | Gán thành công | |
 | 8 | Bấm "Mark Paid" (nếu COD chưa paid) | Đánh dấu đã thanh toán | |
 | 9 | Long-press chọn nhiều đơn → Bulk update | Cập nhật hàng loạt thành công | |
-| 10 | Login Audit → thử đổi status | Bị chặn, Toast read-only | |
+| 10 | Login Audit → thử đổi status | Bị chặn, Toast read-only | | chưa test quá lười
 
 ---
 

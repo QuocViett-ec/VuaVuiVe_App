@@ -2,6 +2,7 @@ package vn.vuavuive.admin.ui.orders;
 
 import android.app.AlertDialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -28,7 +29,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import vn.vuavuive.admin.R;
 import vn.vuavuive.admin.data.repository.MockRepository;
 import vn.vuavuive.admin.databinding.FragmentAdminOrderListBinding;
@@ -84,7 +85,8 @@ public class AdminOrderListFragment extends Fragment implements OrderAdapter.OnO
         binding.tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                currentStatusFilter = (String) tab.getTag();
+                Object tag = tab.getTag();
+                currentStatusFilter = tag instanceof String ? (String) tag : "all";
                 applyFilters();
                 // Disable bulk mode if status changed to prevent state leakage
                 if (adapter.isMultiSelectMode()) {
@@ -255,7 +257,11 @@ public class AdminOrderListFragment extends Fragment implements OrderAdapter.OnO
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String targetStatus = statusCodes[which];
-                Set<String> selectedIds = adapter.getSelectedOrderIds();
+                List<String> selectedIds = new ArrayList<>(adapter.getSelectedOrderIds());
+                if (selectedIds.isEmpty()) return;
+                AtomicInteger successCount = new AtomicInteger(0);
+                AtomicInteger failCount = new AtomicInteger(0);
+                int total = selectedIds.size();
                 
                 for (String id : selectedIds) {
                     java.util.Map<String, String> body = new java.util.HashMap<>();
@@ -263,22 +269,38 @@ public class AdminOrderListFragment extends Fragment implements OrderAdapter.OnO
                     body.put("updatedBy", currentUser.getName() != null ? currentUser.getName() : "Admin");
                     adminOrderApi.updateOrderStatus(id, body).enqueue(new Callback<ApiResponse<Order>>() {
                         @Override public void onResponse(@NonNull Call<ApiResponse<Order>> call,
-                                                         @NonNull Response<ApiResponse<Order>> response) {}
-                        @Override public void onFailure(@NonNull Call<ApiResponse<Order>> call, @NonNull Throwable t) {}
+                                                         @NonNull Response<ApiResponse<Order>> response) {
+                            if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                                successCount.incrementAndGet();
+                            } else {
+                                failCount.incrementAndGet();
+                            }
+                            finishBulkUpdate(successCount, failCount, total);
+                        }
+                        @Override public void onFailure(@NonNull Call<ApiResponse<Order>> call, @NonNull Throwable t) {
+                            failCount.incrementAndGet();
+                            finishBulkUpdate(successCount, failCount, total);
+                        }
                     });
                 }
 
-                Toast.makeText(getContext(), "Đã cập nhật hàng loạt " + selectedIds.size() + " đơn hàng thành công!", Toast.LENGTH_SHORT).show();
-                
                 // Reset Selection
                 adapter.setMultiSelectMode(false);
                 binding.layoutBulkActions.setVisibility(View.GONE);
-                
-                // Refresh
-                loadOrders();
             }
         });
         builder.show();
+    }
+
+    private void finishBulkUpdate(AtomicInteger successCount, AtomicInteger failCount, int total) {
+        if (successCount.get() + failCount.get() != total || !isUiReady()) return;
+        requireActivity().runOnUiThread(() -> {
+            if (!isUiReady()) return;
+            Toast.makeText(getContext(),
+                    "Cập nhật: " + successCount.get() + " thành công, " + failCount.get() + " thất bại",
+                    Toast.LENGTH_LONG).show();
+            loadOrders();
+        });
     }
 
     private void exportFilteredOrdersCsv() {
@@ -287,21 +309,9 @@ public class AdminOrderListFragment extends Fragment implements OrderAdapter.OnO
             csv.append("Mã Đơn,Khách Hàng,Số Điện Thoại,Địa Chỉ,Tổng Tiền,Trạng Thái,Ngày Tạo\n");
             
             // Build CSV based on currently filtered items
-            List<Order> currentItems = new ArrayList<>();
-            applyFilters(); // Ensure adapter list is correct
-            for (Order o : allOrders) {
-                String status = o.getStatus() == null ? "" : o.getStatus().toLowerCase(Locale.getDefault());
-                // Quick filter mirror
-                boolean matchesStatus = "all".equals(currentStatusFilter) || 
-                        ("returns".equals(currentStatusFilter) && status.startsWith("return")) ||
-                        ("shipping".equals(currentStatusFilter) && ("shipping".equals(status) || "shipped".equals(status) || "in_transit".equals(status))) ||
-                        currentStatusFilter.equals(status);
-
-                boolean matchesQuery = currentSearchQuery.isEmpty() || 
-                        (o.getOrderId() != null && o.getOrderId().toLowerCase().contains(currentSearchQuery.toLowerCase())) ||
-                        (o.getRecipientName() != null && o.getRecipientName().toLowerCase().contains(currentSearchQuery.toLowerCase()));
-
-                if (matchesStatus && matchesQuery) {
+            List<Order> currentItems = adapter != null ? adapter.getCurrentItems() : new ArrayList<>();
+            for (Order o : currentItems) {
+                if (o != null) {
                     String name = o.getRecipientName() != null ? o.getRecipientName() : "N/A";
                     String phone = o.getRecipientPhone() != null ? o.getRecipientPhone() : "N/A";
                     String address = o.getRecipientAddress() != null ? o.getRecipientAddress().replace(",", " -") : "N/A";
@@ -317,9 +327,11 @@ public class AdminOrderListFragment extends Fragment implements OrderAdapter.OnO
             values.put(MediaStore.Downloads.MIME_TYPE, "text/csv");
             values.put(MediaStore.Downloads.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS);
 
-            Uri uri = getContext().getContentResolver().insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values);
+            Context context = getContext();
+            if (context == null) return;
+            Uri uri = context.getContentResolver().insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values);
             if (uri != null) {
-                try (OutputStream os = getContext().getContentResolver().openOutputStream(uri)) {
+                try (OutputStream os = context.getContentResolver().openOutputStream(uri)) {
                     if (os != null) {
                         os.write(csv.toString().getBytes(StandardCharsets.UTF_8));
                         os.flush();

@@ -4,11 +4,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import com.bumptech.glide.Glide;
+import com.google.firebase.database.FirebaseDatabase;
 import dagger.hilt.android.AndroidEntryPoint;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -91,6 +94,7 @@ public class AdminOrderDetailActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(@NonNull Call<ApiResponse<Order>> call,
                                        @NonNull Response<ApiResponse<Order>> response) {
+                    if (isFinishing() || isDestroyed()) return;
                     if (response.isSuccessful() && response.body() != null && response.body().isSuccess()
                             && response.body().getData() != null) {
                         order = response.body().getData();
@@ -103,6 +107,7 @@ public class AdminOrderDetailActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(@NonNull Call<ApiResponse<Order>> call, @NonNull Throwable t) {
+                    if (isFinishing() || isDestroyed()) return;
                     Toast.makeText(AdminOrderDetailActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                     finish();
                 }
@@ -113,6 +118,10 @@ public class AdminOrderDetailActivity extends AppCompatActivity {
     }
 
     private void renderOrderDetails(String orderId) {
+        if (order == null) {
+            finish();
+            return;
+        }
         // 1. Core Header & IDs
         binding.tvOrderIdTitle.setText("Mã đơn: " + (order.getOrderId() != null ? order.getOrderId() : order.getId()));
         binding.tvOrderDateVal.setText(order.getCreatedAt() != null ? order.getCreatedAt().replace("T", " ").replace("Z", "") : "");
@@ -132,26 +141,7 @@ public class AdminOrderDetailActivity extends AppCompatActivity {
         binding.layoutItemsContainer.removeAllViews();
         if (order.getItems() != null) {
             for (OrderItem item : order.getItems()) {
-                View itemView = getLayoutInflater().inflate(android.R.layout.simple_list_item_2, binding.layoutItemsContainer, false);
-                TextView text1 = itemView.findViewById(android.R.id.text1);
-                TextView text2 = itemView.findViewById(android.R.id.text2);
-
-                text1.setText(item.getProductName() + " (x" + item.getQuantity() + ")");
-                text1.setTextColor(getColor(R.color.text_primary));
-                text1.setTextSize(14f);
-
-                double price = item.getPrice();
-                text2.setText("Đơn giá: " + CurrencyFormatter.formatVnd(price) + " | Thành tiền: " + CurrencyFormatter.formatVnd(item.getLineTotal()));
-                text2.setTextColor(getColor(R.color.primary));
-                text2.setTextSize(12f);
-
-                // Add small margins
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                params.setMargins(0, 4, 0, 8);
-                itemView.setLayoutParams(params);
-
-                binding.layoutItemsContainer.addView(itemView);
+                binding.layoutItemsContainer.addView(createOrderItemView(item));
             }
         }
 
@@ -188,14 +178,14 @@ public class AdminOrderDetailActivity extends AppCompatActivity {
         binding.tvPaymentStatusVal.setTextColor(isPaid ? getColor(R.color.success) : getColor(R.color.error));
 
         // 5. Price Breakdown
-        double subtotal = order.getSubtotal() > 0 ? order.getSubtotal() : (order.getTotalAmount() - order.getShippingFee() + order.getDiscount());
+        double subtotal = order.getSubtotal() > 0 ? order.getSubtotal() : (order.getTotalAmount() - order.getShippingFee() - order.getDiscount());
         binding.tvBreakdownSubtotal.setText(CurrencyFormatter.formatVnd(subtotal));
         binding.tvBreakdownShipping.setText("+ " + CurrencyFormatter.formatVnd(order.getShippingFee()));
         binding.tvBreakdownDiscount.setText("- " + CurrencyFormatter.formatVnd(order.getDiscount()));
         binding.tvBreakdownTotal.setText(CurrencyFormatter.formatVnd(order.getFinalAmount()));
 
         // 6. Bottom Actions: Mark Paid
-        if (!isPaid && !"MOMO".equalsIgnoreCase(method) && !"audit".equals(currentUser.getRole())) {
+        if (!isPaid && !"MOMO".equalsIgnoreCase(method) && !"audit".equalsIgnoreCase(currentUser.getRole())) {
             binding.btnMarkPaid.setVisibility(View.VISIBLE);
             binding.btnMarkPaid.setOnClickListener(v -> {
                 adminOrderApi.markPaid(order.getId()).enqueue(new Callback<ApiResponse<Order>>() {
@@ -206,7 +196,7 @@ public class AdminOrderDetailActivity extends AppCompatActivity {
                                 && response.body().getData() != null) {
                             order = response.body().getData();
                             Toast.makeText(AdminOrderDetailActivity.this, "Đã cập nhật trạng thái: ĐÃ THANH TOÁN", Toast.LENGTH_SHORT).show();
-                            renderOrderDetails(orderId);
+                            renderOrderDetails(order.getId());
                         } else {
                             Toast.makeText(AdminOrderDetailActivity.this, "Không cập nhật được thanh toán", Toast.LENGTH_SHORT).show();
                         }
@@ -232,6 +222,85 @@ public class AdminOrderDetailActivity extends AppCompatActivity {
         setupReturnRequest();
     }
 
+    private View createOrderItemView(OrderItem item) {
+        int imageSize = (int) (64 * getResources().getDisplayMetrics().density);
+
+        LinearLayout row = new LinearLayout(this);
+        row.setOrientation(LinearLayout.HORIZONTAL);
+        row.setGravity(android.view.Gravity.CENTER_VERTICAL);
+        LinearLayout.LayoutParams rowParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        rowParams.setMargins(0, 4, 0, (int) (10 * getResources().getDisplayMetrics().density));
+        row.setLayoutParams(rowParams);
+
+        ImageView image = new ImageView(this);
+        LinearLayout.LayoutParams imageParams = new LinearLayout.LayoutParams(imageSize, imageSize);
+        imageParams.setMargins(0, 0, (int) (12 * getResources().getDisplayMetrics().density), 0);
+        image.setLayoutParams(imageParams);
+        image.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        loadOrderItemImage(image, item);
+        row.addView(image);
+
+        LinearLayout texts = new LinearLayout(this);
+        texts.setOrientation(LinearLayout.VERTICAL);
+        texts.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
+
+        String productName = item.getProductName() != null && !item.getProductName().isEmpty()
+                ? item.getProductName()
+                : (item.getProductId() != null ? item.getProductId() : "Sản phẩm");
+
+        TextView name = new TextView(this);
+        name.setText(productName + " (x" + item.getQuantity() + ")");
+        name.setTextColor(getColor(R.color.text_primary));
+        name.setTextSize(14f);
+        name.setTypeface(null, android.graphics.Typeface.BOLD);
+        texts.addView(name);
+
+        TextView price = new TextView(this);
+        price.setText("Đơn giá: " + CurrencyFormatter.formatVnd(item.getPrice())
+                + " | Thành tiền: " + CurrencyFormatter.formatVnd(item.getLineTotal()));
+        price.setTextColor(getColor(R.color.primary));
+        price.setTextSize(12f);
+        texts.addView(price);
+
+        row.addView(texts);
+        return row;
+    }
+
+    private void loadOrderItemImage(ImageView image, OrderItem item) {
+        String imageUrl = item.getImageUrl();
+        if (imageUrl != null && !imageUrl.trim().isEmpty()) {
+            Glide.with(this)
+                    .load(imageUrl)
+                    .placeholder(R.drawable.ic_image)
+                    .error(R.drawable.ic_image)
+                    .into(image);
+            return;
+        }
+
+        Glide.with(this)
+                .load(R.drawable.ic_image)
+                .into(image);
+
+        String productId = item.getProductId();
+        if (productId == null || productId.trim().isEmpty()) return;
+
+        FirebaseDatabase.getInstance().getReference("products").child(productId).get()
+                .addOnSuccessListener(snapshot -> {
+                    String fallbackUrl = snapshot.child("image_url").getValue(String.class);
+                    if (fallbackUrl == null || fallbackUrl.trim().isEmpty()) {
+                        fallbackUrl = snapshot.child("imageUrl").getValue(String.class);
+                    }
+                    if (fallbackUrl != null && !fallbackUrl.trim().isEmpty()) {
+                        Glide.with(this)
+                                .load(fallbackUrl)
+                                .placeholder(R.drawable.ic_image)
+                                .error(R.drawable.ic_image)
+                                .into(image);
+                    }
+                });
+    }
+
     private void setupStatusSpinner() {
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, STATUS_DISPLAY);
@@ -246,7 +315,7 @@ public class AdminOrderDetailActivity extends AppCompatActivity {
         }
 
         // Restricted role check (Audit role is read-only)
-        if ("audit".equals(currentUser.getRole())) {
+        if ("audit".equalsIgnoreCase(currentUser.getRole())) {
             binding.spinnerOrderStatus.setEnabled(false);
             return;
         }
@@ -297,13 +366,13 @@ public class AdminOrderDetailActivity extends AppCompatActivity {
     }
 
     private void setupShipperAssignment(String orderId) {
-        boolean readOnly = "audit".equals(currentUser.getRole());
+        boolean readOnly = "audit".equalsIgnoreCase(currentUser.getRole());
         binding.spinnerShipper.setEnabled(false);
         binding.btnAssignShipper.setEnabled(false);
-        binding.btnAssignShipper.setText(readOnly ? "READ ONLY" : "GAN SHIPPER");
+        binding.btnAssignShipper.setText(readOnly ? "CHỈ XEM" : "GÁN SHIPPER");
         binding.tvCurrentShipper.setText(order.getShipperId() != null && !order.getShipperId().isEmpty()
-                ? "Shipper hien tai: " + order.getShipperId()
-                : "Chua gan shipper");
+                ? "Shipper hiện tại: " + order.getShipperId()
+                : "Chưa gán shipper");
 
         if (readOnly) return;
 
@@ -328,11 +397,11 @@ public class AdminOrderDetailActivity extends AppCompatActivity {
                     labels.add(label);
                     if (shipper.getId() != null && shipper.getId().equals(order.getShipperId())) {
                         selectedIndex = i;
-                        binding.tvCurrentShipper.setText("Shipper hien tai: " + label);
+                        binding.tvCurrentShipper.setText("Shipper hiện tại: " + label);
                     }
                 }
 
-                if (labels.isEmpty()) labels.add("Khong co shipper active");
+                if (labels.isEmpty()) labels.add("Không có shipper đang hoạt động");
 
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(AdminOrderDetailActivity.this,
                         android.R.layout.simple_spinner_item, labels);
@@ -342,7 +411,7 @@ public class AdminOrderDetailActivity extends AppCompatActivity {
 
                 selectedShipper = shippers.isEmpty() ? null : shippers.get(selectedIndex);
                 boolean assignable = !shippers.isEmpty() && isAssignableStatus(order.getStatus());
-                binding.spinnerShipper.setEnabled(assignable);
+                binding.spinnerShipper.setEnabled(!shippers.isEmpty());
                 binding.btnAssignShipper.setEnabled(assignable);
 
                 binding.spinnerShipper.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -357,13 +426,13 @@ public class AdminOrderDetailActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NonNull Call<ApiResponse<List<User>>> call, @NonNull Throwable t) {
-                Toast.makeText(AdminOrderDetailActivity.this, "Khong tai duoc danh sach shipper: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(AdminOrderDetailActivity.this, "Không tải được danh sách shipper: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
 
         binding.btnAssignShipper.setOnClickListener(v -> {
             if (selectedShipper == null) {
-                Toast.makeText(this, "Vui long chon shipper", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Vui lòng chọn shipper", Toast.LENGTH_SHORT).show();
                 return;
             }
             adminOrderApi.assignShipper(order.getId(), selectedShipper.getId()).enqueue(new Callback<java.util.Map<String, String>>() {
@@ -372,18 +441,18 @@ public class AdminOrderDetailActivity extends AppCompatActivity {
                                        @NonNull Response<java.util.Map<String, String>> response) {
                     java.util.Map<String, String> body = response.body();
                     if (response.isSuccessful() && body != null && !body.containsKey("error")) {
-                        Toast.makeText(AdminOrderDetailActivity.this, "Da gan shipper", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AdminOrderDetailActivity.this, "Đã gán shipper thành công", Toast.LENGTH_SHORT).show();
                         loadOrderDetails(orderId);
                     } else {
                         Toast.makeText(AdminOrderDetailActivity.this,
-                                body != null && body.get("error") != null ? body.get("error") : "Khong gan duoc shipper",
+                                body != null && body.get("error") != null ? body.get("error") : "Không gán được shipper",
                                 Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 @Override
                 public void onFailure(@NonNull Call<java.util.Map<String, String>> call, @NonNull Throwable t) {
-                    Toast.makeText(AdminOrderDetailActivity.this, "Loi gan shipper: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AdminOrderDetailActivity.this, "Lỗi gán shipper: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
         });
@@ -392,7 +461,13 @@ public class AdminOrderDetailActivity extends AppCompatActivity {
     private boolean isAssignableStatus(String status) {
         if (status == null) return false;
         String s = status.toLowerCase();
-        return "confirmed".equals(s) || "preparing".equals(s) || "ready_for_pickup".equals(s) || "shipping".equals(s);
+        return "pending".equals(s)
+                || "pending_payment".equals(s)
+                || "pending_approval".equals(s)
+                || "confirmed".equals(s)
+                || "preparing".equals(s)
+                || "ready_for_pickup".equals(s)
+                || "shipping".equals(s);
     }
 
     private void setupReturnRequest() {
@@ -404,7 +479,7 @@ public class AdminOrderDetailActivity extends AppCompatActivity {
                 binding.tvReturnReason.setText("Lý do: Khách hàng yêu cầu hoàn tiền hàng lỗi");
             }
 
-            if ("audit".equals(currentUser.getRole())) {
+            if ("audit".equalsIgnoreCase(currentUser.getRole())) {
                 binding.btnApproveReturn.setEnabled(false);
                 binding.btnRejectReturn.setEnabled(false);
                 return;
@@ -437,13 +512,13 @@ public class AdminOrderDetailActivity extends AppCompatActivity {
                     order = response.body().getData();
                     renderOrderDetails(order.getId());
                 } else {
-                    Toast.makeText(AdminOrderDetailActivity.this, "Khong cap nhat duoc tra hang", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AdminOrderDetailActivity.this, "Không cập nhật được trạng thái trả hàng", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<ApiResponse<Order>> call, @NonNull Throwable t) {
-                Toast.makeText(AdminOrderDetailActivity.this, "Loi ket noi: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(AdminOrderDetailActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

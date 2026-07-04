@@ -143,13 +143,13 @@ public class OrderDetailActivity extends AppCompatActivity {
 
     private void showCancelDialog() {
         new AlertDialog.Builder(this)
-                .setTitle("Huy don hang")
-                .setMessage("Ban co chac muon huy don hang nay khong?")
-                .setPositiveButton("Huy don", (d, w) -> {
+                .setTitle("Hủy đơn hàng")
+                .setMessage("Bạn có chắc muốn hủy đơn hàng này không?")
+                .setPositiveButton("Hủy đơn", (d, w) -> {
                     if (currentOrder != null) {
                         orderViewModel.cancelOrder(currentOrder.getId()).observe(this, result -> {
                             if (result.status == AuthRepository.Result.Status.SUCCESS) {
-                                Toast.makeText(this, "Don hang da duoc huy", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(this, "Đơn hàng đã được hủy", Toast.LENGTH_SHORT).show();
                                 finish();
                             } else if (result.status == AuthRepository.Result.Status.ERROR) {
                                 Toast.makeText(this, result.message, Toast.LENGTH_SHORT).show();
@@ -157,26 +157,26 @@ public class OrderDetailActivity extends AppCompatActivity {
                         });
                     }
                 })
-                .setNegativeButton("Dong", null)
+                .setNegativeButton("Đóng", null)
                 .show();
     }
 
     private void showReturnDialog() {
         EditText etReason = new EditText(this);
-        etReason.setHint("Ly do tra hang...");
+        etReason.setHint("Lý do trả hàng...");
         new AlertDialog.Builder(this)
-                .setTitle("Yeu cau tra hang")
+                .setTitle("Yêu cầu trả hàng")
                 .setView(etReason)
-                .setPositiveButton("Gui yeu cau", (d, w) -> {
+                .setPositiveButton("Gửi yêu cầu", (d, w) -> {
                     String reason = etReason.getText().toString().trim();
                     if (reason.isEmpty()) {
-                        Toast.makeText(this, "Vui long nhap ly do", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Vui lòng nhập lý do", Toast.LENGTH_SHORT).show();
                         return;
                     }
                     if (currentOrder != null) {
                         orderViewModel.returnOrder(currentOrder.getId(), reason).observe(this, result -> {
                             if (result.status == AuthRepository.Result.Status.SUCCESS) {
-                                Toast.makeText(this, "Da gui yeu cau tra hang", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(this, "Đã gửi yêu cầu trả hàng", Toast.LENGTH_SHORT).show();
                                 finish();
                             } else if (result.status == AuthRepository.Result.Status.ERROR) {
                                 Toast.makeText(this, result.message, Toast.LENGTH_SHORT).show();
@@ -228,30 +228,34 @@ public class OrderDetailActivity extends AppCompatActivity {
         if (status == null) return "-";
         switch (status.toLowerCase()) {
             case "pending":
-                return "Cho xac nhan";
+                return "Chờ xác nhận";
             case "pending_payment":
-                return "Cho thanh toan";
+                return "Chờ thanh toán";
             case "pending_approval":
-                return "Cho admin duyet";
+                return "Chờ admin duyệt";
             case "confirmed":
-                return "Da xac nhan";
+                return "Đã xác nhận";
             case "processing":
-                return "Dang xu ly";
+                return "Đang xử lý";
             case "packed":
-                return "Dong goi xong";
+                return "Đóng gói xong";
+            case "preparing":
+                return "Đang chuẩn bị";
+            case "ready_for_pickup":
+                return "Chờ lấy hàng";
             case "shipping":
             case "in_transit":
-                return "Dang giao";
+                return "Đang giao";
             case "delivered":
-                return "Da giao";
+                return "Đã giao";
             case "cancelled":
-                return "Da huy";
+                return "Đã hủy";
             case "return_requested":
-                return "Yeu cau tra";
+                return "Yêu cầu trả";
             case "returned":
-                return "Da tra";
+                return "Đã trả";
             case "refunded":
-                return "Da hoan tien";
+                return "Đã hoàn tiền";
             default:
                 return status;
         }
@@ -265,6 +269,8 @@ public class OrderDetailActivity extends AppCompatActivity {
             case "pending_approval":
                 return R.color.status_pending;
             case "confirmed":
+            case "preparing":
+            case "ready_for_pickup":
                 return R.color.status_confirmed;
             case "shipping":
             case "in_transit":
@@ -283,7 +289,7 @@ public class OrderDetailActivity extends AppCompatActivity {
         method = method.toLowerCase();
         switch (method) {
             case "cod":
-                return "Thanh toan khi nhan hang (COD)";
+                return "Thanh toán khi nhận hàng (COD)";
             case "momo":
                 return "MoMo";
             case "zalopay":

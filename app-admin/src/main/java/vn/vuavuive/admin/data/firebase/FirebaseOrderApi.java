@@ -24,6 +24,14 @@ public class FirebaseOrderApi implements OrderApi {
 
     private final DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
 
+    private String firstString(DataSnapshot snapshot, String... keys) {
+        for (String key : keys) {
+            String value = snapshot.child(key).getValue(String.class);
+            if (value != null && !value.isEmpty()) return value;
+        }
+        return null;
+    }
+
     private Order mapSnapshotToOrder(DataSnapshot s) {
         Order o = new Order();
         o.setId(s.child("id").getValue(String.class) != null ? s.child("id").getValue(String.class) : s.getKey());
@@ -57,9 +65,9 @@ public class FirebaseOrderApi implements OrderApi {
 
         // Delivery
         vn.vuavuive.shared.data.dto.DeliveryInfo delivery = new vn.vuavuive.shared.data.dto.DeliveryInfo();
-        delivery.setName(s.child("delivery_name").getValue(String.class));
-        delivery.setPhone(s.child("delivery_phone").getValue(String.class));
-        delivery.setAddress(s.child("delivery_address").getValue(String.class));
+        delivery.setName(firstString(s, "delivery_name", "deliveryName", "delivery/name"));
+        delivery.setPhone(firstString(s, "delivery_phone", "deliveryPhone", "delivery/phone"));
+        delivery.setAddress(firstString(s, "delivery_address", "deliveryAddress", "delivery/address"));
         delivery.setNote(o.getNote());
         o.setDelivery(delivery);
         o.setDeliveryAddress(delivery.getAddress());
@@ -81,12 +89,14 @@ public class FirebaseOrderApi implements OrderApi {
         if (itemsSnap.exists()) {
             for (DataSnapshot itemSnap : itemsSnap.getChildren()) {
                 vn.vuavuive.shared.data.dto.OrderItem item = new vn.vuavuive.shared.data.dto.OrderItem();
-                item.setProductId(itemSnap.child("product_id").getValue(String.class));
-                item.setName(itemSnap.child("product_name").getValue(String.class));
-                item.setImageUrl(itemSnap.child("image_url").getValue(String.class));
+                item.setProductId(firstString(itemSnap, "product_id", "productId"));
+                item.setName(firstString(itemSnap, "product_name", "productName", "name"));
+                item.setImageUrl(firstString(itemSnap, "image_url", "imageUrl", "product_image_url", "productImageUrl"));
                 item.setUnit(itemSnap.child("unit").getValue(String.class));
                 
                 Double price = itemSnap.child("unit_price").getValue(Double.class);
+                if (price == null) price = itemSnap.child("unitPrice").getValue(Double.class);
+                if (price == null) price = itemSnap.child("price").getValue(Double.class);
                 item.setPrice(price != null ? price : 0.0);
                 
                 Integer qty = itemSnap.child("quantity").getValue(Integer.class);

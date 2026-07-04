@@ -33,8 +33,8 @@ import vn.vuavuive.shared.data.dto.PaymentDetail;
  * - Nút Quick Call: Gọi điện trực tiếp (Intent ACTION_DIAL)
  * - Nút Navigate: Mở Google Maps chỉ đường
  * - Cập nhật trạng thái đơn hàng qua Firebase RTDB:
- *     CONFIRMED / PREPARING / READY_FOR_PICKUP / SHIPPING → "Bắt đầu giao hàng" → IN_TRANSIT
- *     IN_TRANSIT → "Đã giao thành công" → DELIVERED
+ *     CONFIRMED / PREPARING / READY_FOR_PICKUP → "Bắt đầu giao hàng" → IN_TRANSIT
+ *     IN_TRANSIT / SHIPPING → "Đã giao thành công" → DELIVERED
  *               → "Giao thất bại"       → FAILED
  *     DELIVERED / FAILED / RETURNED → Hiển thị label kết thúc
  */
@@ -194,14 +194,14 @@ public class ShipperOrderDetailActivity extends AppCompatActivity {
         tvDoneLabel.setVisibility(View.GONE);
 
         if ("CONFIRMED".equals(status) || "PREPARING".equals(status)
-                || "READY_FOR_PICKUP".equals(status) || "SHIPPING".equals(status)) {
+                || "READY_FOR_PICKUP".equals(status)) {
             btnStartDelivery.setVisibility(View.VISIBLE);
             btnStartDelivery.setOnClickListener(v ->
                     confirm("Bắt đầu giao hàng?",
                             "Xác nhận bạn đã lấy hàng và bắt đầu giao cho khách?",
                             "IN_TRANSIT"));
 
-        } else if ("IN_TRANSIT".equals(status)) {
+        } else if ("IN_TRANSIT".equals(status) || "SHIPPING".equals(status)) {
             btnDelivered.setVisibility(View.VISIBLE);
             btnFailed.setVisibility(View.VISIBLE);
             btnDelivered.setOnClickListener(v ->

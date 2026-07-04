@@ -35,8 +35,12 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
     }
 
     public void updateData(List<Order> newOrders) {
-        this.orders = newOrders;
+        this.orders = newOrders != null ? newOrders : new ArrayList<>();
         notifyDataSetChanged();
+    }
+
+    public List<Order> getCurrentItems() {
+        return new ArrayList<>(orders);
     }
 
     public void setMultiSelectMode(boolean enabled) {
@@ -90,7 +94,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
 
     @Override
     public void onBindViewHolder(@NonNull OrderViewHolder holder, int position) {
-        holder.bind(orders.get(position));
+        holder.bind(position >= 0 && position < orders.size() ? orders.get(position) : null);
     }
 
     @Override
@@ -107,6 +111,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         }
 
         public void bind(Order order) {
+            if (order == null) return;
             binding.tvOrderId.setText(order.getOrderId() != null ? order.getOrderId() : order.getId());
             binding.tvOrderDate.setText(order.getCreatedAt() != null ? order.getCreatedAt().replace("T", " ").replace("Z", "") : "");
             
@@ -133,7 +138,9 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
             if (multiSelectMode) {
                 binding.cbSelect.setVisibility(View.VISIBLE);
                 binding.cbSelect.setChecked(selectedOrderIds.contains(order.getId()));
-                binding.cbSelect.setOnClickListener(v -> toggleSelection(order.getId()));
+                binding.cbSelect.setOnClickListener(v -> {
+                    if (order.getId() != null) toggleSelection(order.getId());
+                });
             } else {
                 binding.cbSelect.setVisibility(View.GONE);
             }
@@ -143,7 +150,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
 
             itemView.setOnClickListener(v -> {
                 if (multiSelectMode) {
-                    toggleSelection(order.getId());
+                    if (order.getId() != null) toggleSelection(order.getId());
                 } else if (listener != null) {
                     listener.onOrderClick(order);
                 } else {
@@ -155,7 +162,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
             });
 
             itemView.setOnLongClickListener(v -> {
-                if (!multiSelectMode) {
+                if (!multiSelectMode && order.getId() != null) {
                     setMultiSelectMode(true);
                     toggleSelection(order.getId());
                     return true;

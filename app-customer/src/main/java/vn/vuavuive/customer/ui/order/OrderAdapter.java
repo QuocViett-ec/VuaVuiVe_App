@@ -83,14 +83,15 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
                 String firstName = order.getItems().get(0).getProductName();
                 int extraCount = order.getItems().size() - 1;
                 tvItemsSummary.setText(firstName
-                        + (extraCount > 0 ? " va " + extraCount + " san pham khac" : ""));
+                        + (extraCount > 0 ? " và " + extraCount + " sản phẩm khác" : ""));
                 if (tvItemCount != null) {
-                    tvItemCount.setText(order.getItems().size() + " san pham");
+                    tvItemCount.setText(order.getItems().size() + " sản phẩm");
                 }
-                if (ivFirstItem != null && order.getItems().get(0).getImageUrl() != null) {
+                if (ivFirstItem != null) {
                     Glide.with(context)
                             .load(order.getItems().get(0).getImageUrl())
                             .placeholder(R.drawable.ic_image)
+                            .error(R.drawable.ic_image)
                             .centerCrop()
                             .into(ivFirstItem);
                 }
@@ -105,26 +106,30 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
             if (status == null) return "-";
             switch (status.toLowerCase()) {
                 case "pending":
-                    return "Cho xac nhan";
+                    return "Chờ xác nhận";
                 case "pending_payment":
-                    return "Cho thanh toan";
+                    return "Chờ thanh toán";
                 case "pending_approval":
-                    return "Cho admin duyet";
+                    return "Chờ admin duyệt";
                 case "confirmed":
-                    return "Da xac nhan";
+                    return "Đã xác nhận";
+                case "preparing":
+                    return "Đang chuẩn bị";
+                case "ready_for_pickup":
+                    return "Chờ lấy hàng";
                 case "shipping":
                 case "in_transit":
-                    return "Dang giao";
+                    return "Đang giao";
                 case "delivered":
-                    return "Da giao";
+                    return "Đã giao";
                 case "cancelled":
-                    return "Da huy";
+                    return "Đã hủy";
                 case "return_requested":
-                    return "Yeu cau tra";
+                    return "Yêu cầu trả";
                 case "returned":
-                    return "Da tra";
+                    return "Đã trả";
                 case "refunded":
-                    return "Da hoan tien";
+                    return "Đã hoàn tiền";
                 default:
                     return status;
             }
@@ -138,6 +143,8 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
                 case "pending_approval":
                     return R.color.status_pending;
                 case "confirmed":
+                case "preparing":
+                case "ready_for_pickup":
                     return R.color.status_confirmed;
                 case "shipping":
                 case "in_transit":
