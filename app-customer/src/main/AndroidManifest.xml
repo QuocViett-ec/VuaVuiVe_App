@@ -19,12 +19,7 @@
         <activity
             android:name=".ui.auth.LoginActivity"
             android:exported="true"
-            android:theme="@style/Theme.VuaVuiVe.Customer">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:theme="@style/Theme.VuaVuiVe.Customer" />
 
         <activity
             android:name=".ui.auth.RegisterActivity"
@@ -37,8 +32,13 @@
         <!-- Main -->
         <activity
             android:name=".ui.MainActivity"
-            android:exported="false"
-            android:launchMode="singleTop" />
+            android:exported="true"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
         <!-- Product -->
         <activity

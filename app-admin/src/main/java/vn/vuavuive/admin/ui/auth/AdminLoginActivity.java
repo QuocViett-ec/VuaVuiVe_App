@@ -29,22 +29,21 @@ public class AdminLoginActivity extends AppCompatActivity {
 
     private ActivityAdminLoginBinding binding;
 
+    // Chỉ hiện 3 role hợp lệ cho backoffice — đã xoá "Customer" vì không có quyền đăng nhập
     private static final String[] ROLES_DISPLAY = {
-            "Admin", "Staff", "Audit", "Customer"
+            "Admin", "Staff", "Audit"
     };
 
     private static final String[] ROLES_EMAILS = {
             "admin@vuavuive.vn",
             "staff@vuavuive.vn",
-            "audit@vuavuive.vn",
-            "customer@gmail.com"
+            "audit@vuavuive.vn"
     };
 
     private static final String[] ROLES_PASSWORDS = {
             "Admin@123",
             "Staff@123",
-            "Audit@123",
-            "Customer@123"
+            "Audit@123"
     };
 
     @Override

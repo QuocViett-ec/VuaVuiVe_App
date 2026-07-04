@@ -32,19 +32,19 @@ public class OrderViewModel extends ViewModel {
     }
 
     public LiveData<AuthRepository.Result<List<Order>>> getOrders(String status, int page) {
-        return backendOrderRepository.getOrders(status, page, 20);
+        return firebaseOrderRepository.getOrders(status, page, 20);
     }
 
     public LiveData<AuthRepository.Result<Order>> getOrderDetail(String orderId) {
-        return backendOrderRepository.getOrderDetail(orderId);
+        return firebaseOrderRepository.getOrderDetail(orderId);
     }
 
     public LiveData<AuthRepository.Result<Order>> createOrder(CreateOrderRequest request) {
-        return backendOrderRepository.createOrder(request);
+        return firebaseOrderRepository.createOrder(request);
     }
 
     public LiveData<AuthRepository.Result<Void>> cancelOrder(String orderId) {
-        return backendOrderRepository.cancelOrder(orderId);
+        return firebaseOrderRepository.cancelOrder(orderId);
     }
 
     public LiveData<AuthRepository.Result<Void>> returnOrder(String orderId, String reason) {
@@ -62,7 +62,7 @@ public class OrderViewModel extends ViewModel {
     }
 
     public LiveData<AuthRepository.Result<PaymentStatusResponse>> getPaymentStatus(String orderId) {
-        return backendOrderRepository.getPaymentStatus(orderId);
+        return firebaseOrderRepository.getPaymentStatus(orderId);
     }
 
     public LiveData<AuthRepository.Result<PaymentStatusResponse>> mockMomoSuccess(String orderId) {
@@ -74,16 +74,16 @@ public class OrderViewModel extends ViewModel {
     }
 
     public LiveData<AuthRepository.Result<List<Voucher>>> getAvailableVouchers() {
-        return backendOrderRepository.getAvailableVouchers();
+        return firebaseOrderRepository.getAvailableVouchers();
     }
 
     public LiveData<AuthRepository.Result<vn.vuavuive.shared.data.dto.Review>> submitReview(
             String orderId, java.util.List<java.util.Map<String, Object>> reviews) {
-        return backendOrderRepository.submitReview(orderId, reviews);
+        return firebaseOrderRepository.submitReview(orderId, reviews);
     }
 
     public LiveData<AuthRepository.Result<vn.vuavuive.shared.data.dto.Review>> getMyReview(String orderId) {
-        return backendOrderRepository.getMyReview(orderId);
+        return firebaseOrderRepository.getMyReview(orderId);
     }
 
     public MutableLiveData<Voucher> getSelectedVoucher() { return selectedVoucher; }

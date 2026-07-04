@@ -37,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
                 cartViewModel.onUserLoggedIn();
             } else if (result.status == AuthRepository.Result.Status.ERROR) {
                 authViewModel.setCurrentUser(null);
-                goToLogin();
             }
         });
 
@@ -78,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        bottomNavView.setSelectedItemId(R.id.navigation_products);
+        bottomNavView.setSelectedItemId(R.id.navigation_home);
     }
 
     private void handleNavigateIntent(Intent intent) {
@@ -124,10 +123,4 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void goToLogin() {
-        Intent intent = new Intent(this, vn.vuavuive.customer.ui.auth.LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-        finish();
-    }
 }
