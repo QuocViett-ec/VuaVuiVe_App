@@ -136,7 +136,7 @@
 | 8 | Nhập mã `FREESHIP` → bấm Áp dụng | Miễn phí ship 30.000đ | |
 | 9 | Nhập mã sai → Áp dụng | Toast "Mã không hợp lệ" | |
 | 10 | Chọn COD → bấm Đặt hàng | Toast "Đặt hàng thành công", quay về, giỏ hàng trống | |
-| 11 | Bấm icon bản đồ cạnh địa chỉ | Mở MapPickerActivity, chọn → address fill | |
+| 11 | Bấm icon bản đồ cạnh địa chỉ | Mở MapPickerActivity, chọn → address fill | | cái này chưa test vì k biết ở đâu
 
 ---
 

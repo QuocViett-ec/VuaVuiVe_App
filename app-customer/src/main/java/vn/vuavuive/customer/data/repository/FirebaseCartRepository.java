@@ -210,8 +210,9 @@ public class FirebaseCartRepository {
         String pid = item.getProductId();
         if (cartMap.containsKey(pid)) {
             CartItemEntity existing = cartMap.get(pid);
-            existing.setQuantity(existing.getQuantity() + item.getQuantity());
+            existing.setQuantity(capQuantity(existing, existing.getQuantity() + item.getQuantity()));
         } else {
+            item.setQuantity(capQuantity(item, Math.max(item.getQuantity(), 1)));
             cartMap.put(pid, item);
         }
         notifyObservers();
@@ -219,17 +220,19 @@ public class FirebaseCartRepository {
     }
 
     public void updateQuantity(String productId, int quantity) {
+        if (isMissingProductId(productId)) return;
         if (quantity <= 0) {
             cartMap.remove(productId);
         } else {
             CartItemEntity e = cartMap.get(productId);
-            if (e != null) e.setQuantity(quantity);
+            if (e != null) e.setQuantity(capQuantity(e, quantity));
         }
         notifyObservers();
         if (isUserLoggedIn()) scheduleSync();
     }
 
     public void removeItem(String productId) {
+        if (isMissingProductId(productId)) return;
         cartMap.remove(productId);
         savedMap.remove(productId);
         notifyObservers();
@@ -237,6 +240,7 @@ public class FirebaseCartRepository {
     }
 
     public void saveForLater(String productId) {
+        if (isMissingProductId(productId)) return;
         CartItemEntity e = cartMap.remove(productId);
         if (e != null) {
             e.setSavedForLater(true);
@@ -247,6 +251,7 @@ public class FirebaseCartRepository {
     }
 
     public void moveToCart(String productId) {
+        if (isMissingProductId(productId)) return;
         CartItemEntity e = savedMap.remove(productId);
         if (e != null) {
             e.setSavedForLater(false);
@@ -260,6 +265,16 @@ public class FirebaseCartRepository {
         cartMap.clear();
         notifyObservers();
         if (isUserLoggedIn()) scheduleSync();
+    }
+
+    private boolean isMissingProductId(String productId) {
+        return productId == null || productId.isEmpty();
+    }
+
+    private int capQuantity(CartItemEntity item, int quantity) {
+        int safeQuantity = Math.max(quantity, 1);
+        int stock = item != null ? item.getProductStock() : 0;
+        return stock > 0 ? Math.min(safeQuantity, stock) : safeQuantity;
     }
 
     public void removeLegacyMockItems() {

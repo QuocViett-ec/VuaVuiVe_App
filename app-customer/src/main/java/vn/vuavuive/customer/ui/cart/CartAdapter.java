@@ -50,7 +50,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull CartViewHolder holder, int position) {
-        holder.bind(items.get(position));
+        holder.bind(getItemAt(position));
     }
 
     @Override
@@ -78,41 +78,59 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         }
 
         void bind(CartItemEntity item) {
-            tvName.setText(item.getProductName());
+            if (item == null) return;
+
+            tvName.setText(item.getProductName() != null ? item.getProductName() : "Sản phẩm");
             tvPrice.setText(CurrencyFormatter.format(item.getProductPrice()));
             tvQuantity.setText(String.valueOf(item.getQuantity()));
             tvSubtotal.setText(CurrencyFormatter.format(item.getLineTotal()));
 
             Glide.with(context).load(item.getProductImageUrl())
-                    .placeholder(R.drawable.ic_image).into(ivProduct);
+                    .placeholder(R.drawable.ic_image)
+                    .error(R.drawable.ic_image)
+                    .into(ivProduct);
 
             btnDecrease.setOnClickListener(v -> {
                 if (item.getQuantity() <= 1) {
                     Toast.makeText(context, "Số lượng tối thiểu là 1", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                cartViewModel.updateQuantity(item.getProductId(), item.getQuantity() - 1);
+                if (hasProductId(item)) {
+                    cartViewModel.updateQuantity(item.getProductId(), item.getQuantity() - 1);
+                }
             });
 
             btnIncrease.setOnClickListener(v -> {
                 if (item.getQuantity() < item.getProductStock()) {
-                    cartViewModel.updateQuantity(item.getProductId(), item.getQuantity() + 1);
+                    if (hasProductId(item)) {
+                        cartViewModel.updateQuantity(item.getProductId(), item.getQuantity() + 1);
+                    }
+                } else {
+                    Toast.makeText(context, "Không đủ hàng trong kho", Toast.LENGTH_SHORT).show();
                 }
             });
 
             btnRemove.setOnClickListener(v -> {
-                cartViewModel.removeItem(item.getProductId());
+                if (hasProductId(item)) cartViewModel.removeItem(item.getProductId());
             });
 
             if (savedMode) {
                 tvActionSave.setVisibility(View.GONE);
                 tvActionMove.setVisibility(View.VISIBLE);
-                tvActionMove.setOnClickListener(v -> cartViewModel.moveToCart(item.getProductId()));
+                tvActionMove.setOnClickListener(v -> {
+                    if (hasProductId(item)) cartViewModel.moveToCart(item.getProductId());
+                });
             } else {
                 tvActionSave.setVisibility(View.VISIBLE);
                 tvActionMove.setVisibility(View.GONE);
-                tvActionSave.setOnClickListener(v -> cartViewModel.saveForLater(item.getProductId()));
+                tvActionSave.setOnClickListener(v -> {
+                    if (hasProductId(item)) cartViewModel.saveForLater(item.getProductId());
+                });
             }
+        }
+
+        private boolean hasProductId(CartItemEntity item) {
+            return item != null && item.getProductId() != null && !item.getProductId().isEmpty();
         }
     }
 }

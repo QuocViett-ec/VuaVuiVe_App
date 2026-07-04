@@ -136,7 +136,8 @@ public class CartFragment extends Fragment {
                                             @NonNull RecyclerView.ViewHolder target) { return false; }
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                int position = viewHolder.getAdapterPosition();
+                int position = viewHolder.getBindingAdapterPosition();
+                if (position == RecyclerView.NO_POSITION) return;
                 CartItemEntity item = cartAdapter.getItemAt(position);
                 if (item != null) {
                     cartViewModel.removeItem(item.getProductId());
@@ -179,7 +180,11 @@ public class CartFragment extends Fragment {
 
     private void updateTotal(List<CartItemEntity> items) {
         double total = 0;
-        for (CartItemEntity item : items) total += item.getLineTotal();
+        if (items != null) {
+            for (CartItemEntity item : items) {
+                if (item != null) total += item.getLineTotal();
+            }
+        }
         if (tvTotal != null) tvTotal.setText(CurrencyFormatter.format(total));
         if (tvSubtotalAmount != null) tvSubtotalAmount.setText(CurrencyFormatter.format(total));
         if (tvItemCount != null) {
@@ -196,7 +201,9 @@ public class CartFragment extends Fragment {
         if (layoutEmptyCart != null) {
             layoutEmptyCart.setVisibility(allEmpty ? View.VISIBLE : View.GONE);
         }
-        layoutCartContent.setVisibility(allEmpty ? View.GONE : View.VISIBLE);
+        if (layoutCartContent != null) {
+            layoutCartContent.setVisibility(allEmpty ? View.GONE : View.VISIBLE);
+        }
 
         if (tvEmptyCartInline != null) {
             tvEmptyCartInline.setVisibility(!allEmpty && cartEmpty ? View.VISIBLE : View.GONE);
@@ -216,7 +223,7 @@ public class CartFragment extends Fragment {
             tvSavedCount.setText("(" + (savedItems != null ? savedItems.size() : 0) + ")");
         }
         if (tvSavedToggle != null) {
-            tvSavedToggle.setText(savedExpanded ? "^" : "v");
+            tvSavedToggle.setText(savedExpanded ? "▲" : "▼");
             tvSavedToggle.setVisibility(hasSaved ? View.VISIBLE : View.GONE);
         }
 

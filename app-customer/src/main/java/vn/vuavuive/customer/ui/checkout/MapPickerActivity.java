@@ -149,6 +149,7 @@ public class MapPickerActivity extends AppCompatActivity {
                 final String finalResult = (result == null || result.isEmpty()) ? "Không thể lấy địa chỉ" : result;
                 
                 handler.post(() -> {
+                    if (isFinishing() || isDestroyed()) return;
                     progressBar.setVisibility(View.GONE);
                     currentSelectedAddress = finalResult.equals("Không thể lấy địa chỉ") ? "" : finalResult;
                     tvAddressPreview.setText(finalResult);
@@ -157,6 +158,7 @@ public class MapPickerActivity extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
                 handler.post(() -> {
+                    if (isFinishing() || isDestroyed()) return;
                     progressBar.setVisibility(View.GONE);
                     currentSelectedAddress = "";
                     tvAddressPreview.setText("Lỗi mạng khi tải địa chỉ");
@@ -175,6 +177,7 @@ public class MapPickerActivity extends AppCompatActivity {
     @Override
     public void onPause() {
         super.onPause();
+        if (geocodeRunnable != null) handler.removeCallbacks(geocodeRunnable);
         if (map != null) map.onPause();
     }
 }
