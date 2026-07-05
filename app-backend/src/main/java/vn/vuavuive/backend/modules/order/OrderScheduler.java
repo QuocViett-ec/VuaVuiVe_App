@@ -58,6 +58,7 @@ public class OrderScheduler {
                 // 2. Cập nhật trạng thái đơn hàng sang CANCELLED
                 order.setStatus(Order.OrderStatus.CANCELLED);
                 order.setPaymentStatus(Order.PaymentStatus.CANCELLED);
+                order.setStockRestored(true);
                 orderRepository.save(order);
 
                 // 3. Ghi log trạng thái đơn hàng

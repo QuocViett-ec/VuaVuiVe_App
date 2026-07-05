@@ -22,6 +22,7 @@ public class CreateOrderRequest {
 
     /** Danh sách sản phẩm trong đơn */
     @NotEmpty(message = "Đơn hàng phải có ít nhất 1 sản phẩm")
+    @Valid
     private List<OrderItemRequest> items;
 
     /** Thông tin người nhận và địa chỉ */

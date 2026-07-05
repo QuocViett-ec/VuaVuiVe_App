@@ -18,6 +18,8 @@ public record OrderResponse(
         String paymentMethod,
         String paymentStatus,
         BigDecimal totalAmount,
+        BigDecimal shippingFee,
+        BigDecimal discount,
         BigDecimal finalAmount,
         String deliveryAddress,
         /** Tên người nhận hàng */

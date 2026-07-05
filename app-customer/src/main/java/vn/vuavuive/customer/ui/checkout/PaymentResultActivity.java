@@ -86,8 +86,8 @@ public class PaymentResultActivity extends AppCompatActivity {
                 String orderStatus = result.data.getOrderStatus();
                 if ("PAID".equalsIgnoreCase(status)) {
                     cartViewModel.clearCart();
-                    showStatus("Thanh toan thanh cong",
-                            "Don hang da thanh toan va dang cho admin duyet (" + orderStatus + ").");
+                    Toast.makeText(this, "Thanh toan thanh cong", Toast.LENGTH_LONG).show();
+                    goToOrders();
                 } else if ("FAILED".equalsIgnoreCase(status) || "CANCELLED".equalsIgnoreCase(status)) {
                     showStatus("Thanh toan that bai", "Ban co the thu thanh toan lai.");
                 } else {

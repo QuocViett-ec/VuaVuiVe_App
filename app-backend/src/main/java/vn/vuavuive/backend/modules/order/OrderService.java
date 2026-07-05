@@ -42,6 +42,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class OrderService {
 
+    private static final BigDecimal DEFAULT_SHIPPING_FEE = BigDecimal.valueOf(30_000);
+
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
@@ -72,29 +74,41 @@ public class OrderService {
                 .orElseThrow(() -> AppException.notFound("User"));
 
         List<OrderItem> orderItems = new ArrayList<>();
+        Map<String, Product> productsToUpdate = new HashMap<>();
+        Map<String, Integer> quantitiesByProduct = new HashMap<>();
         BigDecimal totalAmount = BigDecimal.ZERO;
 
         // Kiểm tra tồn kho và tính tiền từng sản phẩm
         for (OrderItemRequest itemReq : request.items()) {
-            Product product = productRepository.findById(itemReq.productId())
-                    .orElseThrow(() -> AppException.notFound("Sản phẩm " + itemReq.productId()));
+            Product product = productsToUpdate.get(itemReq.productId());
+            if (product == null) {
+                product = productRepository.findById(itemReq.productId())
+                        .orElseThrow(() -> AppException.notFound("Sản phẩm " + itemReq.productId()));
+                productsToUpdate.put(itemReq.productId(), product);
+            }
 
             if (!product.getIsActive()) {
                 throw AppException.badRequest("Sản phẩm '" + product.getName() + "' hiện không có bán");
             }
 
+            if (itemReq.quantity() <= 0) {
+                throw AppException.badRequest("Số lượng sản phẩm phải lớn hơn 0");
+            }
+
             // Kiểm tra tồn kho — Đây là bước quan trọng tránh oversell
-            if (product.getStockQuantity() < itemReq.quantity()) {
+            int requestedQuantity = quantitiesByProduct.getOrDefault(itemReq.productId(), 0) + itemReq.quantity();
+            if (product.getStockQuantity() == null || product.getStockQuantity() < requestedQuantity) {
                 throw AppException.badRequest(
                         "Sản phẩm '" + product.getName() + "' chỉ còn "
                         + product.getStockQuantity() + " " + product.getUnit());
             }
+            quantitiesByProduct.put(itemReq.productId(), requestedQuantity);
 
-            // Trừ tồn kho ngay lập tức (trong transaction)
-            product.setStockQuantity(product.getStockQuantity() - itemReq.quantity());
-            productRepository.save(product);
+            BigDecimal unitPrice = product.getSellingPrice();
+            if (unitPrice == null || unitPrice.compareTo(BigDecimal.ZERO) <= 0) {
+                throw AppException.badRequest("Sản phẩm '" + product.getName() + "' chưa có giá bán hợp lệ");
+            }
 
-            BigDecimal unitPrice = itemReq.price() != null ? itemReq.price() : product.getSellingPrice();
             BigDecimal subtotal = unitPrice.multiply(BigDecimal.valueOf(itemReq.quantity()));
             totalAmount = totalAmount.add(subtotal);
 
@@ -108,8 +122,16 @@ public class OrderService {
             orderItems.add(orderItem);
         }
 
+        for (Map.Entry<String, Product> entry : productsToUpdate.entrySet()) {
+            Product product = entry.getValue();
+            product.setStockQuantity(product.getStockQuantity() - quantitiesByProduct.get(entry.getKey()));
+            productRepository.save(product);
+        }
+
         // Tạo Order
-        BigDecimal finalAmount = totalAmount.add(request.shippingFeeAmount()).subtract(request.discountAmount());
+        BigDecimal shippingFee = DEFAULT_SHIPPING_FEE;
+        BigDecimal discount = calculateDiscount(request.getVoucherCode(), totalAmount, shippingFee);
+        BigDecimal finalAmount = totalAmount.add(shippingFee).subtract(discount).max(BigDecimal.ZERO);
 
         // Lấy thông tin giao hàng từ request.getDelivery() (đối tượng DeliveryInfo riêng)
         String recipientName  = request.getDelivery() != null ? request.getDelivery().name()  : null;
@@ -123,6 +145,8 @@ public class OrderService {
                 .paymentStatus(initialPaymentStatus(request.paymentMethod()))
                 .status(initialOrderStatus(request.paymentMethod()))
                 .totalAmount(totalAmount)
+                .shippingFee(shippingFee)
+                .discount(discount)
                 .finalAmount(finalAmount)
                 .deliveryAddress(request.deliveryAddress())  // chuỗi tổng hợp "Tên (SĐT): Địa chỉ"
                 .deliveryName(recipientName)                  // lưu riêng để dễ hiển thị
@@ -138,21 +162,25 @@ public class OrderService {
 
         // Tạo URL thanh toán nếu cần
         String paymentUrl = null;
-        if ("MOMO".equals(request.paymentMethod())) {
-            paymentUrl = moMoService.createMomoPayment(new CreateMomoPaymentRequest(
-                    order.getId(),
-                    order.getFinalAmount(),
-                    "Thanh toan don hang Vua Vui Ve: " + order.getId(),
-                    user.getId()
-            )).payUrl();
-            order = orderRepository.findById(order.getId()).orElse(order);
-        } else if ("ZALOPAY".equals(request.paymentMethod())) {
-            paymentUrl = zaloPayService.createZaloPayPayment(new CreateZaloPayPaymentRequest(
-                    order.getId(),
-                    order.getFinalAmount(),
-                    "Thanh toan don hang Vua Vui Ve: " + order.getId()
-            )).orderUrl();
-            order = orderRepository.findById(order.getId()).orElse(order);
+        try {
+            if ("MOMO".equals(request.paymentMethod())) {
+                paymentUrl = moMoService.createMomoPayment(new CreateMomoPaymentRequest(
+                        order.getId(),
+                        order.getFinalAmount(),
+                        "Thanh toan don hang Vua Vui Ve: " + order.getId(),
+                        user.getId()
+                )).payUrl();
+                order = orderRepository.findById(order.getId()).orElse(order);
+            } else if ("ZALOPAY".equals(request.paymentMethod())) {
+                paymentUrl = zaloPayService.createZaloPayPayment(new CreateZaloPayPaymentRequest(
+                        order.getId(),
+                        order.getFinalAmount(),
+                        "Thanh toan don hang Vua Vui Ve: " + order.getId()
+                )).orderUrl();
+                order = orderRepository.findById(order.getId()).orElse(order);
+            }
+        } catch (RuntimeException e) {
+            log.warn("Khong tao duoc URL thanh toan cho don {}, app co the goi lai API payment", order.getId(), e);
         }
 
         log.info("Đơn hàng {} đã được tạo bởi user {}", order.getId(), email);
@@ -253,6 +281,7 @@ public class OrderService {
 
         restoreStockOnce(order);
         order.setStatus(Order.OrderStatus.CANCELLED);
+        cancelUnpaidPayment(order);
         appendStatusLog(order, Order.OrderStatus.CANCELLED, "Khách hàng hủy đơn", "CUSTOMER", email);
         return toResponse(orderRepository.save(order), null);
     }
@@ -273,6 +302,7 @@ public class OrderService {
         }
         if (status == Order.OrderStatus.CANCELLED) {
             restoreStockOnce(order);
+            cancelUnpaidPayment(order);
         }
         order.setStatus(status);
         appendStatusLog(order, status, note, "ADMIN", updatedByName);
@@ -335,12 +365,21 @@ public class OrderService {
     public OrderResponse markPaid(String orderId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> AppException.notFound("Đơn hàng"));
+        if (!"COD".equalsIgnoreCase(order.getPaymentMethod())) {
+            throw AppException.badRequest("Chỉ đánh dấu thanh toán thủ công cho đơn COD");
+        }
+        if (order.getStatus() != Order.OrderStatus.DELIVERED) {
+            throw AppException.badRequest("Chỉ đánh dấu đã thanh toán sau khi đơn COD đã giao thành công");
+        }
+        if (order.getPaymentStatus() == Order.PaymentStatus.REFUNDED) {
+            throw AppException.badRequest("Đơn đã hoàn tiền không thể đánh dấu đã thanh toán");
+        }
+        if (order.getPaymentStatus() == Order.PaymentStatus.PAID) {
+            return toResponse(order, null);
+        }
         order.setPaymentStatus(Order.PaymentStatus.PAID);
         awardPointsForOrder(order);
-        if (order.getStatus() == Order.OrderStatus.PENDING_PAYMENT) {
-            order.setStatus(Order.OrderStatus.PENDING_APPROVAL);
-            appendStatusLog(order, Order.OrderStatus.PENDING_APPROVAL, "Admin xac nhan da thanh toan", "ADMIN", "Admin");
-        }
+        appendStatusLog(order, order.getStatus(), "Admin xác nhận COD đã thu tiền", "ADMIN", "Admin");
         return toResponse(orderRepository.save(order), null);
     }
 
@@ -386,9 +425,8 @@ public class OrderService {
         // 3. Xử lý cho đơn hàng PENDING bình thường
         if ("0".equals(resultCode)) {
             order.setPaymentStatus(Order.PaymentStatus.PAID);
-            order.setStatus(Order.OrderStatus.CONFIRMED);
-            awardPointsForOrder(order);
-            appendStatusLog(order, Order.OrderStatus.CONFIRMED,
+            order.setStatus(Order.OrderStatus.PENDING_APPROVAL);
+            appendStatusLog(order, Order.OrderStatus.PENDING_APPROVAL,
                     "Thanh toán MoMo thành công", "SYSTEM", "MoMo Gateway");
         } else {
             order.setStatus(Order.OrderStatus.CANCELLED);
@@ -474,6 +512,25 @@ public class OrderService {
                 || "ZALOPAY".equalsIgnoreCase(paymentMethod);
     }
 
+    private BigDecimal calculateDiscount(String voucherCode, BigDecimal subtotal, BigDecimal shippingFee) {
+        if (voucherCode == null || voucherCode.isBlank()) return BigDecimal.ZERO;
+        String code = voucherCode.trim().toUpperCase();
+        if ("VUAVUIVE".equals(code)) {
+            return subtotal.multiply(BigDecimal.valueOf(15)).divide(BigDecimal.valueOf(100));
+        }
+        if ("FREESHIP24".equals(code) || "FREESHIP".equals(code)) {
+            return shippingFee;
+        }
+        return BigDecimal.ZERO;
+    }
+
+    private void cancelUnpaidPayment(Order order) {
+        if (order.getPaymentStatus() != Order.PaymentStatus.PAID
+                && order.getPaymentStatus() != Order.PaymentStatus.REFUNDED) {
+            order.setPaymentStatus(Order.PaymentStatus.CANCELLED);
+        }
+    }
+
     /** Ghi một mốc lịch sử trạng thái vào bảng ORDER_STATUS_LOGS */
     private void appendStatusLog(Order order, Order.OrderStatus status,
                                   String note, String role, String updatedByName) {
@@ -545,6 +602,8 @@ public class OrderService {
                 order.getPaymentMethod(),
                 order.getPaymentStatus().name(),
                 order.getTotalAmount(),
+                amountOrZero(order.getShippingFee()),
+                amountOrZero(order.getDiscount()),
                 order.getFinalAmount(),
                 parsedAddress,
                 parsedName,
@@ -556,6 +615,10 @@ public class OrderService {
                 order.getCreatedAt() != null ? LocalDateTime.ofInstant(java.time.Instant.parse(order.getCreatedAt()), java.time.ZoneId.systemDefault()) : null,
                 paymentUrl
         );
+    }
+
+    private BigDecimal amountOrZero(BigDecimal value) {
+        return value != null ? value : BigDecimal.ZERO;
     }
 
     private ReturnRequestResponse toReturnRequestResponse(Map<String, Object> request) {

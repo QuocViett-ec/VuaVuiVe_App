@@ -28,8 +28,10 @@ public class MomoController {
 
     @GetMapping("/return")
     public ResponseEntity<String> momoReturn(@RequestParam(required = false) String orderId) {
-        return ResponseEntity.ok("<html><body><h1 style='text-align:center;'>MoMo payment returned</h1>"
-                + "<p style='text-align:center;'>Order " + orderId + ". You can close this page.</p></body></html>");
+        return ResponseEntity.ok("<html><body style='font-family:sans-serif;text-align:center;padding:32px'>"
+                + "<h1>Da nhan ket qua MoMo</h1><p>Don hang " + orderId + "</p>"
+                + "<p>Quay lai ung dung de xem danh sach don hang.</p>"
+                + "<p><a style='font-size:20px' href='vuavuive://orders'>Mo ung dung</a></p></body></html>");
     }
 
     @GetMapping("/mock")

@@ -88,7 +88,11 @@ public class MainActivity extends AppCompatActivity {
     private void handleNavigateIntent(Intent intent) {
         if (intent == null) return;
         String navigateTo = intent.getStringExtra("navigate_to");
-        if ("orders".equals(navigateTo) && bottomNavView != null) {
+        android.net.Uri data = intent.getData();
+        boolean ordersDeepLink = data != null
+                && "vuavuive".equals(data.getScheme())
+                && "orders".equals(data.getHost());
+        if (("orders".equals(navigateTo) || ordersDeepLink) && bottomNavView != null) {
             bottomNavView.setSelectedItemId(R.id.navigation_orders);
             intent.removeExtra("navigate_to");
         }

@@ -29,6 +29,8 @@ public class Order extends BaseEntity {
     private OrderStatus status = OrderStatus.PENDING_APPROVAL;
 
     private java.math.BigDecimal totalAmount;
+    private java.math.BigDecimal shippingFee;
+    private java.math.BigDecimal discount;
     private java.math.BigDecimal finalAmount;
 
     private String paymentMethod; // COD, MOMO, ZALOPAY
@@ -146,6 +148,20 @@ public class Order extends BaseEntity {
     @com.google.firebase.database.PropertyName("total_amount")
     @com.fasterxml.jackson.annotation.JsonProperty("total_amount")
     public void setTotalAmount(java.math.BigDecimal totalAmount) { this.totalAmount = totalAmount; }
+
+    @com.google.firebase.database.PropertyName("shipping_fee")
+    @com.fasterxml.jackson.annotation.JsonProperty("shipping_fee")
+    public java.math.BigDecimal getShippingFee() { return shippingFee; }
+    @com.google.firebase.database.PropertyName("shipping_fee")
+    @com.fasterxml.jackson.annotation.JsonProperty("shipping_fee")
+    public void setShippingFee(java.math.BigDecimal shippingFee) { this.shippingFee = shippingFee; }
+
+    @com.google.firebase.database.PropertyName("discount_amount")
+    @com.fasterxml.jackson.annotation.JsonProperty("discount_amount")
+    public java.math.BigDecimal getDiscount() { return discount; }
+    @com.google.firebase.database.PropertyName("discount_amount")
+    @com.fasterxml.jackson.annotation.JsonProperty("discount_amount")
+    public void setDiscount(java.math.BigDecimal discount) { this.discount = discount; }
 
     @com.google.firebase.database.PropertyName("final_amount")
     @com.fasterxml.jackson.annotation.JsonProperty("final_amount")

@@ -194,15 +194,25 @@ public class ZaloPayService {
         String zpTransId = stringValue(payload.get("zp_trans_id"));
         tx.setTransactionId(zpTransId);
         tx.setResponseTime(System.currentTimeMillis());
+        boolean success = status == null || status == 1;
 
-        if (status == null || status == 1) {
+        if (order.getStatus() == Order.OrderStatus.CANCELLED) {
+            tx.setStatus(success ? PaymentTransaction.Status.PAID : PaymentTransaction.Status.FAILED);
+            if (success) {
+                tx.setResultCode(1);
+                tx.setMessage("ZaloPay payment successful after order was cancelled");
+                order.setPaymentMethod("ZALOPAY");
+                order.setPaymentStatus(Order.PaymentStatus.PAID);
+                appendStatusLog(order, Order.OrderStatus.CANCELLED, "ZaloPay da thanh toan sau khi don bi huy");
+            }
+        } else if (success) {
             tx.setStatus(PaymentTransaction.Status.PAID);
             tx.setResultCode(1);
             tx.setMessage("ZaloPay payment successful");
             order.setPaymentMethod("ZALOPAY");
             order.setPaymentStatus(Order.PaymentStatus.PAID);
-            order.setStatus(Order.OrderStatus.CONFIRMED);
-            appendStatusLog(order, Order.OrderStatus.CONFIRMED, "Thanh toan ZaloPay thanh cong");
+            order.setStatus(Order.OrderStatus.PENDING_APPROVAL);
+            appendStatusLog(order, Order.OrderStatus.PENDING_APPROVAL, "Thanh toan ZaloPay thanh cong, cho admin duyet");
         } else {
             markFailed(order, tx, "Thanh toan ZaloPay that bai", status);
         }
@@ -231,8 +241,12 @@ public class ZaloPayService {
             tx.setMessage("Mock ZaloPay success");
             order.setPaymentMethod("ZALOPAY");
             order.setPaymentStatus(Order.PaymentStatus.PAID);
-            order.setStatus(Order.OrderStatus.CONFIRMED);
-            appendStatusLog(order, Order.OrderStatus.CONFIRMED, "Thanh toan ZaloPay mock thanh cong");
+            if (order.getStatus() == Order.OrderStatus.CANCELLED) {
+                appendStatusLog(order, Order.OrderStatus.CANCELLED, "ZaloPay mock da thanh toan sau khi don bi huy");
+            } else {
+                order.setStatus(Order.OrderStatus.PENDING_APPROVAL);
+                appendStatusLog(order, Order.OrderStatus.PENDING_APPROVAL, "Thanh toan ZaloPay mock thanh cong, cho admin duyet");
+            }
         } else {
             markFailed(order, tx, "Mock ZaloPay failed", -1);
         }
@@ -273,13 +287,15 @@ public class ZaloPayService {
     }
 
     private void restoreStock(Order order) {
+        if (Boolean.TRUE.equals(order.getStockRestored())) return;
         for (OrderItem item : order.getOrderItems()) {
             if (item.getProductId() == null) continue;
-            Product product = productRepository.findById(UUID.fromString(item.getProductId())).orElse(null);
+            Product product = productRepository.findById(item.getProductId()).orElse(null);
             if (product == null) continue;
             product.setStockQuantity(product.getStockQuantity() + item.getQuantity());
             productRepository.save(product);
         }
+        order.setStockRestored(true);
     }
 
     private CreateZaloPayPaymentResponse createMockPayment(Order order, User user, String appTransId) {

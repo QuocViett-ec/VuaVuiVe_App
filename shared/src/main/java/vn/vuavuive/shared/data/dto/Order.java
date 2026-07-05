@@ -89,8 +89,12 @@ public class Order {
     @SerializedName("stock_restored")
     private boolean stockRestored;
 
+    @SerializedName("paymentUrl")
+    private String paymentUrl;
+
     // Getters
     public boolean isStockRestored() { return stockRestored; }
+    public String getPaymentUrl() { return paymentUrl; }
     public String getId() { return id != null ? id : orderId; }
     public String getOrderId() { return orderId; }
     public String getUserId() { return userId; }
@@ -206,6 +210,7 @@ public class Order {
     public void setCreatedAt(String createdAt) { this.createdAt = createdAt; }
     public void setUpdatedAt(String updatedAt) { this.updatedAt = updatedAt; }
     public void setStockRestored(boolean stockRestored) { this.stockRestored = stockRestored; }
+    public void setPaymentUrl(String paymentUrl) { this.paymentUrl = paymentUrl; }
     public void setStatus(String status) { this.status = status; }
     public void setPaymentStatus(String paymentStatus) {
         this.paymentStatus = paymentStatus;

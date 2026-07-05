@@ -640,12 +640,18 @@ public class FirebaseOrderRepository {
     public LiveData<AuthRepository.Result<PaymentStatusResponse>> getPaymentStatus(String orderId) {
         MutableLiveData<AuthRepository.Result<PaymentStatusResponse>> result = new MutableLiveData<>();
         
-        dbRef.child("orders").child(orderId).child("payment_status").addListenerForSingleValueEvent(new ValueEventListener() {
+        dbRef.child("orders").child(orderId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String status = snapshot.getValue(String.class);
                 PaymentStatusResponse resp = new PaymentStatusResponse();
-                resp.setPaymentStatus(status != null ? status : "UNPAID");
+                String paymentStatus = snapshot.child("payment_status").getValue(String.class);
+                String orderStatus = snapshot.child("status").getValue(String.class);
+                Double amount = snapshot.child("final_amount").getValue(Double.class);
+                resp.setOrderId(orderId);
+                resp.setPaymentMethod(snapshot.child("payment_method").getValue(String.class));
+                resp.setPaymentStatus(paymentStatus != null ? paymentStatus : "UNPAID");
+                resp.setOrderStatus(orderStatus);
+                resp.setAmount(amount != null ? amount : 0.0);
                 result.postValue(AuthRepository.Result.success(resp));
             }
 

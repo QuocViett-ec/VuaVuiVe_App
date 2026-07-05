@@ -240,6 +240,8 @@ public class CheckoutActivity extends AppCompatActivity {
                     cartViewModel.clearCart();
                     Toast.makeText(CheckoutActivity.this, "Đặt hàng thành công!", Toast.LENGTH_LONG).show();
                     finish();
+                } else if (order.getPaymentUrl() != null && !order.getPaymentUrl().isEmpty()) {
+                    openPaymentResult(orderId, payableAmount, finalMethod, order.getPaymentUrl(), null);
                 } else if (Constants.PAYMENT_MOMO.equals(finalMethod)) {
                     createMomoPayment(orderId, payableAmount, order.getUserId());
                 } else if (Constants.PAYMENT_ZALOPAY.equals(finalMethod)) {
@@ -300,13 +302,7 @@ public class CheckoutActivity extends AppCompatActivity {
                 setLoading(false);
 
                 if (result.status == AuthRepository.Result.Status.SUCCESS && result.data != null) {
-                    Intent intent = new Intent(CheckoutActivity.this, PaymentResultActivity.class);
-                    intent.putExtra("payment_url", result.data.getPayUrl());
-                    intent.putExtra("deeplink", result.data.getDeeplink());
-                    intent.putExtra("order_id", orderId);
-                    intent.putExtra("order_total", amount);
-                    intent.putExtra("provider", "MOMO");
-                    startActivity(intent);
+                    openPaymentResult(orderId, amount, "MOMO", result.data.getPayUrl(), result.data.getDeeplink());
                 } else if (result.status == AuthRepository.Result.Status.ERROR) {
                     Toast.makeText(CheckoutActivity.this, result.message, Toast.LENGTH_LONG).show();
                 }
@@ -326,18 +322,22 @@ public class CheckoutActivity extends AppCompatActivity {
                 setLoading(false);
 
                 if (result.status == AuthRepository.Result.Status.SUCCESS && result.data != null) {
-                    Intent intent = new Intent(CheckoutActivity.this, PaymentResultActivity.class);
-                    intent.putExtra("payment_url", result.data.getOrderUrl());
-                    intent.putExtra("deeplink", result.data.getZpTransToken());
-                    intent.putExtra("order_id", orderId);
-                    intent.putExtra("order_total", amount);
-                    intent.putExtra("provider", "ZALOPAY");
-                    startActivity(intent);
+                    openPaymentResult(orderId, amount, "ZALOPAY", result.data.getOrderUrl(), result.data.getZpTransToken());
                 } else if (result.status == AuthRepository.Result.Status.ERROR) {
                     Toast.makeText(CheckoutActivity.this, result.message, Toast.LENGTH_LONG).show();
                 }
             }
         });
+    }
+
+    private void openPaymentResult(String orderId, double amount, String provider, String paymentUrl, String deeplink) {
+        Intent intent = new Intent(CheckoutActivity.this, PaymentResultActivity.class);
+        intent.putExtra("payment_url", paymentUrl);
+        intent.putExtra("deeplink", deeplink);
+        intent.putExtra("order_id", orderId);
+        intent.putExtra("order_total", amount);
+        intent.putExtra("provider", provider != null ? provider.toUpperCase() : "");
+        startActivity(intent);
     }
 
     private double getSubtotal() {

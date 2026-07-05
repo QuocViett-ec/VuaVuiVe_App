@@ -36,7 +36,7 @@ public class ResponseWrapperAdvice implements ResponseBodyAdvice<Object> {
                                   ServerHttpRequest request, ServerHttpResponse response) {
 
         String path = request.getURI().getPath();
-        if (path.startsWith("/api/momo/mock") || path.startsWith("/api/momo/return")) {
+        if (isPaymentHtmlPage(path)) {
             response.getHeaders().setContentType(MediaType.TEXT_HTML);
             return body;
         }
@@ -77,5 +77,14 @@ public class ResponseWrapperAdvice implements ResponseBodyAdvice<Object> {
         }
 
         return apiResponse;
+    }
+
+    private boolean isPaymentHtmlPage(String path) {
+        return path.startsWith("/api/momo/mock")
+                || path.startsWith("/api/momo/return")
+                || path.startsWith("/api/payments/momo/mock")
+                || path.startsWith("/api/payments/momo/return")
+                || path.startsWith("/api/payments/zalopay/mock")
+                || path.startsWith("/api/payments/zalopay/return");
     }
 }

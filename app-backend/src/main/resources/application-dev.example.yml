@@ -48,11 +48,20 @@ app:
       access-key: "YOUR_MOMO_ACCESS_KEY"
       secret-key: "YOUR_MOMO_SECRET_KEY"
       endpoint: "https://test-payment.momo.vn/v2/gateway/api/create"
-      redirect-url: "http://10.0.2.2:3000/api/momo/return"
-      ipn-url: "http://10.0.2.2:3000/api/momo/ipn"
+      redirect-url: "http://10.0.2.2:3000/api/payments/momo/return"
+      ipn-url: "http://10.0.2.2:3000/api/payments/momo/ipn"
       request-type: "captureWallet"
       lang: "vi"
       mock-mode: "true"
+    zalopay:
+      app-id: "${ZALOPAY_APP_ID:}"
+      key1: "${ZALOPAY_KEY1:}"
+      key2: "${ZALOPAY_KEY2:}"
+      endpoint: "${ZALOPAY_ENDPOINT:https://sb-openapi.zalopay.vn/v2/create}"
+      query-endpoint: "${ZALOPAY_QUERY_ENDPOINT:https://sb-openapi.zalopay.vn/v2/query}"
+      callback-url: "${PUBLIC_BASE_URL:http://10.0.2.2:3000}/api/payments/zalopay/callback"
+      redirect-url: "${PUBLIC_BASE_URL:http://10.0.2.2:3000}/api/payments/zalopay/return"
+      mock-mode: "${ZALOPAY_MOCK_MODE:true}"
 
 # ============================================
 #  CẤU HÌNH CLOUDINARY (Lưu trữ ảnh)

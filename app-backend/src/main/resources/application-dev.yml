@@ -32,21 +32,21 @@ app:
       access-key: "${MOMO_ACCESS_KEY:}"
       secret-key: "${MOMO_SECRET_KEY:}"
       endpoint: "${MOMO_ENDPOINT:https://test-payment.momo.vn/v2/gateway/api/create}"
-      redirect-url: "${MOMO_REDIRECT_URL:http://10.0.2.2:3000/api/momo/return}"
-      ipn-url: "${MOMO_IPN_URL:http://10.0.2.2:3000/api/momo/ipn}"
+      redirect-url: "${MOMO_REDIRECT_URL:http://10.0.2.2:3000/api/payments/momo/return}"
+      ipn-url: "${MOMO_IPN_URL:http://10.0.2.2:3000/api/payments/momo/ipn}"
       request-type: "${MOMO_REQUEST_TYPE:captureWallet}"
       lang: "${MOMO_LANG:vi}"
       mock-mode: "${MOCK_MOMO_MODE:true}"
       allow-mock-result: "${MOMO_ALLOW_MOCK_RESULT:true}"
 
     zalopay:
-      app-id: "${ZALOPAY_APP_ID:2554}"
-      key1: "${ZALOPAY_KEY1:sdngKKJmqEMzvh5QQcdD2A9XBSKUNaYn}"
-      key2: "${ZALOPAY_KEY2:trMrHtvjo6myautxDUiAcYsVtaeQ8nhf}"
+      app-id: "${ZALOPAY_APP_ID:}"
+      key1: "${ZALOPAY_KEY1:}"
+      key2: "${ZALOPAY_KEY2:}"
       endpoint: "${ZALOPAY_ENDPOINT:https://sb-openapi.zalopay.vn/v2/create}"
       query-endpoint: "${ZALOPAY_QUERY_ENDPOINT:https://sb-openapi.zalopay.vn/v2/query}"
-      callback-url: "${PUBLIC_BASE_URL:https://lowell-intercerebral-monopodially.ngrok-free.dev}/api/payments/zalopay/callback"
-      redirect-url: "${PUBLIC_BASE_URL:https://lowell-intercerebral-monopodially.ngrok-free.dev}/api/payments/zalopay/return"
+      callback-url: "${PUBLIC_BASE_URL:http://10.0.2.2:3000}/api/payments/zalopay/callback"
+      redirect-url: "${PUBLIC_BASE_URL:http://10.0.2.2:3000}/api/payments/zalopay/return"
       mock-mode: "${ZALOPAY_MOCK_MODE:true}"
 
 # ============================================

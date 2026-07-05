@@ -126,8 +126,7 @@ public class OrderDetailActivity extends AppCompatActivity {
 
         if ("pending".equals(status)
                 || "pending_payment".equals(status)
-                || "pending_approval".equals(status)
-                || "confirmed".equals(status)) {
+                || "pending_approval".equals(status)) {
             btnCancelOrder.setVisibility(View.VISIBLE);
         }
         if ("delivered".equals(status)) {
@@ -297,16 +296,20 @@ public class OrderDetailActivity extends AppCompatActivity {
     }
 
     private String getPaymentStatusLabel(String status) {
-        if (status == null) return "Pending";
+        if (status == null) return "Chưa thanh toán";
         switch (status.toLowerCase()) {
             case "paid":
-                return "Paid";
+                return "Đã thanh toán";
             case "failed":
-                return "Failed";
+                return "Thất bại";
             case "cancelled":
-                return "Cancelled";
+                return "Đã hủy";
+            case "refunded":
+                return "Đã hoàn tiền";
+            case "unpaid":
+                return "Chưa thanh toán";
             default:
-                return "Pending";
+                return "Chờ thanh toán";
         }
     }
 }

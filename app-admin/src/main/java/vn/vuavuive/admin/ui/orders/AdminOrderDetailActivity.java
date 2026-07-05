@@ -209,7 +209,11 @@ public class AdminOrderDetailActivity extends AppCompatActivity {
         binding.tvBreakdownTotal.setText(CurrencyFormatter.formatVnd(order.getFinalAmount()));
 
         // 6. Bottom Actions: Mark Paid
-        if (!isPaid && !"MOMO".equalsIgnoreCase(method) && !"audit".equalsIgnoreCase(currentUser.getRole())) {
+        boolean canMarkCodPaid = !isPaid
+                && "COD".equalsIgnoreCase(method)
+                && "DELIVERED".equalsIgnoreCase(order.getStatus())
+                && !"audit".equalsIgnoreCase(currentUser.getRole());
+        if (canMarkCodPaid) {
             binding.btnMarkPaid.setVisibility(View.VISIBLE);
             binding.btnMarkPaid.setOnClickListener(v -> {
                 orderStatusApi.markPaid(order.getId()).enqueue(new Callback<ApiResponse<Order>>() {

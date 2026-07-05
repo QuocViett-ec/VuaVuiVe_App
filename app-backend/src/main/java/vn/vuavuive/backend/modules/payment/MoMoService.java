@@ -37,8 +37,8 @@ public class MoMoService {
     @Value("${app.payment.momo.access-key:}") private String accessKey;
     @Value("${app.payment.momo.secret-key:}") private String secretKey;
     @Value("${app.payment.momo.endpoint:https://test-payment.momo.vn/v2/gateway/api/create}") private String endpoint;
-    @Value("${app.payment.momo.redirect-url:http://10.0.2.2:3000/api/momo/return}") private String redirectUrl;
-    @Value("${app.payment.momo.ipn-url:http://10.0.2.2:3000/api/momo/ipn}") private String ipnUrl;
+    @Value("${app.payment.momo.redirect-url:http://10.0.2.2:3000/api/payments/momo/return}") private String redirectUrl;
+    @Value("${app.payment.momo.ipn-url:http://10.0.2.2:3000/api/payments/momo/ipn}") private String ipnUrl;
     @Value("${app.payment.momo.request-type:captureWallet}") private String requestType;
     @Value("${app.payment.momo.lang:vi}") private String lang;
     @Value("${app.payment.momo.mock-mode:false}") private boolean mockMode;
@@ -120,6 +120,8 @@ public class MoMoService {
         if (body.resultCode() == null || body.resultCode() != 0 || body.payUrl() == null) {
             tx.setStatus(PaymentTransaction.Status.FAILED);
             order.setPaymentStatus(Order.PaymentStatus.FAILED);
+            transactionRepository.save(tx);
+            orderRepository.save(order);
             throw AppException.badRequest(body.message() != null ? body.message() : "Khong tao duoc thanh toan MoMo");
         }
 
@@ -155,12 +157,25 @@ public class MoMoService {
         log.info("MoMo IPN requestId={}, orderId={}, amount={}, resultCode={}",
                 request.requestId(), request.orderId(), request.amount(), request.resultCode());
 
-        if (request.resultCode() != null && request.resultCode() == 0) {
+        boolean success = request.resultCode() != null && request.resultCode() == 0;
+        if (order.getStatus() == Order.OrderStatus.CANCELLED) {
+            tx.setStatus(success ? PaymentTransaction.Status.PAID : PaymentTransaction.Status.FAILED);
+            if (success) {
+                order.setPaymentMethod("MOMO");
+                order.setPaymentStatus(Order.PaymentStatus.PAID);
+                appendStatusLog(order, Order.OrderStatus.CANCELLED, "MoMo da thanh toan sau khi don bi huy");
+            }
+            transactionRepository.save(tx);
+            orderRepository.save(order);
+            return;
+        }
+
+        if (success) {
             tx.setStatus(PaymentTransaction.Status.PAID);
             order.setPaymentMethod("MOMO");
             order.setPaymentStatus(Order.PaymentStatus.PAID);
-            order.setStatus(Order.OrderStatus.CONFIRMED);
-            appendStatusLog(order, Order.OrderStatus.CONFIRMED, "Thanh toan MoMo thanh cong");
+            order.setStatus(Order.OrderStatus.PENDING_APPROVAL);
+            appendStatusLog(order, Order.OrderStatus.PENDING_APPROVAL, "Thanh toan MoMo thanh cong, cho admin duyet");
         } else {
             tx.setStatus(PaymentTransaction.Status.FAILED);
             order.setPaymentStatus(Order.PaymentStatus.FAILED);
@@ -189,8 +204,12 @@ public class MoMoService {
             tx.setStatus(PaymentTransaction.Status.PAID);
             order.setPaymentMethod("MOMO");
             order.setPaymentStatus(Order.PaymentStatus.PAID);
-            order.setStatus(Order.OrderStatus.CONFIRMED);
-            appendStatusLog(order, Order.OrderStatus.CONFIRMED, "Thanh toan MoMo mock thanh cong");
+            if (order.getStatus() == Order.OrderStatus.CANCELLED) {
+                appendStatusLog(order, Order.OrderStatus.CANCELLED, "MoMo mock da thanh toan sau khi don bi huy");
+            } else {
+                order.setStatus(Order.OrderStatus.PENDING_APPROVAL);
+                appendStatusLog(order, Order.OrderStatus.PENDING_APPROVAL, "Thanh toan MoMo mock thanh cong, cho admin duyet");
+            }
         } else {
             tx.setStatus(PaymentTransaction.Status.FAILED);
             order.setPaymentStatus(Order.PaymentStatus.FAILED);
@@ -328,6 +347,7 @@ public class MoMoService {
     }
 
     private void restoreStock(Order order) {
+        if (Boolean.TRUE.equals(order.getStockRestored())) return;
         for (OrderItem item : order.getOrderItems()) {
             if (item.getProductId() == null) {
                 continue;
@@ -339,6 +359,7 @@ public class MoMoService {
             product.setStockQuantity(product.getStockQuantity() + item.getQuantity());
             productRepository.save(product);
         }
+        order.setStockRestored(true);
     }
 
     private String hmacSHA256(String key, String data) {

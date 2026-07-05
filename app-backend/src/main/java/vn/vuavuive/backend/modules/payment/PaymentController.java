@@ -64,8 +64,10 @@ public class PaymentController {
     @GetMapping("/momo/return")
     public ResponseEntity<String> momoReturn(@RequestParam Map<String, String> params) {
         String orderId = params.get("orderId");
-        return ResponseEntity.ok("<html><body><h1 style='text-align:center;'>MoMo payment returned</h1>"
-                + "<p style='text-align:center;'>Order " + orderId + ". You can close this page.</p></body></html>");
+        return ResponseEntity.ok("<html><body style='font-family:sans-serif;text-align:center;padding:32px'>"
+                + "<h1>Da nhan ket qua MoMo</h1><p>Don hang " + orderId + "</p>"
+                + "<p>Quay lai ung dung de xem danh sach don hang.</p>"
+                + "<p><a style='font-size:20px' href='vuavuive://orders'>Mo ung dung</a></p></body></html>");
     }
 
     @Operation(summary = "ZaloPay callback")
@@ -78,8 +80,10 @@ public class PaymentController {
     @GetMapping("/zalopay/return")
     public ResponseEntity<String> zaloPayReturn(@RequestParam Map<String, String> params) {
         String orderId = params.get("orderId");
-        return ResponseEntity.ok("<html><body><h1 style='text-align:center;'>ZaloPay payment returned</h1>"
-                + "<p style='text-align:center;'>Order " + orderId + ". You can close this page.</p></body></html>");
+        return ResponseEntity.ok("<html><body style='font-family:sans-serif;text-align:center;padding:32px'>"
+                + "<h1>Da nhan ket qua ZaloPay</h1><p>Don hang " + orderId + "</p>"
+                + "<p>Quay lai ung dung de xem danh sach don hang.</p>"
+                + "<p><a style='font-size:20px' href='vuavuive://orders'>Mo ung dung</a></p></body></html>");
     }
 
     @Operation(summary = "MoMo mock screen")
