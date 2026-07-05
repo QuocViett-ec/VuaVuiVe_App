@@ -84,6 +84,23 @@ public class OrderController {
         return ResponseEntity.ok(ApiResponse.success(orderService.cancelOrder(id)));
     }
 
+    @PostMapping("/{id}/return-request")
+    public ResponseEntity<ApiResponse<OrderResponse>> requestReturn(
+            @PathVariable String id,
+            @RequestBody Map<String, String> body) {
+        return ResponseEntity.ok(ApiResponse.success(
+                orderService.requestReturn(id, body.getOrDefault("reason", ""))));
+    }
+
+    @PutMapping("/{id}/return-review")
+    @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
+    public ResponseEntity<ApiResponse<OrderResponse>> reviewReturn(
+            @PathVariable String id,
+            @RequestBody Map<String, String> body) {
+        return ResponseEntity.ok(ApiResponse.success(orderService.reviewReturnRequest(
+                id, body.get("action"), body.getOrDefault("note", ""))));
+    }
+
     @Operation(summary = "[ADMIN] Cập nhật trạng thái đơn hàng")
     @PatchMapping("/{id}/status")
     @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")

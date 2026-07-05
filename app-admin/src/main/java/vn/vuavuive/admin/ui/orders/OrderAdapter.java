@@ -146,7 +146,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
             }
 
             // Set Status Badge colors & translation
-            setupStatusBadge(order.getStatus());
+            setupStatusBadge(order);
 
             itemView.setOnClickListener(v -> {
                 if (multiSelectMode) {
@@ -171,12 +171,30 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
             });
         }
 
-        private void setupStatusBadge(String status) {
+        private void setupStatusBadge(Order order) {
             int bgTint, textColor;
             String statusText;
+            String status = order.getStatus();
+
+            if (order.getReturnRequest() != null && order.getReturnRequest().getStatus() != null) {
+                bgTint = Color.parseColor("#33E91E63");
+                textColor = Color.parseColor("#E91E63");
+                switch (order.getReturnRequest().getStatus().toUpperCase()) {
+                    case "PENDING": statusText = "TRẢ: CHỜ DUYỆT"; break;
+                    case "APPROVED": statusText = "TRẢ: ĐÃ DUYỆT"; break;
+                    case "REJECTED": statusText = "TRẢ: TỪ CHỐI"; break;
+                    case "RECEIVED": statusText = "ĐÃ NHẬN HÀNG TRẢ"; break;
+                    default: statusText = "TRẢ HÀNG"; break;
+                }
+                binding.tvStatusBadge.setText(statusText);
+                binding.tvStatusBadge.setTextColor(textColor);
+                binding.tvStatusBadge.setBackgroundTintList(ColorStateList.valueOf(bgTint));
+                return;
+            }
 
             switch (status != null ? status.toLowerCase() : "") {
-                case "pending":
+                case "pending_payment":
+                case "pending_approval":
                     bgTint = Color.parseColor("#33FF9800"); // Warning translucent
                     textColor = Color.parseColor("#FF9800");
                     statusText = "CHỜ DUYỆT";
@@ -186,13 +204,6 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
                     textColor = Color.parseColor("#00BCD4");
                     statusText = "ĐÃ XÁC NHẬN";
                     break;
-                case "processing":
-                    bgTint = Color.parseColor("#332196F3"); // Primary translucent
-                    textColor = Color.parseColor("#2196F3");
-                    statusText = "ĐANG XỬ LÝ";
-                    break;
-                case "shipped":
-                case "shipping":
                 case "in_transit":
                     bgTint = Color.parseColor("#339C27B0"); // Purple translucent
                     textColor = Color.parseColor("#9C27B0");
@@ -208,20 +219,15 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
                     textColor = Color.parseColor("#F44336");
                     statusText = "ĐÃ HỦY";
                     break;
-                case "return_requested":
-                    bgTint = Color.parseColor("#33E91E63"); // Pink translucent
-                    textColor = Color.parseColor("#E91E63");
-                    statusText = "Y/C TRẢ HÀNG";
+                case "failed":
+                    bgTint = Color.parseColor("#33F44336");
+                    textColor = Color.parseColor("#F44336");
+                    statusText = "GIAO THẤT BẠI";
                     break;
-                case "return_approved":
-                    bgTint = Color.parseColor("#33009688"); // Teal translucent
+                case "returned":
+                    bgTint = Color.parseColor("#33009688");
                     textColor = Color.parseColor("#009688");
-                    statusText = "ĐÃ DUYỆT TRẢ";
-                    break;
-                case "return_rejected":
-                    bgTint = Color.parseColor("#33607D8B"); // Gray translucent
-                    textColor = Color.parseColor("#607D8B");
-                    statusText = "TỪ CHỐI TRẢ";
+                    statusText = "ĐÃ TRẢ HÀNG";
                     break;
                 default:
                     bgTint = Color.parseColor("#33777777");

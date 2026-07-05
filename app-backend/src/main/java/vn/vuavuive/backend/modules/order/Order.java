@@ -26,7 +26,7 @@ public class Order extends BaseEntity {
     private String shipperName;
 
     @Builder.Default
-    private OrderStatus status = OrderStatus.PENDING;
+    private OrderStatus status = OrderStatus.PENDING_APPROVAL;
 
     private java.math.BigDecimal totalAmount;
     private java.math.BigDecimal finalAmount;
@@ -44,6 +44,14 @@ public class Order extends BaseEntity {
     
     @Builder.Default
     private Boolean pointsAdded = false;
+
+    @Builder.Default
+    @com.fasterxml.jackson.annotation.JsonProperty("stock_restored")
+    private Boolean stockRestored = false;
+
+    @Builder.Default
+    @com.fasterxml.jackson.annotation.JsonProperty("return_request")
+    private Map<String, Object> returnRequest = new java.util.HashMap<>();
 
     @Builder.Default
     private List<OrderItem> orderItems = new ArrayList<>();
@@ -226,20 +234,13 @@ public class Order extends BaseEntity {
     }
 
     public enum OrderStatus {
-        PENDING,
         PENDING_PAYMENT,
         PENDING_APPROVAL,
         CONFIRMED,
-        SHIPPING,
-        PREPARING,
-        READY_FOR_PICKUP,
         IN_TRANSIT,
         DELIVERED,
         FAILED,
         RETURNED,
-        RETURN_REQUESTED,
-        RETURN_REJECTED,
-        REFUNDED,
         CANCELLED
     }
 

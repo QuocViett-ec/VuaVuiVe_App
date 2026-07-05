@@ -33,8 +33,8 @@ import vn.vuavuive.shared.data.dto.PaymentDetail;
  * - Nút Quick Call: Gọi điện trực tiếp (Intent ACTION_DIAL)
  * - Nút Navigate: Mở Google Maps chỉ đường
  * - Cập nhật trạng thái đơn hàng qua Firebase RTDB:
- *     CONFIRMED / PREPARING / READY_FOR_PICKUP → "Bắt đầu giao hàng" → IN_TRANSIT
- *     IN_TRANSIT / SHIPPING → "Đã giao thành công" → DELIVERED
+ *     CONFIRMED → "Bắt đầu giao hàng" → IN_TRANSIT
+ *     IN_TRANSIT → "Đã giao thành công" → DELIVERED
  *               → "Giao thất bại"       → FAILED
  *     DELIVERED / FAILED / RETURNED → Hiển thị label kết thúc
  */
@@ -44,13 +44,14 @@ public class ShipperOrderDetailActivity extends AppCompatActivity {
     @Inject FirebaseShipperRepository repository;
 
     private String orderId;
+    private LiveData<FirebaseShipperRepository.Result<Order>> orderDetailLiveData;
 
     // Views
     private TextView tvOrderId, tvOrderDate, tvHeaderStatus;
     private TextView tvCustomerName, tvPhone, tvAddress, tvNote;
     private TextView tvTotal, tvPaymentMethod, tvDoneLabel;
     private MaterialButton btnCall, btnNavigate;
-    private MaterialButton btnStartDelivery, btnDelivered, btnFailed;
+    private MaterialButton btnStartDelivery, btnDelivered, btnFailed, btnReturned;
     private View layoutNote;
     private RecyclerView recyclerItems;
 
@@ -63,7 +64,7 @@ public class ShipperOrderDetailActivity extends AppCompatActivity {
         if (orderId == null) { finish(); return; }
 
         initViews();
-        findViewById(R.id.btn_back).setOnClickListener(v -> onBackPressed());
+        findViewById(R.id.btn_back).setOnClickListener(v -> finish());
     }
 
     @Override
@@ -89,6 +90,7 @@ public class ShipperOrderDetailActivity extends AppCompatActivity {
         btnStartDelivery = findViewById(R.id.btn_start_delivery);
         btnDelivered     = findViewById(R.id.btn_delivered);
         btnFailed        = findViewById(R.id.btn_failed);
+        btnReturned      = findViewById(R.id.btn_returned);
         recyclerItems    = findViewById(R.id.recycler_items);
         recyclerItems.setLayoutManager(new LinearLayoutManager(this));
         recyclerItems.setNestedScrollingEnabled(false);
@@ -96,7 +98,11 @@ public class ShipperOrderDetailActivity extends AppCompatActivity {
 
     /** Lấy chi tiết đơn hàng từ Firebase RTDB (one-shot). */
     private void fetchAndBind() {
-        repository.getOrderDetail(orderId).observe(this, result -> {
+        if (orderDetailLiveData != null) {
+            orderDetailLiveData.removeObservers(this);
+        }
+        orderDetailLiveData = repository.getOrderDetail(orderId);
+        orderDetailLiveData.observe(this, result -> {
             if (result == null) return;
             switch (result.status) {
                 case LOADING:
@@ -171,7 +177,7 @@ public class ShipperOrderDetailActivity extends AppCompatActivity {
 
         // ── Total & Payment ──────────────────────────────────────────
         NumberFormat fmt = NumberFormat.getNumberInstance(new Locale("vi", "VN"));
-        tvTotal.setText(fmt.format((long) order.getFinalAmount()) + " đ");
+        tvTotal.setText(fmt.format(Math.round(order.getFinalAmount())) + " đ");
         PaymentDetail pmt = order.getPayment();
         tvPaymentMethod.setText(paymentText(pmt, order.getFinalAmount()));
 
@@ -191,17 +197,17 @@ public class ShipperOrderDetailActivity extends AppCompatActivity {
         btnStartDelivery.setVisibility(View.GONE);
         btnDelivered.setVisibility(View.GONE);
         btnFailed.setVisibility(View.GONE);
+        btnReturned.setVisibility(View.GONE);
         tvDoneLabel.setVisibility(View.GONE);
 
-        if ("CONFIRMED".equals(status) || "PREPARING".equals(status)
-                || "READY_FOR_PICKUP".equals(status)) {
+        if ("CONFIRMED".equals(status)) {
             btnStartDelivery.setVisibility(View.VISIBLE);
             btnStartDelivery.setOnClickListener(v ->
                     confirm("Bắt đầu giao hàng?",
                             "Xác nhận bạn đã lấy hàng và bắt đầu giao cho khách?",
                             "IN_TRANSIT"));
 
-        } else if ("IN_TRANSIT".equals(status) || "SHIPPING".equals(status)) {
+        } else if ("IN_TRANSIT".equals(status)) {
             btnDelivered.setVisibility(View.VISIBLE);
             btnFailed.setVisibility(View.VISIBLE);
             btnDelivered.setOnClickListener(v ->
@@ -210,6 +216,18 @@ public class ShipperOrderDetailActivity extends AppCompatActivity {
                             "DELIVERED"));
             btnFailed.setOnClickListener(v ->
                     showFailReasonDialog());
+        } else if ("FAILED".equals(status)
+                || ("DELIVERED".equals(status)
+                    && order.getReturnRequest() != null
+                    && "APPROVED".equalsIgnoreCase(order.getReturnRequest().getStatus()))) {
+            btnReturned.setText("FAILED".equals(status)
+                    ? "Xác nhận đã hoàn hàng về kho"
+                    : "Xác nhận đã nhận hàng khách trả");
+            btnReturned.setVisibility(View.VISIBLE);
+            btnReturned.setOnClickListener(v ->
+                    confirm("Xác nhận hoàn hàng?",
+                            "Kho sẽ được cộng lại tồn sau bước này.",
+                            "RETURNED"));
         } else {
             // Terminal state
             String doneText = "DELIVERED".equals(status) ? "✅ Đơn hàng đã giao thành công"
@@ -314,11 +332,8 @@ public class ShipperOrderDetailActivity extends AppCompatActivity {
         if (status == null) return;
         switch (status.toUpperCase()) {
             case "CONFIRMED":
-            case "PREPARING":
-            case "READY_FOR_PICKUP":
                 tvHeaderStatus.setText("CHỜ LẤY HÀNG");
                 tvHeaderStatus.setBackgroundColor(Color.parseColor("#FF9800")); break;
-            case "SHIPPING":
             case "IN_TRANSIT":
                 tvHeaderStatus.setText("ĐANG GIAO");
                 tvHeaderStatus.setBackgroundColor(Color.parseColor("#FF6B35")); break;
@@ -328,6 +343,12 @@ public class ShipperOrderDetailActivity extends AppCompatActivity {
             case "FAILED":
                 tvHeaderStatus.setText("THẤT BẠI");
                 tvHeaderStatus.setBackgroundColor(Color.parseColor("#757575")); break;
+            case "CANCELLED":
+                tvHeaderStatus.setText("ĐÃ HỦY");
+                tvHeaderStatus.setBackgroundColor(Color.parseColor("#C62828")); break;
+            case "RETURNED":
+                tvHeaderStatus.setText("TRẢ HÀNG");
+                tvHeaderStatus.setBackgroundColor(Color.parseColor("#7B1FA2")); break;
             default:
                 tvHeaderStatus.setText(status);
                 tvHeaderStatus.setBackgroundColor(Color.parseColor("#9E9E9E"));
@@ -337,11 +358,12 @@ public class ShipperOrderDetailActivity extends AppCompatActivity {
     private String paymentText(PaymentDetail pmt, double total) {
         NumberFormat fmt = NumberFormat.getNumberInstance(new Locale("vi", "VN"));
         if (pmt != null && "momo".equalsIgnoreCase(pmt.getMethod())) {
-            if ("paid".equalsIgnoreCase(pmt.getStatus())) return "Payment: Paid by MoMo. Do not collect cash.";
-            return "Payment: MoMo " + (pmt.getStatus() == null ? "pending" : pmt.getStatus())
-                    + ". Online payment has not been completed.";
+            if ("paid".equalsIgnoreCase(pmt.getStatus())) {
+                return "Đã thanh toán qua MoMo. Không thu tiền mặt.";
+            }
+            return "MoMo - Chưa thanh toán. Cần liên hệ khách xác nhận.";
         }
-        return "Payment: COD. Amount to collect: " + fmt.format((long) total) + " đ";
+        return "COD - Thu tiền mặt: " + fmt.format(Math.round(total)) + " đ";
     }
 
     private String formatDate(String raw) {

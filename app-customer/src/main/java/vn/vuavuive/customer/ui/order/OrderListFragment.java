@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,6 +24,7 @@ import vn.vuavuive.customer.R;
 import vn.vuavuive.customer.data.repository.AuthRepository;
 import vn.vuavuive.customer.viewmodel.OrderViewModel;
 import vn.vuavuive.shared.data.dto.Order;
+import vn.vuavuive.shared.util.Constants;
 
 public class OrderListFragment extends Fragment {
 
@@ -32,11 +34,14 @@ public class OrderListFragment extends Fragment {
     private static final String TAB_SHIPPING = "shipping_group";
     private static final String TAB_DELIVERED = "delivered";
     private static final String TAB_CANCELLED = "cancelled";
+    private static final String TAB_RETURNS = "returns";
 
     private OrderViewModel orderViewModel;
     private OrderAdapter orderAdapter;
     private String currentTab = TAB_ALL;
     private ProgressBar progressBar;
+    private List<Order> allOrders = new ArrayList<>();
+    private LiveData<AuthRepository.Result<List<Order>>> ordersLiveData;
 
     @Nullable
     @Override
@@ -56,12 +61,6 @@ public class OrderListFragment extends Fragment {
         setupSwipeRefresh(view);
         loadOrders();
         setupHeaderSearch(view);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (isAdded()) loadOrders();
     }
 
     private void setupHeaderSearch(View view) {
@@ -89,8 +88,8 @@ public class OrderListFragment extends Fragment {
 
     private void setupTabs(View view) {
         TabLayout tabLayout = view.findViewById(R.id.tab_layout);
-        String[] tabs = {"Tất cả", "Chờ xác nhận", "Đã xác nhận", "Đang giao", "Đã giao", "Đã hủy"};
-        String[] keys = {TAB_ALL, TAB_PENDING, TAB_CONFIRMED, TAB_SHIPPING, TAB_DELIVERED, TAB_CANCELLED};
+        String[] tabs = {"Tất cả", "Chờ xác nhận", "Đã xác nhận", "Đang giao", "Đã giao", "Đã hủy", "Trả hàng"};
+        String[] keys = {TAB_ALL, TAB_PENDING, TAB_CONFIRMED, TAB_SHIPPING, TAB_DELIVERED, TAB_CANCELLED, TAB_RETURNS};
 
         for (String tab : tabs) {
             tabLayout.addTab(tabLayout.newTab().setText(tab));
@@ -100,7 +99,7 @@ public class OrderListFragment extends Fragment {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 currentTab = keys[tab.getPosition()];
-                loadOrders();
+                showOrders();
             }
 
             @Override
@@ -127,27 +126,31 @@ public class OrderListFragment extends Fragment {
     private void setupSwipeRefresh(View view) {
         SwipeRefreshLayout swipe = view.findViewById(R.id.swipe_refresh);
         swipe.setColorSchemeResources(R.color.primary);
-        swipe.setOnRefreshListener(() -> {
-            loadOrders();
-            swipe.setRefreshing(false);
-        });
+        swipe.setOnRefreshListener(() -> swipe.setRefreshing(false));
     }
 
     private void loadOrders() {
         if (progressBar == null || !isAdded() || getView() == null) return;
 
         progressBar.setVisibility(View.VISIBLE);
-        orderViewModel.getOrders(null, 1).observe(getViewLifecycleOwner(), result -> {
+        ordersLiveData = orderViewModel.getOrders(null, 1);
+        ordersLiveData.observe(getViewLifecycleOwner(), result -> {
             progressBar.setVisibility(View.GONE);
             if (result.status == AuthRepository.Result.Status.SUCCESS && result.data != null) {
-                List<Order> filtered = filterOrders(result.data);
-                orderAdapter.setOrders(filtered);
-                updateEmptyState(filtered.isEmpty());
+                allOrders = result.data;
+                showOrders();
             } else if (result.status == AuthRepository.Result.Status.ERROR) {
                 orderAdapter.setOrders(Collections.emptyList());
                 updateEmptyState(true);
             }
         });
+    }
+
+    private void showOrders() {
+        if (orderAdapter == null) return;
+        List<Order> filtered = filterOrders(allOrders);
+        orderAdapter.setOrders(filtered);
+        updateEmptyState(filtered.isEmpty());
     }
 
     private List<Order> filterOrders(List<Order> orders) {
@@ -169,19 +172,17 @@ public class OrderListFragment extends Fragment {
 
         switch (currentTab) {
             case TAB_PENDING:
-                return "pending".equals(status)
-                        || "pending_payment".equals(status)
-                        || "pending_approval".equals(status);
+                return Constants.isOrderPending(status);
             case TAB_CONFIRMED:
-                return "confirmed".equals(status)
-                        || "preparing".equals(status)
-                        || "ready_for_pickup".equals(status);
+                return Constants.isOrderConfirmed(status);
             case TAB_SHIPPING:
-                return "shipping".equals(status) || "in_transit".equals(status);
+                return Constants.isOrderShipping(status);
             case TAB_DELIVERED:
-                return "delivered".equals(status);
+                return Constants.isOrderDelivered(status);
             case TAB_CANCELLED:
-                return "cancelled".equals(status) || "failed".equals(status);
+                return Constants.isOrderCancelled(status);
+            case TAB_RETURNS:
+                return order.getReturnRequest() != null || Constants.isOrderReturn(status);
             default:
                 return true;
         }
@@ -201,5 +202,15 @@ public class OrderListFragment extends Fragment {
         if (tvEmpty != null) {
             tvEmpty.setVisibility(empty ? View.VISIBLE : View.GONE);
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        if (ordersLiveData != null) {
+            ordersLiveData.removeObservers(getViewLifecycleOwner());
+            ordersLiveData = null;
+        }
+        allOrders = new ArrayList<>();
+        super.onDestroyView();
     }
 }

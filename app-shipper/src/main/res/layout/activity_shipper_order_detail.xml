@@ -383,6 +383,18 @@
                     app:cornerRadius="12dp"
                     android:visibility="gone"/>
 
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_returned"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:text="Xác nhận đã hoàn hàng"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:backgroundTint="@color/primary"
+                    app:cornerRadius="12dp"
+                    android:layout_marginTop="12dp"
+                    android:visibility="gone"/>
+
                 <!-- Done state label -->
                 <TextView
                     android:id="@+id/tv_done_label"

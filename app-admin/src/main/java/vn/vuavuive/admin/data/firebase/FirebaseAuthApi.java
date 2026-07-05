@@ -75,12 +75,6 @@ public class FirebaseAuthApi implements AuthApi {
                             } else {
                                 Exception e = task.getException();
                                 String errMsg = e != null ? e.getMessage() : "Đăng nhập thất bại";
-                                String emailKey = email != null ? email.toLowerCase() : "";
-                                String expectedRole = ROLE_WHITELIST.get(emailKey);
-                                if (expectedRole != null && !"ADMIN".equalsIgnoreCase(expectedRole)) {
-                                    loginDemoBackoffice(emailKey, expectedRole, errMsg, callback);
-                                    return;
-                                }
                                 callback.onResponse(this, retrofit2.Response.success(
                                         ApiResponse.error(errMsg)
                                 ));
@@ -105,30 +99,6 @@ public class FirebaseAuthApi implements AuthApi {
 
     private static final Handler MAIN = new Handler(Looper.getMainLooper());
 
-    private void loginDemoBackoffice(String emailKey, String role, String fallbackError, @NonNull retrofit2.Callback<ApiResponse<User>> callback) {
-        // ponytail: demo staff/audit auth rides admin Firebase account; split real Firebase users when rules support roles.
-        auth.signInWithEmailAndPassword("admin@vuavuive.vn", "Admin@123")
-                .addOnCompleteListener(adminTask -> {
-                    if (adminTask.isSuccessful() && adminTask.getResult().getUser() != null) {
-                        FirebaseUser fUser = adminTask.getResult().getUser();
-                        User user = new User();
-                        user.setId(fUser.getUid());
-                        user.setEmail(emailKey);
-                        user.setName(NAME_MAP.getOrDefault(emailKey, "Backoffice"));
-                        user.setRole(role);
-                        user.setActive(true);
-                        user.setProvider("local");
-                        String fakeJwt = generateFakeJwt(fUser.getUid(), role);
-                        ApiResponse<User> apiResponse = ApiResponse.success(user, "success", fakeJwt, "refresh");
-                        MAIN.post(() -> callback.onResponse(null, retrofit2.Response.success(apiResponse)));
-                    } else {
-                        MAIN.post(() -> callback.onResponse(null, retrofit2.Response.success(
-                                ApiResponse.error(fallbackError)
-                        )));
-                    }
-                });
-    }
-
     private void fetchOrInitializeUserProfile(String uid, String email, @NonNull retrofit2.Callback<ApiResponse<User>> callback) {
         dbRef.child("users").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -148,9 +118,7 @@ public class FirebaseAuthApi implements AuthApi {
                         user.setRole(expectedRole);
                         dbRef.child("users").child(uid).child("role").setValue(expectedRole.toUpperCase());
                     }
-                    String fakeJwt = generateFakeJwt(uid, user.getRole());
-                    ApiResponse<User> apiResponse = ApiResponse.success(user, "success", fakeJwt, "refresh");
-                    MAIN.post(() -> callback.onResponse(null, retrofit2.Response.success(apiResponse)));
+                    respondWithFirebaseToken(auth.getCurrentUser(), user, callback);
                 } else {
                     // Check whitelist
                     String emailKey = email != null ? email.toLowerCase() : "";
@@ -180,9 +148,7 @@ public class FirebaseAuthApi implements AuthApi {
                         dbRef.child("users").child(uid).setValue(userMap)
                             .addOnCompleteListener(writeTask -> {
                                 if (writeTask.isSuccessful()) {
-                                    String fakeJwt = generateFakeJwt(uid, user.getRole());
-                                    ApiResponse<User> apiResponse = ApiResponse.success(user, "success", fakeJwt, "refresh");
-                                    MAIN.post(() -> callback.onResponse(null, retrofit2.Response.success(apiResponse)));
+                                    respondWithFirebaseToken(auth.getCurrentUser(), user, callback);
                                 } else {
                                     MAIN.post(() -> callback.onResponse(null, retrofit2.Response.success(
                                         ApiResponse.error("Không thể khởi tạo thông tin người dùng")
@@ -317,18 +283,22 @@ public class FirebaseAuthApi implements AuthApi {
         throw new UnsupportedOperationException();
     }
 
-    private String generateFakeJwt(String uid, String role) {
-        try {
-            String header = android.util.Base64.encodeToString("{\"alg\":\"HS256\",\"typ\":\"JWT\"}".getBytes(), android.util.Base64.URL_SAFE | android.util.Base64.NO_WRAP);
-            long exp = (System.currentTimeMillis() + 86400000L) / 1000L; // 24h
-            String payload = android.util.Base64.encodeToString(
-                String.format("{\"sub\":\"%s\",\"role\":\"%s\",\"exp\":%d}", uid, role != null ? role.toUpperCase() : "ADMIN", exp).getBytes(),
-                android.util.Base64.URL_SAFE | android.util.Base64.NO_WRAP
-            );
-            String signature = "fake_signature";
-            return header + "." + payload + "." + signature;
-        } catch (Exception e) {
-            return "token";
+    private void respondWithFirebaseToken(
+            FirebaseUser firebaseUser,
+            User user,
+            @NonNull retrofit2.Callback<ApiResponse<User>> callback) {
+        if (firebaseUser == null) {
+            MAIN.post(() -> callback.onResponse(null,
+                    retrofit2.Response.success(ApiResponse.error("Không lấy được phiên Firebase"))));
+            return;
         }
+        firebaseUser.getIdToken(false)
+                .addOnSuccessListener(result -> {
+                    ApiResponse<User> response = ApiResponse.success(
+                            user, "success", result.getToken(), null);
+                    MAIN.post(() -> callback.onResponse(null, retrofit2.Response.success(response)));
+                })
+                .addOnFailureListener(error -> MAIN.post(() -> callback.onResponse(null,
+                        retrofit2.Response.success(ApiResponse.error("Không lấy được token đăng nhập")))));
     }
 }

@@ -37,6 +37,9 @@ public class FirebaseOrderApi implements OrderApi {
         o.setId(s.child("id").getValue(String.class) != null ? s.child("id").getValue(String.class) : s.getKey());
         o.setOrderId(s.child("order_id").getValue(String.class));
         o.setUserId(s.child("user_id").getValue(String.class));
+        String shipperId = s.child("shipper_id").getValue(String.class);
+        if (shipperId == null) shipperId = s.child("shipperId").getValue(String.class);
+        o.setShipperId(shipperId);
         
         String status = s.child("status").getValue(String.class);
         o.setStatus(status != null ? status.toUpperCase() : null);
@@ -109,6 +112,17 @@ public class FirebaseOrderApi implements OrderApi {
             }
         }
         o.setItems(items);
+
+        DataSnapshot returnSnap = s.child("return_request");
+        if (returnSnap.exists()) {
+            vn.vuavuive.shared.data.dto.ReturnRequest request =
+                    new vn.vuavuive.shared.data.dto.ReturnRequest();
+            request.setReason(returnSnap.child("reason").getValue(String.class));
+            request.setStatus(returnSnap.child("status").getValue(String.class));
+            request.setAdminNote(returnSnap.child("admin_note").getValue(String.class));
+            request.setRequestedAt(returnSnap.child("requested_at").getValue(String.class));
+            o.setReturnRequest(request);
+        }
 
         return o;
     }

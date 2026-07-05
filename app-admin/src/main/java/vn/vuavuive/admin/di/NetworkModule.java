@@ -34,6 +34,7 @@ import vn.vuavuive.shared.data.api.AuditLogApi;
 import vn.vuavuive.shared.data.api.AuthApi;
 import vn.vuavuive.shared.data.api.DashboardApi;
 import vn.vuavuive.shared.data.api.OrderApi;
+import vn.vuavuive.shared.data.api.OrderStatusApi;
 import vn.vuavuive.shared.data.api.ProductApi;
 import vn.vuavuive.shared.data.api.ShipmentApi;
 import vn.vuavuive.shared.util.AuthInterceptor;
@@ -110,6 +111,11 @@ public class NetworkModule {
 
     @Provides @Singleton
     public AdminOrderApi provideAdminOrderApi(Retrofit retrofit) { return new FirebaseAdminOrderApi(); }
+
+    @Provides @Singleton
+    public OrderStatusApi provideOrderStatusApi(Retrofit retrofit) {
+        return retrofit.create(OrderStatusApi.class);
+    }
 
     @Provides @Singleton
     public AdminProductApi provideAdminProductApi(Retrofit retrofit) { return new FirebaseAdminProductApi(); }

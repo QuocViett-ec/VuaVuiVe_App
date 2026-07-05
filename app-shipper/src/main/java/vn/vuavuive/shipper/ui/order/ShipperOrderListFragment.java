@@ -24,12 +24,13 @@ import java.util.List;
 import vn.vuavuive.shipper.R;
 import vn.vuavuive.shipper.data.repository.FirebaseShipperRepository;
 import vn.vuavuive.shared.data.dto.Order;
+import vn.vuavuive.shared.util.Constants;
 
 /**
  * ShipperOrderListFragment — Hiển thị danh sách đơn hàng từ Firebase RTDB.
  *
  * @param isHistory true  → tab Lịch sử (DELIVERED, FAILED, RETURNED)
- *                  false → tab Cần giao (CONFIRMED, SHIPPING, PREPARING, IN_TRANSIT, READY_FOR_PICKUP)
+ *                  false → tab Cần giao (CONFIRMED, IN_TRANSIT)
  */
 @AndroidEntryPoint
 public class ShipperOrderListFragment extends Fragment {
@@ -130,7 +131,7 @@ public class ShipperOrderListFragment extends Fragment {
         addChip("Tất cả", "ALL", true);
         if (!isHistory) {
             addChip("Chờ lấy hàng", "PENDING", false);
-            addChip("Đang giao", "SHIPPING", false);
+            addChip("Đang giao", "IN_TRANSIT", false);
         } else {
             addChip("Thành công", "SUCCESS", false);
             addChip("Thất bại", "FAILED", false);
@@ -156,6 +157,11 @@ public class ShipperOrderListFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
+        if (ordersLiveData != null) {
+            ordersLiveData.removeObservers(getViewLifecycleOwner());
+            ordersLiveData = null;
+        }
+        masterList.clear();
         super.onDestroyView();
     }
 
@@ -200,13 +206,13 @@ public class ShipperOrderListFragment extends Fragment {
             if ("ALL".equals(statusFilter)) {
                 matchesStatus = true;
             } else if ("PENDING".equals(statusFilter)) {
-                matchesStatus = "CONFIRMED".equals(status) || "PREPARING".equals(status) || "READY_FOR_PICKUP".equals(status);
-            } else if ("SHIPPING".equals(statusFilter)) {
-                matchesStatus = "IN_TRANSIT".equals(status) || "SHIPPING".equals(status);
+                matchesStatus = Constants.isOrderConfirmed(status);
+            } else if ("IN_TRANSIT".equals(statusFilter)) {
+                matchesStatus = Constants.isOrderShipping(status);
             } else if ("SUCCESS".equals(statusFilter)) {
-                matchesStatus = "DELIVERED".equals(status);
+                matchesStatus = Constants.isOrderDelivered(status);
             } else if ("FAILED".equals(statusFilter)) {
-                matchesStatus = "FAILED".equals(status) || "RETURNED".equals(status);
+                matchesStatus = Constants.isOrderCancelled(status) || Constants.isOrderReturn(status);
             }
 
             if (!matchesStatus) continue;
@@ -234,7 +240,7 @@ public class ShipperOrderListFragment extends Fragment {
 
     /**
      * Lọc danh sách đơn theo tab:
-     * - Active:  CONFIRMED, SHIPPING, PREPARING, IN_TRANSIT, READY_FOR_PICKUP
+     * - Active:  CONFIRMED, IN_TRANSIT
      * - History: DELIVERED, FAILED, RETURNED
      */
     private List<Order> filterByTab(List<Order> orders) {
@@ -242,13 +248,13 @@ public class ShipperOrderListFragment extends Fragment {
         for (Order order : orders) {
             String status = order.getStatus() == null ? "" : order.getStatus().toUpperCase();
             if (!isHistory) {
-                if ("CONFIRMED".equals(status) || "SHIPPING".equals(status) ||
-                    "PREPARING".equals(status) || "IN_TRANSIT".equals(status) ||
-                    "READY_FOR_PICKUP".equals(status)) {
+                if (Constants.isOrderConfirmed(status) || Constants.isOrderShipping(status)) {
                     result.add(order);
                 }
             } else {
-                if ("DELIVERED".equals(status) || "FAILED".equals(status) || "RETURNED".equals(status)) {
+                if (Constants.isOrderDelivered(status)
+                        || Constants.isOrderCancelled(status)
+                        || Constants.isOrderReturn(status)) {
                     result.add(order);
                 }
             }

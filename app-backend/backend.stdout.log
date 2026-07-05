@@ -1,0 +1,642 @@
+=======================================================
+   KHOI DONG VUAVUIVE BACKEND - PORT FORWARD
+=======================================================
+[+] Kiem tra thiet bi dang ket noi...
+[+] Da phat hien thiet bi/may ao dang chay san.
+[+] Dang kich hoat dung luong tu dong reverse port 3000...
+
+[+] Kiem tra Java:
+[adb] Dang cho thiet bi... 
+[+][adb] Da reverse port 3000 thanh cong!
+
+Public base URL (ngrok): 
+MoMo mock mode: true
+[+] Dang khoi dong Spring Boot...
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------------------< vn.vuavuive:backend >-------------------------
+[INFO] Building Vựa Vui Vẻ Backend 1.0.0
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] >>> spring-boot:3.3.0:run (default-cli) > test-compile @ backend >>>
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ backend ---
+[INFO] Copying 3 resources from src\main\resources to target\classes
+[INFO] Copying 11 resources from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ backend ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ backend ---
+[INFO] skip non existing resourceDirectory E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-backend\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ backend ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] <<< spring-boot:3.3.0:run (default-cli) < test-compile @ backend <<<
+[INFO] 
+[INFO] 
+[INFO] --- spring-boot:3.3.0:run (default-cli) @ backend ---
+[INFO] Attaching agents: []
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.3.0)
+
+2026-07-05T09:34:02.353+07:00  INFO 35244 --- [           main] v.v.backend.VuaVuiVeBackendApplication   : Starting VuaVuiVeBackendApplication using Java 21.0.11 with PID 35244 (E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-backend\target\classes started by ADMIN in E:\Nam3\TaiLieuHocKi8\APP\VuaVuiVe\app-backend)
+2026-07-05T09:34:02.355+07:00 DEBUG 35244 --- [           main] v.v.backend.VuaVuiVeBackendApplication   : Running with Spring Boot v3.3.0, Spring v6.1.8
+2026-07-05T09:34:02.355+07:00  INFO 35244 --- [           main] v.v.backend.VuaVuiVeBackendApplication   : The following 1 profile is active: "dev"
+2026-07-05T09:34:03.240+07:00  INFO 35244 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 3000 (http)
+2026-07-05T09:34:03.250+07:00  INFO 35244 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-07-05T09:34:03.250+07:00  INFO 35244 --- [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.24]
+2026-07-05T09:34:03.309+07:00  INFO 35244 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-07-05T09:34:03.309+07:00  INFO 35244 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 924 ms
+2026-07-05T09:34:03.479+07:00  INFO 35244 --- [           main] v.v.b.core.FirebaseRepositoryHelper      : Initialized REST-based FirebaseRepositoryHelper with URL: https://vua-vui-ve-default-rtdb.firebaseio.com
+2026-07-05T09:34:03.530+07:00 DEBUG 35244 --- [           main] v.v.backend.security.JwtAuthFilter       : Filter 'jwtAuthFilter' configured for use
+2026-07-05T09:34:03.675+07:00  INFO 35244 --- [           main] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-07-05T09:34:03.676+07:00  WARN 35244 --- [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
+2026-07-05T09:34:03.843+07:00  INFO 35244 --- [           main] v.v.backend.config.FirebaseConfig        : Starting initialization of Firebase Admin SDK...
+2026-07-05T09:34:03.880+07:00  INFO 35244 --- [           main] v.v.backend.config.FirebaseConfig        : Firebase Admin SDK initialized successfully for project: [DEFAULT]
+2026-07-05T09:34:04.030+07:00 DEBUG 35244 --- [           main] o.s.w.s.s.s.WebSocketHandlerMapping      : Patterns [/ws, /ws/**] in 'stompWebSocketHandlerMapping'
+2026-07-05T09:34:04.100+07:00 DEBUG 35244 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : 89 mappings in 'requestMappingHandlerMapping'
+2026-07-05T09:34:04.135+07:00 DEBUG 35244 --- [           main] o.s.w.s.handler.SimpleUrlHandlerMapping  : Patterns [/webjars/**, /**, /uploads/**, /swagger-ui*/*swagger-initializer.js, /swagger-ui*/**] in 'resourceHandlerMapping'
+2026-07-05T09:34:04.194+07:00  INFO 35244 --- [           main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@156324b, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@38a38ed4, org.springframework.security.web.context.SecurityContextHolderFilter@5ca22e19, org.springframework.security.web.header.HeaderWriterFilter@5597ca3, org.springframework.web.filter.CorsFilter@1e29a81a, org.springframework.security.web.authentication.logout.LogoutFilter@ff1f465, vn.vuavuive.backend.security.JwtAuthFilter@1f10fec6, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@1bfa3893, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@1a6dc5ea, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@7b4b8199, org.springframework.security.web.session.SessionManagementFilter@3348c987, org.springframework.security.web.access.ExceptionTranslationFilter@5a8dcfbb, org.springframework.security.web.access.intercept.AuthorizationFilter@6f8ac8d5]
+2026-07-05T09:34:04.241+07:00 DEBUG 35244 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
+	v.v.b.m.a.ChatController:
+	
+2026-07-05T09:34:04.241+07:00 DEBUG 35244 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
+	v.v.b.m.a.AuthController:
+	
+2026-07-05T09:34:04.241+07:00 DEBUG 35244 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
+	v.v.b.m.c.CartController:
+	
+2026-07-05T09:34:04.241+07:00 DEBUG 35244 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
+	v.v.b.m.c.CategoryController:
+	
+2026-07-05T09:34:04.242+07:00 DEBUG 35244 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
+	v.v.b.m.o.AdminOrderController:
+	
+2026-07-05T09:34:04.242+07:00 DEBUG 35244 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
+	v.v.b.m.o.AdminShipperController:
+	
+2026-07-05T09:34:04.242+07:00 DEBUG 35244 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
+	v.v.b.m.o.OrderController:
+	
+2026-07-05T09:34:04.243+07:00 DEBUG 35244 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
+	v.v.b.m.p.MomoController:
+	
+2026-07-05T09:34:04.243+07:00 DEBUG 35244 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
+	v.v.b.m.p.PaymentController:
+	
+2026-07-05T09:34:04.243+07:00 DEBUG 35244 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
+	v.v.b.m.p.ProductController:
+	
+2026-07-05T09:34:04.243+07:00 DEBUG 35244 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
+	v.v.b.m.r.RecipeController:
+	
+2026-07-05T09:34:04.243+07:00 DEBUG 35244 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
+	v.v.b.m.r.RecommendController:
+	
+2026-07-05T09:34:04.243+07:00 DEBUG 35244 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
+	v.v.b.m.r.ReviewController:
+	
+2026-07-05T09:34:04.244+07:00 DEBUG 35244 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
+	v.v.b.m.s.ShipperController:
+	
+2026-07-05T09:34:04.244+07:00 DEBUG 35244 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
+	v.v.b.m.u.UploadController:
+	
+2026-07-05T09:34:04.244+07:00 DEBUG 35244 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
+	o.s.b.a.w.s.e.BasicErrorController:
+	
+2026-07-05T09:34:04.245+07:00 DEBUG 35244 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
+	o.s.w.a.OpenApiWebMvcResource:
+	
+2026-07-05T09:34:04.245+07:00 DEBUG 35244 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
+	o.s.w.u.SwaggerWelcomeWebMvc:
+	
+2026-07-05T09:34:04.245+07:00 DEBUG 35244 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
+	o.s.w.u.SwaggerConfigResource:
+	
+2026-07-05T09:34:04.293+07:00 DEBUG 35244 --- [           main] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 2 ResponseBodyAdvice
+2026-07-05T09:34:04.314+07:00 DEBUG 35244 --- [           main] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 2 @ExceptionHandler, 2 ResponseBodyAdvice
+2026-07-05T09:34:04.423+07:00  INFO 35244 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 3000 (http) with context path '/'
+2026-07-05T09:34:04.424+07:00 DEBUG 35244 --- [           main] org.springframework.web.SimpLogging      : clientOutboundChannel added SubProtocolWebSocketHandler[StompSubProtocolHandler[v10.stomp, v11.stomp, v12.stomp]]
+2026-07-05T09:34:04.425+07:00 DEBUG 35244 --- [           main] org.springframework.web.SimpLogging      : clientInboundChannel added WebSocketAnnotationMethodMessageHandler[prefixes=[/app/]]
+2026-07-05T09:34:04.425+07:00  INFO 35244 --- [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Starting...
+2026-07-05T09:34:04.425+07:00 DEBUG 35244 --- [           main] org.springframework.web.SimpLogging      : clientInboundChannel added SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@1e4d8770]
+2026-07-05T09:34:04.425+07:00 DEBUG 35244 --- [           main] org.springframework.web.SimpLogging      : brokerChannel added SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@1e4d8770]
+2026-07-05T09:34:04.426+07:00  INFO 35244 --- [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@1e4d8770]]
+2026-07-05T09:34:04.426+07:00  INFO 35244 --- [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Started.
+2026-07-05T09:34:04.426+07:00 DEBUG 35244 --- [           main] org.springframework.web.SimpLogging      : clientInboundChannel added UserDestinationMessageHandler[DefaultUserDestinationResolver[prefix=/user/]]
+2026-07-05T09:34:04.426+07:00 DEBUG 35244 --- [           main] org.springframework.web.SimpLogging      : brokerChannel added UserDestinationMessageHandler[DefaultUserDestinationResolver[prefix=/user/]]
+2026-07-05T09:34:04.432+07:00  INFO 35244 --- [           main] v.v.backend.VuaVuiVeBackendApplication   : Started VuaVuiVeBackendApplication in 2.331 seconds (process running for 2.63)
+2026-07-05T09:34:05.675+07:00  INFO 35244 --- [           main] vn.vuavuive.backend.config.DataSeeder    : >> SEED (FORCE): Cập nhật thành công tài khoản ADMIN: admin@vuavuive.vn / Admin@123 trên Firebase RTDB
+2026-07-05T09:34:12.687+07:00  INFO 35244 --- [nio-3000-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-07-05T09:34:12.687+07:00  INFO 35244 --- [nio-3000-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-07-05T09:34:12.687+07:00 DEBUG 35244 --- [nio-3000-exec-1] o.s.web.servlet.DispatcherServlet        : Detected StandardServletMultipartResolver
+2026-07-05T09:34:12.687+07:00 DEBUG 35244 --- [nio-3000-exec-1] o.s.web.servlet.DispatcherServlet        : Detected AcceptHeaderLocaleResolver
+2026-07-05T09:34:12.687+07:00 DEBUG 35244 --- [nio-3000-exec-1] o.s.web.servlet.DispatcherServlet        : Detected FixedThemeResolver
+2026-07-05T09:34:12.688+07:00 DEBUG 35244 --- [nio-3000-exec-1] o.s.web.servlet.DispatcherServlet        : Detected org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator@5d3b6585
+2026-07-05T09:34:12.688+07:00 DEBUG 35244 --- [nio-3000-exec-1] o.s.web.servlet.DispatcherServlet        : Detected org.springframework.web.servlet.support.SessionFlashMapManager@371cd2fc
+2026-07-05T09:34:12.688+07:00 DEBUG 35244 --- [nio-3000-exec-1] o.s.web.servlet.DispatcherServlet        : enableLoggingRequestDetails='false': request parameters and headers will be masked to prevent unsafe logging of potentially sensitive data
+2026-07-05T09:34:12.690+07:00  INFO 35244 --- [nio-3000-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2026-07-05T09:34:12.703+07:00 DEBUG 35244 --- [nio-3000-exec-1] o.s.web.servlet.DispatcherServlet        : GET "/api-docs", parameters={}
+2026-07-05T09:34:12.706+07:00 DEBUG 35244 --- [nio-3000-exec-1] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to org.springdoc.webmvc.api.OpenApiWebMvcResource#openapiJson(HttpServletRequest, String, Locale)
+2026-07-05T09:34:13.384+07:00  INFO 35244 --- [nio-3000-exec-1] o.springdoc.api.AbstractOpenApiResource  : Init duration for springdoc-openapi is: 664 ms
+2026-07-05T09:34:13.399+07:00 DEBUG 35244 --- [nio-3000-exec-1] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [*/*] and supported [application/json]
+2026-07-05T09:34:13.402+07:00 DEBUG 35244 --- [nio-3000-exec-1] m.m.a.RequestResponseBodyMethodProcessor : Writing [{123, 34, 111, 112, 101, 110, 97, 112, 105, 34, 58, 34, 51, 46, 48, 46, 49, 34, 44, 34, 105, 110, 10 (truncated)...]
+2026-07-05T09:34:13.407+07:00 DEBUG 35244 --- [nio-3000-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-05T09:34:13.598+07:00  WARN 35244 --- [nio-3000-exec-2] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
+2026-07-05T09:34:14.059+07:00 DEBUG 35244 --- [nio-3000-exec-2] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: shipper2@gmail.com
+2026-07-05T09:34:14.062+07:00 DEBUG 35244 --- [nio-3000-exec-2] o.s.web.servlet.DispatcherServlet        : GET "/api/auth/me", parameters={}
+2026-07-05T09:34:14.064+07:00 DEBUG 35244 --- [nio-3000-exec-2] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.auth.AuthController#getMe()
+2026-07-05T09:34:14.321+07:00 DEBUG 35244 --- [nio-3000-exec-2] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-05T09:34:14.331+07:00 DEBUG 35244 --- [nio-3000-exec-2] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Lấy thông tin người dùng thành công, data=UserResponse[id=Fa38Rdhx (truncated)...]
+2026-07-05T09:34:14.344+07:00 DEBUG 35244 --- [nio-3000-exec-2] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-05T09:34:14.357+07:00  WARN 35244 --- [nio-3000-exec-4] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
+2026-07-05T09:34:14.609+07:00 DEBUG 35244 --- [nio-3000-exec-4] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: shipper2@gmail.com
+2026-07-05T09:34:14.610+07:00 DEBUG 35244 --- [nio-3000-exec-4] o.s.web.servlet.DispatcherServlet        : GET "/api/shippers/me", parameters={}
+2026-07-05T09:34:14.610+07:00 DEBUG 35244 --- [nio-3000-exec-4] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.shipper.ShipperController#getMyProfile()
+2026-07-05T09:34:15.348+07:00 DEBUG 35244 --- [nio-3000-exec-4] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-05T09:34:15.350+07:00 DEBUG 35244 --- [nio-3000-exec-4] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=ShipperResponse[id=Fa38RdhxfJa9EDZH5oAJv (truncated)...]
+2026-07-05T09:34:15.351+07:00 DEBUG 35244 --- [nio-3000-exec-4] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-05T09:34:15.368+07:00  WARN 35244 --- [nio-3000-exec-5] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
+2026-07-05T09:34:15.620+07:00 DEBUG 35244 --- [nio-3000-exec-5] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: shipper2@gmail.com
+2026-07-05T09:34:15.622+07:00 DEBUG 35244 --- [nio-3000-exec-5] o.s.web.servlet.DispatcherServlet        : GET "/api/orders/shipper?limit=100", parameters={masked}
+2026-07-05T09:34:15.623+07:00 DEBUG 35244 --- [nio-3000-exec-5] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.order.OrderController#getShipperOrders(String, int, Integer, Integer)
+2026-07-05T09:34:17.531+07:00 DEBUG 35244 --- [nio-3000-exec-5] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-05T09:34:17.554+07:00 DEBUG 35244 --- [nio-3000-exec-5] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[OrderResponse[orderId=e5de1245-cfe4-4a4 (truncated)...]
+2026-07-05T09:34:17.558+07:00 DEBUG 35244 --- [nio-3000-exec-5] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-05T09:35:04.423+07:00  INFO 35244 --- [MessageBroker-2] o.s.w.s.c.WebSocketMessageBrokerStats    : WebSocketSession[0 current WS(0)-HttpStream(0)-HttpPoll(0), 0 total, 0 closed abnormally (0 connect failure, 0 send limit, 0 transport error)], stompSubProtocol[processed CONNECT(0)-CONNECTED(0)-DISCONNECT(0)], stompBrokerRelay[null], inboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], outboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], sockJsScheduler[pool size = 3, active threads = 1, queued tasks = 1, completed tasks = 1]
+2026-07-05T09:35:05.806+07:00  WARN 35244 --- [nio-3000-exec-8] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
+2026-07-05T09:35:06.335+07:00 DEBUG 35244 --- [nio-3000-exec-8] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: shipper2@gmail.com
+2026-07-05T09:35:06.346+07:00 DEBUG 35244 --- [nio-3000-exec-8] o.s.web.servlet.DispatcherServlet        : PUT "/api/shippers/Fa38RdhxfJa9EDZH5oAJveCuWQc2/orders/e5de1245-cfe4-4a4e-95b0-e539f1993d2b/delivery?status=IN_TRANSIT", parameters={masked}
+2026-07-05T09:35:06.352+07:00 DEBUG 35244 --- [nio-3000-exec-8] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.shipper.ShipperController#updateDeliveryStatus(String, String, String, String)
+2026-07-05T09:35:07.513+07:00  INFO 35244 --- [nio-3000-exec-8] v.v.b.modules.shipper.ShipperService     : Shipper Fa38RdhxfJa9EDZH5oAJveCuWQc2 cập nhật đơn e5de1245-cfe4-4a4e-95b0-e539f1993d2b từ CONFIRMED → IN_TRANSIT
+2026-07-05T09:35:07.523+07:00 DEBUG 35244 --- [nio-3000-exec-8] org.springframework.web.SimpLogging      : Processing MESSAGE destination=/topic/admin/orders session=null payload={"orderId":"e5de1245-cfe4-4a4e-95b0-e539f1993d2b","message":"Tài xế Trần Qu...(truncated)
+2026-07-05T09:35:07.527+07:00 DEBUG 35244 --- [nio-3000-exec-8] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-05T09:35:07.528+07:00 DEBUG 35244 --- [nio-3000-exec-8] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data={message=Cập nhật trạng thái giao hàng t (truncated)...]
+2026-07-05T09:35:07.529+07:00 DEBUG 35244 --- [nio-3000-exec-8] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-05T09:35:32.444+07:00  WARN 35244 --- [nio-3000-exec-6] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
+2026-07-05T09:35:32.676+07:00 DEBUG 35244 --- [nio-3000-exec-6] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: admin@vuavuive.vn
+2026-07-05T09:35:32.680+07:00 DEBUG 35244 --- [nio-3000-exec-6] o.s.web.servlet.DispatcherServlet        : GET "/api/admin/orders?page=1&limit=100", parameters={masked}
+2026-07-05T09:35:32.680+07:00 DEBUG 35244 --- [nio-3000-exec-6] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.order.AdminOrderController#getOrders(String, int, Integer, Integer)
+2026-07-05T09:35:44.531+07:00 DEBUG 35244 --- [nio-3000-exec-6] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-05T09:35:44.534+07:00 DEBUG 35244 --- [nio-3000-exec-6] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[OrderResponse[orderId=order_mock_001, s (truncated)...]
+2026-07-05T09:35:44.539+07:00 DEBUG 35244 --- [nio-3000-exec-6] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-05T09:35:44.576+07:00  WARN 35244 --- [nio-3000-exec-7] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
+2026-07-05T09:35:44.831+07:00 DEBUG 35244 --- [nio-3000-exec-7] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: customer@gmail.com
+2026-07-05T09:35:44.832+07:00 DEBUG 35244 --- [nio-3000-exec-7] o.s.web.servlet.DispatcherServlet        : GET "/api/orders/my?page=1&limit=100", parameters={masked}
+2026-07-05T09:35:44.833+07:00 DEBUG 35244 --- [nio-3000-exec-7] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.order.OrderController#getMyOrders(String, int, Integer, Integer)
+2026-07-05T09:35:50.989+07:00 DEBUG 35244 --- [nio-3000-exec-7] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-05T09:35:50.990+07:00 DEBUG 35244 --- [nio-3000-exec-7] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[OrderResponse[orderId=e5de1245-cfe4-4a4 (truncated)...]
+2026-07-05T09:35:50.991+07:00 DEBUG 35244 --- [nio-3000-exec-7] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-05T09:36:07.650+07:00  WARN 35244 --- [io-3000-exec-10] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
+2026-07-05T09:36:07.903+07:00 DEBUG 35244 --- [io-3000-exec-10] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: customer@gmail.com
+2026-07-05T09:36:07.906+07:00 DEBUG 35244 --- [io-3000-exec-10] o.s.web.servlet.DispatcherServlet        : GET "/api/recipes", parameters={}
+2026-07-05T09:36:07.906+07:00 DEBUG 35244 --- [io-3000-exec-10] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.recipe.RecipeController#getRecipes()
+2026-07-05T09:36:08.176+07:00 DEBUG 35244 --- [io-3000-exec-10] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-05T09:36:08.178+07:00 DEBUG 35244 --- [io-3000-exec-10] m.m.a.RequestResponseBodyMethodProcessor : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[{difficulty=Dễ, image=http://10.0.2.2:3 (truncated)...]
+2026-07-05T09:36:08.181+07:00 DEBUG 35244 --- [io-3000-exec-10] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-05T09:36:10.325+07:00  WARN 35244 --- [nio-3000-exec-2] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
+2026-07-05T09:36:10.579+07:00 DEBUG 35244 --- [nio-3000-exec-2] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: customer@gmail.com
+2026-07-05T09:36:10.579+07:00 DEBUG 35244 --- [nio-3000-exec-2] o.s.web.servlet.DispatcherServlet        : GET "/api/orders/me?page=1&limit=20", parameters={masked}
+2026-07-05T09:36:10.580+07:00 DEBUG 35244 --- [nio-3000-exec-2] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.order.OrderController#getMyOrders(String, int, Integer, Integer)
+2026-07-05T09:36:10.709+07:00  WARN 35244 --- [nio-3000-exec-4] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
+2026-07-05T09:36:10.956+07:00 DEBUG 35244 --- [nio-3000-exec-4] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: customer@gmail.com
+2026-07-05T09:36:10.957+07:00 DEBUG 35244 --- [nio-3000-exec-4] o.s.web.servlet.DispatcherServlet        : GET "/api/orders/me?page=1&limit=20", parameters={masked}
+2026-07-05T09:36:10.957+07:00 DEBUG 35244 --- [nio-3000-exec-4] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.order.OrderController#getMyOrders(String, int, Integer, Integer)
+2026-07-05T09:36:15.719+07:00 DEBUG 35244 --- [nio-3000-exec-2] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-05T09:36:15.723+07:00 DEBUG 35244 --- [nio-3000-exec-2] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[OrderResponse[orderId=e5de1245-cfe4-4a4 (truncated)...]
+2026-07-05T09:36:15.724+07:00 DEBUG 35244 --- [nio-3000-exec-2] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-05T09:36:16.214+07:00 DEBUG 35244 --- [nio-3000-exec-4] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-05T09:36:16.214+07:00 DEBUG 35244 --- [nio-3000-exec-4] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[OrderResponse[orderId=e5de1245-cfe4-4a4 (truncated)...]
+2026-07-05T09:36:16.217+07:00 DEBUG 35244 --- [nio-3000-exec-4] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-05T09:45:15.108+07:00 DEBUG 35244 --- [nio-3000-exec-6] o.s.web.servlet.DispatcherServlet        : GET "/api-docs", parameters={}
+2026-07-05T09:45:15.109+07:00 DEBUG 35244 --- [nio-3000-exec-6] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to org.springdoc.webmvc.api.OpenApiWebMvcResource#openapiJson(HttpServletRequest, String, Locale)
+2026-07-05T09:45:15.121+07:00 DEBUG 35244 --- [nio-3000-exec-6] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [*/*] and supported [application/json]
+2026-07-05T09:45:15.124+07:00 DEBUG 35244 --- [nio-3000-exec-6] m.m.a.RequestResponseBodyMethodProcessor : Writing [{123, 34, 111, 112, 101, 110, 97, 112, 105, 34, 58, 34, 51, 46, 48, 46, 49, 34, 44, 34, 105, 110, 10 (truncated)...]
+2026-07-05T09:45:15.126+07:00 DEBUG 35244 --- [nio-3000-exec-6] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-05T09:45:15.673+07:00  WARN 35244 --- [nio-3000-exec-9] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
+2026-07-05T09:45:15.943+07:00 DEBUG 35244 --- [nio-3000-exec-9] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: customer@gmail.com
+2026-07-05T09:45:15.945+07:00 DEBUG 35244 --- [nio-3000-exec-9] o.s.web.servlet.DispatcherServlet        : GET "/api/orders/me?page=1&limit=20", parameters={masked}
+2026-07-05T09:45:15.945+07:00 DEBUG 35244 --- [nio-3000-exec-9] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.order.OrderController#getMyOrders(String, int, Integer, Integer)
+2026-07-05T09:45:21.659+07:00 DEBUG 35244 --- [nio-3000-exec-9] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-05T09:45:21.660+07:00 DEBUG 35244 --- [nio-3000-exec-9] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[OrderResponse[orderId=e5de1245-cfe4-4a4 (truncated)...]
+2026-07-05T09:45:21.661+07:00 DEBUG 35244 --- [nio-3000-exec-9] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-05T09:45:39.971+07:00  WARN 35244 --- [nio-3000-exec-2] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
+2026-07-05T09:45:40.231+07:00 DEBUG 35244 --- [nio-3000-exec-2] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: customer@gmail.com
+2026-07-05T09:45:40.232+07:00 DEBUG 35244 --- [nio-3000-exec-2] o.s.web.servlet.DispatcherServlet        : GET "/api/orders/me?page=1&limit=20", parameters={masked}
+2026-07-05T09:45:40.233+07:00 DEBUG 35244 --- [nio-3000-exec-2] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.order.OrderController#getMyOrders(String, int, Integer, Integer)
+2026-07-05T09:45:45.933+07:00 DEBUG 35244 --- [nio-3000-exec-2] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-05T09:45:45.934+07:00 DEBUG 35244 --- [nio-3000-exec-2] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[OrderResponse[orderId=e5de1245-cfe4-4a4 (truncated)...]
+2026-07-05T09:45:45.935+07:00 DEBUG 35244 --- [nio-3000-exec-2] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-05T09:46:11.565+07:00  WARN 35244 --- [nio-3000-exec-4] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
+2026-07-05T09:46:11.568+07:00  WARN 35244 --- [nio-3000-exec-3] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
+2026-07-05T09:46:11.646+07:00  WARN 35244 --- [nio-3000-exec-5] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
+2026-07-05T09:46:11.823+07:00 DEBUG 35244 --- [nio-3000-exec-4] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: customer@gmail.com
+2026-07-05T09:46:11.823+07:00 DEBUG 35244 --- [nio-3000-exec-4] o.s.web.servlet.DispatcherServlet        : GET "/api/orders/my?limit=100", parameters={masked}
+2026-07-05T09:46:11.824+07:00 DEBUG 35244 --- [nio-3000-exec-4] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.order.OrderController#getMyOrders(String, int, Integer, Integer)
+2026-07-05T09:46:12.480+07:00 DEBUG 35244 --- [nio-3000-exec-3] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: admin@vuavuive.vn
+2026-07-05T09:46:12.480+07:00 DEBUG 35244 --- [nio-3000-exec-5] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: shipper2@gmail.com
+2026-07-05T09:46:12.480+07:00 DEBUG 35244 --- [nio-3000-exec-3] o.s.web.servlet.DispatcherServlet        : GET "/api/orders/e5de1245-cfe4-4a4e-95b0-e539f1993d2b", parameters={}
+2026-07-05T09:46:12.482+07:00 DEBUG 35244 --- [nio-3000-exec-5] o.s.web.servlet.DispatcherServlet        : GET "/api/orders/shipper?limit=100", parameters={masked}
+2026-07-05T09:46:12.482+07:00 DEBUG 35244 --- [nio-3000-exec-3] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.order.OrderController#getOrderById(String)
+2026-07-05T09:46:12.482+07:00 DEBUG 35244 --- [nio-3000-exec-5] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.order.OrderController#getShipperOrders(String, int, Integer, Integer)
+2026-07-05T09:46:12.950+07:00 DEBUG 35244 --- [nio-3000-exec-3] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-05T09:46:12.950+07:00 DEBUG 35244 --- [nio-3000-exec-3] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=OrderResponse[orderId=e5de1245-cfe4-4a4e (truncated)...]
+2026-07-05T09:46:12.951+07:00 DEBUG 35244 --- [nio-3000-exec-3] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-05T09:46:14.276+07:00 DEBUG 35244 --- [nio-3000-exec-5] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-05T09:46:14.276+07:00 DEBUG 35244 --- [nio-3000-exec-5] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[OrderResponse[orderId=e5de1245-cfe4-4a4 (truncated)...]
+2026-07-05T09:46:14.277+07:00 DEBUG 35244 --- [nio-3000-exec-5] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-05T09:46:18.612+07:00 DEBUG 35244 --- [nio-3000-exec-4] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-05T09:46:18.613+07:00 DEBUG 35244 --- [nio-3000-exec-4] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[OrderResponse[orderId=e5de1245-cfe4-4a4 (truncated)...]
+2026-07-05T09:46:18.615+07:00 DEBUG 35244 --- [nio-3000-exec-4] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-05T09:46:42.922+07:00  WARN 35244 --- [nio-3000-exec-9] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
+2026-07-05T09:46:42.935+07:00  WARN 35244 --- [io-3000-exec-10] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
+2026-07-05T09:46:43.171+07:00 DEBUG 35244 --- [nio-3000-exec-9] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: shipper2@gmail.com
+2026-07-05T09:46:43.171+07:00 DEBUG 35244 --- [nio-3000-exec-9] o.s.web.servlet.DispatcherServlet        : GET "/api/orders/shipper?limit=100", parameters={masked}
+2026-07-05T09:46:43.172+07:00 DEBUG 35244 --- [nio-3000-exec-9] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.order.OrderController#getShipperOrders(String, int, Integer, Integer)
+2026-07-05T09:46:43.192+07:00 DEBUG 35244 --- [io-3000-exec-10] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: customer@gmail.com
+2026-07-05T09:46:43.192+07:00 DEBUG 35244 --- [io-3000-exec-10] o.s.web.servlet.DispatcherServlet        : GET "/api/orders/my?limit=100", parameters={masked}
+2026-07-05T09:46:43.192+07:00 DEBUG 35244 --- [io-3000-exec-10] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.order.OrderController#getMyOrders(String, int, Integer, Integer)
+2026-07-05T09:46:44.988+07:00 DEBUG 35244 --- [nio-3000-exec-9] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-05T09:46:44.991+07:00 DEBUG 35244 --- [nio-3000-exec-9] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[OrderResponse[orderId=e5de1245-cfe4-4a4 (truncated)...]
+2026-07-05T09:46:44.991+07:00 DEBUG 35244 --- [nio-3000-exec-9] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-05T09:46:49.664+07:00 DEBUG 35244 --- [io-3000-exec-10] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-05T09:46:49.666+07:00 DEBUG 35244 --- [io-3000-exec-10] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[OrderResponse[orderId=e5de1245-cfe4-4a4 (truncated)...]
+2026-07-05T09:46:49.668+07:00 DEBUG 35244 --- [io-3000-exec-10] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-05T09:47:06.276+07:00  WARN 35244 --- [nio-3000-exec-8] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
+2026-07-05T09:47:06.284+07:00  WARN 35244 --- [nio-3000-exec-5] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
+2026-07-05T09:47:06.531+07:00 DEBUG 35244 --- [nio-3000-exec-5] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: shipper2@gmail.com
+2026-07-05T09:47:06.531+07:00 DEBUG 35244 --- [nio-3000-exec-5] o.s.web.servlet.DispatcherServlet        : GET "/api/orders/shipper?limit=100", parameters={masked}
+2026-07-05T09:47:06.532+07:00 DEBUG 35244 --- [nio-3000-exec-5] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.order.OrderController#getShipperOrders(String, int, Integer, Integer)
+2026-07-05T09:47:06.535+07:00 DEBUG 35244 --- [nio-3000-exec-8] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: customer@gmail.com
+2026-07-05T09:47:06.536+07:00 DEBUG 35244 --- [nio-3000-exec-8] o.s.web.servlet.DispatcherServlet        : GET "/api/orders/my?limit=100", parameters={masked}
+2026-07-05T09:47:06.536+07:00 DEBUG 35244 --- [nio-3000-exec-8] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.order.OrderController#getMyOrders(String, int, Integer, Integer)
+2026-07-05T09:47:08.313+07:00 DEBUG 35244 --- [nio-3000-exec-5] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-05T09:47:08.314+07:00 DEBUG 35244 --- [nio-3000-exec-5] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[OrderResponse[orderId=e5de1245-cfe4-4a4 (truncated)...]
+2026-07-05T09:47:08.315+07:00 DEBUG 35244 --- [nio-3000-exec-5] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-05T09:47:12.940+07:00 DEBUG 35244 --- [nio-3000-exec-8] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-05T09:47:12.943+07:00 DEBUG 35244 --- [nio-3000-exec-8] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[OrderResponse[orderId=e5de1245-cfe4-4a4 (truncated)...]
+2026-07-05T09:47:12.946+07:00 DEBUG 35244 --- [nio-3000-exec-8] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-05T09:49:32.995+07:00  WARN 35244 --- [nio-3000-exec-7] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
+2026-07-05T09:49:33.259+07:00 DEBUG 35244 --- [nio-3000-exec-7] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: customer@gmail.com
+2026-07-05T09:49:33.260+07:00 DEBUG 35244 --- [nio-3000-exec-7] o.s.web.servlet.DispatcherServlet        : GET "/api/orders/me?page=1&limit=20", parameters={masked}
+2026-07-05T09:49:33.260+07:00 DEBUG 35244 --- [nio-3000-exec-7] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.order.OrderController#getMyOrders(String, int, Integer, Integer)
+2026-07-05T09:49:34.971+07:00  WARN 35244 --- [nio-3000-exec-9] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
+2026-07-05T09:49:35.558+07:00 DEBUG 35244 --- [nio-3000-exec-9] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: customer@gmail.com
+2026-07-05T09:49:35.558+07:00 DEBUG 35244 --- [nio-3000-exec-9] o.s.web.servlet.DispatcherServlet        : GET "/api/orders/me?page=1&limit=20", parameters={masked}
+2026-07-05T09:49:35.559+07:00 DEBUG 35244 --- [nio-3000-exec-9] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.order.OrderController#getMyOrders(String, int, Integer, Integer)
+2026-07-05T09:49:38.906+07:00 DEBUG 35244 --- [nio-3000-exec-7] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-05T09:49:38.907+07:00 DEBUG 35244 --- [nio-3000-exec-7] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[OrderResponse[orderId=e5de1245-cfe4-4a4 (truncated)...]
+2026-07-05T09:49:38.909+07:00 DEBUG 35244 --- [nio-3000-exec-7] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-05T09:49:41.717+07:00 DEBUG 35244 --- [nio-3000-exec-9] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-05T09:49:41.719+07:00 DEBUG 35244 --- [nio-3000-exec-9] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[OrderResponse[orderId=e5de1245-cfe4-4a4 (truncated)...]
+2026-07-05T09:49:41.721+07:00 DEBUG 35244 --- [nio-3000-exec-9] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-05T09:50:19.453+07:00 DEBUG 35244 --- [nio-3000-exec-1] o.s.web.servlet.DispatcherServlet        : GET "/api-docs", parameters={}
+2026-07-05T09:50:19.455+07:00 DEBUG 35244 --- [nio-3000-exec-1] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to org.springdoc.webmvc.api.OpenApiWebMvcResource#openapiJson(HttpServletRequest, String, Locale)
+2026-07-05T09:50:19.464+07:00 DEBUG 35244 --- [nio-3000-exec-1] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [*/*] and supported [application/json]
+2026-07-05T09:50:19.468+07:00 DEBUG 35244 --- [nio-3000-exec-1] m.m.a.RequestResponseBodyMethodProcessor : Writing [{123, 34, 111, 112, 101, 110, 97, 112, 105, 34, 58, 34, 51, 46, 48, 46, 49, 34, 44, 34, 105, 110, 10 (truncated)...]
+2026-07-05T09:50:19.470+07:00 DEBUG 35244 --- [nio-3000-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-05T09:51:48.964+07:00  WARN 35244 --- [nio-3000-exec-5] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
+2026-07-05T09:51:50.317+07:00 DEBUG 35244 --- [nio-3000-exec-5] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: shipper2@gmail.com
+2026-07-05T09:51:50.319+07:00 DEBUG 35244 --- [nio-3000-exec-5] o.s.web.servlet.DispatcherServlet        : PUT "/api/shippers/Fa38RdhxfJa9EDZH5oAJveCuWQc2/orders/e5de1245-cfe4-4a4e-95b0-e539f1993d2b/delivery?status=DELIVERED", parameters={masked}
+2026-07-05T09:51:50.320+07:00 DEBUG 35244 --- [nio-3000-exec-5] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.shipper.ShipperController#updateDeliveryStatus(String, String, String, String)
+2026-07-05T09:51:51.233+07:00  INFO 35244 --- [nio-3000-exec-5] v.v.backend.modules.order.OrderService   : Awarded 4990 points to user customer@gmail.com for order e5de1245-cfe4-4a4e-95b0-e539f1993d2b
+2026-07-05T09:51:52.148+07:00  INFO 35244 --- [nio-3000-exec-5] v.v.b.modules.shipper.ShipperService     : Shipper Fa38RdhxfJa9EDZH5oAJveCuWQc2 cập nhật đơn e5de1245-cfe4-4a4e-95b0-e539f1993d2b từ IN_TRANSIT → DELIVERED
+2026-07-05T09:51:52.149+07:00 DEBUG 35244 --- [nio-3000-exec-5] org.springframework.web.SimpLogging      : Processing MESSAGE destination=/topic/admin/orders session=null payload={"orderId":"e5de1245-cfe4-4a4e-95b0-e539f1993d2b","message":"Tài xế Trần Qu...(truncated)
+2026-07-05T09:51:52.150+07:00 DEBUG 35244 --- [nio-3000-exec-5] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-05T09:51:52.150+07:00 DEBUG 35244 --- [nio-3000-exec-5] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data={message=Cập nhật trạng thái giao hàng t (truncated)...]
+2026-07-05T09:51:52.151+07:00 DEBUG 35244 --- [nio-3000-exec-5] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-05T09:51:56.316+07:00  WARN 35244 --- [nio-3000-exec-6] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
+2026-07-05T09:51:56.558+07:00 DEBUG 35244 --- [nio-3000-exec-6] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: customer@gmail.com
+2026-07-05T09:51:56.559+07:00 DEBUG 35244 --- [nio-3000-exec-6] o.s.web.servlet.DispatcherServlet        : GET "/api/orders/me?page=1&limit=20", parameters={masked}
+2026-07-05T09:51:56.560+07:00 DEBUG 35244 --- [nio-3000-exec-6] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.order.OrderController#getMyOrders(String, int, Integer, Integer)
+2026-07-05T09:52:01.972+07:00 DEBUG 35244 --- [nio-3000-exec-6] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-05T09:52:01.974+07:00 DEBUG 35244 --- [nio-3000-exec-6] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[OrderResponse[orderId=e5de1245-cfe4-4a4 (truncated)...]
+2026-07-05T09:52:01.975+07:00 DEBUG 35244 --- [nio-3000-exec-6] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-05T09:52:02.019+07:00  WARN 35244 --- [nio-3000-exec-8] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
+2026-07-05T09:52:02.254+07:00 DEBUG 35244 --- [nio-3000-exec-8] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: customer@gmail.com
+2026-07-05T09:52:02.256+07:00 DEBUG 35244 --- [nio-3000-exec-8] o.s.web.servlet.DispatcherServlet        : GET "/api/orders/me?page=1&limit=20", parameters={masked}
+2026-07-05T09:52:02.256+07:00 DEBUG 35244 --- [nio-3000-exec-8] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.order.OrderController#getMyOrders(String, int, Integer, Integer)
+2026-07-05T09:52:07.460+07:00 DEBUG 35244 --- [nio-3000-exec-8] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-05T09:52:07.461+07:00 DEBUG 35244 --- [nio-3000-exec-8] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[OrderResponse[orderId=e5de1245-cfe4-4a4 (truncated)...]
+2026-07-05T09:52:07.463+07:00 DEBUG 35244 --- [nio-3000-exec-8] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-05T09:52:09.462+07:00  WARN 35244 --- [nio-3000-exec-4] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
+2026-07-05T09:52:09.693+07:00 DEBUG 35244 --- [nio-3000-exec-4] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: customer@gmail.com
+2026-07-05T09:52:09.693+07:00 DEBUG 35244 --- [nio-3000-exec-4] o.s.web.servlet.DispatcherServlet        : GET "/api/orders/me?page=1&limit=20", parameters={masked}
+2026-07-05T09:52:09.694+07:00 DEBUG 35244 --- [nio-3000-exec-4] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.order.OrderController#getMyOrders(String, int, Integer, Integer)
+2026-07-05T09:52:14.751+07:00 DEBUG 35244 --- [nio-3000-exec-4] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-05T09:52:14.752+07:00 DEBUG 35244 --- [nio-3000-exec-4] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[OrderResponse[orderId=e5de1245-cfe4-4a4 (truncated)...]
+2026-07-05T09:52:14.753+07:00 DEBUG 35244 --- [nio-3000-exec-4] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-05T09:54:02.776+07:00  WARN 35244 --- [nio-3000-exec-1] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
+2026-07-05T09:54:03.307+07:00 DEBUG 35244 --- [nio-3000-exec-1] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: customer@gmail.com
+2026-07-05T09:54:03.307+07:00 DEBUG 35244 --- [nio-3000-exec-1] o.s.web.servlet.DispatcherServlet        : GET "/api/orders/me?page=1&limit=20", parameters={masked}
+2026-07-05T09:54:03.308+07:00 DEBUG 35244 --- [nio-3000-exec-1] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.order.OrderController#getMyOrders(String, int, Integer, Integer)
+2026-07-05T09:54:09.299+07:00 DEBUG 35244 --- [nio-3000-exec-1] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-05T09:54:09.299+07:00 DEBUG 35244 --- [nio-3000-exec-1] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[OrderResponse[orderId=e5de1245-cfe4-4a4 (truncated)...]
+2026-07-05T09:54:09.300+07:00 DEBUG 35244 --- [nio-3000-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-05T09:54:22.693+07:00  WARN 35244 --- [nio-3000-exec-2] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
+2026-07-05T09:54:22.958+07:00 DEBUG 35244 --- [nio-3000-exec-2] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: shipper2@gmail.com
+2026-07-05T09:54:22.959+07:00 DEBUG 35244 --- [nio-3000-exec-2] o.s.web.servlet.DispatcherServlet        : PUT "/api/shippers/Fa38RdhxfJa9EDZH5oAJveCuWQc2/orders/3e3131a2-1135-41ef-95ab-57cb815b9135/delivery?status=FAILED&note=Kh%C3%A1ch%20h%C3%A0ng%20kh%C3%B4ng%20nghe%20m%C3%A1y%20%28G%E1%BB%8Di%20nhi%E1%BB%81u%20l%E1%BA%A7n%29", parameters={masked}
+2026-07-05T09:54:22.960+07:00 DEBUG 35244 --- [nio-3000-exec-2] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.shipper.ShipperController#updateDeliveryStatus(String, String, String, String)
+2026-07-05T09:54:24.186+07:00  INFO 35244 --- [nio-3000-exec-2] v.v.b.modules.shipper.ShipperService     : Shipper Fa38RdhxfJa9EDZH5oAJveCuWQc2 cập nhật đơn 3e3131a2-1135-41ef-95ab-57cb815b9135 từ IN_TRANSIT → FAILED
+2026-07-05T09:54:24.188+07:00 DEBUG 35244 --- [nio-3000-exec-2] org.springframework.web.SimpLogging      : Processing MESSAGE destination=/topic/admin/orders session=null payload={"orderId":"3e3131a2-1135-41ef-95ab-57cb815b9135","message":"Tài xế Trần Qu...(truncated)
+2026-07-05T09:54:24.189+07:00 DEBUG 35244 --- [nio-3000-exec-2] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-05T09:54:24.189+07:00 DEBUG 35244 --- [nio-3000-exec-2] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data={message=Cập nhật trạng thái giao hàng t (truncated)...]
+2026-07-05T09:54:24.190+07:00 DEBUG 35244 --- [nio-3000-exec-2] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-05T09:54:30.320+07:00  WARN 35244 --- [io-3000-exec-10] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
+2026-07-05T09:54:30.578+07:00 DEBUG 35244 --- [io-3000-exec-10] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: customer@gmail.com
+2026-07-05T09:54:30.579+07:00 DEBUG 35244 --- [io-3000-exec-10] o.s.web.servlet.DispatcherServlet        : GET "/api/orders/me?page=1&limit=20", parameters={masked}
+2026-07-05T09:54:30.580+07:00 DEBUG 35244 --- [io-3000-exec-10] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.order.OrderController#getMyOrders(String, int, Integer, Integer)
+2026-07-05T09:54:36.104+07:00 DEBUG 35244 --- [io-3000-exec-10] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-05T09:54:36.104+07:00 DEBUG 35244 --- [io-3000-exec-10] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[OrderResponse[orderId=e5de1245-cfe4-4a4 (truncated)...]
+2026-07-05T09:54:36.105+07:00 DEBUG 35244 --- [io-3000-exec-10] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-05T09:54:39.555+07:00  WARN 35244 --- [nio-3000-exec-3] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
+2026-07-05T09:54:39.808+07:00 DEBUG 35244 --- [nio-3000-exec-3] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: customer@gmail.com
+2026-07-05T09:54:39.809+07:00 DEBUG 35244 --- [nio-3000-exec-3] o.s.web.servlet.DispatcherServlet        : GET "/api/orders/me?page=1&limit=20", parameters={masked}
+2026-07-05T09:54:39.810+07:00 DEBUG 35244 --- [nio-3000-exec-3] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.order.OrderController#getMyOrders(String, int, Integer, Integer)
+2026-07-05T09:54:45.294+07:00 DEBUG 35244 --- [nio-3000-exec-3] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-05T09:54:45.302+07:00 DEBUG 35244 --- [nio-3000-exec-3] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[OrderResponse[orderId=e5de1245-cfe4-4a4 (truncated)...]
+2026-07-05T09:54:45.305+07:00 DEBUG 35244 --- [nio-3000-exec-3] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-05T10:01:12.038+07:00  WARN 35244 --- [nio-3000-exec-8] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
+2026-07-05T10:01:12.466+07:00  WARN 35244 --- [nio-3000-exec-4] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
+2026-07-05T10:01:12.587+07:00 DEBUG 35244 --- [nio-3000-exec-8] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: customer@gmail.com
+2026-07-05T10:01:12.589+07:00 DEBUG 35244 --- [nio-3000-exec-8] o.s.web.servlet.DispatcherServlet        : GET "/api/orders/me?page=1&limit=20", parameters={masked}
+2026-07-05T10:01:12.589+07:00 DEBUG 35244 --- [nio-3000-exec-8] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.order.OrderController#getMyOrders(String, int, Integer, Integer)
+2026-07-05T10:01:12.993+07:00 DEBUG 35244 --- [nio-3000-exec-4] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: customer@gmail.com
+2026-07-05T10:01:12.998+07:00 DEBUG 35244 --- [nio-3000-exec-4] o.s.web.servlet.DispatcherServlet        : GET "/api/orders/me?page=1&limit=20", parameters={masked}
+2026-07-05T10:01:12.998+07:00 DEBUG 35244 --- [nio-3000-exec-4] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.order.OrderController#getMyOrders(String, int, Integer, Integer)
+2026-07-05T10:01:18.468+07:00 DEBUG 35244 --- [nio-3000-exec-8] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-05T10:01:18.474+07:00 DEBUG 35244 --- [nio-3000-exec-8] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[OrderResponse[orderId=e5de1245-cfe4-4a4 (truncated)...]
+2026-07-05T10:01:18.474+07:00 DEBUG 35244 --- [nio-3000-exec-8] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-05T10:01:18.666+07:00 DEBUG 35244 --- [nio-3000-exec-4] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-05T10:01:18.666+07:00 DEBUG 35244 --- [nio-3000-exec-4] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[OrderResponse[orderId=e5de1245-cfe4-4a4 (truncated)...]
+2026-07-05T10:01:18.667+07:00 DEBUG 35244 --- [nio-3000-exec-4] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-05T10:01:28.046+07:00  WARN 35244 --- [nio-3000-exec-7] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
+2026-07-05T10:01:28.299+07:00 DEBUG 35244 --- [nio-3000-exec-7] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: customer@gmail.com
+2026-07-05T10:01:28.300+07:00 DEBUG 35244 --- [nio-3000-exec-7] o.s.web.servlet.DispatcherServlet        : GET "/api/orders/me?page=1&limit=20", parameters={masked}
+2026-07-05T10:01:28.301+07:00 DEBUG 35244 --- [nio-3000-exec-7] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.order.OrderController#getMyOrders(String, int, Integer, Integer)
+2026-07-05T10:01:28.435+07:00  WARN 35244 --- [nio-3000-exec-9] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
+2026-07-05T10:01:28.683+07:00 DEBUG 35244 --- [nio-3000-exec-9] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: customer@gmail.com
+2026-07-05T10:01:28.684+07:00 DEBUG 35244 --- [nio-3000-exec-9] o.s.web.servlet.DispatcherServlet        : GET "/api/orders/me?page=1&limit=20", parameters={masked}
+2026-07-05T10:01:28.684+07:00 DEBUG 35244 --- [nio-3000-exec-9] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.order.OrderController#getMyOrders(String, int, Integer, Integer)
+2026-07-05T10:01:33.655+07:00 DEBUG 35244 --- [nio-3000-exec-7] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-05T10:01:33.656+07:00 DEBUG 35244 --- [nio-3000-exec-7] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[OrderResponse[orderId=e5de1245-cfe4-4a4 (truncated)...]
+2026-07-05T10:01:33.657+07:00 DEBUG 35244 --- [nio-3000-exec-7] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-05T10:01:34.388+07:00 DEBUG 35244 --- [nio-3000-exec-9] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-05T10:01:34.394+07:00 DEBUG 35244 --- [nio-3000-exec-9] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[OrderResponse[orderId=e5de1245-cfe4-4a4 (truncated)...]
+2026-07-05T10:01:34.399+07:00 DEBUG 35244 --- [nio-3000-exec-9] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-05T10:01:38.645+07:00  WARN 35244 --- [nio-3000-exec-1] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
+2026-07-05T10:01:38.902+07:00 DEBUG 35244 --- [nio-3000-exec-1] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: shipper2@gmail.com
+2026-07-05T10:01:38.902+07:00 DEBUG 35244 --- [nio-3000-exec-1] o.s.web.servlet.DispatcherServlet        : PUT "/api/shippers/Fa38RdhxfJa9EDZH5oAJveCuWQc2/orders/3e3131a2-1135-41ef-95ab-57cb815b9135/delivery?status=RETURNED", parameters={masked}
+2026-07-05T10:01:38.903+07:00 DEBUG 35244 --- [nio-3000-exec-1] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.shipper.ShipperController#updateDeliveryStatus(String, String, String, String)
+2026-07-05T10:01:40.668+07:00  INFO 35244 --- [nio-3000-exec-1] v.v.b.modules.shipper.ShipperService     : Shipper Fa38RdhxfJa9EDZH5oAJveCuWQc2 cập nhật đơn 3e3131a2-1135-41ef-95ab-57cb815b9135 từ FAILED → RETURNED
+2026-07-05T10:01:40.670+07:00 DEBUG 35244 --- [nio-3000-exec-1] org.springframework.web.SimpLogging      : Processing MESSAGE destination=/topic/admin/orders session=null payload={"orderId":"3e3131a2-1135-41ef-95ab-57cb815b9135","message":"Tài xế Trần Qu...(truncated)
+2026-07-05T10:01:40.670+07:00 DEBUG 35244 --- [nio-3000-exec-1] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-05T10:01:40.671+07:00 DEBUG 35244 --- [nio-3000-exec-1] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data={message=Cập nhật trạng thái giao hàng t (truncated)...]
+2026-07-05T10:01:40.671+07:00 DEBUG 35244 --- [nio-3000-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-05T10:01:46.665+07:00  WARN 35244 --- [nio-3000-exec-2] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
+2026-07-05T10:01:46.913+07:00 DEBUG 35244 --- [nio-3000-exec-2] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: customer@gmail.com
+2026-07-05T10:01:46.914+07:00 DEBUG 35244 --- [nio-3000-exec-2] o.s.web.servlet.DispatcherServlet        : GET "/api/orders/me?page=1&limit=20", parameters={masked}
+2026-07-05T10:01:46.914+07:00 DEBUG 35244 --- [nio-3000-exec-2] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.order.OrderController#getMyOrders(String, int, Integer, Integer)
+2026-07-05T10:01:49.963+07:00  WARN 35244 --- [io-3000-exec-10] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
+2026-07-05T10:01:50.227+07:00 DEBUG 35244 --- [io-3000-exec-10] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: customer@gmail.com
+2026-07-05T10:01:50.231+07:00 DEBUG 35244 --- [io-3000-exec-10] o.s.web.servlet.DispatcherServlet        : GET "/api/orders/me?page=1&limit=20", parameters={masked}
+2026-07-05T10:01:50.232+07:00 DEBUG 35244 --- [io-3000-exec-10] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.order.OrderController#getMyOrders(String, int, Integer, Integer)
+2026-07-05T10:01:52.322+07:00 DEBUG 35244 --- [nio-3000-exec-2] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-05T10:01:52.327+07:00 DEBUG 35244 --- [nio-3000-exec-2] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[OrderResponse[orderId=e5de1245-cfe4-4a4 (truncated)...]
+2026-07-05T10:01:52.328+07:00 DEBUG 35244 --- [nio-3000-exec-2] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-05T10:01:55.742+07:00 DEBUG 35244 --- [io-3000-exec-10] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-05T10:01:55.745+07:00 DEBUG 35244 --- [io-3000-exec-10] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[OrderResponse[orderId=e5de1245-cfe4-4a4 (truncated)...]
+2026-07-05T10:01:55.746+07:00 DEBUG 35244 --- [io-3000-exec-10] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-05T10:02:21.219+07:00  WARN 35244 --- [nio-3000-exec-3] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
+2026-07-05T10:02:21.473+07:00 DEBUG 35244 --- [nio-3000-exec-3] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: customer@gmail.com
+2026-07-05T10:02:21.474+07:00 DEBUG 35244 --- [nio-3000-exec-3] o.s.web.servlet.DispatcherServlet        : GET "/api/orders/me?page=1&limit=20", parameters={masked}
+2026-07-05T10:02:21.474+07:00 DEBUG 35244 --- [nio-3000-exec-3] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.order.OrderController#getMyOrders(String, int, Integer, Integer)
+2026-07-05T10:02:26.991+07:00 DEBUG 35244 --- [nio-3000-exec-3] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-05T10:02:26.993+07:00 DEBUG 35244 --- [nio-3000-exec-3] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[OrderResponse[orderId=e5de1245-cfe4-4a4 (truncated)...]
+2026-07-05T10:02:26.994+07:00 DEBUG 35244 --- [nio-3000-exec-3] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-05T10:02:27.033+07:00  WARN 35244 --- [nio-3000-exec-5] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
+2026-07-05T10:02:27.281+07:00 DEBUG 35244 --- [nio-3000-exec-5] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: customer@gmail.com
+2026-07-05T10:02:27.286+07:00 DEBUG 35244 --- [nio-3000-exec-5] o.s.web.servlet.DispatcherServlet        : GET "/api/orders/me?page=1&limit=20", parameters={masked}
+2026-07-05T10:02:27.287+07:00 DEBUG 35244 --- [nio-3000-exec-5] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.order.OrderController#getMyOrders(String, int, Integer, Integer)
+2026-07-05T10:02:32.798+07:00 DEBUG 35244 --- [nio-3000-exec-5] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-05T10:02:32.803+07:00 DEBUG 35244 --- [nio-3000-exec-5] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[OrderResponse[orderId=e5de1245-cfe4-4a4 (truncated)...]
+2026-07-05T10:02:32.803+07:00 DEBUG 35244 --- [nio-3000-exec-5] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-05T10:04:01.481+07:00  WARN 35244 --- [nio-3000-exec-7] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
+2026-07-05T10:04:01.514+07:00  WARN 35244 --- [nio-3000-exec-9] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
+2026-07-05T10:04:02.037+07:00 DEBUG 35244 --- [nio-3000-exec-9] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: customer@gmail.com
+2026-07-05T10:04:02.039+07:00 DEBUG 35244 --- [nio-3000-exec-7] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: admin@vuavuive.vn
+2026-07-05T10:04:02.039+07:00 DEBUG 35244 --- [nio-3000-exec-9] o.s.web.servlet.DispatcherServlet        : GET "/api/orders/my?limit=100", parameters={masked}
+2026-07-05T10:04:02.039+07:00 DEBUG 35244 --- [nio-3000-exec-7] o.s.web.servlet.DispatcherServlet        : GET "/api/admin/orders?limit=100", parameters={masked}
+2026-07-05T10:04:02.040+07:00 DEBUG 35244 --- [nio-3000-exec-9] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.order.OrderController#getMyOrders(String, int, Integer, Integer)
+2026-07-05T10:04:02.040+07:00 DEBUG 35244 --- [nio-3000-exec-7] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.order.AdminOrderController#getOrders(String, int, Integer, Integer)
+2026-07-05T10:04:08.646+07:00 DEBUG 35244 --- [nio-3000-exec-9] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-05T10:04:08.647+07:00 DEBUG 35244 --- [nio-3000-exec-9] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[OrderResponse[orderId=e5de1245-cfe4-4a4 (truncated)...]
+2026-07-05T10:04:08.648+07:00 DEBUG 35244 --- [nio-3000-exec-9] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-05T10:04:14.891+07:00 DEBUG 35244 --- [nio-3000-exec-7] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-05T10:04:14.892+07:00 DEBUG 35244 --- [nio-3000-exec-7] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[OrderResponse[orderId=a5175560-2f21-4f1 (truncated)...]
+2026-07-05T10:04:14.900+07:00 DEBUG 35244 --- [nio-3000-exec-7] .m.m.a.ExceptionHandlerExceptionResolver : Using @ExceptionHandler vn.vuavuive.backend.exception.GlobalExceptionHandler#handleGenericException(Exception)
+2026-07-05T10:04:14.900+07:00 ERROR 35244 --- [nio-3000-exec-7] v.v.b.exception.GlobalExceptionHandler   : Lỗi không xác định: 
+
+org.springframework.web.context.request.async.AsyncRequestNotUsableException: ServletOutputStream failed to write: java.io.IOException: An established connection was aborted by the software in your host machine
+	at org.springframework.web.context.request.async.StandardServletAsyncWebRequest$LifecycleHttpServletResponse.handleIOException(StandardServletAsyncWebRequest.java:320) ~[spring-web-6.1.8.jar:6.1.8]
+	at org.springframework.web.context.request.async.StandardServletAsyncWebRequest$LifecycleServletOutputStream.write(StandardServletAsyncWebRequest.java:378) ~[spring-web-6.1.8.jar:6.1.8]
+	at org.springframework.util.StreamUtils$NonClosingOutputStream.write(StreamUtils.java:261) ~[spring-core-6.1.8.jar:6.1.8]
+	at com.fasterxml.jackson.core.json.UTF8JsonGenerator._flushBuffer(UTF8JsonGenerator.java:2210) ~[jackson-core-2.17.1.jar:2.17.1]
+	at com.fasterxml.jackson.core.json.UTF8JsonGenerator._writeStringSegment2(UTF8JsonGenerator.java:1522) ~[jackson-core-2.17.1.jar:2.17.1]
+	at com.fasterxml.jackson.core.json.UTF8JsonGenerator._writeStringSegment(UTF8JsonGenerator.java:1469) ~[jackson-core-2.17.1.jar:2.17.1]
+	at com.fasterxml.jackson.core.json.UTF8JsonGenerator.writeString(UTF8JsonGenerator.java:531) ~[jackson-core-2.17.1.jar:2.17.1]
+	at com.fasterxml.jackson.databind.ser.std.StringSerializer.serialize(StringSerializer.java:41) ~[jackson-databind-2.17.1.jar:2.17.1]
+	at com.fasterxml.jackson.databind.ser.BeanPropertyWriter.serializeAsField(BeanPropertyWriter.java:732) ~[jackson-databind-2.17.1.jar:2.17.1]
+	at com.fasterxml.jackson.databind.ser.std.BeanSerializerBase.serializeFields(BeanSerializerBase.java:770) ~[jackson-databind-2.17.1.jar:2.17.1]
+	at com.fasterxml.jackson.databind.ser.BeanSerializer.serialize(BeanSerializer.java:183) ~[jackson-databind-2.17.1.jar:2.17.1]
+	at com.fasterxml.jackson.databind.ser.impl.IndexedListSerializer.serializeContentsUsing(IndexedListSerializer.java:142) ~[jackson-databind-2.17.1.jar:2.17.1]
+	at com.fasterxml.jackson.databind.ser.impl.IndexedListSerializer.serializeContents(IndexedListSerializer.java:88) ~[jackson-databind-2.17.1.jar:2.17.1]
+	at com.fasterxml.jackson.databind.ser.impl.IndexedListSerializer.serialize(IndexedListSerializer.java:79) ~[jackson-databind-2.17.1.jar:2.17.1]
+	at com.fasterxml.jackson.databind.ser.impl.IndexedListSerializer.serialize(IndexedListSerializer.java:18) ~[jackson-databind-2.17.1.jar:2.17.1]
+	at com.fasterxml.jackson.databind.ser.BeanPropertyWriter.serializeAsField(BeanPropertyWriter.java:732) ~[jackson-databind-2.17.1.jar:2.17.1]
+	at com.fasterxml.jackson.databind.ser.std.BeanSerializerBase.serializeFields(BeanSerializerBase.java:770) ~[jackson-databind-2.17.1.jar:2.17.1]
+	at com.fasterxml.jackson.databind.ser.BeanSerializer.serialize(BeanSerializer.java:183) ~[jackson-databind-2.17.1.jar:2.17.1]
+	at com.fasterxml.jackson.databind.ser.impl.IndexedListSerializer.serializeContents(IndexedListSerializer.java:119) ~[jackson-databind-2.17.1.jar:2.17.1]
+	at com.fasterxml.jackson.databind.ser.impl.IndexedListSerializer.serialize(IndexedListSerializer.java:79) ~[jackson-databind-2.17.1.jar:2.17.1]
+	at com.fasterxml.jackson.databind.ser.impl.IndexedListSerializer.serialize(IndexedListSerializer.java:18) ~[jackson-databind-2.17.1.jar:2.17.1]
+	at com.fasterxml.jackson.databind.ser.BeanPropertyWriter.serializeAsField(BeanPropertyWriter.java:732) ~[jackson-databind-2.17.1.jar:2.17.1]
+	at com.fasterxml.jackson.databind.ser.std.BeanSerializerBase.serializeFields(BeanSerializerBase.java:770) ~[jackson-databind-2.17.1.jar:2.17.1]
+	at com.fasterxml.jackson.databind.ser.BeanSerializer.serialize(BeanSerializer.java:183) ~[jackson-databind-2.17.1.jar:2.17.1]
+	at com.fasterxml.jackson.databind.ser.DefaultSerializerProvider._serialize(DefaultSerializerProvider.java:502) ~[jackson-databind-2.17.1.jar:2.17.1]
+	at com.fasterxml.jackson.databind.ser.DefaultSerializerProvider.serializeValue(DefaultSerializerProvider.java:341) ~[jackson-databind-2.17.1.jar:2.17.1]
+	at com.fasterxml.jackson.databind.ObjectWriter$Prefetch.serialize(ObjectWriter.java:1574) ~[jackson-databind-2.17.1.jar:2.17.1]
+	at com.fasterxml.jackson.databind.ObjectWriter.writeValue(ObjectWriter.java:1061) ~[jackson-databind-2.17.1.jar:2.17.1]
+	at org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter.writeInternal(AbstractJackson2HttpMessageConverter.java:483) ~[spring-web-6.1.8.jar:6.1.8]
+	at org.springframework.http.converter.AbstractGenericHttpMessageConverter.write(AbstractGenericHttpMessageConverter.java:114) ~[spring-web-6.1.8.jar:6.1.8]
+	at org.springframework.web.servlet.mvc.method.annotation.AbstractMessageConverterMethodProcessor.writeWithMessageConverters(AbstractMessageConverterMethodProcessor.java:297) ~[spring-webmvc-6.1.8.jar:6.1.8]
+	at org.springframework.web.servlet.mvc.method.annotation.HttpEntityMethodProcessor.handleReturnValue(HttpEntityMethodProcessor.java:245) ~[spring-webmvc-6.1.8.jar:6.1.8]
+	at org.springframework.web.method.support.HandlerMethodReturnValueHandlerComposite.handleReturnValue(HandlerMethodReturnValueHandlerComposite.java:78) ~[spring-web-6.1.8.jar:6.1.8]
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:136) ~[spring-webmvc-6.1.8.jar:6.1.8]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:926) ~[spring-webmvc-6.1.8.jar:6.1.8]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:831) ~[spring-webmvc-6.1.8.jar:6.1.8]
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87) ~[spring-webmvc-6.1.8.jar:6.1.8]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089) ~[spring-webmvc-6.1.8.jar:6.1.8]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979) ~[spring-webmvc-6.1.8.jar:6.1.8]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014) ~[spring-webmvc-6.1.8.jar:6.1.8]
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903) ~[spring-webmvc-6.1.8.jar:6.1.8]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564) ~[tomcat-embed-core-10.1.24.jar:6.0]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885) ~[spring-webmvc-6.1.8.jar:6.1.8]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658) ~[tomcat-embed-core-10.1.24.jar:6.0]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51) ~[tomcat-embed-websocket-10.1.24.jar:10.1.24]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:110) ~[spring-web-6.1.8.jar:6.1.8]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:108) ~[spring-web-6.1.8.jar:6.1.8]
+	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$3(FilterChainProxy.java:231) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:365) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.security.web.access.intercept.AuthorizationFilter.doFilter(AuthorizationFilter.java:100) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:126) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:120) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:131) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:85) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:179) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at vn.vuavuive.backend.security.JwtAuthFilter.doFilterInternal(JwtAuthFilter.java:75) ~[classes/:na]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.8.jar:6.1.8]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.web.filter.CorsFilter.doFilterInternal(CorsFilter.java:91) ~[spring-web-6.1.8.jar:6.1.8]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.8.jar:6.1.8]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.8.jar:6.1.8]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.8.jar:6.1.8]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.8.jar:6.1.8]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113) ~[spring-web-6.1.8.jar:6.1.8]
+	at org.springframework.web.servlet.handler.HandlerMappingIntrospector.lambda$createCacheFilter$3(HandlerMappingIntrospector.java:195) ~[spring-webmvc-6.1.8.jar:6.1.8]
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113) ~[spring-web-6.1.8.jar:6.1.8]
+	at org.springframework.web.filter.CompositeFilter.doFilter(CompositeFilter.java:74) ~[spring-web-6.1.8.jar:6.1.8]
+	at org.springframework.security.config.annotation.web.configuration.WebMvcSecurityConfiguration$CompositeFilterChainProxy.doFilter(WebMvcSecurityConfiguration.java:230) ~[spring-security-config-6.3.0.jar:6.3.0]
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:352) ~[spring-web-6.1.8.jar:6.1.8]
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:268) ~[spring-web-6.1.8.jar:6.1.8]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[spring-web-6.1.8.jar:6.1.8]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.8.jar:6.1.8]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[spring-web-6.1.8.jar:6.1.8]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.8.jar:6.1.8]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[spring-web-6.1.8.jar:6.1.8]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.8.jar:6.1.8]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:389) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:896) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at java.base/java.lang.Thread.run(Thread.java:1583) ~[na:na]
+	Suppressed: org.springframework.web.context.request.async.AsyncRequestNotUsableException: Response not usable after response errors.
+		at org.springframework.web.context.request.async.StandardServletAsyncWebRequest$LifecycleHttpServletResponse.obtainLockAndCheckState(StandardServletAsyncWebRequest.java:314) ~[spring-web-6.1.8.jar:6.1.8]
+		at org.springframework.web.context.request.async.StandardServletAsyncWebRequest$LifecycleServletOutputStream.write(StandardServletAsyncWebRequest.java:373) ~[spring-web-6.1.8.jar:6.1.8]
+		at org.springframework.util.StreamUtils$NonClosingOutputStream.write(StreamUtils.java:261) ~[spring-core-6.1.8.jar:6.1.8]
+		at com.fasterxml.jackson.core.json.UTF8JsonGenerator._flushBuffer(UTF8JsonGenerator.java:2210) ~[jackson-core-2.17.1.jar:2.17.1]
+		at com.fasterxml.jackson.core.json.UTF8JsonGenerator.close(UTF8JsonGenerator.java:1234) ~[jackson-core-2.17.1.jar:2.17.1]
+		at org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter.writeInternal(AbstractJackson2HttpMessageConverter.java:452) ~[spring-web-6.1.8.jar:6.1.8]
+		... 101 common frames omitted
+Caused by: org.apache.catalina.connector.ClientAbortException: java.io.IOException: An established connection was aborted by the software in your host machine
+	at org.apache.catalina.connector.OutputBuffer.realWriteBytes(OutputBuffer.java:341) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.catalina.connector.OutputBuffer.flushByteBuffer(OutputBuffer.java:776) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.catalina.connector.OutputBuffer.append(OutputBuffer.java:673) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.catalina.connector.OutputBuffer.writeBytes(OutputBuffer.java:376) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.catalina.connector.OutputBuffer.write(OutputBuffer.java:354) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.catalina.connector.CoyoteOutputStream.write(CoyoteOutputStream.java:103) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.springframework.security.web.util.OnCommittedResponseWrapper$SaveContextServletOutputStream.write(OnCommittedResponseWrapper.java:639) ~[spring-security-web-6.3.0.jar:6.3.0]
+	at org.springframework.web.context.request.async.StandardServletAsyncWebRequest$LifecycleServletOutputStream.write(StandardServletAsyncWebRequest.java:375) ~[spring-web-6.1.8.jar:6.1.8]
+	... 128 common frames omitted
+Caused by: java.io.IOException: An established connection was aborted by the software in your host machine
+	at java.base/sun.nio.ch.SocketDispatcher.write0(Native Method) ~[na:na]
+	at java.base/sun.nio.ch.SocketDispatcher.write(SocketDispatcher.java:57) ~[na:na]
+	at java.base/sun.nio.ch.IOUtil.writeFromNativeBuffer(IOUtil.java:137) ~[na:na]
+	at java.base/sun.nio.ch.IOUtil.write(IOUtil.java:102) ~[na:na]
+	at java.base/sun.nio.ch.IOUtil.write(IOUtil.java:58) ~[na:na]
+	at java.base/sun.nio.ch.SocketChannelImpl.write(SocketChannelImpl.java:542) ~[na:na]
+	at org.apache.tomcat.util.net.NioChannel.write(NioChannel.java:122) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.tomcat.util.net.NioEndpoint$NioSocketWrapper.doWrite(NioEndpoint.java:1378) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.tomcat.util.net.SocketWrapperBase.doWrite(SocketWrapperBase.java:764) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.tomcat.util.net.SocketWrapperBase.writeBlocking(SocketWrapperBase.java:589) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.tomcat.util.net.SocketWrapperBase.write(SocketWrapperBase.java:533) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.coyote.http11.Http11OutputBuffer$SocketOutputBuffer.doWrite(Http11OutputBuffer.java:533) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.coyote.http11.filters.ChunkedOutputFilter.doWrite(ChunkedOutputFilter.java:112) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.coyote.http11.Http11OutputBuffer.doWrite(Http11OutputBuffer.java:193) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.coyote.Response.doWrite(Response.java:623) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	at org.apache.catalina.connector.OutputBuffer.realWriteBytes(OutputBuffer.java:329) ~[tomcat-embed-core-10.1.24.jar:10.1.24]
+	... 135 common frames omitted
+
+2026-07-05T10:04:14.908+07:00 DEBUG 35244 --- [nio-3000-exec-7] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Found 'Content-Type:application/json' in response
+2026-07-05T10:04:14.911+07:00 DEBUG 35244 --- [nio-3000-exec-7] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ErrorResponse[status=500, message=Lỗi máy chủ nội bộ, vui lòng thử lại sau, errors=null, timestamp=2 (truncated)...]
+2026-07-05T10:04:14.913+07:00 DEBUG 35244 --- [nio-3000-exec-7] o.s.w.s.m.m.a.DisconnectedClient         : Looks like the client has gone away: org.apache.catalina.connector.ClientAbortException: java.io.IOException: An established connection was aborted by the software in your host machine (For a full stack trace, set the log category 'org.apache.commons.logging.LogAdapter$Slf4jLocationAwareLog@6382d225' to TRACE level.)
+2026-07-05T10:04:14.914+07:00 DEBUG 35244 --- [nio-3000-exec-7] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.web.context.request.async.AsyncRequestNotUsableException: ServletOutputStream failed to write: java.io.IOException: An established connection was aborted by the software in your host machine]
+2026-07-05T10:04:14.914+07:00 DEBUG 35244 --- [nio-3000-exec-7] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-05T10:05:04.442+07:00  INFO 35244 --- [MessageBroker-2] o.s.w.s.c.WebSocketMessageBrokerStats    : WebSocketSession[0 current WS(0)-HttpStream(0)-HttpPoll(0), 0 total, 0 closed abnormally (0 connect failure, 0 send limit, 0 transport error)], stompSubProtocol[processed CONNECT(0)-CONNECTED(0)-DISCONNECT(0)], stompBrokerRelay[null], inboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], outboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], sockJsScheduler[pool size = 24, active threads = 1, queued tasks = 1, completed tasks = 32]
+2026-07-05T10:06:41.202+07:00 DEBUG 35244 --- [nio-3000-exec-2] o.s.web.servlet.DispatcherServlet        : GET "/api-docs", parameters={}
+2026-07-05T10:06:41.208+07:00 DEBUG 35244 --- [nio-3000-exec-2] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to org.springdoc.webmvc.api.OpenApiWebMvcResource#openapiJson(HttpServletRequest, String, Locale)
+2026-07-05T10:06:41.213+07:00 DEBUG 35244 --- [nio-3000-exec-2] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [*/*] and supported [application/json]
+2026-07-05T10:06:41.215+07:00 DEBUG 35244 --- [nio-3000-exec-2] m.m.a.RequestResponseBodyMethodProcessor : Writing [{123, 34, 111, 112, 101, 110, 97, 112, 105, 34, 58, 34, 51, 46, 48, 46, 49, 34, 44, 34, 105, 110, 10 (truncated)...]
+2026-07-05T10:06:41.216+07:00 DEBUG 35244 --- [nio-3000-exec-2] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  32:59 min
+[INFO] Finished at: 2026-07-05T10:06:58+07:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.springframework.boot:spring-boot-maven-plugin:3.3.0:run (default-cli) on project backend: Process terminated with exit code: 1 -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoExecutionException
+Press any key to continue . . . 

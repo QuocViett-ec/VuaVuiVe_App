@@ -17,15 +17,14 @@ import retrofit2.Response;
 import vn.vuavuive.shared.data.api.DashboardApi;
 import vn.vuavuive.shared.data.dto.ApiResponse;
 import vn.vuavuive.shared.data.dto.DashboardStats;
+import vn.vuavuive.shared.util.Constants;
 
 public class FirebaseDashboardApi implements DashboardApi {
 
     private final DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
 
     private boolean isPendingStatus(String status) {
-        return "pending".equalsIgnoreCase(status)
-                || "pending_payment".equalsIgnoreCase(status)
-                || "pending_approval".equalsIgnoreCase(status);
+        return Constants.isOrderPending(status);
     }
 
     @Override
@@ -66,8 +65,8 @@ public class FirebaseDashboardApi implements DashboardApi {
                                 String status = oSnap.child("status").getValue(String.class);
                                 if (status != null) {
                                     status = status.toLowerCase();
-                                    if (isPendingStatus(status)) pendingCount++;
-                                    else if ("in_transit".equals(status) || "shipping".equals(status)) shippingCount++;
+                            if (isPendingStatus(status)) pendingCount++;
+                            else if (Constants.isOrderShipping(status)) shippingCount++;
                                 }
 
                                 String createdAt = oSnap.child("created_at").getValue(String.class);

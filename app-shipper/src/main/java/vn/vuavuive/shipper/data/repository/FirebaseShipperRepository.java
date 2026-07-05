@@ -22,8 +22,10 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import vn.vuavuive.shared.data.dto.ApiResponse;
 import vn.vuavuive.shared.data.dto.Order;
 import vn.vuavuive.shared.data.dto.User;
+import vn.vuavuive.shared.data.api.ShipperOrderApi;
 import vn.vuavuive.shared.util.SessionManager;
 
 /**
@@ -43,10 +45,14 @@ public class FirebaseShipperRepository {
     private final FirebaseAuth auth;
     private final DatabaseReference dbRef;
     private final SessionManager sessionManager;
+    private final ShipperOrderApi shipperOrderApi;
 
     @Inject
-    public FirebaseShipperRepository(SessionManager sessionManager) {
+    public FirebaseShipperRepository(
+            SessionManager sessionManager,
+            ShipperOrderApi shipperOrderApi) {
         this.sessionManager = sessionManager;
+        this.shipperOrderApi = shipperOrderApi;
         this.auth = FirebaseAuth.getInstance();
         this.dbRef = FirebaseDatabase.getInstance().getReference();
     }
@@ -107,12 +113,12 @@ public class FirebaseShipperRepository {
                                             out.setValue(Result.success(user));
                                         } else {
                                             logout();
-                                            out.setValue(Result.error("Phien dang nhap khong hop le"));
+                                            out.setValue(Result.error("Phiên đăng nhập không hợp lệ"));
                                         }
                                     }).addOnFailureListener(e -> {
                                         // Token bat buoc de kiem tra session het han.
                                         logout();
-                                        out.setValue(Result.error("Khong lay duoc token dang nhap"));
+                                        out.setValue(Result.error("Không lấy được token đăng nhập"));
                                     });
                                 }
 
@@ -143,6 +149,14 @@ public class FirebaseShipperRepository {
      * Đăng xuất Firebase Auth và xoá session local.
      */
     public void logout() {
+        FirebaseUser currentUser = auth.getCurrentUser();
+        if (currentUser != null) {
+            DatabaseReference statusRef = dbRef.child("users").child(currentUser.getUid())
+                    .child("onlineStatus");
+            statusRef.onDisconnect().cancel();
+            statusRef.setValue("OFFLINE")
+                    .addOnFailureListener(e -> Log.e(TAG, "set offline before logout failed", e));
+        }
         auth.signOut();
         sessionManager.clearSession();
     }
@@ -218,42 +232,51 @@ public class FirebaseShipperRepository {
         };
     }
 
-    /**
-     * Lấy chi tiết một đơn hàng (one-shot, không real-time).
-     */
+    /** Lắng nghe real-time chi tiết một đơn hàng. */
     public LiveData<Result<Order>> getOrderDetail(String orderId) {
-        MutableLiveData<Result<Order>> out = new MutableLiveData<>();
-        out.setValue(Result.loading());
+        return new LiveData<Result<Order>>() {
+            private final DatabaseReference orderRef = dbRef.child("orders").child(orderId);
+            private ValueEventListener listener;
 
-        dbRef.child("orders").child(orderId)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            protected void onActive() {
+                super.onActive();
+                postValue(Result.loading());
+                listener = new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot snapshot) {
                         if (!snapshot.exists()) {
-                            out.postValue(Result.error("Không tìm thấy đơn hàng"));
+                            postValue(Result.error("Không tìm thấy đơn hàng"));
                             return;
                         }
                         Order order = mapSnapshotToOrder(snapshot);
                         if (order != null) {
-                            out.postValue(Result.success(order));
+                            postValue(Result.success(order));
                         } else {
-                            out.postValue(Result.error("Lỗi đọc dữ liệu đơn hàng"));
+                            postValue(Result.error("Lỗi đọc dữ liệu đơn hàng"));
                         }
                     }
 
                     @Override
                     public void onCancelled(DatabaseError error) {
-                        out.postValue(Result.error(error.getMessage()));
+                        postValue(Result.error(error.getMessage()));
                     }
-                });
-        return out;
+                };
+                orderRef.addValueEventListener(listener);
+            }
+
+            @Override
+            protected void onInactive() {
+                super.onInactive();
+                if (listener != null) {
+                    orderRef.removeEventListener(listener);
+                    listener = null;
+                }
+            }
+        };
     }
 
-    /**
-     * Cập nhật trạng thái đơn hàng.
-     * Ghi newStatus vào /orders/{orderId}/status.
-     * Ghi log vào /orders/{orderId}/statusLogs.
-     */
+    /** Backend xác thực transition rồi ghi Firebase để mọi app nhận realtime. */
     public LiveData<Result<Void>> updateOrderStatus(String orderId, String newStatus) {
         return updateOrderStatus(orderId, newStatus, null);
     }
@@ -265,42 +288,28 @@ public class FirebaseShipperRepository {
         FirebaseUser currentUser = auth.getCurrentUser();
         String uid = currentUser != null ? currentUser.getUid() : "unknown";
 
-        String now = getCurrentIsoTime();
-        Map<String, Object> updates = new HashMap<>();
-        updates.put("orders/" + orderId + "/status", newStatus);
-        updates.put("orders/" + orderId + "/updated_at", now);
-        updates.put("orders/" + orderId + "/updatedAt", now);
-        if ("DELIVERED".equalsIgnoreCase(newStatus)) {
-            updates.put("orders/" + orderId + "/delivered_at", now);
-            updates.put("orders/" + orderId + "/deliveredAt", now);
-        }
-        if (failReason != null) {
-            updates.put("orders/" + orderId + "/failReason", failReason);
-            updates.put("orders/" + orderId + "/fail_reason", failReason);
-        }
+        shipperOrderApi.updateDeliveryStatus(uid, orderId, newStatus, failReason)
+                .enqueue(new retrofit2.Callback<ApiResponse<Map<String, String>>>() {
+                    @Override
+                    public void onResponse(
+                            retrofit2.Call<ApiResponse<Map<String, String>>> call,
+                            retrofit2.Response<ApiResponse<Map<String, String>>> response) {
+                        if (response.isSuccessful() && response.body() != null
+                                && response.body().isSuccess()) {
+                            out.postValue(Result.success(null));
+                        } else {
+                            out.postValue(Result.error(
+                                    "Backend từ chối cập nhật (" + response.code() + ")"));
+                        }
+                    }
 
-        // Ghi log
-        String logKey = dbRef.child("orders").child(orderId).child("status_logs").push().getKey();
-        if (logKey != null) {
-            Map<String, Object> logEntry = new HashMap<>();
-            logEntry.put("status", newStatus);
-            logEntry.put("changedBy", uid);
-            logEntry.put("changedAt", now);
-            logEntry.put("changed_at", now);
-            logEntry.put("role", "SHIPPER");
-            if (failReason != null) {
-                logEntry.put("failReason", failReason);
-                logEntry.put("fail_reason", failReason);
-            }
-            updates.put("orders/" + orderId + "/status_logs/" + logKey, logEntry);
-            updates.put("orders/" + orderId + "/statusLogs/" + logKey, logEntry);
-        }
-
-        dbRef.updateChildren(updates)
-                .addOnSuccessListener(aVoid -> out.postValue(Result.success(null)))
-                .addOnFailureListener(e -> {
-                    Log.e(TAG, "updateOrderStatus failed", e);
-                    out.postValue(Result.error("Cập nhật thất bại: " + e.getMessage()));
+                    @Override
+                    public void onFailure(
+                            retrofit2.Call<ApiResponse<Map<String, String>>> call,
+                            Throwable error) {
+                        Log.e(TAG, "updateOrderStatus failed", error);
+                        out.postValue(Result.error("Cập nhật thất bại: " + error.getMessage()));
+                    }
                 });
 
         return out;
@@ -357,8 +366,8 @@ public class FirebaseShipperRepository {
             o.setRecipientAddress(stringVal(s, "recipient_address", "recipientAddress", "delivery_address", "deliveryAddress", "delivery/address"));
             o.setNote(stringVal(s, "note"));
             o.setFailReason(stringVal(s, "failReason", "fail_reason"));
-            o.setPaymentMethod(stringVal(s, "paymentMethod", "payment_method"));
-            o.setPaymentStatus(stringVal(s, "paymentStatus", "payment_status"));
+            o.setPaymentMethod(stringVal(s, "paymentMethod", "payment_method", "payment/method"));
+            o.setPaymentStatus(stringVal(s, "paymentStatus", "payment_status", "payment/status"));
 
             // Amount
             Double finalAmt = doubleVal(s, "final_amount", "finalAmount", "totalAmount", "total_amount");
@@ -386,6 +395,17 @@ public class FirebaseShipperRepository {
                     items.add(item);
                 }
                 o.setItems(items);
+            }
+
+            DataSnapshot returnSnap = s.child("return_request");
+            if (returnSnap.exists()) {
+                vn.vuavuive.shared.data.dto.ReturnRequest request =
+                        new vn.vuavuive.shared.data.dto.ReturnRequest();
+                request.setReason(returnSnap.child("reason").getValue(String.class));
+                request.setStatus(returnSnap.child("status").getValue(String.class));
+                request.setAdminNote(returnSnap.child("admin_note").getValue(String.class));
+                request.setRequestedAt(returnSnap.child("requested_at").getValue(String.class));
+                o.setReturnRequest(request);
             }
 
             return o;

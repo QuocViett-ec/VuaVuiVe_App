@@ -19,7 +19,7 @@ android {
 
     buildTypes {
         debug {
-            buildConfigField("String", "BASE_URL", "\"http://192.168.110.94:3000\"")
+            buildConfigField("String", "BASE_URL", "\"http://localhost:3000\"")
             buildConfigField("String", "PORTAL_SCOPE", "\"customer\"")
         }
         release {

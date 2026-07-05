@@ -1,5 +1,6 @@
 package vn.vuavuive.admin.ui.orders;
 
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -11,10 +12,13 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import dagger.hilt.android.AndroidEntryPoint;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import javax.inject.Inject;
 import retrofit2.Call;
@@ -25,6 +29,7 @@ import vn.vuavuive.admin.databinding.ActivityAdminOrderDetailBinding;
 import vn.vuavuive.shared.data.api.AdminOrderApi;
 import vn.vuavuive.shared.data.api.AdminUserApi;
 import vn.vuavuive.shared.data.api.OrderApi;
+import vn.vuavuive.shared.data.api.OrderStatusApi;
 import vn.vuavuive.shared.data.dto.ApiResponse;
 import vn.vuavuive.shared.data.dto.Order;
 import vn.vuavuive.shared.data.dto.OrderItem;
@@ -37,6 +42,7 @@ public class AdminOrderDetailActivity extends AppCompatActivity {
 
     @Inject OrderApi orderApi;
     @Inject AdminOrderApi adminOrderApi;
+    @Inject OrderStatusApi orderStatusApi;
     @Inject AdminUserApi adminUserApi;
     @Inject SessionManager sessionManager;
 
@@ -45,21 +51,9 @@ public class AdminOrderDetailActivity extends AppCompatActivity {
     private User currentUser;
     private User selectedShipper;
     private final List<User> shippers = new ArrayList<>();
-    private boolean isInitialSpinnerLoad = true;
-
-    private static final List<String> STATUS_CODES = Arrays.asList(
-            "pending", "confirmed", "preparing", "ready_for_pickup", "shipping", "in_transit", "delivered", "cancelled"
-    );
-    private static final List<String> STATUS_DISPLAY = Arrays.asList(
-            "Chờ duyệt",
-            "Đã xác nhận",
-            "Đang chuẩn bị",
-            "Sẵn sàng lấy hàng",
-            "Đã gán shipper",
-            "Đang giao",
-            "Đã giao",
-            "Đã hủy"
-    );
+    private String orderId;
+    private DatabaseReference orderRef;
+    private ValueEventListener orderListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,16 +70,45 @@ public class AdminOrderDetailActivity extends AppCompatActivity {
             return;
         }
 
-        String orderId = getIntent().getStringExtra("ORDER_ID");
+        orderId = getIntent().getStringExtra("ORDER_ID");
         if (orderId == null) {
             Toast.makeText(this, "Không tìm thấy mã đơn hàng!", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
 
-        loadOrderDetails(orderId);
-
         binding.btnBack.setOnClickListener(v -> finish());
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (orderId == null) return;
+        orderRef = FirebaseDatabase.getInstance().getReference("orders").child(orderId);
+        orderListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                // ponytail: reuse the existing mapper; read directly if this extra fetch becomes measurable.
+                loadOrderDetails(orderId);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(AdminOrderDetailActivity.this,
+                        error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        };
+        orderRef.addValueEventListener(orderListener);
+    }
+
+    @Override
+    protected void onStop() {
+        if (orderRef != null && orderListener != null) {
+            orderRef.removeEventListener(orderListener);
+            orderListener = null;
+            orderRef = null;
+        }
+        super.onStop();
     }
 
     private void loadOrderDetails(String orderId) {
@@ -125,6 +148,7 @@ public class AdminOrderDetailActivity extends AppCompatActivity {
         // 1. Core Header & IDs
         binding.tvOrderIdTitle.setText("Mã đơn: " + (order.getOrderId() != null ? order.getOrderId() : order.getId()));
         binding.tvOrderDateVal.setText(order.getCreatedAt() != null ? order.getCreatedAt().replace("T", " ").replace("Z", "") : "");
+        renderStatusBadge(order.getStatus());
 
         // 2. Customer & Address Information
         if (order.getRecipientName() != null || order.getRecipientPhone() != null || order.getRecipientAddress() != null) {
@@ -188,7 +212,7 @@ public class AdminOrderDetailActivity extends AppCompatActivity {
         if (!isPaid && !"MOMO".equalsIgnoreCase(method) && !"audit".equalsIgnoreCase(currentUser.getRole())) {
             binding.btnMarkPaid.setVisibility(View.VISIBLE);
             binding.btnMarkPaid.setOnClickListener(v -> {
-                adminOrderApi.markPaid(order.getId()).enqueue(new Callback<ApiResponse<Order>>() {
+                orderStatusApi.markPaid(order.getId()).enqueue(new Callback<ApiResponse<Order>>() {
                     @Override
                     public void onResponse(@NonNull Call<ApiResponse<Order>> call,
                                            @NonNull Response<ApiResponse<Order>> response) {
@@ -211,9 +235,31 @@ public class AdminOrderDetailActivity extends AppCompatActivity {
         } else {
             binding.btnMarkPaid.setVisibility(View.GONE);
         }
+        boolean canRefund = "RETURNED".equalsIgnoreCase(order.getStatus())
+                && isPaid
+                && !"audit".equalsIgnoreCase(currentUser.getRole());
+        binding.btnRefund.setVisibility(canRefund ? View.VISIBLE : View.GONE);
+        if (canRefund) {
+            binding.btnRefund.setOnClickListener(v ->
+                    orderStatusApi.markRefunded(order.getId()).enqueue(new Callback<ApiResponse<Order>>() {
+                        @Override
+                        public void onResponse(@NonNull Call<ApiResponse<Order>> call,
+                                               @NonNull Response<ApiResponse<Order>> response) {
+                            Toast.makeText(AdminOrderDetailActivity.this,
+                                    response.isSuccessful() ? "Đã hoàn tiền" : "Không thể hoàn tiền",
+                                    Toast.LENGTH_SHORT).show();
+                        }
 
-        // 7. Status Spinner configuration
-        setupStatusSpinner();
+                        @Override
+                        public void onFailure(@NonNull Call<ApiResponse<Order>> call, @NonNull Throwable error) {
+                            Toast.makeText(AdminOrderDetailActivity.this,
+                                    "Lỗi kết nối: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }));
+        }
+
+        // 7. Valid status actions
+        setupStatusActions();
 
         // 8. Shipper assignment
         setupShipperAssignment(orderId);
@@ -301,76 +347,72 @@ public class AdminOrderDetailActivity extends AppCompatActivity {
                 });
     }
 
-    private void setupStatusSpinner() {
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, STATUS_DISPLAY);
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        binding.spinnerOrderStatus.setAdapter(spinnerAdapter);
+    private void setupStatusActions() {
+        binding.btnAdvanceStatus.setVisibility(View.GONE);
+        binding.btnCancelOrderAdmin.setVisibility(View.GONE);
+        String status = order.getStatus() == null ? "" : order.getStatus().toUpperCase();
+        boolean readOnly = "audit".equalsIgnoreCase(currentUser.getRole());
+        boolean pending = "PENDING".equals(status)
+                || "PENDING_PAYMENT".equals(status)
+                || "PENDING_APPROVAL".equals(status);
+        binding.layoutStatusActions.setVisibility(pending ? View.VISIBLE : View.GONE);
+        if (!pending) return;
 
-        // Find current status index
-        int currentIndex = STATUS_CODES.indexOf(order.getStatus() != null ? order.getStatus().toLowerCase() : "");
-        if (currentIndex >= 0) {
-            isInitialSpinnerLoad = true;
-            binding.spinnerOrderStatus.setSelection(currentIndex);
+        if (!"PENDING_PAYMENT".equals(status) && !readOnly) {
+            binding.btnAdvanceStatus.setText("XÁC NHẬN ĐƠN");
+            binding.btnAdvanceStatus.setVisibility(View.VISIBLE);
+            binding.btnAdvanceStatus.setOnClickListener(v -> updateOrderStatus("CONFIRMED"));
+            binding.tvStatusActionHint.setText("Xác nhận đơn để tiếp tục gán shipper");
+        } else {
+            binding.tvStatusActionHint.setText("Đơn đang chờ thanh toán");
         }
 
-        // Restricted role check (Audit role is read-only)
-        if ("audit".equalsIgnoreCase(currentUser.getRole())) {
-            binding.spinnerOrderStatus.setEnabled(false);
-            return;
+        if (!readOnly) {
+            binding.btnCancelOrderAdmin.setVisibility(View.VISIBLE);
+            binding.btnCancelOrderAdmin.setOnClickListener(v -> updateOrderStatus("CANCELLED"));
         }
+    }
 
-        binding.spinnerOrderStatus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+    private void updateOrderStatus(String newStatus) {
+        java.util.Map<String, String> body = new java.util.HashMap<>();
+        body.put("status", newStatus);
+        body.put("updatedBy", currentUser.getName() != null ? currentUser.getName() : "Admin");
+        orderStatusApi.updateStatus(order.getId(), body).enqueue(new Callback<ApiResponse<Order>>() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (isInitialSpinnerLoad) {
-                    isInitialSpinnerLoad = false;
-                    return;
-                }
-                String newStatus = STATUS_CODES.get(position);
-                if (!newStatus.equalsIgnoreCase(order.getStatus())) {
-                    java.util.Map<String, String> body = new java.util.HashMap<>();
-                    body.put("status", newStatus);
-                    body.put("updatedBy", currentUser.getName() != null ? currentUser.getName() : "Admin");
-                    adminOrderApi.updateOrderStatus(order.getId(), body).enqueue(new Callback<ApiResponse<Order>>() {
-                        @Override
-                        public void onResponse(@NonNull Call<ApiResponse<Order>> call,
-                                               @NonNull Response<ApiResponse<Order>> response) {
-                            if (response.isSuccessful() && response.body() != null && response.body().isSuccess()
-                                    && response.body().getData() != null) {
-                                order = response.body().getData();
-                                Toast.makeText(AdminOrderDetailActivity.this, "Đã chuyển trạng thái sang: " + newStatus.toUpperCase(), Toast.LENGTH_SHORT).show();
-                                renderOrderDetails(order.getId());
-                            } else {
-                                String errorMsg = "Không cập nhật được trạng thái (Code: " + response.code() + ")";
-                                try {
-                                    if (response.errorBody() != null) {
-                                        errorMsg += " - " + response.errorBody().string();
-                                    }
-                                } catch (Exception ignored) {}
-                                Toast.makeText(AdminOrderDetailActivity.this, errorMsg, Toast.LENGTH_LONG).show();
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(@NonNull Call<ApiResponse<Order>> call, @NonNull Throwable t) {
-                            Toast.makeText(AdminOrderDetailActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_LONG).show();
-                        }
-                    });
+            public void onResponse(@NonNull Call<ApiResponse<Order>> call,
+                                   @NonNull Response<ApiResponse<Order>> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                    Toast.makeText(AdminOrderDetailActivity.this,
+                            "Đã chuyển trạng thái sang " + newStatus, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(AdminOrderDetailActivity.this,
+                            "Không thể chuyển trạng thái từ " + order.getStatus() + " sang " + newStatus,
+                            Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
+            public void onFailure(@NonNull Call<ApiResponse<Order>> call, @NonNull Throwable error) {
+                Toast.makeText(AdminOrderDetailActivity.this,
+                        "Lỗi kết nối: " + error.getMessage(), Toast.LENGTH_LONG).show();
+            }
         });
     }
 
     private void setupShipperAssignment(String orderId) {
         boolean readOnly = "audit".equalsIgnoreCase(currentUser.getRole());
+        boolean hasShipper = order.getShipperId() != null && !order.getShipperId().isEmpty();
+        boolean assignable = isAssignableStatus(order.getStatus());
+        binding.layoutShipperAssignment.setVisibility(
+                assignable || hasShipper ? View.VISIBLE : View.GONE);
+        if (!assignable && !hasShipper) return;
+
         binding.spinnerShipper.setEnabled(false);
         binding.btnAssignShipper.setEnabled(false);
+        binding.spinnerShipper.setVisibility(hasShipper ? View.GONE : View.VISIBLE);
+        binding.btnAssignShipper.setVisibility(hasShipper ? View.GONE : View.VISIBLE);
         binding.btnAssignShipper.setText(readOnly ? "CHỈ XEM" : "GÁN SHIPPER");
-        binding.tvCurrentShipper.setText(order.getShipperId() != null && !order.getShipperId().isEmpty()
+        binding.tvCurrentShipper.setText(hasShipper
                 ? "Shipper hiện tại: " + order.getShipperId()
                 : "Chưa gán shipper");
 
@@ -410,9 +452,8 @@ public class AdminOrderDetailActivity extends AppCompatActivity {
                 binding.spinnerShipper.setSelection(selectedIndex);
 
                 selectedShipper = shippers.isEmpty() ? null : shippers.get(selectedIndex);
-                boolean assignable = !shippers.isEmpty() && isAssignableStatus(order.getStatus());
                 binding.spinnerShipper.setEnabled(!shippers.isEmpty());
-                binding.btnAssignShipper.setEnabled(assignable);
+                binding.btnAssignShipper.setEnabled(!shippers.isEmpty());
 
                 binding.spinnerShipper.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
@@ -435,23 +476,23 @@ public class AdminOrderDetailActivity extends AppCompatActivity {
                 Toast.makeText(this, "Vui lòng chọn shipper", Toast.LENGTH_SHORT).show();
                 return;
             }
-            adminOrderApi.assignShipper(order.getId(), selectedShipper.getId()).enqueue(new Callback<java.util.Map<String, String>>() {
+            orderStatusApi.assignShipper(order.getId(), selectedShipper.getId()).enqueue(new Callback<ApiResponse<java.util.Map<String, String>>>() {
                 @Override
-                public void onResponse(@NonNull Call<java.util.Map<String, String>> call,
-                                       @NonNull Response<java.util.Map<String, String>> response) {
-                    java.util.Map<String, String> body = response.body();
-                    if (response.isSuccessful() && body != null && !body.containsKey("error")) {
+                public void onResponse(@NonNull Call<ApiResponse<java.util.Map<String, String>>> call,
+                                       @NonNull Response<ApiResponse<java.util.Map<String, String>>> response) {
+                    ApiResponse<java.util.Map<String, String>> body = response.body();
+                    if (response.isSuccessful() && body != null && body.isSuccess()) {
                         Toast.makeText(AdminOrderDetailActivity.this, "Đã gán shipper thành công", Toast.LENGTH_SHORT).show();
                         loadOrderDetails(orderId);
                     } else {
                         Toast.makeText(AdminOrderDetailActivity.this,
-                                body != null && body.get("error") != null ? body.get("error") : "Không gán được shipper",
+                                body != null && body.getMessage() != null ? body.getMessage() : "Không gán được shipper",
                                 Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 @Override
-                public void onFailure(@NonNull Call<java.util.Map<String, String>> call, @NonNull Throwable t) {
+                public void onFailure(@NonNull Call<ApiResponse<java.util.Map<String, String>>> call, @NonNull Throwable t) {
                     Toast.makeText(AdminOrderDetailActivity.this, "Lỗi gán shipper: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
@@ -459,19 +500,62 @@ public class AdminOrderDetailActivity extends AppCompatActivity {
     }
 
     private boolean isAssignableStatus(String status) {
-        if (status == null) return false;
-        String s = status.toLowerCase();
-        return "pending".equals(s)
-                || "pending_payment".equals(s)
-                || "pending_approval".equals(s)
-                || "confirmed".equals(s)
-                || "preparing".equals(s)
-                || "ready_for_pickup".equals(s)
-                || "shipping".equals(s);
+        return "confirmed".equalsIgnoreCase(status);
+    }
+
+    private void renderStatusBadge(String status) {
+        String value = status == null ? "" : status.toUpperCase();
+        int textColor = R.color.primary;
+        int bgColor = R.color.primary_translucent;
+        String label;
+        switch (value) {
+            case "PENDING_PAYMENT":
+                label = "CHỜ THANH TOÁN";
+                textColor = R.color.warning;
+                bgColor = R.color.warning_translucent;
+                break;
+            case "PENDING":
+            case "PENDING_APPROVAL":
+                label = "CHỜ DUYỆT";
+                textColor = R.color.warning;
+                bgColor = R.color.warning_translucent;
+                break;
+            case "CONFIRMED":
+                label = "ĐÃ XÁC NHẬN";
+                break;
+            case "IN_TRANSIT":
+                label = "ĐANG GIAO";
+                break;
+            case "DELIVERED":
+                label = "ĐÃ GIAO";
+                textColor = R.color.success;
+                bgColor = R.color.success_translucent;
+                break;
+            case "FAILED":
+                label = "GIAO THẤT BẠI";
+                textColor = R.color.error;
+                bgColor = R.color.error_translucent;
+                break;
+            case "CANCELLED":
+                label = "ĐÃ HỦY";
+                textColor = R.color.error;
+                bgColor = R.color.error_translucent;
+                break;
+            case "RETURNED":
+                label = "ĐÃ TRẢ HÀNG";
+                break;
+            default:
+                label = value.isEmpty() ? "KHÔNG RÕ" : value;
+                break;
+        }
+        binding.tvOrderStatusBadge.setText(label);
+        binding.tvOrderStatusBadge.setTextColor(getColor(textColor));
+        binding.tvOrderStatusBadge.setBackgroundTintList(ColorStateList.valueOf(getColor(bgColor)));
     }
 
     private void setupReturnRequest() {
-        if ("return_requested".equals(order.getStatus())) {
+        if (order.getReturnRequest() != null
+                && "PENDING".equalsIgnoreCase(order.getReturnRequest().getStatus())) {
             binding.layoutReturnReview.setVisibility(View.VISIBLE);
             if (order.getReturnRequest() != null) {
                 binding.tvReturnReason.setText("Lý do: " + order.getReturnRequest().getReason());
@@ -486,31 +570,30 @@ public class AdminOrderDetailActivity extends AppCompatActivity {
             }
 
             binding.btnApproveReturn.setOnClickListener(v -> {
-                updateReturnStatus("returned");
-                Toast.makeText(this, "Đã CHẤP THUẬN yêu cầu trả hàng", Toast.LENGTH_SHORT).show();
+                reviewReturn("approve");
             });
 
             binding.btnRejectReturn.setOnClickListener(v -> {
-                updateReturnStatus("delivered");
-                Toast.makeText(this, "Đã TỪ CHỐI yêu cầu trả hàng", Toast.LENGTH_SHORT).show();
+                reviewReturn("reject");
             });
         } else {
             binding.layoutReturnReview.setVisibility(View.GONE);
         }
     }
 
-    private void updateReturnStatus(String status) {
+    private void reviewReturn(String action) {
         java.util.Map<String, String> body = new java.util.HashMap<>();
-        body.put("status", status);
-        body.put("updatedBy", currentUser.getName() != null ? currentUser.getName() : "Admin");
-        adminOrderApi.updateOrderStatus(order.getId(), body).enqueue(new Callback<ApiResponse<Order>>() {
+        body.put("action", action);
+        body.put("note", currentUser.getName() != null ? currentUser.getName() : "Admin");
+        orderStatusApi.reviewReturn(order.getId(), body).enqueue(new Callback<ApiResponse<Order>>() {
             @Override
             public void onResponse(@NonNull Call<ApiResponse<Order>> call,
                                    @NonNull Response<ApiResponse<Order>> response) {
                 if (response.isSuccessful() && response.body() != null && response.body().isSuccess()
-                        && response.body().getData() != null) {
-                    order = response.body().getData();
-                    renderOrderDetails(order.getId());
+                        ) {
+                    Toast.makeText(AdminOrderDetailActivity.this,
+                            "approve".equals(action) ? "Đã duyệt trả hàng" : "Đã từ chối trả hàng",
+                            Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(AdminOrderDetailActivity.this, "Không cập nhật được trạng thái trả hàng", Toast.LENGTH_SHORT).show();
                 }

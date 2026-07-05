@@ -91,8 +91,9 @@ public class OrderDetailActivity extends AppCompatActivity {
                 ? order.getOrderId()
                 : "#" + order.getId().substring(0, 8).toUpperCase();
         tvOrderId.setText(displayId);
-        tvStatus.setText(getStatusLabel(order.getStatus()));
-        tvStatus.setTextColor(getResources().getColor(getStatusColor(order.getStatus()), null));
+        tvStatus.setText(getStatusLabel(order));
+        tvStatus.setTextColor(getResources().getColor(
+                order.getReturnRequest() != null ? R.color.status_return : getStatusColor(order.getStatus()), null));
 
         if (order.getCreatedAt() != null && order.getCreatedAt().length() >= 10) {
             tvOrderDate.setText("Dat luc: " + order.getCreatedAt().replace("T", " ").substring(0, 16));
@@ -130,7 +131,9 @@ public class OrderDetailActivity extends AppCompatActivity {
             btnCancelOrder.setVisibility(View.VISIBLE);
         }
         if ("delivered".equals(status)) {
-            btnReturnOrder.setVisibility(View.VISIBLE);
+            if (order.getReturnRequest() == null) {
+                btnReturnOrder.setVisibility(View.VISIBLE);
+            }
             btnReview.setVisibility(View.VISIBLE);
         }
     }
@@ -224,38 +227,35 @@ public class OrderDetailActivity extends AppCompatActivity {
         sheet.show(getSupportFragmentManager(), "review_sheet");
     }
 
-    private String getStatusLabel(String status) {
+    private String getStatusLabel(Order order) {
+        if (order.getReturnRequest() != null && order.getReturnRequest().getStatus() != null) {
+            switch (order.getReturnRequest().getStatus().toUpperCase()) {
+                case "PENDING": return "Trả hàng: Chờ duyệt";
+                case "APPROVED": return "Trả hàng: Đã duyệt";
+                case "REJECTED": return "Trả hàng: Từ chối";
+                case "RECEIVED": return "Đã nhận hàng trả";
+                default: return "Trả hàng";
+            }
+        }
+        String status = order.getStatus();
         if (status == null) return "-";
         switch (status.toLowerCase()) {
-            case "pending":
-                return "Chờ xác nhận";
             case "pending_payment":
                 return "Chờ thanh toán";
             case "pending_approval":
                 return "Chờ admin duyệt";
             case "confirmed":
                 return "Đã xác nhận";
-            case "processing":
-                return "Đang xử lý";
-            case "packed":
-                return "Đóng gói xong";
-            case "preparing":
-                return "Đang chuẩn bị";
-            case "ready_for_pickup":
-                return "Chờ lấy hàng";
-            case "shipping":
             case "in_transit":
                 return "Đang giao";
             case "delivered":
                 return "Đã giao";
             case "cancelled":
                 return "Đã hủy";
-            case "return_requested":
-                return "Yêu cầu trả";
+            case "failed":
+                return "Giao thất bại";
             case "returned":
                 return "Đã trả";
-            case "refunded":
-                return "Đã hoàn tiền";
             default:
                 return status;
         }
@@ -264,20 +264,17 @@ public class OrderDetailActivity extends AppCompatActivity {
     private int getStatusColor(String status) {
         if (status == null) return R.color.text_secondary;
         switch (status.toLowerCase()) {
-            case "pending":
             case "pending_payment":
             case "pending_approval":
                 return R.color.status_pending;
             case "confirmed":
-            case "preparing":
-            case "ready_for_pickup":
                 return R.color.status_confirmed;
-            case "shipping":
             case "in_transit":
                 return R.color.status_shipping;
             case "delivered":
                 return R.color.status_delivered;
             case "cancelled":
+            case "failed":
                 return R.color.status_cancelled;
             default:
                 return R.color.status_return;

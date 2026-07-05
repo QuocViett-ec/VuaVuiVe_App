@@ -53,7 +53,7 @@ public class Order {
     private double finalAmount;
 
     @SerializedName("status")
-    private String status;  // pending, confirmed, processing, packed, shipped, delivered, cancelled, return_requested, return_approved, return_rejected
+    private String status;
 
     @SerializedName("deliveredAt")
     private String deliveredAt;
@@ -222,10 +222,8 @@ public class Order {
 
     // Helper methods
     public boolean isCancellable() {
-        return "pending".equalsIgnoreCase(status)
-                || "pending_payment".equalsIgnoreCase(status)
-                || "pending_approval".equalsIgnoreCase(status)
-                || "confirmed".equalsIgnoreCase(status);
+        return "pending_payment".equalsIgnoreCase(status)
+                || "pending_approval".equalsIgnoreCase(status);
     }
 
     public boolean isReturnable() {

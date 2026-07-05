@@ -25,7 +25,9 @@ import vn.vuavuive.backend.modules.user.UserRepository;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -244,31 +246,18 @@ public class OrderService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> AppException.notFound("Đơn hàng"));
 
-        if (order.getStatus() != Order.OrderStatus.PENDING
-                && order.getStatus() != Order.OrderStatus.PENDING_PAYMENT
-                && order.getStatus() != Order.OrderStatus.PENDING_APPROVAL) {
+        if (!OrderStateMachine.canCustomerCancel(order.getStatus())) {
             throw AppException.badRequest(
                     "Không thể hủy đơn đang ở trạng thái " + order.getStatus());
         }
 
-        for (OrderItem item : order.getOrderItems()) {
-            if (item.getProductId() != null) {
-                Product product = productRepository.findById(item.getProductId()).orElse(null);
-                if (product != null) {
-                    product.setStockQuantity(product.getStockQuantity() + item.getQuantity());
-                    productRepository.save(product);
-                }
-            }
-        }
-
+        restoreStockOnce(order);
         order.setStatus(Order.OrderStatus.CANCELLED);
         appendStatusLog(order, Order.OrderStatus.CANCELLED, "Khách hàng hủy đơn", "CUSTOMER", email);
         return toResponse(orderRepository.save(order), null);
     }
 
-    /**
-     * Admin/Staff cập nhật trạng thái đơn hàng (CONFIRMED, PREPARING, READY_FOR_PICKUP...).
-     */
+    /** Admin/Staff xác nhận hoặc hủy đơn hàng. */
     @Transactional(rollbackFor = Exception.class)
     public OrderResponse updateOrderStatus(String orderId, String newStatus, String note, String updatedByName) {
         Order order = orderRepository.findById(orderId)
@@ -278,15 +267,68 @@ public class OrderService {
         if (status == null) {
             throw AppException.badRequest("Trang thai don hang khong hop le");
         }
-        order.setStatus(status);
-        if (status == Order.OrderStatus.DELIVERED) {
-            awardPointsForOrder(order);
-            if ("COD".equalsIgnoreCase(order.getPaymentMethod())) {
-                order.setPaymentStatus(Order.PaymentStatus.PAID);
-            }
+        if (!OrderStateMachine.canAdminTransition(order.getStatus(), status)) {
+            throw AppException.badRequest(
+                    "Không thể chuyển từ " + order.getStatus() + " sang " + status);
         }
+        if (status == Order.OrderStatus.CANCELLED) {
+            restoreStockOnce(order);
+        }
+        order.setStatus(status);
         appendStatusLog(order, status, note, "ADMIN", updatedByName);
         return toResponse(orderRepository.save(order), null);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public OrderResponse requestReturn(String orderId, String reason) {
+        String identifier = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByEmail(identifier)
+                .or(() -> userRepository.findByPhone(identifier))
+                .orElseThrow(() -> AppException.notFound("User"));
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> AppException.notFound("Đơn hàng"));
+        if (!user.getId().equals(order.getUserId())) {
+            throw AppException.forbidden("Bạn không có quyền thao tác đơn hàng này");
+        }
+        if (order.getStatus() != Order.OrderStatus.DELIVERED) {
+            throw AppException.badRequest("Chỉ có thể yêu cầu trả đơn đã giao");
+        }
+        Map<String, Object> current = order.getReturnRequest();
+        if (current != null && "PENDING".equalsIgnoreCase(String.valueOf(current.get("status")))) {
+            throw AppException.badRequest("Đơn hàng đã có yêu cầu trả đang chờ xử lý");
+        }
+        Map<String, Object> request = new HashMap<>();
+        request.put("reason", reason);
+        request.put("status", "PENDING");
+        request.put("requested_at", java.time.Instant.now().toString());
+        order.setReturnRequest(request);
+        orderRepository.patch(orderId, Map.of("return_request", request));
+        return toResponse(order, null);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public OrderResponse reviewReturnRequest(String orderId, String action, String note) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> AppException.notFound("Đơn hàng"));
+        Map<String, Object> request = order.getReturnRequest();
+        if (request == null || !"PENDING".equalsIgnoreCase(String.valueOf(request.get("status")))) {
+            throw AppException.badRequest("Yêu cầu trả hàng không ở trạng thái chờ duyệt");
+        }
+        String status;
+        if ("approve".equalsIgnoreCase(action)) {
+            status = "APPROVED";
+        } else if ("reject".equalsIgnoreCase(action)) {
+            status = "REJECTED";
+        } else {
+            throw AppException.badRequest("Hành động duyệt trả hàng không hợp lệ");
+        }
+        request = new HashMap<>(request);
+        request.put("status", status);
+        request.put("admin_note", note == null ? "" : note);
+        request.put("reviewed_at", java.time.Instant.now().toString());
+        order.setReturnRequest(request);
+        orderRepository.patch(orderId, Map.of("return_request", request));
+        return toResponse(order, null);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -306,6 +348,9 @@ public class OrderService {
     public OrderResponse markRefunded(String orderId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> AppException.notFound("Đơn hàng"));
+        if (order.getStatus() != Order.OrderStatus.RETURNED) {
+            throw AppException.badRequest("Chỉ hoàn tiền sau khi đã nhận lại hàng");
+        }
         order.setPaymentStatus(Order.PaymentStatus.REFUNDED);
         return toResponse(orderRepository.save(order), null);
     }
@@ -362,7 +407,7 @@ public class OrderService {
         orderRepository.save(order);
     }
 
-    private void awardPointsForOrder(Order order) {
+    public void awardPointsForOrder(Order order) {
         if (order.getPointsAdded() == null || !order.getPointsAdded()) {
             User user = order.getUserId() != null ? userRepository.findById(order.getUserId()).orElse(null) : null;
             if (user != null) {
@@ -389,15 +434,8 @@ public class OrderService {
         if (value == null || value.isBlank() || "all".equalsIgnoreCase(value)) {
             return null;
         }
-        String normalized = value.trim().toUpperCase();
-        if ("SHIPPED".equals(normalized)) {
-            normalized = "SHIPPING";
-        }
-        if ("PROCESSING".equals(normalized)) {
-            normalized = "CONFIRMED";
-        }
         try {
-            return Order.OrderStatus.valueOf(normalized);
+            return Order.OrderStatus.valueOf(value.trim().toUpperCase());
         } catch (IllegalArgumentException e) {
             return null;
         }
@@ -407,6 +445,20 @@ public class OrderService {
         return isOnlinePayment(paymentMethod) ? Order.PaymentStatus.PENDING : Order.PaymentStatus.UNPAID;
     }
 
+    public boolean restoreStockOnce(Order order) {
+        if (Boolean.TRUE.equals(order.getStockRestored())) return false;
+        for (OrderItem item : order.getOrderItems()) {
+            if (item.getProductId() == null) continue;
+            Product product = productRepository.findById(item.getProductId()).orElse(null);
+            if (product != null) {
+                product.setStockQuantity(product.getStockQuantity() + item.getQuantity());
+                productRepository.save(product);
+            }
+        }
+        order.setStockRestored(true);
+        return true;
+    }
+
     private Order.OrderStatus initialOrderStatus(String paymentMethod) {
         if (isOnlinePayment(paymentMethod)) {
             return Order.OrderStatus.PENDING_PAYMENT;
@@ -414,7 +466,7 @@ public class OrderService {
         if ("COD".equalsIgnoreCase(paymentMethod)) {
             return Order.OrderStatus.PENDING_APPROVAL;
         }
-        return Order.OrderStatus.PENDING;
+        return Order.OrderStatus.PENDING_APPROVAL;
     }
 
     private boolean isOnlinePayment(String paymentMethod) {
@@ -488,6 +540,7 @@ public class OrderService {
 
         return new OrderResponse(
                 order.getId(),
+                order.getShipperId(),
                 order.getStatus().name(),
                 order.getPaymentMethod(),
                 order.getPaymentStatus().name(),
@@ -497,11 +550,30 @@ public class OrderService {
                 parsedName,
                 parsedPhone,
                 order.getNote(),
+                toReturnRequestResponse(order.getReturnRequest()),
                 itemResponses,
                 logResponses,
                 order.getCreatedAt() != null ? LocalDateTime.ofInstant(java.time.Instant.parse(order.getCreatedAt()), java.time.ZoneId.systemDefault()) : null,
                 paymentUrl
         );
+    }
+
+    private ReturnRequestResponse toReturnRequestResponse(Map<String, Object> request) {
+        if (request == null || request.isEmpty()) return null;
+        return new ReturnRequestResponse(
+                stringValue(request, "reason"),
+                stringValue(request, "status"),
+                stringValue(request, "admin_note", "adminNote"),
+                stringValue(request, "requested_at", "requestedAt")
+        );
+    }
+
+    private String stringValue(Map<String, Object> map, String... keys) {
+        for (String key : keys) {
+            Object value = map.get(key);
+            if (value != null) return String.valueOf(value);
+        }
+        return null;
     }
 }
 

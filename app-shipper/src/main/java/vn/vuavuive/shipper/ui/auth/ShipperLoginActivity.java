@@ -65,11 +65,11 @@ public class ShipperLoginActivity extends AppCompatActivity {
         String password = etPassword.getText() != null ? etPassword.getText().toString() : "";
         boolean valid = true;
         if (TextUtils.isEmpty(identifier)) {
-            tilIdentifier.setError("Nhap so dien thoai hoac email");
+            tilIdentifier.setError("Nhập số điện thoại hoặc email");
             valid = false;
         }
         if (TextUtils.isEmpty(password)) {
-            tilPassword.setError("Nhap mat khau");
+            tilPassword.setError("Nhập mật khẩu");
             valid = false;
         }
         if (!valid) return;
@@ -103,7 +103,7 @@ public class ShipperLoginActivity extends AppCompatActivity {
     }
 
     private void showError(String message) {
-        tvError.setText(message != null ? message : "Dang nhap that bai");
+        tvError.setText(message != null ? message : "Đăng nhập thất bại");
         tvError.setVisibility(View.VISIBLE);
     }
 

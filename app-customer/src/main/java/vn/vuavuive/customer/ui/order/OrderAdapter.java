@@ -69,8 +69,9 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
             String orderId = order.getOrderId() != null ? order.getOrderId() : order.getId();
             tvOrderId.setText("#" + orderId);
 
-            tvStatus.setText(getStatusLabel(order.getStatus()));
-            int statusColor = getStatusColor(order.getStatus());
+            tvStatus.setText(getStatusLabel(order));
+            int statusColor = order.getReturnRequest() != null
+                    ? R.color.status_return : getStatusColor(order.getStatus());
             tvStatus.setTextColor(context.getResources().getColor(statusColor, null));
 
             tvTotal.setText(CurrencyFormatter.format(order.getFinalAmount()));
@@ -102,34 +103,35 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
             });
         }
 
-        private String getStatusLabel(String status) {
+        private String getStatusLabel(Order order) {
+            if (order.getReturnRequest() != null && order.getReturnRequest().getStatus() != null) {
+                switch (order.getReturnRequest().getStatus().toUpperCase()) {
+                    case "PENDING": return "Trả hàng: Chờ duyệt";
+                    case "APPROVED": return "Trả hàng: Đã duyệt";
+                    case "REJECTED": return "Trả hàng: Từ chối";
+                    case "RECEIVED": return "Đã nhận hàng trả";
+                    default: return "Trả hàng";
+                }
+            }
+            String status = order.getStatus();
             if (status == null) return "-";
             switch (status.toLowerCase()) {
-                case "pending":
-                    return "Chờ xác nhận";
                 case "pending_payment":
                     return "Chờ thanh toán";
                 case "pending_approval":
                     return "Chờ admin duyệt";
                 case "confirmed":
                     return "Đã xác nhận";
-                case "preparing":
-                    return "Đang chuẩn bị";
-                case "ready_for_pickup":
-                    return "Chờ lấy hàng";
-                case "shipping":
                 case "in_transit":
                     return "Đang giao";
                 case "delivered":
                     return "Đã giao";
                 case "cancelled":
                     return "Đã hủy";
-                case "return_requested":
-                    return "Yêu cầu trả";
+                case "failed":
+                    return "Giao thất bại";
                 case "returned":
                     return "Đã trả";
-                case "refunded":
-                    return "Đã hoàn tiền";
                 default:
                     return status;
             }
@@ -138,20 +140,17 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         private int getStatusColor(String status) {
             if (status == null) return R.color.text_secondary;
             switch (status.toLowerCase()) {
-                case "pending":
                 case "pending_payment":
                 case "pending_approval":
                     return R.color.status_pending;
                 case "confirmed":
-                case "preparing":
-                case "ready_for_pickup":
                     return R.color.status_confirmed;
-                case "shipping":
                 case "in_transit":
                     return R.color.status_shipping;
                 case "delivered":
                     return R.color.status_delivered;
                 case "cancelled":
+                case "failed":
                     return R.color.status_cancelled;
                 default:
                     return R.color.status_return;

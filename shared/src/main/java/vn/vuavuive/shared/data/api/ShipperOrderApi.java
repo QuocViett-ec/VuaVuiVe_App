@@ -24,12 +24,12 @@ public interface ShipperOrderApi {
     /** Lấy danh sách đơn hàng được gán cho Shipper này (lọc theo trạng thái) */
     @GET("api/orders/shipper")
     Call<ApiResponse<List<Order>>> getMyShipperOrders(
-            @Query("status") String status  // PREPARING, IN_TRANSIT, DELIVERED, FAILED
+            @Query("status") String status
     );
 
     /** Shipper cập nhật trạng thái giao hàng của một đơn */
     @PUT("api/shippers/{shipperId}/orders/{orderId}/delivery")
-    Call<ApiResponse<Void>> updateDeliveryStatus(
+    Call<ApiResponse<Map<String, String>>> updateDeliveryStatus(
             @Path("shipperId") String shipperId,
             @Path("orderId") String orderId,
             @Query("status") String status,

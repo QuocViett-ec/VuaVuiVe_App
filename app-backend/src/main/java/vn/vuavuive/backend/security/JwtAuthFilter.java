@@ -1,5 +1,7 @@
 package vn.vuavuive.backend.security;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseToken;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -42,19 +44,32 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         String token = extractToken(request);
 
-        if (token != null && jwtUtils.validateToken(token)) {
-            String email = jwtUtils.getEmailFromToken(token);
-            UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+        if (token != null) {
+            String identifier = null;
+            if (jwtUtils.validateToken(token)) {
+                identifier = jwtUtils.getEmailFromToken(token);
+            } else {
+                try {
+                    FirebaseToken firebaseToken = FirebaseAuth.getInstance().verifyIdToken(token);
+                    identifier = firebaseToken.getEmail();
+                } catch (Exception ignored) {
+                    // Invalid tokens remain unauthenticated.
+                }
+            }
 
-            UsernamePasswordAuthenticationToken authentication =
-                    new UsernamePasswordAuthenticationToken(
-                            userDetails, null, userDetails.getAuthorities());
+            if (identifier != null) {
+                UserDetails userDetails = userDetailsService.loadUserByUsername(identifier);
 
-            authentication.setDetails(
-                    new WebAuthenticationDetailsSource().buildDetails(request));
+                UsernamePasswordAuthenticationToken authentication =
+                        new UsernamePasswordAuthenticationToken(
+                                userDetails, null, userDetails.getAuthorities());
 
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            log.debug("JWT hợp lệ — Đã xác thực user: {}", email);
+                authentication.setDetails(
+                        new WebAuthenticationDetailsSource().buildDetails(request));
+
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+                log.debug("Token hợp lệ — Đã xác thực user: {}", identifier);
+            }
         }
 
         filterChain.doFilter(request, response);

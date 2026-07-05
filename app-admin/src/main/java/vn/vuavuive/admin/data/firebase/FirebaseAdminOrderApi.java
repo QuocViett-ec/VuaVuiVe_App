@@ -58,8 +58,7 @@ public class FirebaseAdminOrderApi implements AdminOrderApi {
     private boolean matchesStatus(@Nullable String filter, @Nullable String orderStatus) {
         if (filter == null || filter.isEmpty() || "all".equalsIgnoreCase(filter)) return true;
         if ("pending".equalsIgnoreCase(filter)) {
-            return "pending".equalsIgnoreCase(orderStatus)
-                    || "pending_payment".equalsIgnoreCase(orderStatus)
+            return "pending_payment".equalsIgnoreCase(orderStatus)
                     || "pending_approval".equalsIgnoreCase(orderStatus);
         }
         return filter.equalsIgnoreCase(orderStatus);
@@ -145,6 +144,17 @@ public class FirebaseAdminOrderApi implements AdminOrderApi {
             }
         }
         o.setItems(items);
+
+        DataSnapshot returnSnap = s.child("return_request");
+        if (returnSnap.exists()) {
+            vn.vuavuive.shared.data.dto.ReturnRequest request =
+                    new vn.vuavuive.shared.data.dto.ReturnRequest();
+            request.setReason(returnSnap.child("reason").getValue(String.class));
+            request.setStatus(returnSnap.child("status").getValue(String.class));
+            request.setAdminNote(returnSnap.child("admin_note").getValue(String.class));
+            request.setRequestedAt(returnSnap.child("requested_at").getValue(String.class));
+            o.setReturnRequest(request);
+        }
 
         return o;
     }
@@ -345,21 +355,13 @@ public class FirebaseAdminOrderApi implements AdminOrderApi {
     }
 
     private boolean isAssignableStatus(String status) {
-        if (status == null) return false;
-        String s = status.toUpperCase(Locale.US);
-        return "PENDING".equals(s)
-                || "PENDING_PAYMENT".equals(s)
-                || "PENDING_APPROVAL".equals(s)
-                || "CONFIRMED".equals(s)
-                || "PREPARING".equals(s)
-                || "READY_FOR_PICKUP".equals(s)
-                || "SHIPPING".equals(s);
+        return "CONFIRMED".equalsIgnoreCase(status);
     }
 
     @Override
     public Call<ApiResponse<Order>> updateOrderStatus(String id, Map<String, String> body) {
         String inputStatus = body.get("status");
-        final String newStatus = inputStatus != null ? inputStatus.toUpperCase() : "PENDING";
+        final String newStatus = inputStatus != null ? inputStatus.toUpperCase() : "PENDING_APPROVAL";
         
         return new Call<ApiResponse<Order>>() {
             @Override public Response<ApiResponse<Order>> execute() { throw new UnsupportedOperationException(); }
@@ -494,66 +496,17 @@ public class FirebaseAdminOrderApi implements AdminOrderApi {
     public Call<ApiResponse<Order>> reviewReturnRequest(String id, Map<String, String> body) {
         String action = body.get("action"); // "approve" or "reject"
         String note = body.get("note");
-        final String newStatus = "approve".equalsIgnoreCase(action) ? "RETURN_APPROVED" : "DELIVERED";
         final String noteLog = "approve".equalsIgnoreCase(action) ? "Đồng ý trả hàng: " + note : "Từ chối trả hàng: " + note;
         
         return new Call<ApiResponse<Order>>() {
             @Override public Response<ApiResponse<Order>> execute() { throw new UnsupportedOperationException(); }
             @Override
             public void enqueue(@NonNull Callback<ApiResponse<Order>> callback) {
-                // If return approved, restore stock!
-                if ("RETURN_APPROVED".equals(newStatus)) {
-                    dbRef.child("orders").child(id).addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if (!snapshot.exists()) {
-                                callback.onResponse(null, Response.success(ApiResponse.error("Order not found")));
-                                return;
-                            }
-                            
-                            Boolean restored = snapshot.child("stock_restored").getValue(Boolean.class);
-                            boolean isRestored = restored != null ? restored : false;
-
-                            if (isRestored) {
-                                updateOrderStatusAndLog(id, newStatus, noteLog, callback);
-                            } else {
-                                List<String> productIds = new ArrayList<>();
-                                List<Integer> quantities = new ArrayList<>();
-                                DataSnapshot itemsSnap = snapshot.child("items");
-                                if (itemsSnap.exists()) {
-                                    for (DataSnapshot itemSnap : itemsSnap.getChildren()) {
-                                        String pid = itemSnap.child("product_id").getValue(String.class);
-                                        Integer qty = itemSnap.child("quantity").getValue(Integer.class);
-                                        if (pid != null && qty != null) {
-                                            productIds.add(pid);
-                                            quantities.add(qty);
-                                        }
-                                    }
-                                }
-                                rollbackStock(productIds, quantities, 0, () -> {
-                                    Map<String, Object> updates = new HashMap<>();
-                                    updates.put("stock_restored", true);
-                                    updates.put("return_request/status", "APPROVED");
-                                    dbRef.child("orders").child(id).updateChildren(updates).addOnCompleteListener(t -> {
-                                        updateOrderStatusAndLog(id, newStatus, noteLog, callback);
-                                    });
-                                });
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-                            callback.onResponse(null, Response.success(ApiResponse.error(error.getMessage())));
-                        }
-                    });
-                } else {
-                    // RETURN_REJECTED / back to DELIVERED
-                    Map<String, Object> updates = new HashMap<>();
-                    updates.put("return_request/status", "REJECTED");
-                    dbRef.child("orders").child(id).updateChildren(updates).addOnCompleteListener(t -> {
-                        updateOrderStatusAndLog(id, "RETURN_REJECTED", noteLog, callback);
-                    });
-                }
+                Map<String, Object> updates = new HashMap<>();
+                updates.put("return_request/status",
+                        "approve".equalsIgnoreCase(action) ? "APPROVED" : "REJECTED");
+                dbRef.child("orders").child(id).updateChildren(updates).addOnCompleteListener(t ->
+                        updateOrderStatusAndLog(id, "DELIVERED", noteLog, callback));
             }
             @Override public boolean isExecuted() { return false; }
             @Override public void cancel() {}
@@ -596,7 +549,7 @@ public class FirebaseAdminOrderApi implements AdminOrderApi {
                 updates.put("payment_status", "REFUNDED");
                 updates.put("payment/status", "REFUNDED");
                 dbRef.child("orders").child(id).updateChildren(updates).addOnCompleteListener(task -> {
-                    updateOrderStatusAndLog(id, "CANCELLED", "Đánh dấu đã hoàn tiền", callback);
+                    updateOrderStatusAndLog(id, "RETURNED", "Đánh dấu đã hoàn tiền", callback);
                 });
             }
             @Override public boolean isExecuted() { return false; }

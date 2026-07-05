@@ -84,7 +84,7 @@ public class ShipperOrderAdapter extends ListAdapter<Order, ShipperOrderAdapter.
                     ? "#" + order.getId().substring(0, 8).toUpperCase() : "#------";
             tvOrderId.setText(idShort);
             tvCreatedAt.setText(formatDate(order.getCreatedAt()));
-            bindStatus(order.getStatus());
+            bindStatus(order);
 
             // Recipient info — uses helper methods that support both flat & nested formats
             String name    = order.getRecipientName();
@@ -131,7 +131,7 @@ public class ShipperOrderAdapter extends ListAdapter<Order, ShipperOrderAdapter.
                 tvTotal.setText(momoBadge(pmt.getStatus()));
             } else if (order.getFinalAmount() > 0) {
                 NumberFormat fmt = NumberFormat.getNumberInstance(new Locale("vi", "VN"));
-                tvTotal.setText("Collect cash: " + fmt.format((long) order.getFinalAmount()) + " đ");
+                tvTotal.setText("Thu tiền mặt: " + fmt.format(Math.round(order.getFinalAmount())) + " đ");
             } else {
                 tvTotal.setText("—");
             }
@@ -144,15 +144,19 @@ public class ShipperOrderAdapter extends ListAdapter<Order, ShipperOrderAdapter.
             });
         }
 
-        private void bindStatus(String status) {
+        private void bindStatus(Order order) {
+            if (order.getReturnRequest() != null
+                    && "APPROVED".equalsIgnoreCase(order.getReturnRequest().getStatus())) {
+                tvStatus.setText("Cần nhận hàng trả");
+                tvStatus.setBackgroundColor(Color.parseColor("#7B1FA2"));
+                return;
+            }
+            String status = order.getStatus();
             if (status == null) return;
             switch (status.toUpperCase()) {
                 case "CONFIRMED":
-                case "PREPARING":
-                case "READY_FOR_PICKUP":
                     tvStatus.setText("Chờ lấy hàng");
                     tvStatus.setBackgroundColor(Color.parseColor("#FF9800")); break;
-                case "SHIPPING":
                 case "IN_TRANSIT":
                     tvStatus.setText("Đang giao");
                     tvStatus.setBackgroundColor(Color.parseColor("#FF6B35")); break;
@@ -162,6 +166,9 @@ public class ShipperOrderAdapter extends ListAdapter<Order, ShipperOrderAdapter.
                 case "FAILED":
                     tvStatus.setText("Thất bại");
                     tvStatus.setBackgroundColor(Color.parseColor("#757575")); break;
+                case "CANCELLED":
+                    tvStatus.setText("Đã hủy");
+                    tvStatus.setBackgroundColor(Color.parseColor("#C62828")); break;
                 case "RETURNED":
                     tvStatus.setText("Hoàn hàng");
                     tvStatus.setBackgroundColor(Color.parseColor("#7B1FA2")); break;
@@ -182,9 +189,9 @@ public class ShipperOrderAdapter extends ListAdapter<Order, ShipperOrderAdapter.
         }
 
         private String momoBadge(String status) {
-            if ("paid".equalsIgnoreCase(status)) return "Paid by MoMo";
-            if ("failed".equalsIgnoreCase(status)) return "MoMo failed";
-            return "MoMo pending";
+            if ("paid".equalsIgnoreCase(status)) return "Đã thanh toán MoMo";
+            if ("failed".equalsIgnoreCase(status)) return "MoMo thất bại";
+            return "MoMo chờ thanh toán";
         }
     }
 }

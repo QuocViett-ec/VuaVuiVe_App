@@ -898,7 +898,7 @@ public class MockRepository {
         for (Order o : orders) {
             if (o.getId().equals(orderId)) {
                 String action = approved ? "Duyệt trả hàng" : "Từ chối trả hàng";
-                o.setStatus(approved ? "return_approved" : "return_rejected");
+            o.setStatus("delivered");
                 addAuditLog(action, o.getId(), "Ghi chú: " + note);
                 
                 try {

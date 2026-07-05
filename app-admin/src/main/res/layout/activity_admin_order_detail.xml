@@ -75,8 +75,23 @@
                     android:textSize="12sp" />
             </LinearLayout>
 
+            <TextView
+                android:id="@+id/tv_order_status_badge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/bg_card_light"
+                android:backgroundTint="@color/primary_translucent"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="5dp"
+                android:text="ĐÃ XÁC NHẬN"
+                android:textColor="@color/primary"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
             <!-- Status Edit Card -->
             <LinearLayout
+                android:id="@+id/layout_status_actions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_card_light"
@@ -94,26 +109,33 @@
                     android:textSize="14sp"
                     android:layout_marginBottom="8dp" />
 
-                <LinearLayout
+                <TextView
+                    android:id="@+id/tv_status_action_hint"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:textColor="@color/text_secondary"
+                    android:textSize="13sp"
+                    android:layout_marginBottom="8dp" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Cập nhật:"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="13sp"
-                        android:layout_marginEnd="12dp" />
+                <Button
+                    android:id="@+id/btn_advance_status"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:backgroundTint="@color/primary"
+                    android:visibility="gone" />
 
-                    <Spinner
-                        android:id="@+id/spinner_order_status"
-                        android:layout_width="match_parent"
-                        android:layout_height="44dp"
-                        android:backgroundTint="@color/primary" />
-                </LinearLayout>
+                <Button
+                    android:id="@+id/btn_cancel_order_admin"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:layout_marginTop="8dp"
+                    android:text="HỦY ĐƠN"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:backgroundTint="@color/error"
+                    android:visibility="gone" />
             </LinearLayout>
 
             <!-- Return Review Request Panel (Visible only if status == return_requested) -->
@@ -184,12 +206,13 @@
                 android:orientation="vertical"
                 android:padding="16dp"
                 android:layout_marginBottom="16dp"
-                android:elevation="2dp">
+                android:elevation="2dp"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Gan Shipper"
+                    android:text="Gán shipper"
                     android:textColor="@color/primary"
                     android:textStyle="bold"
                     android:textSize="14sp"
@@ -199,7 +222,7 @@
                     android:id="@+id/tv_current_shipper"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Chua gan shipper"
+                    android:text="Chưa gán shipper"
                     android:textColor="@color/text_secondary"
                     android:textSize="13sp"
                     android:layout_marginBottom="8dp" />
@@ -215,7 +238,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="44dp"
                     android:layout_marginTop="10dp"
-                    android:text="GAN SHIPPER"
+                    android:text="GÁN SHIPPER"
                     android:textColor="@color/white"
                     android:textStyle="bold"
                     android:backgroundTint="@color/primary" />
@@ -511,6 +534,16 @@
             android:textStyle="bold"
             android:backgroundTint="@color/primary"
             app:cornerRadius="10dp"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/btn_refund"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="HOÀN TIỀN"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:backgroundTint="@color/error"
             android:visibility="gone" />
     </LinearLayout>
 

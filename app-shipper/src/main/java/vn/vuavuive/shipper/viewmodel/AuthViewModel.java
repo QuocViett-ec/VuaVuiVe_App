@@ -1,6 +1,7 @@
 package vn.vuavuive.shipper.viewmodel;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.ViewModel;
 import dagger.hilt.android.lifecycle.HiltViewModel;
 import javax.inject.Inject;
@@ -38,13 +39,16 @@ public class AuthViewModel extends ViewModel {
      * (giữ nguyên inner Result class để UI không cần thay đổi)
      */
     private <T> LiveData<Result<T>> mapResult(LiveData<FirebaseShipperRepository.Result<T>> source) {
-        androidx.lifecycle.MutableLiveData<Result<T>> out = new androidx.lifecycle.MutableLiveData<>();
-        source.observeForever(r -> {
+        MediatorLiveData<Result<T>> out = new MediatorLiveData<>();
+        out.addSource(source, r -> {
             if (r == null) return;
             switch (r.status) {
                 case LOADING:  out.postValue(Result.loading());         break;
                 case SUCCESS:  out.postValue(Result.success(r.data));   break;
                 case ERROR:    out.postValue(Result.error(r.message));  break;
+            }
+            if (r.status != FirebaseShipperRepository.Result.Status.LOADING) {
+                out.removeSource(source);
             }
         });
         return out;

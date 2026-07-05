@@ -214,7 +214,10 @@ public class FirebaseOrderRepository {
                         
                         orderMap.put("payment_method", paymentMethod);
                         orderMap.put("payment_status", "UNPAID"); // default unpaid on creation
-                        orderMap.put("status", "PENDING");
+                        String initialStatus = "COD".equals(paymentMethod)
+                                ? "PENDING_APPROVAL"
+                                : "PENDING_PAYMENT";
+                        orderMap.put("status", initialStatus);
                         orderMap.put("stock_restored", false);
                         orderMap.put("created_at", now);
                         orderMap.put("updated_at", now);
@@ -239,7 +242,7 @@ public class FirebaseOrderRepository {
                         String logUuid = UUID.randomUUID().toString();
                         Map<String, Object> logMap = new HashMap<>();
                         logMap.put("id", logUuid);
-                        logMap.put("status", "PENDING");
+                        logMap.put("status", initialStatus);
                         logMap.put("note", "Đơn hàng vừa được tạo");
                         logMap.put("updated_by", uid);
                         logMap.put("updated_by_name", sessionManager.getUser() != null ? sessionManager.getUser().getName() : "Khách Hàng");
@@ -352,84 +355,125 @@ public class FirebaseOrderRepository {
 
     // ── Get Orders for Current User ──────────────────────────────────────────
     public LiveData<AuthRepository.Result<List<Order>>> getOrders(String status, int page, int limit) {
-        MutableLiveData<AuthRepository.Result<List<Order>>> result = new MutableLiveData<>();
-        result.postValue(AuthRepository.Result.loading());
-
         String uid = getCurrentUserUid();
+        String backendUserId = sessionManager.getUser() != null
+                ? sessionManager.getUser().getId()
+                : null;
         if (uid == null) {
+            MutableLiveData<AuthRepository.Result<List<Order>>> result = new MutableLiveData<>();
             result.postValue(AuthRepository.Result.error("Chưa đăng nhập"));
             return result;
         }
 
-        dbRef.child("orders").addListenerForSingleValueEvent(new ValueEventListener() {
+        return new LiveData<AuthRepository.Result<List<Order>>>() {
+            private final DatabaseReference ordersRef = dbRef.child("orders");
+            private ValueEventListener listener;
+
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                executor.execute(() -> {
-                    List<Order> orders = new ArrayList<>();
-                    for (DataSnapshot s : snapshot.getChildren()) {
-                        String orderUserId = s.child("user_id").getValue(String.class);
-                        if (uid.equals(orderUserId)) {
-                            Order order = mapSnapshotToOrder(s);
-                            if (status != null && !status.isEmpty() && !status.equalsIgnoreCase("all") && !status.equalsIgnoreCase("Tất cả")) {
-                                if (status.equalsIgnoreCase(order.getStatus())) {
-                                    orders.add(order);
+            protected void onActive() {
+                super.onActive();
+                postValue(AuthRepository.Result.loading());
+                listener = new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        executor.execute(() -> {
+                            List<Order> orders = new ArrayList<>();
+                            for (DataSnapshot s : snapshot.getChildren()) {
+                                String orderUserId = s.child("user_id").getValue(String.class);
+                                if (ownsOrder(orderUserId, backendUserId, uid)) {
+                                    Order order = mapSnapshotToOrder(s);
+                                    if (status != null && !status.isEmpty()
+                                            && !status.equalsIgnoreCase("all")
+                                            && !status.equalsIgnoreCase("Tất cả")) {
+                                        if (status.equalsIgnoreCase(order.getStatus())) {
+                                            orders.add(order);
+                                        }
+                                    } else {
+                                        orders.add(order);
+                                    }
                                 }
-                            } else {
-                                orders.add(order);
                             }
-                        }
+
+                            Collections.sort(orders, (o1, o2) -> {
+                                String c1 = o1.getCreatedAt() != null ? o1.getCreatedAt() : "";
+                                String c2 = o2.getCreatedAt() != null ? o2.getCreatedAt() : "";
+                                return c2.compareTo(c1);
+                            });
+
+                            int startIndex = (page - 1) * limit;
+                            if (startIndex >= orders.size()) {
+                                postValue(AuthRepository.Result.success(new ArrayList<>()));
+                            } else {
+                                int endIndex = Math.min(startIndex + limit, orders.size());
+                                postValue(AuthRepository.Result.success(
+                                        new ArrayList<>(orders.subList(startIndex, endIndex))));
+                            }
+                        });
                     }
 
-                    // Sort by created_at descending (newest first)
-                    Collections.sort(orders, (o1, o2) -> {
-                        String c1 = o1.getCreatedAt() != null ? o1.getCreatedAt() : "";
-                        String c2 = o2.getCreatedAt() != null ? o2.getCreatedAt() : "";
-                        return c2.compareTo(c1);
-                    });
-
-                    // Paginate
-                    int startIndex = (page - 1) * limit;
-                    if (startIndex >= orders.size()) {
-                        result.postValue(AuthRepository.Result.success(new ArrayList<>()));
-                    } else {
-                        int endIndex = Math.min(startIndex + limit, orders.size());
-                        result.postValue(AuthRepository.Result.success(orders.subList(startIndex, endIndex)));
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        postValue(AuthRepository.Result.error(
+                                "Lỗi kết nối Firebase: " + error.getMessage()));
                     }
-                });
+                };
+                ordersRef.addValueEventListener(listener);
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                result.postValue(AuthRepository.Result.error("Lỗi kết nối Firebase: " + error.getMessage()));
+            protected void onInactive() {
+                super.onInactive();
+                if (listener != null) {
+                    ordersRef.removeEventListener(listener);
+                    listener = null;
+                }
             }
-        });
+        };
+    }
 
-        return result;
+    static boolean ownsOrder(String orderUserId, String backendUserId, String firebaseUid) {
+        return orderUserId != null
+                && (orderUserId.equals(backendUserId) || orderUserId.equals(firebaseUid));
     }
 
     // ── Get Order Detail ─────────────────────────────────────────────────────
     public LiveData<AuthRepository.Result<Order>> getOrderDetail(String orderId) {
-        MutableLiveData<AuthRepository.Result<Order>> result = new MutableLiveData<>();
-        result.postValue(AuthRepository.Result.loading());
+        return new LiveData<AuthRepository.Result<Order>>() {
+            private final DatabaseReference orderRef = dbRef.child("orders").child(orderId);
+            private ValueEventListener listener;
 
-        dbRef.child("orders").child(orderId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    Order order = mapSnapshotToOrder(snapshot);
-                    result.postValue(AuthRepository.Result.success(order));
-                } else {
-                    result.postValue(AuthRepository.Result.error("Không tìm thấy đơn hàng"));
+            protected void onActive() {
+                super.onActive();
+                postValue(AuthRepository.Result.loading());
+                listener = new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.exists()) {
+                            postValue(AuthRepository.Result.success(mapSnapshotToOrder(snapshot)));
+                        } else {
+                            postValue(AuthRepository.Result.error("Không tìm thấy đơn hàng"));
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        postValue(AuthRepository.Result.error(
+                                "Lỗi đọc Firebase: " + error.getMessage()));
+                    }
+                };
+                orderRef.addValueEventListener(listener);
+            }
+
+            @Override
+            protected void onInactive() {
+                super.onInactive();
+                if (listener != null) {
+                    orderRef.removeEventListener(listener);
+                    listener = null;
                 }
             }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                result.postValue(AuthRepository.Result.error("Lỗi đọc Firebase: " + error.getMessage()));
-            }
-        });
-
-        return result;
+        };
     }
 
     // ── Cancel Order with Double-Restock Protection ──────────────────────────
@@ -549,14 +593,13 @@ public class FirebaseOrderRepository {
                 returnMap.put("requested_at", now);
 
                 Map<String, Object> updates = new HashMap<>();
-                updates.put("status", "RETURN_REQUESTED");
                 updates.put("return_request", returnMap);
                 updates.put("updated_at", now);
 
                 String logUuid = UUID.randomUUID().toString();
                 Map<String, Object> logMap = new HashMap<>();
                 logMap.put("id", logUuid);
-                logMap.put("status", "RETURN_REQUESTED");
+                logMap.put("status", "DELIVERED");
                 logMap.put("note", "Yêu cầu trả hàng: " + reason);
                 logMap.put("updated_by", uid != null ? uid : "");
                 logMap.put("updated_by_name", sessionManager.getUser() != null ? sessionManager.getUser().getName() : "Khách Hàng");

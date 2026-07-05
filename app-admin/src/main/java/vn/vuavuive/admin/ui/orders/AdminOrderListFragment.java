@@ -18,6 +18,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.android.material.tabs.TabLayout;
 import dagger.hilt.android.AndroidEntryPoint;
 import javax.inject.Inject;
@@ -34,15 +39,18 @@ import vn.vuavuive.admin.R;
 import vn.vuavuive.admin.data.repository.MockRepository;
 import vn.vuavuive.admin.databinding.FragmentAdminOrderListBinding;
 import vn.vuavuive.shared.data.api.AdminOrderApi;
+import vn.vuavuive.shared.data.api.OrderStatusApi;
 import vn.vuavuive.shared.data.dto.ApiResponse;
 import vn.vuavuive.shared.data.dto.Order;
 import vn.vuavuive.shared.data.dto.User;
+import vn.vuavuive.shared.util.Constants;
 import vn.vuavuive.shared.util.SessionManager;
 
 @AndroidEntryPoint
 public class AdminOrderListFragment extends Fragment implements OrderAdapter.OnOrderClickListener {
 
     @Inject AdminOrderApi adminOrderApi;
+    @Inject OrderStatusApi orderStatusApi;
     @Inject SessionManager sessionManager;
 
     private FragmentAdminOrderListBinding binding;
@@ -51,6 +59,8 @@ public class AdminOrderListFragment extends Fragment implements OrderAdapter.OnO
     private String currentStatusFilter = "all";
     private String currentSearchQuery = "";
     private User currentUser;
+    private DatabaseReference ordersRef;
+    private ValueEventListener ordersListener;
 
     @Nullable
     @Override
@@ -70,14 +80,13 @@ public class AdminOrderListFragment extends Fragment implements OrderAdapter.OnO
         setupTabs();
         setupRecyclerView();
         setupSearchAndActions();
-        loadOrders();
     }
 
     private void setupTabs() {
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Tất cả").setTag("all"));
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Chờ duyệt").setTag("pending"));
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Đã xác nhận").setTag("confirmed"));
-        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Đang giao").setTag("shipping"));
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Đang giao").setTag("in_transit"));
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Đã giao").setTag("delivered"));
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Đã hủy").setTag("cancelled"));
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Trả hàng").setTag("returns"));
@@ -180,11 +189,15 @@ public class AdminOrderListFragment extends Fragment implements OrderAdapter.OnO
             if ("all".equals(currentStatusFilter)) {
                 matchesStatus = true;
             } else if ("returns".equals(currentStatusFilter)) {
-                matchesStatus = status.startsWith("return");
-            } else if ("shipping".equals(currentStatusFilter)) {
-                matchesStatus = "shipping".equals(status) || "shipped".equals(status) || "in_transit".equals(status);
+                matchesStatus = Constants.isOrderReturn(status) || o.getReturnRequest() != null;
+            } else if ("in_transit".equals(currentStatusFilter)) {
+                matchesStatus = Constants.isOrderShipping(status);
             } else if ("pending".equals(currentStatusFilter)) {
-                matchesStatus = "pending".equals(status) || "pending_payment".equals(status) || "pending_approval".equals(status);
+                matchesStatus = Constants.isOrderPending(status);
+            } else if ("confirmed".equals(currentStatusFilter)) {
+                matchesStatus = Constants.isOrderConfirmed(status);
+            } else if ("cancelled".equals(currentStatusFilter)) {
+                matchesStatus = Constants.isOrderCancelled(status);
             } else {
                 matchesStatus = currentStatusFilter.equals(status);
             }
@@ -237,9 +250,34 @@ public class AdminOrderListFragment extends Fragment implements OrderAdapter.OnO
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        if (isUiReady()) loadOrders(); // Refresh in-memory changes when coming back from Detail
+    public void onStart() {
+        super.onStart();
+        ordersRef = FirebaseDatabase.getInstance().getReference("orders");
+        ordersListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                // ponytail: reuse the existing mapper; read directly if this extra fetch becomes measurable.
+                loadOrders();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                if (isUiReady()) {
+                    Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
+        ordersRef.addValueEventListener(ordersListener);
+    }
+
+    @Override
+    public void onStop() {
+        if (ordersRef != null && ordersListener != null) {
+            ordersRef.removeEventListener(ordersListener);
+            ordersListener = null;
+            ordersRef = null;
+        }
+        super.onStop();
     }
 
     private void showBulkUpdateDialog() {
@@ -248,8 +286,8 @@ public class AdminOrderListFragment extends Fragment implements OrderAdapter.OnO
             return;
         }
 
-        final String[] options = {"Xác nhận đơn hàng (confirmed)", "Bắt đầu giao hàng (shipping)", "Đã giao hàng (delivered)", "Hủy đơn hàng (cancelled)"};
-        final String[] statusCodes = {"confirmed", "in_transit", "delivered", "cancelled"};
+        final String[] options = {"Xác nhận đơn", "Hủy đơn"};
+        final String[] statusCodes = {"confirmed", "cancelled"};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Chọn trạng thái cập nhật hàng loạt");
@@ -267,7 +305,7 @@ public class AdminOrderListFragment extends Fragment implements OrderAdapter.OnO
                     java.util.Map<String, String> body = new java.util.HashMap<>();
                     body.put("status", targetStatus);
                     body.put("updatedBy", currentUser.getName() != null ? currentUser.getName() : "Admin");
-                    adminOrderApi.updateOrderStatus(id, body).enqueue(new Callback<ApiResponse<Order>>() {
+                    orderStatusApi.updateStatus(id, body).enqueue(new Callback<ApiResponse<Order>>() {
                         @Override public void onResponse(@NonNull Call<ApiResponse<Order>> call,
                                                          @NonNull Response<ApiResponse<Order>> response) {
                             if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {

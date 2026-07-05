@@ -13,6 +13,7 @@ import java.util.UUID;
  */
 public record OrderResponse(
         String orderId,
+        String shipperId,
         String status,
         String paymentMethod,
         String paymentStatus,
@@ -24,6 +25,7 @@ public record OrderResponse(
         /** Số điện thoại người nhận hàng — Dùng để Shipper gọi điện */
         String deliveryPhone,
         String note,
+        ReturnRequestResponse returnRequest,
         List<OrderItemResponse> items,
         List<OrderStatusLogResponse> statusTimeline,
         LocalDateTime createdAt,

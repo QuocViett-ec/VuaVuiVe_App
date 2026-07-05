@@ -7,6 +7,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.android.material.navigation.NavigationBarView;
 import dagger.hilt.android.AndroidEntryPoint;
 import javax.inject.Inject;
@@ -45,6 +46,10 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
         MockRepository.getInstance().setCurrentUser(currentUser);
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            FirebaseAuth.getInstance().getCurrentUser().getIdToken(false)
+                    .addOnSuccessListener(token -> sessionManager.saveTokens(token.getToken(), null));
+        }
         setupUI();
     }
 

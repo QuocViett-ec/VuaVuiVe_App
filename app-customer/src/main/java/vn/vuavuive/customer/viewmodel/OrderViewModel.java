@@ -2,6 +2,7 @@ package vn.vuavuive.customer.viewmodel;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 import dagger.hilt.android.lifecycle.HiltViewModel;
 import vn.vuavuive.customer.data.repository.AuthRepository;
@@ -32,7 +33,9 @@ public class OrderViewModel extends ViewModel {
     }
 
     public LiveData<AuthRepository.Result<List<Order>>> getOrders(String status, int page) {
-        return firebaseOrderRepository.getOrders(status, page, 20);
+        return Transformations.switchMap(
+                firebaseOrderRepository.getOrders(null, page, 20),
+                ignored -> backendOrderRepository.getOrders(status, page, 20));
     }
 
     public LiveData<AuthRepository.Result<Order>> getOrderDetail(String orderId) {
@@ -40,15 +43,15 @@ public class OrderViewModel extends ViewModel {
     }
 
     public LiveData<AuthRepository.Result<Order>> createOrder(CreateOrderRequest request) {
-        return firebaseOrderRepository.createOrder(request);
+        return backendOrderRepository.createOrder(request);
     }
 
     public LiveData<AuthRepository.Result<Void>> cancelOrder(String orderId) {
-        return firebaseOrderRepository.cancelOrder(orderId);
+        return backendOrderRepository.cancelOrder(orderId);
     }
 
     public LiveData<AuthRepository.Result<Void>> returnOrder(String orderId, String reason) {
-        return firebaseOrderRepository.returnOrder(orderId, reason);
+        return backendOrderRepository.returnOrder(orderId, reason);
     }
 
     public LiveData<AuthRepository.Result<CreateMomoPaymentResponse>> createMomoPayment(

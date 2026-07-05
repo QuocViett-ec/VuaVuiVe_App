@@ -1,5 +1,7 @@
 package vn.vuavuive.shared.util;
 
+import java.util.Locale;
+
 /**
  * Constants — Hằng số dùng chung toàn app.
  */
@@ -8,18 +10,47 @@ public final class Constants {
     private Constants() {} // Prevent instantiation
 
     // ── Order Statuses ──
-    public static final String ORDER_STATUS_PENDING = "pending";
     public static final String ORDER_STATUS_PENDING_PAYMENT = "pending_payment";
     public static final String ORDER_STATUS_PENDING_APPROVAL = "pending_approval";
     public static final String ORDER_STATUS_CONFIRMED = "confirmed";
-    public static final String ORDER_STATUS_PROCESSING = "processing";
-    public static final String ORDER_STATUS_PACKED = "packed";
-    public static final String ORDER_STATUS_SHIPPED = "shipped";
+    public static final String ORDER_STATUS_IN_TRANSIT = "in_transit";
     public static final String ORDER_STATUS_DELIVERED = "delivered";
+    public static final String ORDER_STATUS_FAILED = "failed";
     public static final String ORDER_STATUS_CANCELLED = "cancelled";
-    public static final String ORDER_STATUS_RETURN_REQUESTED = "return_requested";
-    public static final String ORDER_STATUS_RETURN_APPROVED = "return_approved";
-    public static final String ORDER_STATUS_RETURN_REJECTED = "return_rejected";
+    public static final String ORDER_STATUS_RETURNED = "returned";
+
+    public static String normalizeOrderStatus(String status) {
+        return status == null ? "" : status.trim().toLowerCase(Locale.ROOT);
+    }
+
+    public static boolean isOrderPending(String status) {
+        String value = normalizeOrderStatus(status);
+        return ORDER_STATUS_PENDING_PAYMENT.equals(value)
+                || ORDER_STATUS_PENDING_APPROVAL.equals(value);
+    }
+
+    public static boolean isOrderConfirmed(String status) {
+        String value = normalizeOrderStatus(status);
+        return ORDER_STATUS_CONFIRMED.equals(value);
+    }
+
+    public static boolean isOrderShipping(String status) {
+        String value = normalizeOrderStatus(status);
+        return ORDER_STATUS_IN_TRANSIT.equals(value);
+    }
+
+    public static boolean isOrderDelivered(String status) {
+        return ORDER_STATUS_DELIVERED.equals(normalizeOrderStatus(status));
+    }
+
+    public static boolean isOrderCancelled(String status) {
+        String value = normalizeOrderStatus(status);
+        return ORDER_STATUS_CANCELLED.equals(value) || ORDER_STATUS_FAILED.equals(value);
+    }
+
+    public static boolean isOrderReturn(String status) {
+        return ORDER_STATUS_RETURNED.equals(normalizeOrderStatus(status));
+    }
 
     // ── Payment Methods ──
     public static final String PAYMENT_COD = "cod";
