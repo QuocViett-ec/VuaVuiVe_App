@@ -21,6 +21,7 @@ import vn.vuavuive.admin.ui.orders.AdminOrderListFragment;
 import vn.vuavuive.admin.ui.products.AdminProductListFragment;
 import vn.vuavuive.admin.ui.vouchers.VoucherListFragment;
 import vn.vuavuive.shared.data.dto.User;
+import vn.vuavuive.shared.fcm.FcmTokenRegistrar;
 import vn.vuavuive.shared.util.SessionManager;
 
 @AndroidEntryPoint
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        FcmTokenRegistrar.requestNotificationPermission(this);
 
         if (!sessionManager.isLoggedIn() || !sessionManager.isBackoffice()) {
             logout();
@@ -51,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
                     .addOnSuccessListener(token -> sessionManager.saveTokens(token.getToken(), null));
         }
         setupUI();
+        FcmTokenRegistrar.register(this, "admin_orders");
     }
 
     private void setupUI() {

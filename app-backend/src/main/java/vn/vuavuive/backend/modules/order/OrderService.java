@@ -9,6 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vn.vuavuive.backend.exception.AppException;
+import vn.vuavuive.backend.modules.notification.NotificationService;
 import vn.vuavuive.backend.modules.order.dto.*;
 import vn.vuavuive.backend.modules.payment.MoMoService;
 import vn.vuavuive.backend.modules.payment.ZaloPayService;
@@ -51,6 +52,7 @@ public class OrderService {
     private final ShipperRepository shipperRepository;
     private final MoMoService moMoService;
     private final ZaloPayService zaloPayService;
+    private final NotificationService notificationService;
 
     /**
      * TẠO ĐƠN HÀNG — Đây là hàm quan trọng nhất, được bảo vệ bởi @Transactional.
@@ -184,6 +186,7 @@ public class OrderService {
         }
 
         log.info("Đơn hàng {} đã được tạo bởi user {}", order.getId(), email);
+        notifyOrderCreated(order);
         return toResponse(order, paymentUrl);
     }
 
@@ -283,7 +286,9 @@ public class OrderService {
         order.setStatus(Order.OrderStatus.CANCELLED);
         cancelUnpaidPayment(order);
         appendStatusLog(order, Order.OrderStatus.CANCELLED, "Khách hàng hủy đơn", "CUSTOMER", email);
-        return toResponse(orderRepository.save(order), null);
+        Order saved = orderRepository.save(order);
+        notifyAdminOrder(saved, "Don hang da bi huy", "Khach hang huy don " + saved.getId());
+        return toResponse(saved, null);
     }
 
     /** Admin/Staff xác nhận hoặc hủy đơn hàng. */
@@ -306,7 +311,9 @@ public class OrderService {
         }
         order.setStatus(status);
         appendStatusLog(order, status, note, "ADMIN", updatedByName);
-        return toResponse(orderRepository.save(order), null);
+        Order saved = orderRepository.save(order);
+        notifyOrderStatus(saved, "Cap nhat don hang", "Don " + saved.getId() + " dang o trang thai " + status.name());
+        return toResponse(saved, null);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -333,6 +340,7 @@ public class OrderService {
         request.put("requested_at", java.time.Instant.now().toString());
         order.setReturnRequest(request);
         orderRepository.patch(orderId, Map.of("return_request", request));
+        notifyAdminOrder(order, "Yeu cau tra hang moi", "Don " + order.getId() + " co yeu cau tra hang");
         return toResponse(order, null);
     }
 
@@ -358,6 +366,7 @@ public class OrderService {
         request.put("reviewed_at", java.time.Instant.now().toString());
         order.setReturnRequest(request);
         orderRepository.patch(orderId, Map.of("return_request", request));
+        notifyOrderStatus(order, "Yeu cau tra hang", "Yeu cau tra hang don " + order.getId() + " da duoc " + status);
         return toResponse(order, null);
     }
 
@@ -380,7 +389,9 @@ public class OrderService {
         order.setPaymentStatus(Order.PaymentStatus.PAID);
         awardPointsForOrder(order);
         appendStatusLog(order, order.getStatus(), "Admin xác nhận COD đã thu tiền", "ADMIN", "Admin");
-        return toResponse(orderRepository.save(order), null);
+        Order saved = orderRepository.save(order);
+        notifyOrderStatus(saved, "Thanh toan thanh cong", "Don " + saved.getId() + " da duoc xac nhan thanh toan");
+        return toResponse(saved, null);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -391,7 +402,9 @@ public class OrderService {
             throw AppException.badRequest("Chỉ hoàn tiền sau khi đã nhận lại hàng");
         }
         order.setPaymentStatus(Order.PaymentStatus.REFUNDED);
-        return toResponse(orderRepository.save(order), null);
+        Order saved = orderRepository.save(order);
+        notifyOrderStatus(saved, "Hoan tien", "Don " + saved.getId() + " da duoc hoan tien");
+        return toResponse(saved, null);
     }
 
     /**
@@ -443,6 +456,7 @@ public class OrderService {
                     "Thanh toán MoMo thất bại (resultCode: " + resultCode + ")", "SYSTEM", "MoMo Gateway");
         }
         orderRepository.save(order);
+        notifyOrderStatus(order, "Cap nhat thanh toan", "Don " + order.getId() + " dang o trang thai " + order.getStatus().name());
     }
 
     public void awardPointsForOrder(Order order) {
@@ -637,6 +651,32 @@ public class OrderService {
             if (value != null) return String.valueOf(value);
         }
         return null;
+    }
+
+    private void notifyOrderCreated(Order order) {
+        notifyAdminOrder(order, "Don hang moi", "Don " + order.getId() + " vua duoc tao");
+        notificationService.sendToUser(
+                order.getUserId(),
+                "Dat hang thanh cong",
+                "Don " + order.getId() + " da duoc tao",
+                orderData(order, "order_created"));
+    }
+
+    private void notifyOrderStatus(Order order, String title, String body) {
+        notificationService.sendToUser(order.getUserId(), title, body, orderData(order, "order_status"));
+    }
+
+    private void notifyAdminOrder(Order order, String title, String body) {
+        notificationService.sendToTopic("admin_orders", title, body, orderData(order, "admin_order"));
+    }
+
+    private Map<String, String> orderData(Order order, String type) {
+        Map<String, String> data = new HashMap<>();
+        data.put("type", type);
+        data.put("navigate_to", "orders");
+        if (order.getId() != null) data.put("orderId", order.getId());
+        if (order.getStatus() != null) data.put("status", order.getStatus().name());
+        return data;
     }
 }
 

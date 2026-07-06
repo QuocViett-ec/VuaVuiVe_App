@@ -53,6 +53,10 @@ dependencies {
     api("androidx.navigation:navigation-ui:2.8.9")
     api("androidx.viewpager2:viewpager2:1.1.0")
 
+    // Firebase Cloud Messaging
+    api(platform("com.google.firebase:firebase-bom:33.1.1"))
+    api("com.google.firebase:firebase-messaging")
+
     // Testing
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")

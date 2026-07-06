@@ -1,6 +1,5 @@
 package vn.vuavuive.backend.config;
 
-import com.google.auth.Credentials;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
@@ -13,10 +12,6 @@ import org.springframework.core.io.Resource;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @Configuration
@@ -53,26 +48,8 @@ public class FirebaseConfig {
                 try {
                     credentials = GoogleCredentials.fromStream(serviceAccount);
                 } catch (Exception e) {
-                    log.warn("=========================================================================");
-                    log.warn("WARNING: Failed to parse serviceAccountKey.json private key!");
-                    log.warn("Falling back to anonymous credentials. RTDB must have public read/write rules.");
-                    log.warn("=========================================================================");
-                    credentials = new GoogleCredentials() {
-                        @Override
-                        public Map<String, List<String>> getRequestMetadata(URI uri) {
-                            return Collections.emptyMap();
-                        }
-                        @Override
-                        public boolean hasRequestMetadata() {
-                            return false;
-                        }
-                        @Override
-                        public boolean hasRequestMetadataOnly() {
-                            return false;
-                        }
-                        @Override
-                        public void refresh() {}
-                    };
+                    log.error("Invalid Firebase credential file at path: {}", configPath, e);
+                    throw new IllegalStateException("Invalid Firebase credential file: " + configPath, e);
                 }
             }
 

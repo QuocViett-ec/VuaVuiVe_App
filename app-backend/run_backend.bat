@@ -32,17 +32,24 @@ rem =======================================================
 if "%JAVA_HOME%"=="" set "JAVA_HOME=C:\Program Files\Android\Android Studio\jbr"
 set "PATH=%JAVA_HOME%\bin;%~dp0apache-maven-3.9.6\bin;%PATH%"
 
+if exist "%~dp0.env" (
+    echo [+] Dang nap cau hinh tu app-backend\.env...
+    for /f "usebackq eol=# tokens=1,* delims==" %%A in ("%~dp0.env") do (
+        if not "%%A"=="" set "%%A=%%B"
+    )
+)
+
 echo [+] Kiem tra Java:
 java -version
 echo.
 
-rem MoMo sandbox test keys. Keep these in backend only, never Android.
-set MOMO_PARTNER_CODE=MOMO
-set MOMO_ACCESS_KEY=F8BBA842ECF85
-set MOMO_SECRET_KEY=K951B6PE1waDMi640xX08PD3vg6EkVlz
-set MOMO_ENDPOINT=https://test-payment.momo.vn/v2/gateway/api/create
-set MOMO_REQUEST_TYPE=captureWallet
-set MOMO_LANG=vi
+rem MoMo sandbox defaults. Real keys should live in app-backend\.env.
+if "%MOMO_PARTNER_CODE%"=="" set "MOMO_PARTNER_CODE=MOMO"
+if "%MOMO_ACCESS_KEY%"=="" set "MOMO_ACCESS_KEY=F8BBA842ECF85"
+if "%MOMO_SECRET_KEY%"=="" set "MOMO_SECRET_KEY=K951B6PE1waDMi640xX08PD3vg6EkVlz"
+if "%MOMO_ENDPOINT%"=="" set "MOMO_ENDPOINT=https://test-payment.momo.vn/v2/gateway/api/create"
+if "%MOMO_REQUEST_TYPE%"=="" set "MOMO_REQUEST_TYPE=captureWallet"
+if "%MOMO_LANG%"=="" set "MOMO_LANG=vi"
 if "%ZALOPAY_MOCK_MODE%"=="" set ZALOPAY_MOCK_MODE=true
 
 rem Set PUBLIC_BASE_URL to your current ngrok URL for real sandbox IPN.

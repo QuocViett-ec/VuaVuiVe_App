@@ -16,10 +16,10 @@ server:
 # ============================================
 app:
   firebase:
-    database-url: "https://vua-vui-ve-default-rtdb.firebaseio.com"
-    config-path: "classpath:serviceAccountKey.json"
+    database-url: "${FIREBASE_DATABASE_URL:https://vua-vui-ve-default-rtdb.firebaseio.com}"
+    config-path: "${FIREBASE_CONFIG_PATH:file:./serviceAccountKey.json}"
   jwt:
-    secret: "vuavuive-super-secret-key-for-jwt-please-change-in-production-min-256bit"
+    secret: "${JWT_SECRET:dev-only-change-me-dev-only-change-me-dev-only-change-me}"
     access-token-expiration-ms: 86400000       # 24 giờ
     refresh-token-expiration-ms: 2592000000  # 30 ngày
 
@@ -53,16 +53,16 @@ app:
 #  CẤU HÌNH CLOUDINARY (Lưu trữ ảnh)
 # ============================================
   cloudinary:
-    cloud-name: "ddj1f931a"    # <<< ĐỔI
-    api-key: "239185989455687"          # <<< ĐỔI
-    api-secret: "M3dSBbSLmEkryTAWEsBOKf0o4zQ"    # <<< ĐỔI
+    cloud-name: "${CLOUDINARY_CLOUD_NAME:}"
+    api-key: "${CLOUDINARY_API_KEY:}"
+    api-secret: "${CLOUDINARY_API_SECRET:}"
 
 # ============================================
 #  CẤU HÌNH GOOGLE GEMINI AI (Chatbot)
 # ============================================
   gemini:
-    api-key: "AQ.Ab8RN6LcGFuoZkB5TJ1l4IcQ2fbDRqh_am_AXegYvptxdhf0gw"
-    model: "gemini-1.5-flash-latest"
+    api-key: "${GEMINI_API_KEY:}"
+    model: "${GEMINI_MODEL:gemini-1.5-flash-latest}"
 
 # ============================================
 #  CẤU HÌNH TỰ ĐỘNG HỦY ĐƠN (Cron Job)
@@ -74,14 +74,14 @@ app:
 #  CẤU HÌNH TELEGRAM BOT
 # ============================================
   telegram:
-    bot-token: ${TELEGRAM_BOT_TOKEN:8997579650:AAF9pvs53W1fEnXgfoo23p5CmJPN6EP2jdA}
-    chat-id: ${TELEGRAM_CHAT_ID:5759562152}
+    bot-token: ${TELEGRAM_BOT_TOKEN:}
+    chat-id: ${TELEGRAM_CHAT_ID:}
 
 # ============================================
 #  CẤU HÌNH RESEND EMAIL
 # ============================================
   resend:
-    api-key: re_NyfhpxtP_GDQ3gqNeWEh3iFvuUgrJKefp
+    api-key: ${RESEND_API_KEY:}
 
 logging:
   level:

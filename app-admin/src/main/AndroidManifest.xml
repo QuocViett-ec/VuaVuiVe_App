@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:name=".VuaVuiVeAdminApp"
@@ -14,6 +15,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.VuaVuiVe.Admin"
         android:usesCleartextTraffic="true">
+
+        <meta-data
+            android:name="vn.vuavuive.BASE_URL"
+            android:value="${vvvBaseUrl}" />
+        <meta-data
+            android:name="vn.vuavuive.PORTAL_SCOPE"
+            android:value="${vvvPortalScope}" />
+
+        <service
+            android:name="vn.vuavuive.shared.fcm.VuaVuiVeMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
 
         <activity
             android:name=".ui.auth.AdminLoginActivity"

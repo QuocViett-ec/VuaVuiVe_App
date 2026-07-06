@@ -14,6 +14,7 @@ import vn.vuavuive.shipper.R;
 import vn.vuavuive.shipper.data.repository.FirebaseShipperRepository;
 import vn.vuavuive.shipper.ui.auth.ShipperLoginActivity;
 import vn.vuavuive.shared.data.dto.User;
+import vn.vuavuive.shared.fcm.FcmTokenRegistrar;
 import vn.vuavuive.shared.util.SessionManager;
 
 /**
@@ -43,6 +44,8 @@ public class ShipperMainActivity extends AppCompatActivity {
         }
 
         setContentView(R.layout.activity_shipper_main);
+        FcmTokenRegistrar.requestNotificationPermission(this);
+        FcmTokenRegistrar.register(this);
         setupHeader();
         setupTabs();
         setupLogout();

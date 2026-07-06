@@ -26,3 +26,11 @@ app-backend/apache-maven-*/
 # Backend runtime logs
 app-backend/target/backend-run.*.log
 screencap.png
+
+# Local secrets
+.env
+.env.*
+serviceAccountKey.json
+app-backend/serviceAccountKey.json
+app-backend/src/main/resources/serviceAccountKey.json
+*.firebase-service-account.json

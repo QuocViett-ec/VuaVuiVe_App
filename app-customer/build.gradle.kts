@@ -21,6 +21,8 @@ android {
         debug {
             buildConfigField("String", "BASE_URL", "\"http://localhost:3000\"")
             buildConfigField("String", "PORTAL_SCOPE", "\"customer\"")
+            manifestPlaceholders["vvvBaseUrl"] = "http://localhost:3000"
+            manifestPlaceholders["vvvPortalScope"] = "customer"
         }
         release {
             isMinifyEnabled = true
@@ -30,6 +32,8 @@ android {
             )
             buildConfigField("String", "BASE_URL", "\"https://api.vuavuive.vn\"")
             buildConfigField("String", "PORTAL_SCOPE", "\"customer\"")
+            manifestPlaceholders["vvvBaseUrl"] = "https://api.vuavuive.vn"
+            manifestPlaceholders["vvvPortalScope"] = "customer"
         }
     }
 

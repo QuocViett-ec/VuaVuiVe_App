@@ -209,7 +209,7 @@ public class FirebaseUserRepository {
     }
 
     // ── Register Flow (Resend Email OTP) ──────────────────────
-    private static final String RESEND_API_KEY = "re_NyfhpxtP_GDQ3gqNeWEh3iFvuUgrJKefp"; // Configured from application-dev.yml
+    private static final String RESEND_API_KEY = ""; // Send OTP from backend only; never ship Resend keys in APK.
 
     public LiveData<AuthRepository.Result<Void>> sendRegisterOtp(RegisterRequest request) {
         MutableLiveData<AuthRepository.Result<Void>> result = new MutableLiveData<>();
@@ -226,7 +226,7 @@ public class FirebaseUserRepository {
 
         // 1. Generate 6-digit random code
         String code = String.format(Locale.US, "%06d", (int) (Math.random() * 1000000));
-        android.util.Log.d("FirebaseUserRepository", "Generated OTP: " + code + " for email: " + request.getEmail());
+        android.util.Log.d("FirebaseUserRepository", "Generated registration OTP for email: " + request.getEmail());
 
         // 2. Cache in memory
         pendingRegistrations.put(request.getPhone(), new PendingRegistration(request, code));
@@ -235,7 +235,7 @@ public class FirebaseUserRepository {
         new Thread(() -> {
             boolean isPlaceholderKey = "re_YOUR_RESEND_API_KEY".equals(RESEND_API_KEY) || RESEND_API_KEY.isEmpty();
             if (isPlaceholderKey) {
-                android.util.Log.d("FirebaseUserRepository", "[RESEND FALLBACK] API Key is placeholder. OTP for email " + request.getEmail() + " is: " + code);
+                android.util.Log.d("FirebaseUserRepository", "[RESEND FALLBACK] API key is not bundled in the app.");
                 result.postValue(AuthRepository.Result.success(null));
                 return;
             }

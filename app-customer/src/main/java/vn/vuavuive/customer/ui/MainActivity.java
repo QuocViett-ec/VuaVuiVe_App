@@ -15,6 +15,7 @@ import vn.vuavuive.customer.R;
 import vn.vuavuive.customer.data.repository.AuthRepository;
 import vn.vuavuive.customer.viewmodel.AuthViewModel;
 import vn.vuavuive.customer.viewmodel.CartViewModel;
+import vn.vuavuive.shared.fcm.FcmTokenRegistrar;
 
 @AndroidEntryPoint
 public class MainActivity extends AppCompatActivity {
@@ -31,11 +32,17 @@ public class MainActivity extends AppCompatActivity {
 
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
         cartViewModel = new ViewModelProvider(this).get(CartViewModel.class);
+        FcmTokenRegistrar.requestNotificationPermission(this);
 
         authViewModel.checkSession().observe(this, result -> {
             if (result.status == AuthRepository.Result.Status.SUCCESS) {
                 authViewModel.setCurrentUser(result.data);
                 cartViewModel.onUserLoggedIn();
+                FcmTokenRegistrar.register(
+                        this,
+                        "customer_promotions",
+                        "customer_flash_sale",
+                        "customer_news");
             } else if (result.status == AuthRepository.Result.Status.ERROR) {
                 authViewModel.setCurrentUser(null);
             }

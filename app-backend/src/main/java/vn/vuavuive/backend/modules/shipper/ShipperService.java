@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vn.vuavuive.backend.exception.AppException;
+import vn.vuavuive.backend.modules.notification.NotificationService;
 import vn.vuavuive.backend.modules.order.Order;
 import vn.vuavuive.backend.modules.order.OrderRepository;
 import vn.vuavuive.backend.modules.order.OrderStatusLog;
@@ -37,6 +38,7 @@ public class ShipperService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final OrderService orderService;
+    private final NotificationService notificationService;
 
     /**
      * Tạo mới shipper (Admin)
@@ -156,6 +158,8 @@ public class ShipperService {
 
         // Gửi thông báo WebSocket tới Admin Dashboard
         notifyAdminDashboard(order, "Đã gán tài xế " + (shipper.getFullName() != null ? shipper.getFullName() : shipper.getPhone()) + " cho đơn hàng.");
+        notifyShipperAssigned(order, shipper);
+        notifyCustomer(order, "Don hang da co tai xe", "Don " + order.getId() + " da duoc gan tai xe giao hang");
     }
 
     /**
@@ -237,6 +241,7 @@ public class ShipperService {
 
         // Bắn WebSocket notification
         notifyAdminDashboard(order, "Tài xế " + shipperDisplayName + " → " + newStatus.name());
+        notifyCustomer(order, "Cap nhat giao hang", "Don " + order.getId() + " dang o trang thai " + newStatus.name());
     }
 
     /**
@@ -276,6 +281,27 @@ public class ShipperService {
         wsMessage.put("updatedAt", LocalDateTime.now().toString());
 
         messagingTemplate.convertAndSend("/topic/admin/orders", wsMessage);
+    }
+
+    private void notifyShipperAssigned(Order order, Shipper shipper) {
+        String userId = shipper.getUserId() != null ? shipper.getUserId() : shipper.getId();
+        notificationService.sendToUser(userId,
+                "Don giao moi",
+                "Ban vua duoc gan don " + order.getId(),
+                orderData(order, "shipper_order_assigned"));
+    }
+
+    private void notifyCustomer(Order order, String title, String body) {
+        notificationService.sendToUser(order.getUserId(), title, body, orderData(order, "order_status"));
+    }
+
+    private Map<String, String> orderData(Order order, String type) {
+        Map<String, String> data = new HashMap<>();
+        data.put("type", type);
+        data.put("navigate_to", "orders");
+        if (order.getId() != null) data.put("orderId", order.getId());
+        if (order.getStatus() != null) data.put("status", order.getStatus().name());
+        return data;
     }
 
     private ShipperResponse toResponse(Shipper s) {
