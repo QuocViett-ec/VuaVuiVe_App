@@ -259,6 +259,14 @@ public class HomeFragment extends Fragment {
         EditText etSearch = view.findViewById(R.id.et_search_home);
         etSearchHome = etSearch;
         View btnMenu = view.findViewById(R.id.btn_menu);
+        View btnImageSearch = view.findViewById(R.id.btn_image_search_home);
+        if (btnImageSearch != null) {
+            btnImageSearch.setOnClickListener(v -> {
+                Intent intent = new Intent(requireContext(), vn.vuavuive.customer.ui.search.SearchActivity.class);
+                intent.putExtra("open_image_picker", true);
+                startActivity(intent);
+            });
+        }
         if (btnMenu != null) {
             btnMenu.setOnClickListener(v -> {
                 Intent intent = new Intent(requireContext(), vn.vuavuive.customer.ui.chat.ChatActivity.class);

@@ -100,6 +100,9 @@ public class SearchActivity extends AppCompatActivity {
             etSearch.setSelection(prefill.length());
             performSearch(prefill, true);
         }
+        if (getIntent().getBooleanExtra("open_image_picker", false)) {
+            etSearch.post(this::showImagePickerDialog);
+        }
     }
 
     private void initViews() {
