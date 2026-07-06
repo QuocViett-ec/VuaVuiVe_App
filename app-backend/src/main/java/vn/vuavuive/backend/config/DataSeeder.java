@@ -99,6 +99,7 @@ public class DataSeeder implements CommandLineRunner {
         }
 
         // Tạo/cập nhật đối tượng Shipper trong bảng shippers tương ứng
+        String shipperAssignmentId = resolveSeedShipperAssignmentId(shipperUser);
         Shipper shipper = shipperRepository.findByPhone("0987654321").orElseGet(() -> {
             Shipper created = Shipper.builder()
                     .fullName("Tài Xế Vui Vẻ")
@@ -110,10 +111,19 @@ public class DataSeeder implements CommandLineRunner {
             log.info(">> SEED: Tạo thành công thực thể Shipper với SĐT: 0987654321");
             return created;
         });
-        if (shipper.getUserId() == null) {
-            shipper.setUserId(shipperUser.getId());
+        if (shipper.getUserId() == null || !shipperAssignmentId.equals(shipper.getUserId())) {
+            shipper.setUserId(shipperAssignmentId);
             shipperRepository.save(shipper);
         }
+    }
+
+    private String resolveSeedShipperAssignmentId(User shipperUser) {
+        return userRepository.findAll().stream()
+                .filter(u -> shipperUser.getEmail() != null && shipperUser.getEmail().equalsIgnoreCase(u.getEmail()))
+                .filter(u -> u.getId() != null && !u.getId().contains("-"))
+                .map(User::getId)
+                .findFirst()
+                .orElse(shipperUser.getId());
     }
 
     private void seedProducts() {
@@ -168,7 +178,8 @@ public class DataSeeder implements CommandLineRunner {
         if (shipper == null || customer == null || product == null) {
             return;
         }
-        if (orderRepository.findByShipperIdOrderByCreatedAtDesc(shipper.getId(), PageRequest.of(0, 3)).getNumberOfElements() >= 3) {
+        String shipperAssignmentId = shipper.getUserId() != null ? shipper.getUserId() : shipper.getId();
+        if (orderRepository.findByShipperIdOrderByCreatedAtDesc(shipperAssignmentId, PageRequest.of(0, 3)).getNumberOfElements() >= 3) {
             return;
         }
 
@@ -186,7 +197,7 @@ public class DataSeeder implements CommandLineRunner {
                 .userId(customer.getId())
                 .userName(customer.getFullName())
                 .userPhone(customer.getPhone())
-                .shipperId(shipper.getId())
+                .shipperId(shipper.getUserId() != null ? shipper.getUserId() : shipper.getId())
                 .shipperName(shipper.getFullName())
                 .status(status)
                 .paymentMethod("COD")

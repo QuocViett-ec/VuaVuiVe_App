@@ -140,13 +140,15 @@ public class ShipperService {
 
         // Dùng PATCH để chỉ cập nhật các field thay đổi
         // → Firebase Realtime Database sẽ bắn event onChange ngay lập tức cho app mobile/web
+        String assignedShipperId = resolveOrderShipperId(shipper);
+        String notificationUserId = resolveNotificationUserId(shipper);
         Map<String, Object> patch = new HashMap<>();
-        patch.put("shipper_id", shipperId);
+        patch.put("shipper_id", assignedShipperId);
         patch.put("shipper_name", shipper.getFullName() != null ? shipper.getFullName() : shipper.getPhone());
         orderRepository.patch(orderId, patch);
 
         // Cập nhật state trong memory để log
-        order.setShipperId(shipperId);
+        order.setShipperId(assignedShipperId);
         order.setShipperName(shipper.getFullName());
 
         // Lưu log lịch sử trạng thái
@@ -158,7 +160,7 @@ public class ShipperService {
 
         // Gửi thông báo WebSocket tới Admin Dashboard
         notifyAdminDashboard(order, "Đã gán tài xế " + (shipper.getFullName() != null ? shipper.getFullName() : shipper.getPhone()) + " cho đơn hàng.");
-        notifyShipperAssigned(order, shipper);
+        notifyShipperAssigned(order, notificationUserId);
         notifyCustomer(order, "Don hang da co tai xe", "Don " + order.getId() + " da duoc gan tai xe giao hang");
     }
 
@@ -180,7 +182,11 @@ public class ShipperService {
                 .or(() -> shipperRepository.findByUserId(shipperId))
                 .orElseThrow(() -> AppException.notFound("Shipper"));
 
-        if (order.getShipperId() == null || !order.getShipperId().equals(shipperId)) {
+        String assignedShipperId = resolveOrderShipperId(shipper);
+        if (order.getShipperId() == null
+                || !(order.getShipperId().equals(shipperId)
+                || order.getShipperId().equals(assignedShipperId)
+                || order.getShipperId().equals(shipper.getId()))) {
             throw AppException.badRequest("Tài xế này không được phân công giao đơn hàng này!");
         }
 
@@ -283,12 +289,50 @@ public class ShipperService {
         messagingTemplate.convertAndSend("/topic/admin/orders", wsMessage);
     }
 
-    private void notifyShipperAssigned(Order order, Shipper shipper) {
-        String userId = shipper.getUserId() != null ? shipper.getUserId() : shipper.getId();
+    private void notifyShipperAssigned(Order order, String userId) {
         notificationService.sendToUser(userId,
                 "Don giao moi",
                 "Ban vua duoc gan don " + order.getId(),
                 orderData(order, "shipper_order_assigned"));
+    }
+
+    private String resolveOrderShipperId(Shipper shipper) {
+        User notificationUser = findNotificationUser(shipper);
+        String email = notificationUser != null ? notificationUser.getEmail() : null;
+        String userId = matchingShipperUsers(shipper).stream()
+                .filter(u -> email == null || email.equalsIgnoreCase(u.getEmail()))
+                .filter(u -> u.getId() != null && !u.getId().contains("-"))
+                .map(User::getId)
+                .findFirst()
+                .orElse(shipper.getUserId() != null ? shipper.getUserId() : shipper.getId());
+        if (userId != null && !userId.equals(shipper.getUserId())) {
+            shipper.setUserId(userId);
+            shipperRepository.save(shipper);
+        }
+        return userId;
+    }
+
+    private String resolveNotificationUserId(Shipper shipper) {
+        User user = findNotificationUser(shipper);
+        return user != null ? user.getId() : (shipper.getUserId() != null ? shipper.getUserId() : shipper.getId());
+    }
+
+    private User findNotificationUser(Shipper shipper) {
+        return matchingShipperUsers(shipper).stream()
+                .sorted((a, b) -> Boolean.compare(hasPassword(b), hasPassword(a)))
+                .findFirst()
+                .orElse(null);
+    }
+
+    private List<User> matchingShipperUsers(Shipper shipper) {
+        return userRepository.findAll().stream()
+                .filter(u -> User.Role.SHIPPER == u.getRole())
+                .filter(u -> shipper.getPhone() != null && shipper.getPhone().equals(u.getPhone()))
+                .toList();
+    }
+
+    private boolean hasPassword(User user) {
+        return user.getPasswordHash() != null && !user.getPasswordHash().isBlank();
     }
 
     private void notifyCustomer(Order order, String title, String body) {
