@@ -1,7 +1,11 @@
 package vn.vuavuive.customer.ui.search;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -13,8 +17,14 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.activity.OnBackPressedCallback;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,10 +36,23 @@ import vn.vuavuive.customer.data.repository.AuthRepository;
 import vn.vuavuive.customer.ui.product.ProductAdapter;
 import vn.vuavuive.customer.ui.product.ProductDetailActivity;
 import vn.vuavuive.customer.viewmodel.ProductViewModel;
+import vn.vuavuive.shared.data.api.VisionApi;
+import vn.vuavuive.shared.data.dto.ApiResponse;
+import vn.vuavuive.shared.data.dto.VisionSearchResponse;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import javax.inject.Inject;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import org.json.JSONArray;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 @AndroidEntryPoint
 public class SearchActivity extends AppCompatActivity {
@@ -37,6 +60,8 @@ public class SearchActivity extends AppCompatActivity {
     private static final String PREFS_NAME = "vvv_search_history";
     private static final String KEY_HISTORY = "history";
     private static final int HISTORY_LIMIT = 10;
+
+    @Inject VisionApi visionApi;
 
     private ProductViewModel productViewModel;
     private ProductAdapter adapter;
@@ -50,6 +75,10 @@ public class SearchActivity extends AppCompatActivity {
 
     private final Handler searchHandler = new Handler();
     private Runnable searchRunnable;
+    private ActivityResultLauncher<String> galleryLauncher;
+    private ActivityResultLauncher<Uri> cameraLauncher;
+    private ActivityResultLauncher<String> cameraPermissionLauncher;
+    private Uri cameraImageUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +87,7 @@ public class SearchActivity extends AppCompatActivity {
 
         productViewModel = new ViewModelProvider(this).get(ProductViewModel.class);
 
+        setupImagePickers();
         initViews();
         setupRecycler();
         setupSearch();
@@ -83,10 +113,120 @@ public class SearchActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progress_bar);
         tvEmpty = findViewById(R.id.tv_empty);
 
+        ImageButton btnImageSearch = findViewById(R.id.btn_image_search);
+        if (btnImageSearch != null) {
+            btnImageSearch.setOnClickListener(v -> showImagePickerDialog());
+        }
+
         tvClearHistory.setOnClickListener(v -> {
             saveHistory(new ArrayList<>());
             renderHistory(new ArrayList<>());
         });
+    }
+
+    private void setupImagePickers() {
+        galleryLauncher = registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
+            if (uri != null) analyzeImage(uri);
+        });
+        cameraLauncher = registerForActivityResult(new ActivityResultContracts.TakePicture(), success -> {
+            if (success && cameraImageUri != null) analyzeImage(cameraImageUri);
+        });
+        cameraPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), granted -> {
+            if (granted) openCamera();
+            else Toast.makeText(this, "Can quyen camera de chup anh san pham", Toast.LENGTH_SHORT).show();
+        });
+    }
+
+    private void showImagePickerDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle("Tim bang hinh anh")
+                .setItems(new CharSequence[]{"Chup anh", "Chon tu thu vien"}, (dialog, which) -> {
+                    if (which == 0) {
+                        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                                == PackageManager.PERMISSION_GRANTED) {
+                            openCamera();
+                        } else {
+                            cameraPermissionLauncher.launch(Manifest.permission.CAMERA);
+                        }
+                    } else {
+                        galleryLauncher.launch("image/*");
+                    }
+                })
+                .show();
+    }
+
+    private void openCamera() {
+        try {
+            File dir = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "vision");
+            if (!dir.exists() && !dir.mkdirs()) {
+                Toast.makeText(this, "Khong tao duoc thu muc anh", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            File file = File.createTempFile("vision_", ".jpg", dir);
+            cameraImageUri = FileProvider.getUriForFile(this, getPackageName() + ".fileprovider", file);
+            cameraLauncher.launch(cameraImageUri);
+        } catch (Exception e) {
+            Toast.makeText(this, "Khong mo duoc camera", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void analyzeImage(Uri uri) {
+        try {
+            byte[] bytes = readBytes(uri);
+            String mime = getContentResolver().getType(uri);
+            if (mime == null || mime.isBlank()) mime = "image/jpeg";
+            RequestBody body = RequestBody.create(bytes, MediaType.parse(mime));
+            MultipartBody.Part part = MultipartBody.Part.createFormData("image", "product.jpg", body);
+
+            showLoading(true);
+            visionApi.searchProductByImage(part).enqueue(new Callback<ApiResponse<VisionSearchResponse>>() {
+                @Override
+                public void onResponse(Call<ApiResponse<VisionSearchResponse>> call,
+                                       Response<ApiResponse<VisionSearchResponse>> response) {
+                    showLoading(false);
+                    ApiResponse<VisionSearchResponse> api = response.body();
+                    VisionSearchResponse data = api != null ? api.getData() : null;
+                    String keyword = pickKeyword(data);
+                    if (response.isSuccessful() && keyword != null && !keyword.isBlank()) {
+                        Toast.makeText(SearchActivity.this, "Da nhan dien: " + keyword, Toast.LENGTH_SHORT).show();
+                        etSearch.setText(keyword);
+                        etSearch.setSelection(keyword.length());
+                        performSearch(keyword, true);
+                    } else {
+                        Toast.makeText(SearchActivity.this, "Khong nhan dien duoc san pham", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ApiResponse<VisionSearchResponse>> call, Throwable t) {
+                    showLoading(false);
+                    Toast.makeText(SearchActivity.this, "Loi ket noi khi nhan dien anh", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } catch (Exception e) {
+            showLoading(false);
+            Toast.makeText(this, "Khong doc duoc anh", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private byte[] readBytes(Uri uri) throws java.io.IOException {
+        try (InputStream in = getContentResolver().openInputStream(uri);
+             ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            if (in == null) throw new java.io.IOException("No image stream");
+            byte[] buffer = new byte[8192];
+            int read;
+            while ((read = in.read(buffer)) != -1) {
+                out.write(buffer, 0, read);
+            }
+            return out.toByteArray();
+        }
+    }
+
+    private String pickKeyword(VisionSearchResponse data) {
+        if (data == null) return null;
+        if (data.getKeyword() != null && !data.getKeyword().isBlank()) return data.getKeyword();
+        if (data.getKeywords() != null && !data.getKeywords().isEmpty()) return data.getKeywords().get(0);
+        return null;
     }
 
     private void setupRecycler() {

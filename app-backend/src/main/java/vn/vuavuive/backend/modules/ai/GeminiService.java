@@ -9,7 +9,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import vn.vuavuive.backend.exception.AppException;
+import vn.vuavuive.backend.modules.vision.VisionSearchResponse;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +36,7 @@ public class GeminiService {
 
     private static final String GEMINI_API_URL =
             "https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent?key=%s";
+    private static final ObjectMapper MAPPER = new ObjectMapper();
 
     private static final String SYSTEM_PROMPT =
             "Bạn là VuiVe Bot - trợ lý ảo thông minh của Vựa Vui Vẻ, nền tảng thương mại điện tử " +
@@ -60,6 +64,20 @@ public class GeminiService {
 
         // Fallback: mock data thông minh
         return getMockReply(userPrompt);
+    }
+
+    public VisionSearchResponse analyzeProductImage(String base64Image, String mimeType) {
+        if (apiKey == null || apiKey.isBlank()) {
+            throw AppException.badRequest("Chua cau hinh GEMINI_API_KEY trong app-backend\\.env");
+        }
+        try {
+            String text = callGeminiVisionApi(base64Image, mimeType);
+            String json = extractJson(text);
+            return MAPPER.readValue(json, VisionSearchResponse.class);
+        } catch (Exception e) {
+            log.warn("Gemini Vision failed: {}", e.getMessage());
+            throw AppException.badRequest("Khong nhan dien duoc san pham trong anh");
+        }
     }
 
     // ── Gọi Gemini API thật ─────────────────────────────────────────────────
@@ -108,6 +126,81 @@ public class GeminiService {
             }
         }
         return null;
+    }
+
+    private String callGeminiVisionApi(String base64Image, String mimeType) {
+        String url = String.format(GEMINI_API_URL, model, apiKey);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        String prompt = """
+                Analyze this fresh food/product image for an ecommerce search feature.
+                Return ONLY one valid JSON object:
+                {
+                  "keyword": "short Vietnamese search keyword, e.g. ca chua",
+                  "keywords": ["Vietnamese and English search keywords"],
+                  "category": "vegetable|fruit|meat|seafood|drink|other",
+                  "confidence": 0.0
+                }
+                Prefer product names used in Vietnam. If the image is not food or grocery, use category "other" and confidence below 0.4.
+                """;
+
+        Map<String, Object> inlineData = Map.of(
+                "mime_type", mimeType != null && !mimeType.isBlank() ? mimeType : "image/jpeg",
+                "data", base64Image
+        );
+        Map<String, Object> userContent = new HashMap<>();
+        userContent.put("role", "user");
+        userContent.put("parts", List.of(
+                Map.of("text", prompt),
+                Map.of("inline_data", inlineData)
+        ));
+
+        Map<String, Object> generationConfig = new HashMap<>();
+        generationConfig.put("temperature", 0.1);
+        generationConfig.put("maxOutputTokens", 256);
+
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("contents", List.of(userContent));
+        requestBody.put("generationConfig", generationConfig);
+
+        HttpEntity<Map<String, Object>> request = new HttpEntity<>(requestBody, headers);
+
+        @SuppressWarnings("unchecked")
+        ResponseEntity<Map<String, Object>> response =
+                restTemplate.postForEntity(url, request, (Class<Map<String, Object>>) (Class<?>) Map.class);
+
+        if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+            @SuppressWarnings("unchecked")
+            List<Map<String, Object>> candidates =
+                    (List<Map<String, Object>>) response.getBody().get("candidates");
+            if (candidates != null && !candidates.isEmpty()) {
+                @SuppressWarnings("unchecked")
+                Map<String, Object> content = (Map<String, Object>) candidates.get(0).get("content");
+                if (content != null) {
+                    @SuppressWarnings("unchecked")
+                    List<Map<String, Object>> parts = (List<Map<String, Object>>) content.get("parts");
+                    if (parts != null && !parts.isEmpty()) {
+                        return String.valueOf(parts.get(0).get("text"));
+                    }
+                }
+            }
+        }
+        throw AppException.badRequest("Gemini khong tra ve ket qua nhan dien");
+    }
+
+    private String extractJson(String text) {
+        if (text == null || text.isBlank()) {
+            throw AppException.badRequest("Gemini tra ve rong");
+        }
+        String cleaned = text.replace("```json", "").replace("```", "").trim();
+        int start = cleaned.indexOf('{');
+        int end = cleaned.lastIndexOf('}');
+        if (start < 0 || end <= start) {
+            throw AppException.badRequest("Gemini khong tra ve JSON hop le");
+        }
+        return cleaned.substring(start, end + 1);
     }
 
     // ── Mock data thông minh (fallback) ─────────────────────────────────────

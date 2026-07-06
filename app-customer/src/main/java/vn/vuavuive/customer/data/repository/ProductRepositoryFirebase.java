@@ -233,11 +233,8 @@ public class ProductRepositoryFirebase {
                     String query = deAccent(search.trim()).toLowerCase();
                     List<Product> filtered = new ArrayList<>();
                     for (Product p : products) {
-                        if (p.getName() != null) {
-                            String nameNormalized = deAccent(p.getName()).toLowerCase();
-                            if (nameNormalized.contains(query)) {
-                                filtered.add(p);
-                            }
+                        if (matchesProduct(p, query)) {
+                            filtered.add(p);
                         }
                     }
                     products = filtered;
@@ -495,5 +492,22 @@ public class ProductRepositoryFirebase {
         java.util.regex.Pattern pattern = java.util.regex.Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
         String result = pattern.matcher(nfdNormalizedString).replaceAll("");
         return result.replace('đ', 'd').replace('Đ', 'D');
+    }
+    private static boolean matchesProduct(Product p, String query) {
+        if (containsNormalized(p.getName(), query)
+                || containsNormalized(p.getDescription(), query)
+                || containsNormalized(p.getSubCategory(), query)) {
+            return true;
+        }
+        if (p.getTags() != null) {
+            for (String tag : p.getTags()) {
+                if (containsNormalized(tag, query)) return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean containsNormalized(String value, String query) {
+        return value != null && deAccent(value).toLowerCase().contains(query);
     }
 }
