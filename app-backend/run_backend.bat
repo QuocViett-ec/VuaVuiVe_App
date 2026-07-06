@@ -11,16 +11,8 @@ set "SDK_DIR=%LOCALAPPDATA%\Android\Sdk"
 set "ADB_PATH=%SDK_DIR%\platform-tools\adb.exe"
 
 if exist "%ADB_PATH%" (
-    echo [+] Kiem tra thiet bi dang ket noi...
-    "%ADB_PATH%" devices | findstr /c:"device" | findstr /v "attached" >nul
-    if %errorlevel% neq 0 (
-        echo [+] Khong phat hien thiet bi/may ao nao dang ket noi.
-        echo [+] Vui long ket noi thiet bi hoac bat may ao de tu dong reverse port 3000.
-    ) else (
-        echo [+] Da phat hien thiet bi/may ao dang chay san.
-    )
-    echo [+] Dang kich hoat tu dong reverse port 3000 cho tung thiet bi...
-    start /b powershell -NoProfile -Command "& '%ADB_PATH%' devices | Select-Object -Skip 1 | ForEach-Object { if ($_ -match '^(\S+)\s+device$') { & '%ADB_PATH%' -s $matches[1] reverse tcp:3000 tcp:3000; Write-Host ('[+][adb] Da reverse port 3000 cho ' + $matches[1]) } }"
+    echo [+] Dang cho emulator/thiet bi de tu dong reverse port 3000...
+    start /b powershell -NoProfile -ExecutionPolicy Bypass -Command "$adb='%ADB_PATH%'; $deadline=(Get-Date).AddSeconds(60); do { $devices=& $adb devices | Select-Object -Skip 1; $ok=$false; foreach ($line in $devices) { if ($line -match '^(\S+)\s+device$') { & $adb -s $matches[1] reverse tcp:3000 tcp:3000 | Out-Null; Write-Host ('[+][adb] Da reverse port 3000 cho ' + $matches[1]); $ok=$true } }; if ($ok) { exit 0 }; Start-Sleep -Seconds 2 } while ((Get-Date) -lt $deadline); Write-Host '[!][adb] Chua thay emulator/thiet bi sau 60s, bo qua reverse port.'"
 ) else (
     echo [!] Khong tim thay adb.exe tai %ADB_PATH%, bo qua phan reverse port.
 )
