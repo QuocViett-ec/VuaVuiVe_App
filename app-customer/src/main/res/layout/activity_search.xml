@@ -76,7 +76,7 @@
             android:background="@drawable/bg_search_bar"
             android:contentDescription="Tim bang hinh anh"
             android:padding="12dp"
-            android:src="@drawable/ic_image"
+            android:src="@drawable/ic_camera"
             android:tint="@color/primary" />
     </LinearLayout>
 

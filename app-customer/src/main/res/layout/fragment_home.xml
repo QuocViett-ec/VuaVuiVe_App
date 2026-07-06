@@ -269,13 +269,20 @@
                         android:singleLine="true"
                         android:imeOptions="actionSearch" />
 
-                    <ImageView
+                    <TextView
                         android:id="@+id/btn_image_search_home"
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
-                        android:layout_marginEnd="14dp"
-                        android:src="@drawable/ic_image"
-                        app:tint="@color/primary" />
+                        android:layout_width="48dp"
+                        android:layout_height="32dp"
+                        android:layout_marginEnd="10dp"
+                        android:background="@drawable/bg_camera_pill"
+                        android:clickable="true"
+                        android:contentDescription="Tim bang camera"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:text="CAM"
+                        android:textColor="@android:color/white"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
 
                     <ImageView
                         android:id="@+id/btn_menu"
