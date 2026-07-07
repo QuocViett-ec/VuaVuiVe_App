@@ -86,13 +86,15 @@ public class ProductDetailActivity extends AppCompatActivity {
     }
 
     private void setupToolbar() {
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle("");
+        View btnBack = findViewById(R.id.btn_back_custom);
+        if (btnBack != null) {
+            btnBack.setOnClickListener(v -> finish());
         }
-        toolbar.setNavigationOnClickListener(v -> finish());
+
+        View btnCart = findViewById(R.id.btn_cart_custom);
+        if (btnCart != null) {
+            btnCart.setOnClickListener(v -> buyNow());
+        }
     }
 
     private void initViews() {
@@ -236,10 +238,16 @@ public class ProductDetailActivity extends AppCompatActivity {
 
     // ── Bind product data to views ─────────────────────────────────────────────
     private void bindProduct(Product product) {
+        // Custom toolbar title
+        TextView tvTitleCustom = findViewById(R.id.tv_title_custom);
+        String productName = product.getName() != null ? product.getName() : "";
+        if (tvTitleCustom != null) {
+            tvTitleCustom.setText(productName);
+        }
+
         // Collapsing toolbar title
         com.google.android.material.appbar.CollapsingToolbarLayout ctl =
                 findViewById(R.id.collapsing_toolbar);
-        String productName = product.getName() != null ? product.getName() : "";
         if (ctl != null) ctl.setTitle(productName);
 
         // Image Slider Setup
@@ -409,6 +417,35 @@ public class ProductDetailActivity extends AppCompatActivity {
             meta.put("quantity", quantity);
             productViewModel.sendRecommendEvent(Constants.EVENT_ADD_TO_CART, id, meta);
         } catch (Exception ignored) {}
+    }
+
+    private void buyNow() {
+        if (currentProduct == null) {
+            Toast.makeText(this, "Đang tải thông tin sản phẩm, vui lòng đợi...", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        String id = currentProduct.getId();
+        if (currentProduct.getStock() <= 0) {
+            Toast.makeText(this, "Sản phẩm đã hết hàng", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (sessionManager == null || !sessionManager.isLoggedIn()) {
+            Toast.makeText(this, "Vui lòng đăng nhập để mua hàng", Toast.LENGTH_SHORT).show();
+            android.content.Intent intent = new android.content.Intent(this, vn.vuavuive.customer.ui.auth.LoginActivity.class);
+            startActivity(intent);
+            return;
+        }
+
+        android.content.Intent intent = new android.content.Intent(this, vn.vuavuive.customer.ui.checkout.CheckoutActivity.class);
+        intent.putExtra("EXTRA_BUY_NOW", true);
+        intent.putExtra("EXTRA_PRODUCT_ID", id);
+        intent.putExtra("EXTRA_PRODUCT_NAME", currentProduct.getName());
+        intent.putExtra("EXTRA_PRODUCT_PRICE", currentProduct.getPrice());
+        intent.putExtra("EXTRA_PRODUCT_IMAGE_URL", currentProduct.getImageUrl());
+        intent.putExtra("EXTRA_PRODUCT_UNIT", currentProduct.getUnit());
+        intent.putExtra("EXTRA_PRODUCT_STOCK", currentProduct.getStock());
+        intent.putExtra("EXTRA_PRODUCT_QUANTITY", quantity);
+        startActivity(intent);
     }
 
     private void setupImageSlider(Product product) {

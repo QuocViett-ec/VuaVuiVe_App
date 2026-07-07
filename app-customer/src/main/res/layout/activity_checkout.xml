@@ -104,6 +104,7 @@
                             android:layout_marginTop="12dp"
                             app:endIconMode="custom"
                             app:endIconDrawable="@drawable/ic_location"
+                            app:endIconTint="@color/primary"
                             android:hint="Địa chỉ giao hàng">
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/et_delivery_address"

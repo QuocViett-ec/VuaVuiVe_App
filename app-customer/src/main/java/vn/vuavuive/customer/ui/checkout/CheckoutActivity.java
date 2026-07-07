@@ -58,6 +58,7 @@ public class CheckoutActivity extends AppCompatActivity {
 
     private double appliedDiscount = 0;
     private boolean cartLoaded = false;
+    private boolean isBuyNow = false;
     private List<CartItemEntity> cartItems = new ArrayList<>();
 
     private final ActivityResultLauncher<Intent> mapPickerLauncher =
@@ -122,15 +123,43 @@ public class CheckoutActivity extends AppCompatActivity {
     private void observeCart() {
         if (btnPlaceOrder != null) btnPlaceOrder.setEnabled(false);
 
-        cartViewModel.getCartItems().observe(this, items -> {
-            cartItems = items != null ? items : new ArrayList<>();
+        isBuyNow = getIntent().getBooleanExtra("EXTRA_BUY_NOW", false);
+        if (isBuyNow) {
+            String productId = getIntent().getStringExtra("EXTRA_PRODUCT_ID");
+            String productName = getIntent().getStringExtra("EXTRA_PRODUCT_NAME");
+            double productPrice = getIntent().getDoubleExtra("EXTRA_PRODUCT_PRICE", 0.0);
+            String productImageUrl = getIntent().getStringExtra("EXTRA_PRODUCT_IMAGE_URL");
+            String productUnit = getIntent().getStringExtra("EXTRA_PRODUCT_UNIT");
+            int productStock = getIntent().getIntExtra("EXTRA_PRODUCT_STOCK", 99);
+            int qty = getIntent().getIntExtra("EXTRA_PRODUCT_QUANTITY", 1);
+
+            CartItemEntity buyNowItem = new CartItemEntity();
+            buyNowItem.setProductId(productId);
+            buyNowItem.setProductName(productName);
+            buyNowItem.setProductPrice(productPrice);
+            buyNowItem.setProductImageUrl(productImageUrl);
+            buyNowItem.setProductUnit(productUnit);
+            buyNowItem.setProductStock(productStock);
+            buyNowItem.setQuantity(qty);
+
+            cartItems = new ArrayList<>();
+            cartItems.add(buyNowItem);
             cartLoaded = true;
             updatePriceSummary();
-            if (btnPlaceOrder != null && progressBar != null
-                    && progressBar.getVisibility() != View.VISIBLE) {
+            if (btnPlaceOrder != null) {
                 btnPlaceOrder.setEnabled(true);
             }
-        });
+        } else {
+            cartViewModel.getCartItems().observe(this, items -> {
+                cartItems = items != null ? items : new ArrayList<>();
+                cartLoaded = true;
+                updatePriceSummary();
+                if (btnPlaceOrder != null && progressBar != null
+                        && progressBar.getVisibility() != View.VISIBLE) {
+                    btnPlaceOrder.setEnabled(true);
+                }
+            });
+        }
     }
 
     private void setupPlaceOrder() {
@@ -237,7 +266,9 @@ public class CheckoutActivity extends AppCompatActivity {
                 trackPurchaseEvents(orderId);
 
                 if (Constants.PAYMENT_COD.equals(finalMethod)) {
-                    cartViewModel.clearCart();
+                    if (!isBuyNow) {
+                        cartViewModel.clearCart();
+                    }
                     Toast.makeText(CheckoutActivity.this, "Đặt hàng thành công!", Toast.LENGTH_LONG).show();
                     finish();
                 } else if (order.getPaymentUrl() != null && !order.getPaymentUrl().isEmpty()) {
@@ -337,6 +368,7 @@ public class CheckoutActivity extends AppCompatActivity {
         intent.putExtra("order_id", orderId);
         intent.putExtra("order_total", amount);
         intent.putExtra("provider", provider != null ? provider.toUpperCase() : "");
+        intent.putExtra("EXTRA_BUY_NOW", isBuyNow);
         startActivity(intent);
     }
 

@@ -85,7 +85,10 @@ public class PaymentResultActivity extends AppCompatActivity {
                 String status = result.data.getPaymentStatus();
                 String orderStatus = result.data.getOrderStatus();
                 if ("PAID".equalsIgnoreCase(status)) {
-                    cartViewModel.clearCart();
+                    boolean isBuyNow = getIntent().getBooleanExtra("EXTRA_BUY_NOW", false);
+                    if (!isBuyNow) {
+                        cartViewModel.clearCart();
+                    }
                     Toast.makeText(this, "Thanh toan thanh cong", Toast.LENGTH_LONG).show();
                     goToOrders();
                 } else if ("FAILED".equalsIgnoreCase(status) || "CANCELLED".equalsIgnoreCase(status)) {
