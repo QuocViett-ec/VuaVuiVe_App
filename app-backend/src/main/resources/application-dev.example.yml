@@ -76,7 +76,7 @@ app:
 # ============================================
   gemini:
     api-key: "YOUR_GEMINI_API_KEY"
-    model: "gemini-1.5-flash"
+    model: "gemini-2.0-flash"
 
 # ============================================
 #  CẤU HÌNH TỰ ĐỘNG HỦY ĐƠN (Cron Job)
