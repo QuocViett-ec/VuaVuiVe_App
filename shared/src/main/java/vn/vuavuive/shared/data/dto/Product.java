@@ -31,6 +31,9 @@ public class Product {
     @SerializedName("imageUrl")
     private String imageUrl;
 
+    @SerializedName("images")
+    private List<String> images;
+
     @SerializedName("stock")
     private int stock;
 
@@ -71,6 +74,7 @@ public class Product {
     public String getSubCategory() { return subCategory; }
     public String getDescription() { return description; }
     public String getImageUrl() { return imageUrl; }
+    public List<String> getImages() { return images; }
     public int getStock() { return stock; }
     public String getUnit() { return unit; }
     public List<String> getTags() { return tags; }
@@ -92,6 +96,7 @@ public class Product {
     public void setSubCategory(String subCategory) { this.subCategory = subCategory; }
     public void setDescription(String description) { this.description = description; }
     public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+    public void setImages(List<String> images) { this.images = images; }
     public void setStock(int stock) { this.stock = stock; }
     public void setUnit(String unit) { this.unit = unit; }
     public void setTags(List<String> tags) { this.tags = tags; }

@@ -131,6 +131,7 @@ public class ProductService {
                 .stockQuantity(request.stockQuantity())
                 .unit(request.unit())
                 .imageUrl(request.imageUrl())
+                .images(request.images())
                 .categoryId(category.getId())
                 .isActive(request.isActive() != null ? request.isActive() : true)
                 .build();
@@ -156,6 +157,7 @@ public class ProductService {
         product.setUnit(request.unit());
         product.setCategoryId(category.getId());
         if (request.imageUrl() != null) product.setImageUrl(request.imageUrl());
+        if (request.images() != null) product.setImages(request.images());
         if (request.isActive() != null) product.setIsActive(request.isActive());
 
         return toResponse(productRepository.save(product));
@@ -236,6 +238,7 @@ public class ProductService {
                 p.getStockQuantity(),
                 p.getUnit(),
                 p.getImageUrl(),
+                ProductImages.withFallback(p),
                 p.getIsActive(),
                 category != null ? category.getId() : null,
                 category != null ? category.getName() : null,

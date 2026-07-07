@@ -34,6 +34,8 @@ server:
 #  CẤU HÌNH JWT
 # ============================================
 app:
+  seed:
+    enabled: "${APP_SEED_ENABLED:false}"
   jwt:
     secret: "YOUR_JWT_SUPER_SECRET_KEY_MIN_256BIT"
     access-token-expiration-ms: 900000       # 15 phút

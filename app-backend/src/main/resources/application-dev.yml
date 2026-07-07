@@ -15,6 +15,8 @@ server:
 #  CẤU HÌNH JWT & FIREBASE
 # ============================================
 app:
+  seed:
+    enabled: "${APP_SEED_ENABLED:false}"
   firebase:
     database-url: "${FIREBASE_DATABASE_URL:https://vua-vui-ve-default-rtdb.firebaseio.com}"
     config-path: "${FIREBASE_CONFIG_PATH:file:./serviceAccountKey.json}"

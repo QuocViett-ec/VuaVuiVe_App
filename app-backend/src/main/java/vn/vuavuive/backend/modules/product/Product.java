@@ -27,6 +27,9 @@ public class Product extends BaseEntity {
     private String unit = "KG";
     
     private String imageUrl;
+
+    @Builder.Default
+    private java.util.List<String> images = new java.util.ArrayList<>();
     
     @Builder.Default
     private Boolean isActive = true;
@@ -69,6 +72,11 @@ public class Product extends BaseEntity {
     public String getImageUrl() { return imageUrl; }
     @com.google.firebase.database.PropertyName("image_url")
     public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+
+    @com.google.firebase.database.PropertyName("images")
+    public java.util.List<String> getImages() { return images; }
+    @com.google.firebase.database.PropertyName("images")
+    public void setImages(java.util.List<String> images) { this.images = images; }
 
     @com.google.firebase.database.PropertyName("is_active")
     public Boolean getIsActive() { return isActive; }
