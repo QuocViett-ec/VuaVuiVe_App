@@ -38,7 +38,7 @@ public class CartFragment extends Fragment {
     private View layoutCartContent;
     private View layoutEmptyCart;
     private View layoutSavedHeader;
-    private Button btnCheckout;
+    private Button btnCheckout, btnDeleteSelected;
     private RecyclerView rvSavedItems;
     private boolean savedExpanded = false;
     private List<CartItemEntity> cartItems = new java.util.ArrayList<>();
@@ -70,6 +70,7 @@ public class CartFragment extends Fragment {
         tvSavedToggle  = view.findViewById(R.id.tv_saved_toggle);
         tvSavedEmpty   = view.findViewById(R.id.tv_saved_empty);
         rvSavedItems   = view.findViewById(R.id.rv_saved_items);
+        btnDeleteSelected = view.findViewById(R.id.btn_delete_selected);
 
         setupCartRecyclerView(view);
         setupSavedRecyclerView();
@@ -94,8 +95,17 @@ public class CartFragment extends Fragment {
                 startActivity(new Intent(getContext(), LoginActivity.class));
                 return;
             }
-            startActivity(new Intent(getContext(), CheckoutActivity.class));
+            java.util.List<String> selectedIds = cartAdapter.getSelectedProductIds();
+            if (selectedIds.isEmpty()) {
+                Toast.makeText(getContext(), "Vui lòng chọn ít nhất một sản phẩm để thanh toán", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            Intent intent = new Intent(getContext(), CheckoutActivity.class);
+            intent.putStringArrayListExtra("EXTRA_SELECTED_PRODUCT_IDS", new java.util.ArrayList<>(selectedIds));
+            startActivity(intent);
         });
+
+        btnDeleteSelected.setOnClickListener(v -> deleteSelectedItems());
 
         setupHeaderSearch(view);
     }
@@ -125,6 +135,10 @@ public class CartFragment extends Fragment {
     private void setupCartRecyclerView(View view) {
         RecyclerView rv = view.findViewById(R.id.rv_cart_items);
         cartAdapter = new CartAdapter(getContext(), cartViewModel, false);
+        cartAdapter.setOnSelectionChangedListener(selectedCount -> {
+            updateSelectedDeleteButton(selectedCount);
+            updateTotal(cartItems);
+        });
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
         rv.setAdapter(cartAdapter);
 
@@ -141,6 +155,7 @@ public class CartFragment extends Fragment {
                 CartItemEntity item = cartAdapter.getItemAt(position);
                 if (item != null) {
                     cartViewModel.removeItem(item.getProductId());
+                    cartAdapter.clearSelection();
                 }
             }
         };
@@ -168,6 +183,7 @@ public class CartFragment extends Fragment {
             updateTotal(cartItems);
             updateEmptyState();
             updateSavedSection();
+            updateSelectedDeleteButton(cartAdapter.getSelectedProductIds().size());
         });
 
         cartViewModel.getSavedItems().observe(getViewLifecycleOwner(), items -> {
@@ -180,9 +196,12 @@ public class CartFragment extends Fragment {
 
     private void updateTotal(List<CartItemEntity> items) {
         double total = 0;
-        if (items != null) {
+        if (items != null && cartAdapter != null) {
+            java.util.List<String> selectedIds = cartAdapter.getSelectedProductIds();
             for (CartItemEntity item : items) {
-                if (item != null) total += item.getLineTotal();
+                if (item != null && selectedIds.contains(item.getProductId())) {
+                    total += item.getLineTotal();
+                }
             }
         }
         if (tvTotal != null) tvTotal.setText(CurrencyFormatter.format(total));
@@ -233,5 +252,29 @@ public class CartFragment extends Fragment {
         if (tvSavedEmpty != null) {
             tvSavedEmpty.setVisibility(!hasSaved && showHeader ? View.VISIBLE : View.GONE);
         }
+    }
+
+    private void deleteSelectedItems() {
+        if (cartAdapter == null) return;
+        List<String> selectedIds = cartAdapter.getSelectedProductIds();
+        if (selectedIds.isEmpty()) return;
+        for (String productId : selectedIds) {
+            cartViewModel.removeItem(productId);
+        }
+        int removedCount = selectedIds.size();
+        cartAdapter.clearSelection();
+        Toast.makeText(
+                getContext(),
+                "Đã xóa " + removedCount + " sản phẩm khỏi giỏ hàng",
+                Toast.LENGTH_SHORT
+        ).show();
+    }
+
+    private void updateSelectedDeleteButton(int selectedCount) {
+        if (btnDeleteSelected == null) return;
+        btnDeleteSelected.setVisibility(selectedCount > 0 ? View.VISIBLE : View.GONE);
+        btnDeleteSelected.setText(selectedCount > 0
+                ? "Xóa đã chọn (" + selectedCount + ")"
+                : "Xóa đã chọn");
     }
 }

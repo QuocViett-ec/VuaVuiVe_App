@@ -1,5 +1,8 @@
 package vn.vuavuive.backend.modules.ai;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,17 +13,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
+import vn.vuavuive.backend.core.FirebaseRepositoryHelper;
 import vn.vuavuive.backend.exception.AppException;
 import vn.vuavuive.backend.modules.vision.VisionSearchResponse;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
- * GeminiService - Kết nối Google Gemini AI API để cung cấp Chatbot tư vấn Vựa Vui Vẻ.
- * Nếu API lỗi, tự động fallback sang mock data thông minh tiếng Việt.
+ * GeminiService - Kết nối Google Gemini 2.5 Flash để cung cấp chatbot tư vấn Vựa Vui Vẻ.
+ * Tự động tìm sản phẩm liên quan từ Firebase REST API và nhúng vào context trước khi gọi AI.
  */
 @Slf4j
 @Service
@@ -34,64 +35,169 @@ public class GeminiService {
     private String model;
 
     private final RestTemplate restTemplate;
+    private final FirebaseRepositoryHelper firebase;
 
     private static final String GEMINI_API_URL =
             "https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent?key=%s";
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
+    // ── System Prompt ────────────────────────────────────────────────────────
     private static final String SYSTEM_PROMPT =
-            "Bạn là VuiVe Bot - trợ lý ảo thông minh của Vựa Vui Vẻ, nền tảng thương mại điện tử " +
-            "chuyên cung cấp thực phẩm tươi sạch, rau củ quả đạt chuẩn VietGAP, thịt cá hải sản tươi ngon.\n\n" +
-            "Nhiệm vụ: Tư vấn sản phẩm, gợi ý món ăn, hỗ trợ đơn hàng, giao hàng, thanh toán.\n" +
-            "Voucher hiện có: VUAVUIVE giảm 15%, FREESHIP24 miễn phí ship.\n" +
-            "Phong cách: Thân thiện, tiếng Việt, ngắn gọn, dùng emoji.";
+            "Bạn là VuiVe Bot - trợ lý ảo thông minh của Vựa Vui Vẻ, một nền tảng thương mại điện tử " +
+            "chuyên cung cấp thực phẩm tươi sạch tại Việt Nam.\n\n" +
+            "# Thông tin về Vựa Vui Vẻ\n" +
+            "- Chuyên cung cấp: rau củ quả VietGAP, thịt tươi sạch, hải sản nhập mới hàng ngày\n" +
+            "- Giao hàng trong 2–4 giờ, nội thành và vùng lân cận\n" +
+            "- Voucher: VUAVUIVE giảm 15%, FREESHIP24 miễn phí ship (đơn từ 150k)\n" +
+            "- Thanh toán: COD, MoMo, ZaloPay\n\n" +
+            "# Nhiệm vụ\n" +
+            "1. Tư vấn sản phẩm thực phẩm tươi ngon, dinh dưỡng\n" +
+            "2. Gợi ý món ăn và công thức nấu ăn phù hợp\n" +
+            "3. Hỗ trợ đơn hàng, giao hàng, thanh toán\n" +
+            "4. Nếu trong context có danh sách sản phẩm, hãy tự nhiên giới thiệu chúng (tên, giá)\n\n" +
+            "# Phong cách\n" +
+            "- Thân thiện, vui vẻ, tiếng Việt tự nhiên\n" +
+            "- Ngắn gọn, súc tích (tối đa 150 từ)\n" +
+            "- Dùng emoji phù hợp\n" +
+            "- KHÔNG bịa thông tin sản phẩm nếu không có trong context";
 
-    /**
-     * Gửi tin nhắn đến Gemini AI, nếu lỗi thì dùng mock data thông minh.
-     */
-    public String chatWithBot(String userPrompt) {
+    // ── Model ánh xạ Firebase product ────────────────────────────────────────
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class FirebaseProduct {
+        public String id;
+        public String name;
+
+        @JsonProperty("selling_price")
+        public Double sellingPrice;
+
+        @JsonProperty("sellingPrice")
+        public Double sellingPrice2;
+
+        public Double price;
+
+        public String unit;
+
+        @JsonProperty("image_url")
+        public String imageUrl;
+
+        @JsonProperty("imageUrl")
+        public String imageUrl2;
+
+        @JsonProperty("is_active")
+        public Boolean isActive;
+
+        @JsonProperty("isActive")
+        public Boolean isActive2;
+
+        @JsonProperty("stock_quantity")
+        public Integer stockQuantity;
+
+        public double getPrice() {
+            if (sellingPrice != null && sellingPrice > 0) return sellingPrice;
+            if (sellingPrice2 != null && sellingPrice2 > 0) return sellingPrice2;
+            if (price != null && price > 0) return price;
+            return 0;
+        }
+
+        public String getImage() {
+            if (imageUrl != null && !imageUrl.isEmpty()) return imageUrl;
+            if (imageUrl2 != null && !imageUrl2.isEmpty()) return imageUrl2;
+            return null;
+        }
+
+        public boolean isActive() {
+            if (isActive != null) return isActive;
+            if (isActive2 != null) return isActive2;
+            return true; // default active
+        }
+    }
+
+    /** Dữ liệu sản phẩm trả về cho client */
+    public static class ProductInfo {
+        public String id;
+        public String name;
+        public double price;
+        public String unit;
+        public String imageUrl;
+
+        public String toContextString() {
+            return String.format("- %s: %.0fđ/%s", name, price, unit != null ? unit : "kg");
+        }
+    }
+
+    // ── Main chat method ──────────────────────────────────────────────────────
+    public ChatController.ChatResponse chatWithBot(String userPrompt) {
         log.info("VuiVe Bot nhận prompt: {}", userPrompt);
 
-        // Thử gọi Gemini API thật trước
+        // 1. Tìm sản phẩm từ Firebase REST
+        List<ProductInfo> matchedProducts = searchRelevantProducts(userPrompt);
+        log.info("Tìm được {} sản phẩm liên quan", matchedProducts.size());
+
+        // 2. Gọi Gemini AI với context sản phẩm
         try {
-            String reply = callGeminiApi(userPrompt);
+            String reply = callGeminiApi(userPrompt, matchedProducts);
             if (reply != null && !reply.isBlank()) {
                 log.info("Gemini AI trả lời thành công.");
-                return reply;
+                return new ChatController.ChatResponse(reply.trim(), matchedProducts);
             }
         } catch (Exception e) {
             log.warn("Gemini API lỗi ({}), chuyển sang mock data.", e.getMessage());
         }
 
-        // Fallback: mock data thông minh
-        return getMockReply(userPrompt);
+        // 3. Fallback: mock data thông minh
+        String mockReply = getMockReply(userPrompt);
+        return new ChatController.ChatResponse(mockReply, matchedProducts);
     }
 
-    public VisionSearchResponse analyzeProductImage(String base64Image, String mimeType) {
-        if (apiKey == null || apiKey.isBlank()) {
-            throw AppException.badRequest("Chua cau hinh GEMINI_API_KEY trong app-backend\\.env");
-        }
+    // ── Tìm sản phẩm dùng FirebaseRepositoryHelper REST ──────────────────────
+    @SuppressWarnings("unchecked")
+    private List<ProductInfo> searchRelevantProducts(String userPrompt) {
+        String query = userPrompt.toLowerCase().trim();
+        List<ProductInfo> results = new ArrayList<>();
+
         try {
-            String text = callGeminiVisionApi(base64Image, mimeType);
-            String json = extractJson(text);
-            return MAPPER.readValue(json, VisionSearchResponse.class);
-        } catch (RestClientResponseException e) {
-            log.warn("Gemini Vision HTTP failed: {} {}", e.getRawStatusCode(), e.getResponseBodyAsString());
-            int status = e.getRawStatusCode();
-            if (status == 429) throw AppException.badRequest("Gemini dang het quota hoac bi gioi han toc do, thu lai sau");
-            if (status == 403) throw AppException.badRequest("Gemini API key khong co quyen goi model nay");
-            if (status == 404) throw AppException.badRequest("Gemini model khong ton tai, kiem tra GEMINI_MODEL");
-            throw AppException.badRequest("Gemini khong xu ly duoc anh");
-        } catch (AppException e) {
-            throw e;
+            List<FirebaseProduct> allProducts = firebase.getList("products", FirebaseProduct.class);
+            log.debug("Loaded {} products from Firebase", allProducts.size());
+
+            for (FirebaseProduct p : allProducts) {
+                if (p.name == null) continue;
+                if (!p.isActive()) continue;
+
+                if (isProductMatch(query, p)) {
+                    ProductInfo info = new ProductInfo();
+                    info.id       = p.id;
+                    info.name     = p.name;
+                    info.price    = p.getPrice();
+                    info.unit     = p.unit != null ? p.unit : "kg";
+                    info.imageUrl = p.getImage();
+                    results.add(info);
+                    if (results.size() >= 6) break;
+                }
+            }
         } catch (Exception e) {
-            log.warn("Gemini Vision failed: {}", e.getMessage());
-            throw AppException.badRequest("Khong nhan dien duoc san pham trong anh");
+            log.warn("Không thể tìm sản phẩm từ Firebase: {}", e.getMessage());
         }
+
+        return results;
     }
 
-    // ── Gọi Gemini API thật ─────────────────────────────────────────────────
-    private String callGeminiApi(String userPrompt) {
+    private boolean isProductMatch(String query, FirebaseProduct p) {
+        String nameLower = p.name.toLowerCase();
+
+        // So sánh trực tiếp tên
+        if (nameLower.contains(query) || query.contains(nameLower)) return true;
+
+        // So sánh từng từ (độ dài >= 3 ký tự)
+        String[] words = query.split("[\\s,]+");
+        for (String word : words) {
+            if (word.length() >= 3 && nameLower.contains(word)) return true;
+        }
+
+        return false;
+    }
+
+    // ── Gọi Gemini API ────────────────────────────────────────────────────────
+    private String callGeminiApi(String userPrompt, List<ProductInfo> products) {
         String url = String.format(GEMINI_API_URL, model, apiKey);
 
         HttpHeaders headers = new HttpHeaders();
@@ -100,13 +206,22 @@ public class GeminiService {
         Map<String, Object> systemInstruction = new HashMap<>();
         systemInstruction.put("parts", List.of(Map.of("text", SYSTEM_PROMPT)));
 
+        // Tạo prompt user với context sản phẩm
+        StringBuilder promptBuilder = new StringBuilder(userPrompt);
+        if (!products.isEmpty()) {
+            promptBuilder.append("\n\n[Sản phẩm đang có trong cửa hàng liên quan:]\n");
+            for (ProductInfo pi : products) {
+                promptBuilder.append(pi.toContextString()).append("\n");
+            }
+        }
+
         Map<String, Object> userContent = new HashMap<>();
         userContent.put("role", "user");
-        userContent.put("parts", List.of(Map.of("text", userPrompt)));
+        userContent.put("parts", List.of(Map.of("text", promptBuilder.toString())));
 
         Map<String, Object> generationConfig = new HashMap<>();
         generationConfig.put("temperature", 0.7);
-        generationConfig.put("maxOutputTokens", 512);
+        generationConfig.put("maxOutputTokens", 500);
 
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("system_instruction", systemInstruction);
@@ -138,9 +253,32 @@ public class GeminiService {
         return null;
     }
 
+    // ── Vision API ────────────────────────────────────────────────────────────
+    public VisionSearchResponse analyzeProductImage(String base64Image, String mimeType) {
+        if (apiKey == null || apiKey.isBlank()) {
+            throw AppException.badRequest("Chua cau hinh GEMINI_API_KEY");
+        }
+        try {
+            String text = callGeminiVisionApi(base64Image, mimeType);
+            String json = extractJson(text);
+            return MAPPER.readValue(json, VisionSearchResponse.class);
+        } catch (RestClientResponseException e) {
+            log.warn("Gemini Vision HTTP failed: {} {}", e.getRawStatusCode(), e.getResponseBodyAsString());
+            int status = e.getRawStatusCode();
+            if (status == 429) throw AppException.badRequest("Gemini dang het quota hoac bi gioi han toc do, thu lai sau");
+            if (status == 403) throw AppException.badRequest("Gemini API key khong co quyen goi model nay");
+            if (status == 404) throw AppException.badRequest("Gemini model khong ton tai, kiem tra GEMINI_MODEL");
+            throw AppException.badRequest("Gemini khong xu ly duoc anh");
+        } catch (AppException e) {
+            throw e;
+        } catch (Exception e) {
+            log.warn("Gemini Vision failed: {}", e.getMessage());
+            throw AppException.badRequest("Khong nhan dien duoc san pham trong anh");
+        }
+    }
+
     private String callGeminiVisionApi(String base64Image, String mimeType) {
         String url = String.format(GEMINI_API_URL, model, apiKey);
-
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
@@ -201,83 +339,35 @@ public class GeminiService {
     }
 
     private String extractJson(String text) {
-        if (text == null || text.isBlank()) {
-            throw AppException.badRequest("Gemini tra ve rong");
-        }
+        if (text == null || text.isBlank()) throw AppException.badRequest("Gemini tra ve rong");
         String cleaned = text.replace("```json", "").replace("```", "").trim();
         int start = cleaned.indexOf('{');
         int end = cleaned.lastIndexOf('}');
-        if (start < 0 || end <= start) {
-            throw AppException.badRequest("Gemini khong tra ve JSON hop le");
-        }
+        if (start < 0 || end <= start) throw AppException.badRequest("Gemini khong tra ve JSON hop le");
         return cleaned.substring(start, end + 1);
     }
 
-    // ── Mock data thông minh (fallback) ─────────────────────────────────────
+    // ── Mock fallback ─────────────────────────────────────────────────────────
     private String getMockReply(String userPrompt) {
         String q = userPrompt.toLowerCase().trim();
-
-        // Chào hỏi
-        if (q.contains("chào") || q.contains("hello") || q.contains("hi") || q.contains("xin chào")) {
-            return "Chào bạn! 👋 Mình là VuiVe Bot của Vựa Vui Vẻ.\n\nMình có thể giúp bạn:\n• 🛒 Tìm & tư vấn sản phẩm tươi ngon\n• 🍳 Gợi ý món ăn và cách nấu\n• 📦 Tra cứu đơn hàng & giao hàng\n• 🎁 Thông tin khuyến mãi\n\nBạn cần hỗ trợ gì ạ?";
+        if (q.contains("chào") || q.contains("hello") || q.contains("hi")) {
+            return "Chào bạn! 👋 Mình là VuiVe Bot của Vựa Vui Vẻ.\nBạn cần tìm sản phẩm gì, gợi ý món ăn hay hỏi đơn hàng ạ?";
         }
-
-        // Rau củ quả
-        if (q.contains("rau") || q.contains("củ") || q.contains("cải") || q.contains("bắp cải") || q.contains("cà") || q.contains("su hào") || q.contains("bắp") || q.contains("ngô") || q.contains("khoai")) {
-            return "🥦 **Rau củ quả tại Vựa Vui Vẻ**\n\nBên mình có sẵn:\n• Rau muống, rau cải, mồng tơi — tươi hái mỗi sáng\n• Cà rốt, khoai tây, bắp cải VietGAP\n• Dưa chuột, cà chua, ớt chuông nhập mới hàng ngày\n\n💚 Tất cả 100% đạt chuẩn VietGAP, không thuốc trừ sâu.\nBạn muốn đặt mua loại rau nào ạ?";
+        if (q.contains("rau") || q.contains("củ") || q.contains("cải") || q.contains("khoai") || q.contains("bắp") || q.contains("cà")) {
+            return "🥦 Bên mình có nhiều rau củ VietGAP tươi ngon!\nNhập mới mỗi sáng, không thuốc trừ sâu.\nBạn muốn tìm loại nào cụ thể?";
         }
-
-        // Trái cây
-        if (q.contains("trái cây") || q.contains("hoa quả") || q.contains("xoài") || q.contains("dưa") || q.contains("chuối") || q.contains("cam") || q.contains("táo") || q.contains("nho") || q.contains("bưởi") || q.contains("ổi")) {
-            return "🍎 **Trái cây tươi Vựa Vui Vẻ**\n\nĐang có sẵn hôm nay:\n• 🥭 Xoài cát Hòa Lộc — ngọt thơm, 45.000đ/kg\n• 🍌 Chuối già Nam Mỹ — 25.000đ/nải\n• 🍊 Cam sành Vĩnh Long — 35.000đ/kg\n• 🍇 Nho đỏ Ninh Thuận — 85.000đ/kg\n\n🎁 Dùng mã **VUAVUIVE** giảm ngay 15%!\nBạn muốn đặt loại nào?";
+        if (q.contains("thịt") || q.contains("heo") || q.contains("bò") || q.contains("gà")) {
+            return "🥩 Thịt tươi từ trang trại uy tín!\nGiao hàng bảo quản lạnh, đảm bảo tươi ngon.\nBạn cần loại thịt nào ạ?";
         }
-
-        // Thịt
-        if (q.contains("thịt") || q.contains("heo") || q.contains("lợn") || q.contains("bò") || q.contains("gà") || q.contains("vịt") || q.contains("giò") || q.contains("sườn")) {
-            return "🥩 **Thịt tươi Vựa Vui Vẻ**\n\nThịt nhập từ trang trại uy tín, giết mổ đúng chuẩn VSATTP:\n• 🐷 Thịt heo ba chỉ — 130.000đ/kg\n• 🐄 Thịt bò thăn — 250.000đ/kg\n• 🐔 Gà ta thả vườn — 120.000đ/con (1–1.5kg)\n• 🦆 Vịt xiêm — 95.000đ/kg\n\nTất cả bảo quản lạnh, giao trong ngày.\nBạn muốn tư vấn cách chế biến không? 🍳";
+        if (q.contains("cá") || q.contains("tôm") || q.contains("hải sản")) {
+            return "🦐 Hải sản tươi nhập trực tiếp từ cảng mỗi sáng!\nGiao bằng thùng đá lạnh.\nBạn cần loại hải sản nào?";
         }
-
-        // Hải sản / cá
-        if (q.contains("cá") || q.contains("tôm") || q.contains("mực") || q.contains("hải sản") || q.contains("cua") || q.contains("ghẹ") || q.contains("sò") || q.contains("nghêu") || q.contains("ốc")) {
-            return "🦐 **Hải sản tươi Vựa Vui Vẻ**\n\nNhập trực tiếp từ cảng cá mỗi sáng:\n• 🦐 Tôm sú tươi — 220.000đ/kg\n• 🐟 Cá thu Phú Quốc — 150.000đ/kg\n• 🦑 Mực ống — 180.000đ/kg\n• 🦀 Cua biển — 350.000đ/kg\n\n❄️ Giao hàng bằng thùng đá lạnh để giữ tươi ngon.\nBạn cần đặt loại hải sản nào ạ?";
+        if (q.contains("khuyến mãi") || q.contains("voucher")) {
+            return "🎁 Mã VUAVUIVE giảm 15%, FREESHIP24 miễn phí ship!\nÁp dụng khi thanh toán nhé!";
         }
-
-        // Nấu ăn / món ăn / công thức
-        if (q.contains("nấu") || q.contains("món") || q.contains("công thức") || q.contains("thực đơn") || q.contains("làm") || q.contains("chế biến") || q.contains("recipe")) {
-            return "🍳 **Gợi ý món ăn từ VuiVe Bot**\n\nMột số món ngon dễ nấu:\n• **Bò xào cần tỏi**: Thịt bò thăn + cần tỏi Vựa Vui Vẻ, xào lửa to 5 phút là xong!\n• **Canh chua cá lóc**: Cá lóc tươi + cà chua + thơm + me — thanh mát ngày hè\n• **Tôm hấp bia sả**: Tôm sú + bia + sả — hấp 8 phút, chấm muối tiêu chanh 🤤\n• **Salad trộn**: Rau xanh VietGAP + dầu ô liu + chanh — healthy và ngon\n\nBạn muốn mình hướng dẫn chi tiết món nào không?";
+        if (q.contains("đơn") || q.contains("giao hàng")) {
+            return "📦 Giao hàng 2–4 giờ sau xác nhận.\nTra cứu đơn tại tab Đơn hàng nhé!";
         }
-
-        // Giá / khuyến mãi / voucher
-        if (q.contains("giá") || q.contains("bao nhiêu") || q.contains("tiền") || q.contains("khuyến mãi") || q.contains("voucher") || q.contains("mã") || q.contains("giảm") || q.contains("sale") || q.contains("freeship")) {
-            return "🎁 **Khuyến mãi đang có tại Vựa Vui Vẻ**\n\n• 🏷️ Mã **VUAVUIVE** — Giảm **15%** cho mọi đơn hàng\n• 🚚 Mã **FREESHIP24** — Miễn phí vận chuyển (đơn từ 150k)\n• ⭐ Mua hàng tích điểm đổi quà — 1.000đ = 1 điểm\n\nÁp dụng mã tại bước thanh toán trong giỏ hàng nhé!\nBạn cần tư vấn thêm về sản phẩm gì không?";
-        }
-
-        // Đơn hàng / giao hàng / tracking
-        if (q.contains("đơn") || q.contains("giao hàng") || q.contains("ship") || q.contains("vận chuyển") || q.contains("theo dõi") || q.contains("order") || q.contains("tracking") || q.contains("bao lâu")) {
-            return "📦 **Thông tin giao hàng Vựa Vui Vẻ**\n\n• ⏱️ Thời gian giao: **2–4 giờ** sau khi xác nhận đơn\n• 🗺️ Khu vực giao: Nội thành và vùng lân cận\n• 💰 Phí ship: 20.000đ (miễn phí với mã FREESHIP24)\n• 🔍 Tra cứu đơn: Vào tab **Đơn hàng** → chọn đơn → xem chi tiết\n\nNếu bạn cần tra cứu đơn cụ thể, hãy cung cấp mã đơn để mình hỗ trợ nhé!";
-        }
-
-        // Thanh toán
-        if (q.contains("thanh toán") || q.contains("payment") || q.contains("momo") || q.contains("zalopay") || q.contains("cod") || q.contains("tiền mặt") || q.contains("chuyển khoản")) {
-            return "💳 **Phương thức thanh toán tại Vựa Vui Vẻ**\n\nBên mình hỗ trợ:\n• 💵 **COD** — Thanh toán tiền mặt khi nhận hàng\n• 📱 **MoMo** — Ví điện tử, nhanh và tiện\n• 🏦 **ZaloPay** — Ví điện tử ZaloPay\n\nTất cả đều an toàn và bảo mật. Bạn muốn thanh toán theo hình thức nào?";
-        }
-
-        // Sản phẩm hữu cơ / sạch / VietGAP
-        if (q.contains("hữu cơ") || q.contains("organic") || q.contains("sạch") || q.contains("vietgap") || q.contains("an toàn") || q.contains("không thuốc")) {
-            return "🌿 **Cam kết chất lượng Vựa Vui Vẻ**\n\n• ✅ 100% rau củ đạt chứng nhận **VietGAP**\n• ✅ Không dùng thuốc trừ sâu hóa học\n• ✅ Thịt từ trang trại đạt chuẩn VSATTP\n• ✅ Hải sản nhập mới từ cảng mỗi sáng\n• ✅ Có mã QR truy xuất nguồn gốc từng sản phẩm\n\nBạn yên tâm mua sắm tại Vựa Vui Vẻ nhé! 💚";
-        }
-
-        // Tài khoản / đăng nhập / đăng ký
-        if (q.contains("tài khoản") || q.contains("đăng nhập") || q.contains("đăng ký") || q.contains("mật khẩu") || q.contains("login") || q.contains("register") || q.contains("quên mật khẩu")) {
-            return "👤 **Hỗ trợ tài khoản**\n\nBạn đang gặp vấn đề gì với tài khoản?\n• **Quên mật khẩu**: Chọn 'Quên mật khẩu' ở màn hình đăng nhập → nhập email → kiểm tra hộp thư\n• **Chưa có tài khoản**: Chọn 'Đăng ký' → điền thông tin → xác nhận OTP\n• **Lỗi đăng nhập**: Kiểm tra email/mật khẩu hoặc thử đổi mật khẩu mới\n\nNếu vẫn chưa giải quyết được, hãy liên hệ hotline hỗ trợ nhé!";
-        }
-
-        // Điểm thưởng / loyalty
-        if (q.contains("điểm") || q.contains("tích điểm") || q.contains("điểm thưởng") || q.contains("loyalty") || q.contains("reward")) {
-            return "⭐ **Chương trình tích điểm Vựa Vui Vẻ**\n\n• Mỗi **1.000đ** chi tiêu = **1 điểm** tích lũy\n• **100 điểm** = Giảm 10.000đ cho đơn hàng tiếp theo\n• Điểm không có thời hạn sử dụng\n• Xem điểm tại: Tài khoản → Điểm thưởng\n\nBạn đã có bao nhiêu điểm rồi? Cần hỗ trợ đổi điểm không?";
-        }
-
-        // Default response thông minh
-        return "💡 Mình là VuiVe Bot của Vựa Vui Vẻ!\n\nMình có thể tư vấn về:\n• 🥬 **Rau củ quả** — VietGAP, tươi ngon\n• 🥩 **Thịt & Hải sản** — nhập mới mỗi ngày\n• 🍳 **Món ăn** — gợi ý công thức nấu\n• 📦 **Đơn hàng** — tra cứu, giao hàng\n• 🎁 **Khuyến mãi** — mã VUAVUIVE giảm 15%\n\nBạn hỏi chi tiết hơn để mình hỗ trợ tốt nhất nhé! 🌿";
+        return "💡 Mình là VuiVe Bot!\nMình tư vấn: 🥬 Rau củ • 🥩 Thịt hải sản • 🍳 Món ăn • 📦 Đơn hàng • 🎁 Khuyến mãi\nBạn cần gì ạ?";
     }
 }

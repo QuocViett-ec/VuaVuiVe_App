@@ -125,8 +125,19 @@ public class ShipperService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> AppException.notFound("Đơn hàng"));
 
-        Shipper shipper = shipperRepository.findById(shipperId)
-                .orElseThrow(() -> AppException.notFound("Shipper"));
+        Shipper shipper = shipperRepository.findById(shipperId).orElse(null);
+        if (shipper == null) {
+            shipper = shipperRepository.findByUserId(shipperId).orElse(null);
+        }
+        if (shipper == null) {
+            User matchedUser = userRepository.findById(shipperId).orElse(null);
+            if (matchedUser != null && matchedUser.getPhone() != null) {
+                shipper = shipperRepository.findByPhone(matchedUser.getPhone()).orElse(null);
+            }
+        }
+        if (shipper == null) {
+            throw AppException.notFound("Shipper");
+        }
 
         if (!shipper.getIsActive()) {
             throw AppException.badRequest("Shipper này hiện đang bị khóa tài khoản");
@@ -301,7 +312,7 @@ public class ShipperService {
         String email = notificationUser != null ? notificationUser.getEmail() : null;
         String userId = matchingShipperUsers(shipper).stream()
                 .filter(u -> email == null || email.equalsIgnoreCase(u.getEmail()))
-                .filter(u -> u.getId() != null && !u.getId().contains("-"))
+                .filter(u -> u.getId() != null)
                 .map(User::getId)
                 .findFirst()
                 .orElse(shipper.getUserId() != null ? shipper.getUserId() : shipper.getId());

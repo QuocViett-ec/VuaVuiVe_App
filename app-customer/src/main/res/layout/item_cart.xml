@@ -17,15 +17,26 @@
         android:layout_height="wrap_content"
         android:padding="12dp">
 
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/cb_select_item"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:buttonTint="@color/primary"
+            android:contentDescription="Chọn sản phẩm"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/cv_image"
+            app:layout_constraintBottom_toBottomOf="@id/cv_image" />
+
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cv_image"
             android:layout_width="80dp"
             android:layout_height="80dp"
+            android:layout_marginStart="4dp"
             app:cardCornerRadius="12dp"
             app:cardElevation="0dp"
             app:strokeWidth="1dp"
             app:strokeColor="@color/border_light"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@id/cb_select_item"
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView

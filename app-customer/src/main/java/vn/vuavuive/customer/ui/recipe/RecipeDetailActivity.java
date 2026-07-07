@@ -16,8 +16,6 @@ import vn.vuavuive.customer.R;
 import vn.vuavuive.customer.viewmodel.CartViewModel;
 import vn.vuavuive.customer.viewmodel.ProductViewModel;
 import vn.vuavuive.customer.viewmodel.RecipeViewModel;
-import vn.vuavuive.shared.data.dto.Product;
-import vn.vuavuive.shared.data.local.CartItemEntity;
 import vn.vuavuive.shared.util.Constants;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +35,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
     private RecyclerView rvIngredients;
     private IngredientAdapter ingredientAdapter;
     private LinearLayout llSteps;
+    private RecipeIngredientCartHelper ingredientCartHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +45,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
         recipeViewModel  = new ViewModelProvider(this).get(RecipeViewModel.class);
         cartViewModel    = new ViewModelProvider(this).get(CartViewModel.class);
         productViewModel = new ViewModelProvider(this).get(ProductViewModel.class);
+        ingredientCartHelper = new RecipeIngredientCartHelper(this, this, productViewModel, cartViewModel);
 
         initViews();
 
@@ -134,33 +134,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
     }
 
     private void addIngredientToCart(Map<String, Object> ingredient) {
-        String name = getString(ingredient, "name", "");
-        if (name.isEmpty()) return;
-
-        productViewModel.getProducts(null, name, 1, 1, null).observe(this, result -> {
-            if (result != null && result.status != null) {
-                if (result.status.name().equals("LOADING")) {
-                    return; // Ignore loading state
-                }
-                if (result.status.name().equals("SUCCESS") && result.data != null && !result.data.isEmpty()) {
-                    Product p = result.data.get(0);
-                    CartItemEntity item = new CartItemEntity();
-                    item.setProductId(p.getId());
-                    item.setProductName(p.getName());
-                    item.setProductPrice(p.getPrice());
-                    item.setProductImageUrl(p.getImageUrl());
-                    item.setProductUnit(p.getUnit());
-                    item.setProductStock(p.getStock());
-                    item.setQuantity(1);
-                    item.setAddedAt(System.currentTimeMillis());
-                    item.setSavedForLater(false);
-                    cartViewModel.addItem(item);
-                    Toast.makeText(this, "Đã thêm " + p.getName() + " vào giỏ", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(this, "Không tìm thấy sản phẩm: " + name, Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+        ingredientCartHelper.addIngredient(ingredient);
     }
 
     @SuppressWarnings("unchecked")
@@ -169,7 +143,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
         Object ingObj = currentRecipe.get("ingredients");
         if (ingObj instanceof List) {
             for (Object ing : (List<?>) ingObj) {
-                if (ing instanceof Map) addIngredientToCart((Map<String, Object>) ing);
+                if (ing instanceof Map) ingredientCartHelper.addIngredient((Map<String, Object>) ing, false);
             }
         }
         Toast.makeText(this, "Đang thêm tất cả nguyên liệu vào giỏ...", Toast.LENGTH_SHORT).show();
@@ -180,4 +154,3 @@ public class RecipeDetailActivity extends AppCompatActivity {
         return val != null ? val.toString() : def;
     }
 }
-

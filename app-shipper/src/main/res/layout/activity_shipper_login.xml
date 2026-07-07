@@ -9,30 +9,10 @@
     android:background="@color/background">
 
     <ImageView
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_marginBottom="16dp"
-        android:src="@drawable/bg_avatar_circle"
-        app:tint="@color/primary" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:gravity="center"
-        android:text="Vựa Vui Vẻ Shipper"
-        android:textColor="@color/primary"
-        android:textSize="26sp"
-        android:textStyle="bold" />
-        
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="220dp"
+        android:layout_height="220dp"
         android:layout_marginBottom="32dp"
-        android:gravity="center"
-        android:text="Đăng nhập để nhận đơn giao hàng"
-        android:textColor="@color/text_secondary"
-        android:textSize="14sp" />
+        android:src="@drawable/logo_shipper" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_identifier"
@@ -79,8 +59,10 @@
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:layout_marginTop="24dp"
-        android:text="Đăng nhập"
-        android:textSize="16sp" />
+        android:text="ĐĂNG NHẬP HỆ THỐNG"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:letterSpacing="0.06" />
 
     <ProgressBar
         android:id="@+id/progress_bar"

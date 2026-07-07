@@ -247,6 +247,59 @@ public class AuthController {
         return ResponseEntity.ok(authService.refreshToken(request));
     }
 
+    @Operation(summary = "Yêu cầu khôi phục mật khẩu (Gửi OTP)")
+    @PostMapping("/forgot-password")
+    public ResponseEntity<ApiResponse<Void>> forgotPassword(@RequestBody java.util.Map<String, String> body) {
+        String phoneOrEmail = body.get("email");
+        if (phoneOrEmail == null) {
+            phoneOrEmail = body.get("phone");
+        }
+        if (phoneOrEmail == null || phoneOrEmail.trim().isEmpty()) {
+            throw new AppException(HttpStatus.BAD_REQUEST, "Vui lòng cung cấp email hoặc số điện thoại");
+        }
+        authService.forgotPassword(phoneOrEmail.trim());
+        ApiResponse<Void> apiResponse = ApiResponse.<Void>builder()
+                .success(true)
+                .message("Mã OTP khôi phục mật khẩu đã được gửi")
+                .build();
+        return ResponseEntity.ok(apiResponse);
+    }
+
+    @Operation(summary = "Xác minh mã OTP khôi phục mật khẩu")
+    @PostMapping("/verify-otp")
+    public ResponseEntity<ApiResponse<Void>> verifyOtp(@RequestBody java.util.Map<String, String> body) {
+        String phoneOrEmail = body.get("email");
+        if (phoneOrEmail == null) {
+            phoneOrEmail = body.get("phone");
+        }
+        String otp = body.get("otp");
+        if (phoneOrEmail == null || otp == null || phoneOrEmail.trim().isEmpty() || otp.trim().isEmpty()) {
+            throw new AppException(HttpStatus.BAD_REQUEST, "Thiếu thông tin xác thực");
+        }
+        authService.verifyForgotPasswordOtp(phoneOrEmail.trim(), otp.trim());
+        ApiResponse<Void> apiResponse = ApiResponse.<Void>builder()
+                .success(true)
+                .message("Xác minh OTP thành công")
+                .build();
+        return ResponseEntity.ok(apiResponse);
+    }
+
+    @Operation(summary = "Đặt lại mật khẩu mới")
+    @PostMapping("/reset-password")
+    public ResponseEntity<ApiResponse<Void>> resetPassword(@RequestBody java.util.Map<String, String> body) {
+        String resetToken = body.get("resetToken");
+        String newPassword = body.get("newPassword");
+        if (resetToken == null || newPassword == null || resetToken.trim().isEmpty() || newPassword.trim().isEmpty()) {
+            throw new AppException(HttpStatus.BAD_REQUEST, "Thông tin đặt lại mật khẩu không hợp lệ");
+        }
+        authService.resetPassword(resetToken.trim(), newPassword.trim());
+        ApiResponse<Void> apiResponse = ApiResponse.<Void>builder()
+                .success(true)
+                .message("Đặt lại mật khẩu thành công")
+                .build();
+        return ResponseEntity.ok(apiResponse);
+    }
+
     private void setAuthCookie(HttpServletResponse response, String token, String role) {
         String cookieName = "vvv.customer.sid";
         if ("admin".equals(role) || "staff".equals(role) || "audit".equals(role)) {

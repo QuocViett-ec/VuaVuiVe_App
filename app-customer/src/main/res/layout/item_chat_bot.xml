@@ -54,7 +54,25 @@
         </com.google.android.material.card.MaterialCardView>
     </LinearLayout>
 
-    <!-- Quick reply chips — hiển thị bên dưới bubble, ẩn nếu không có -->
+    <!-- Horizontal product cards list (hiển thị khi có sản phẩm liên quan) -->
+    <HorizontalScrollView
+        android:id="@+id/scroll_products"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="10dp"
+        android:scrollbars="none"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:id="@+id/container_products"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="4dp" />
+    </HorizontalScrollView>
+
+    <!-- Quick reply chips -->
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/chip_group_suggestions"
         android:layout_width="wrap_content"

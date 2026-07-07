@@ -28,39 +28,14 @@
                 android:gravity="center"
                 android:layout_marginBottom="36dp">
 
-                <androidx.cardview.widget.CardView
-                    android:layout_width="88dp"
-                    android:layout_height="88dp"
+                <ImageView
+                    android:layout_width="220dp"
+                    android:layout_height="220dp"
                     android:layout_gravity="center"
                     android:layout_marginBottom="18dp"
-                    app:cardBackgroundColor="@color/primary"
-                    app:cardCornerRadius="26dp"
-                    app:cardElevation="6dp">
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:text="🛒"
-                        android:textSize="40sp"
-                        android:gravity="center" />
-                </androidx.cardview.widget.CardView>
+                    android:src="@drawable/ic_logo_admin"
+                    android:scaleType="fitCenter" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="VỰA VUI VẺ"
-                    android:textColor="@color/primary"
-                    android:textSize="30sp"
-                    android:textStyle="bold"
-                    android:letterSpacing="0.06"
-                    android:layout_marginBottom="6dp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="HỆ THỐNG QUẢN TRỊ &amp; ĐIỀU HÀNH"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="11sp"
-                    android:letterSpacing="0.1" />
             </LinearLayout>
 
             <!-- ===== LOGIN CARD ===== -->

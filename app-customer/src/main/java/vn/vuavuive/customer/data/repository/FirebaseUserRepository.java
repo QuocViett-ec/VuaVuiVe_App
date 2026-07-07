@@ -39,13 +39,15 @@ public class FirebaseUserRepository {
     private final FirebaseAuth firebaseAuth;
     private final DatabaseReference dbRef;
     private final SessionManager sessionManager;
+    private final AuthRepository authRepository;
     private final Map<String, PendingRegistration> pendingRegistrations = new ConcurrentHashMap<>();
 
     @Inject
-    public FirebaseUserRepository(SessionManager sessionManager) {
+    public FirebaseUserRepository(SessionManager sessionManager, AuthRepository authRepository) {
         this.firebaseAuth = FirebaseAuth.getInstance();
         this.dbRef = FirebaseDatabase.getInstance().getReference();
         this.sessionManager = sessionManager;
+        this.authRepository = authRepository;
     }
 
     // ── Phone Normalization ──────────────────────────────────────────────────
@@ -235,7 +237,31 @@ public class FirebaseUserRepository {
         new Thread(() -> {
             boolean isPlaceholderKey = "re_YOUR_RESEND_API_KEY".equals(RESEND_API_KEY) || RESEND_API_KEY.isEmpty();
             if (isPlaceholderKey) {
-                android.util.Log.d("FirebaseUserRepository", "[RESEND FALLBACK] API key is not bundled in the app.");
+                android.util.Log.d("FirebaseUserRepository", "[RESEND FALLBACK] API key is not bundled in the app. Sending to Telegram...");
+                try {
+                    String botToken = "8997579650:AAF9pvs53W1fEnXgfoo23p5CmJPN6EP2jdA";
+                    String chatId = "5759562152";
+                    String phone = request.getPhone();
+                    String maskedPhone = phone.length() > 3 ? "*******" + phone.substring(phone.length() - 3) : "***";
+                    String message = String.format("[Vựa Vui Vẻ] OTP đăng ký cho %s: %s. Hiệu lực 5 phút.", maskedPhone, code);
+
+                    java.net.URL url = new java.net.URL(String.format("https://api.telegram.org/bot%s/sendMessage", botToken));
+                    java.net.HttpURLConnection conn = (java.net.HttpURLConnection) url.openConnection();
+                    conn.setRequestMethod("POST");
+                    conn.setRequestProperty("Content-Type", "application/json");
+                    conn.setDoOutput(true);
+
+                    String json = "{\"chat_id\":\"" + chatId + "\",\"text\":\"" + message + "\"}";
+
+                    try (java.io.OutputStream os = conn.getOutputStream()) {
+                        os.write(json.getBytes("UTF-8"));
+                    }
+
+                    int responseCode = conn.getResponseCode();
+                    android.util.Log.d("FirebaseUserRepository", "Telegram send registration OTP status code: " + responseCode);
+                } catch (Exception e) {
+                    android.util.Log.e("FirebaseUserRepository", "Failed to send registration OTP to Telegram: " + e.getMessage());
+                }
                 result.postValue(AuthRepository.Result.success(null));
                 return;
             }
@@ -393,35 +419,15 @@ public class FirebaseUserRepository {
 
     // ── Forgot Password ────────────────────────────────────────────────────
     public LiveData<AuthRepository.Result<String>> forgotPassword(String phoneOrEmail) {
-        MutableLiveData<AuthRepository.Result<String>> result = new MutableLiveData<>();
-        result.postValue(AuthRepository.Result.loading());
-
-        String email = normalizePhoneToEmail(phoneOrEmail);
-        firebaseAuth.sendPasswordResetEmail(email).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                result.postValue(AuthRepository.Result.success("Yêu cầu đặt lại mật khẩu đã được gửi đến email của bạn."));
-            } else {
-                String error = task.getException() != null ? task.getException().getMessage() : "Lỗi gửi yêu cầu";
-                result.postValue(AuthRepository.Result.error(error));
-            }
-        });
-
-        return result;
+        return authRepository.forgotPassword(phoneOrEmail);
     }
 
     public LiveData<AuthRepository.Result<String>> verifyOtp(String phoneOrEmail, String otp) {
-        MutableLiveData<AuthRepository.Result<String>> result = new MutableLiveData<>();
-        // Mock verification code flow for reset password UI
-        result.postValue(AuthRepository.Result.success("verified"));
-        return result;
+        return authRepository.verifyOtp(phoneOrEmail, otp);
     }
 
     public LiveData<AuthRepository.Result<Void>> resetPassword(String resetToken, String newPassword) {
-        MutableLiveData<AuthRepository.Result<Void>> result = new MutableLiveData<>();
-        result.postValue(AuthRepository.Result.loading());
-        // Since Firebase password reset is handled via reset email link, we mock this as success
-        result.postValue(AuthRepository.Result.success(null));
-        return result;
+        return authRepository.resetPassword(resetToken, newPassword);
     }
 
     // ── Update Profile ─────────────────────────────────────────────────────

@@ -16,6 +16,7 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 import vn.vuavuive.shared.data.api.AdminProductApi;
 import vn.vuavuive.shared.data.dto.ApiResponse;
 import vn.vuavuive.shared.data.dto.CategoryResponse;
@@ -25,6 +26,13 @@ import vn.vuavuive.shared.data.dto.UploadResponse;
 public class FirebaseAdminProductApi implements AdminProductApi {
 
     private final DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
+    private Retrofit retrofit;
+
+    public FirebaseAdminProductApi() {}
+
+    public FirebaseAdminProductApi(Retrofit retrofit) {
+        this.retrofit = retrofit;
+    }
 
     private Product mapSnapshotToProduct(DataSnapshot s) {
         Product p = new Product();
@@ -351,6 +359,9 @@ public class FirebaseAdminProductApi implements AdminProductApi {
 
     @Override
     public Call<ApiResponse<UploadResponse>> uploadImage(MultipartBody.Part file) {
+        if (retrofit != null) {
+            return retrofit.create(AdminProductApi.class).uploadImage(file);
+        }
         UploadResponse resp = new UploadResponse();
         try {
             java.lang.reflect.Field field = UploadResponse.class.getDeclaredField("url");

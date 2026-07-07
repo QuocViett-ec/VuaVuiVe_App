@@ -1,7 +1,9 @@
 package vn.vuavuive.customer.ui.chat;
 
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -10,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import dagger.hilt.android.AndroidEntryPoint;
 import vn.vuavuive.customer.R;
 import vn.vuavuive.customer.viewmodel.ChatViewModel;
@@ -23,10 +26,9 @@ public class ChatActivity extends AppCompatActivity {
     private ChatAdapter chatAdapter;
     private RecyclerView rvChat;
     private EditText etMessage;
-    private ImageButton btnSend;
+    private FloatingActionButton btnSend;
     private ProgressBar progressBar;
 
-    // Gợi ý mặc định khi bot chào
     private static final List<String> DEFAULT_SUGGESTIONS = Arrays.asList(
             "🥦 Rau củ quả", "🥩 Thịt & hải sản", "🍳 Gợi ý món ăn",
             "🎁 Khuyến mãi", "📦 Đơn hàng"
@@ -41,7 +43,6 @@ public class ChatActivity extends AppCompatActivity {
 
         initViews();
 
-        // Tin chào + gợi ý nhanh ban đầu
         chatAdapter.addMessage(new ChatMessage(
                 "Xin chào! Mình là VuiVe Bot 🤖\nMình có thể giúp bạn tìm sản phẩm, tư vấn món ăn, hỏi về đơn hàng và khuyến mãi. Bạn cần gì nào? 👇",
                 false,
@@ -60,7 +61,6 @@ public class ChatActivity extends AppCompatActivity {
 
         chatAdapter = new ChatAdapter(this);
 
-        // Khi nhấn vào chip gợi ý → điền vào ô nhập và gửi luôn
         chatAdapter.setSuggestionListener(suggestionText -> {
             etMessage.setText(suggestionText);
             sendMessage();
@@ -72,6 +72,18 @@ public class ChatActivity extends AppCompatActivity {
         rvChat.setAdapter(chatAdapter);
 
         btnSend.setOnClickListener(v -> sendMessage());
+
+        // Cập nhật icon nút gửi khi nhập chữ
+        etMessage.addTextChangedListener(new TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void afterTextChanged(Editable s) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                boolean hasText = s != null && s.toString().trim().length() > 0;
+                btnSend.setAlpha(hasText ? 1f : 0.6f);
+            }
+        });
+        btnSend.setAlpha(0.6f);
     }
 
     private void sendMessage() {
@@ -87,7 +99,7 @@ public class ChatActivity extends AppCompatActivity {
             setBusy(false);
             if (result != null && result.reply != null) {
                 List<String> suggestions = getSuggestionsForReply(result.reply);
-                chatAdapter.addMessage(new ChatMessage(result.reply, false, suggestions));
+                chatAdapter.addMessage(new ChatMessage(result.reply, false, suggestions, result.products));
             } else {
                 chatAdapter.addMessage(new ChatMessage(
                         "Xin lỗi, mình không thể kết nối ngay lúc này. Vui lòng thử lại sau. 🙏",
@@ -99,9 +111,6 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
-    /**
-     * Tự động sinh gợi ý tiếp theo dựa trên nội dung reply của bot.
-     */
     private List<String> getSuggestionsForReply(String reply) {
         String r = reply.toLowerCase();
         if (r.contains("rau") || r.contains("vietgap") || r.contains("rau củ")) {
@@ -114,8 +123,6 @@ public class ChatActivity extends AppCompatActivity {
             return Arrays.asList("🛒 Mua ngay", "📦 Tra cứu đơn hàng", "🥦 Xem sản phẩm");
         } else if (r.contains("đơn") || r.contains("giao hàng") || r.contains("ship")) {
             return Arrays.asList("🎁 Khuyến mãi", "🥩 Mua thêm", "💳 Thanh toán");
-        } else if (r.contains("thanh toán") || r.contains("momo") || r.contains("zalopay")) {
-            return Arrays.asList("📦 Đơn hàng của tôi", "🎁 Xem khuyến mãi", "🥦 Mua sắm tiếp");
         } else {
             return Arrays.asList("🥦 Rau củ quả", "🥩 Thịt & hải sản", "🍳 Gợi ý món ăn");
         }

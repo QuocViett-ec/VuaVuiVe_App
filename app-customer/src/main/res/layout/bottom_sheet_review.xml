@@ -134,6 +134,7 @@
             android:layout_marginStart="16dp"
             android:layout_weight="1"
             android:text="Gửi đánh giá"
+            android:textColor="@color/white"
             app:backgroundTint="@color/primary"
             app:cornerRadius="28dp" />
     </LinearLayout>

@@ -1,30 +1,3 @@
-[INFO] Scanning for projects...
-[INFO] 
-[INFO] ------------------------< vn.vuavuive:backend >-------------------------
-[INFO] Building Vựa Vui Vẻ Backend 1.0.0
-[INFO]   from pom.xml
-[INFO] --------------------------------[ jar ]---------------------------------
-[INFO] 
-[INFO] >>> spring-boot:3.3.0:run (default-cli) > test-compile @ backend >>>
-[INFO] 
-[INFO] --- resources:3.3.1:resources (default-resources) @ backend ---
-[INFO] Copying 3 resources from src/main/resources to target/classes
-[INFO] Copying 10 resources from src/main/resources to target/classes
-[INFO] 
-[INFO] --- compiler:3.13.0:compile (default-compile) @ backend ---
-[INFO] Nothing to compile - all classes are up to date.
-[INFO] 
-[INFO] --- resources:3.3.1:testResources (default-testResources) @ backend ---
-[INFO] skip non existing resourceDirectory /Users/lynhuhieu/Documents/VuaVuiVe_App/app-backend/src/test/resources
-[INFO] 
-[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ backend ---
-[INFO] Nothing to compile - all classes are up to date.
-[INFO] 
-[INFO] <<< spring-boot:3.3.0:run (default-cli) < test-compile @ backend <<<
-[INFO] 
-[INFO] 
-[INFO] --- spring-boot:3.3.0:run (default-cli) @ backend ---
-[INFO] Attaching agents: []
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
 ( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
@@ -34,329 +7,310 @@
 
  :: Spring Boot ::                (v3.3.0)
 
-2026-07-07T11:37:09.654+07:00  INFO 39755 --- [           main] v.v.backend.VuaVuiVeBackendApplication   : Starting VuaVuiVeBackendApplication using Java 21.0.11 with PID 39755 (/Users/lynhuhieu/Documents/VuaVuiVe_App/app-backend/target/classes started by lynhuhieu in /Users/lynhuhieu/Documents/VuaVuiVe_App/app-backend)
-2026-07-07T11:37:09.655+07:00 DEBUG 39755 --- [           main] v.v.backend.VuaVuiVeBackendApplication   : Running with Spring Boot v3.3.0, Spring v6.1.8
-2026-07-07T11:37:09.655+07:00  INFO 39755 --- [           main] v.v.backend.VuaVuiVeBackendApplication   : The following 1 profile is active: "dev"
-2026-07-07T11:37:10.358+07:00  INFO 39755 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 3000 (http)
-2026-07-07T11:37:10.364+07:00  INFO 39755 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2026-07-07T11:37:10.364+07:00  INFO 39755 --- [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.24]
-2026-07-07T11:37:10.399+07:00  INFO 39755 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-2026-07-07T11:37:10.400+07:00  INFO 39755 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 723 ms
-2026-07-07T11:37:10.487+07:00  INFO 39755 --- [           main] v.v.b.core.FirebaseRepositoryHelper      : Initialized REST-based FirebaseRepositoryHelper with URL: https://vua-vui-ve-default-rtdb.firebaseio.com
-2026-07-07T11:37:10.526+07:00 DEBUG 39755 --- [           main] v.v.backend.security.JwtAuthFilter       : Filter 'jwtAuthFilter' configured for use
-2026-07-07T11:37:10.651+07:00  INFO 39755 --- [           main] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
-2026-07-07T11:37:10.652+07:00  WARN 39755 --- [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
-2026-07-07T11:37:10.789+07:00  INFO 39755 --- [           main] v.v.backend.config.FirebaseConfig        : Starting initialization of Firebase Admin SDK...
-2026-07-07T11:37:10.821+07:00  INFO 39755 --- [           main] v.v.backend.config.FirebaseConfig        : Firebase Admin SDK initialized successfully for project: [DEFAULT]
-2026-07-07T11:37:10.969+07:00 DEBUG 39755 --- [           main] o.s.w.s.s.s.WebSocketHandlerMapping      : Patterns [/ws, /ws/**] in 'stompWebSocketHandlerMapping'
-2026-07-07T11:37:11.041+07:00 DEBUG 39755 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : 93 mappings in 'requestMappingHandlerMapping'
-2026-07-07T11:37:11.079+07:00 DEBUG 39755 --- [           main] o.s.w.s.handler.SimpleUrlHandlerMapping  : Patterns [/webjars/**, /**, /uploads/**, /swagger-ui*/*swagger-initializer.js, /swagger-ui*/**] in 'resourceHandlerMapping'
-2026-07-07T11:37:11.130+07:00  INFO 39755 --- [           main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@40b31a16, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@25fa6889, org.springframework.security.web.context.SecurityContextHolderFilter@278de2b2, org.springframework.security.web.header.HeaderWriterFilter@3348c987, org.springframework.web.filter.CorsFilter@1de73d37, org.springframework.security.web.authentication.logout.LogoutFilter@156324b, vn.vuavuive.backend.security.JwtAuthFilter@421d54b3, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@75cacb3e, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@2bdcfcf, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@31693a86, org.springframework.security.web.session.SessionManagementFilter@5f3f3d00, org.springframework.security.web.access.ExceptionTranslationFilter@7540160e, org.springframework.security.web.access.intercept.AuthorizationFilter@305aaedf]
-2026-07-07T11:37:11.173+07:00 DEBUG 39755 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
-	v.v.b.m.a.ChatController:
-	
-2026-07-07T11:37:11.173+07:00 DEBUG 39755 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
-	v.v.b.m.a.AuthController:
-	
-2026-07-07T11:37:11.173+07:00 DEBUG 39755 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
-	v.v.b.m.c.CartController:
-	
-2026-07-07T11:37:11.173+07:00 DEBUG 39755 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
-	v.v.b.m.c.CategoryController:
-	
-2026-07-07T11:37:11.173+07:00 DEBUG 39755 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
-	v.v.b.m.n.AdminNotificationController:
-	
-2026-07-07T11:37:11.173+07:00 DEBUG 39755 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
-	v.v.b.m.n.NotificationController:
-	
-2026-07-07T11:37:11.173+07:00 DEBUG 39755 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
+2026-07-08T00:33:21.969+07:00  INFO 3269 --- [           main] v.v.backend.VuaVuiVeBackendApplication   : Starting VuaVuiVeBackendApplication v1.0.0 using Java 21.0.11 with PID 3269 (/Users/lynhuhieu/Documents/VuaVuiVe_App/app-backend/target/backend-1.0.0.jar started by lynhuhieu in /Users/lynhuhieu/Documents/VuaVuiVe_App/app-backend)
+2026-07-08T00:33:21.970+07:00 DEBUG 3269 --- [           main] v.v.backend.VuaVuiVeBackendApplication   : Running with Spring Boot v3.3.0, Spring v6.1.8
+2026-07-08T00:33:21.970+07:00  INFO 3269 --- [           main] v.v.backend.VuaVuiVeBackendApplication   : The following 1 profile is active: "dev"
+2026-07-08T00:33:22.864+07:00  INFO 3269 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 3000 (http)
+2026-07-08T00:33:22.872+07:00  INFO 3269 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-07-08T00:33:22.872+07:00  INFO 3269 --- [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.24]
+2026-07-08T00:33:22.890+07:00  INFO 3269 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-07-08T00:33:22.890+07:00  INFO 3269 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 876 ms
+2026-07-08T00:33:22.979+07:00  INFO 3269 --- [           main] v.v.b.core.FirebaseRepositoryHelper      : Initialized REST-based FirebaseRepositoryHelper with URL: https://vua-vui-ve-default-rtdb.firebaseio.com
+2026-07-08T00:33:23.022+07:00 DEBUG 3269 --- [           main] v.v.backend.security.JwtAuthFilter       : Filter 'jwtAuthFilter' configured for use
+2026-07-08T00:33:23.223+07:00  INFO 3269 --- [           main] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-07-08T00:33:23.224+07:00  WARN 3269 --- [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
+2026-07-08T00:33:23.272+07:00  INFO 3269 --- [           main] v.v.backend.config.FirebaseConfig        : Starting initialization of Firebase Admin SDK...
+2026-07-08T00:33:23.311+07:00  INFO 3269 --- [           main] v.v.backend.config.FirebaseConfig        : Firebase Admin SDK initialized successfully for project: [DEFAULT]
+2026-07-08T00:33:23.355+07:00 DEBUG 3269 --- [           main] o.s.w.s.s.s.WebSocketHandlerMapping      : Patterns [/ws, /ws/**] in 'stompWebSocketHandlerMapping'
+2026-07-08T00:33:23.513+07:00 DEBUG 3269 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
 	v.v.b.m.o.AdminOrderController:
 	
-2026-07-07T11:37:11.173+07:00 DEBUG 39755 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
-	v.v.b.m.o.AdminShipperController:
-	
-2026-07-07T11:37:11.173+07:00 DEBUG 39755 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
+2026-07-08T00:33:23.514+07:00 DEBUG 3269 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
 	v.v.b.m.o.OrderController:
 	
-2026-07-07T11:37:11.173+07:00 DEBUG 39755 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
-	v.v.b.m.p.MomoController:
+2026-07-08T00:33:23.514+07:00 DEBUG 3269 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
+	v.v.b.m.o.AdminShipperController:
 	
-2026-07-07T11:37:11.173+07:00 DEBUG 39755 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
-	v.v.b.m.p.PaymentController:
-	
-2026-07-07T11:37:11.173+07:00 DEBUG 39755 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
-	v.v.b.m.p.ProductController:
-	
-2026-07-07T11:37:11.173+07:00 DEBUG 39755 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
-	v.v.b.m.r.RecipeController:
-	
-2026-07-07T11:37:11.173+07:00 DEBUG 39755 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
-	v.v.b.m.r.RecommendController:
-	
-2026-07-07T11:37:11.173+07:00 DEBUG 39755 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
-	v.v.b.m.r.ReviewController:
-	
-2026-07-07T11:37:11.174+07:00 DEBUG 39755 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
+2026-07-08T00:33:23.514+07:00 DEBUG 3269 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
 	v.v.b.m.s.ShipperController:
 	
-2026-07-07T11:37:11.174+07:00 DEBUG 39755 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
-	v.v.b.m.u.UploadController:
+2026-07-08T00:33:23.514+07:00 DEBUG 3269 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
+	v.v.b.m.c.CategoryController:
 	
-2026-07-07T11:37:11.174+07:00 DEBUG 39755 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
+2026-07-08T00:33:23.514+07:00 DEBUG 3269 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
+	v.v.b.m.r.RecommendController:
+	
+2026-07-08T00:33:23.514+07:00 DEBUG 3269 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
+	v.v.b.m.a.AuthController:
+	
+2026-07-08T00:33:23.514+07:00 DEBUG 3269 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
+	v.v.b.m.n.AdminNotificationController:
+	
+2026-07-08T00:33:23.515+07:00 DEBUG 3269 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
+	v.v.b.m.n.NotificationController:
+	
+2026-07-08T00:33:23.515+07:00 DEBUG 3269 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
+	v.v.b.m.p.MomoController:
+	
+2026-07-08T00:33:23.515+07:00 DEBUG 3269 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
+	v.v.b.m.p.PaymentController:
+	
+2026-07-08T00:33:23.515+07:00 DEBUG 3269 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
+	v.v.b.m.r.RecipeController:
+	
+2026-07-08T00:33:23.515+07:00 DEBUG 3269 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
 	v.v.b.m.v.VisionController:
 	
-2026-07-07T11:37:11.174+07:00 DEBUG 39755 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
+2026-07-08T00:33:23.515+07:00 DEBUG 3269 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
+	v.v.b.m.p.ProductController:
+	
+2026-07-08T00:33:23.515+07:00 DEBUG 3269 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
+	v.v.b.m.a.ChatController:
+	
+2026-07-08T00:33:23.515+07:00 DEBUG 3269 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
+	v.v.b.m.a.ExportController:
+	
+2026-07-08T00:33:23.515+07:00 DEBUG 3269 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
+	v.v.b.m.r.ReviewController:
+	
+2026-07-08T00:33:23.515+07:00 DEBUG 3269 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
+	v.v.b.m.c.CartController:
+	
+2026-07-08T00:33:23.515+07:00 DEBUG 3269 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
+	v.v.b.m.u.UploadController:
+	
+2026-07-08T00:33:23.517+07:00 DEBUG 3269 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
 	o.s.b.a.w.s.e.BasicErrorController:
 	
-2026-07-07T11:37:11.174+07:00 DEBUG 39755 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
+2026-07-08T00:33:23.522+07:00 DEBUG 3269 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
 	o.s.w.a.OpenApiWebMvcResource:
 	
-2026-07-07T11:37:11.175+07:00 DEBUG 39755 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
+2026-07-08T00:33:23.523+07:00 DEBUG 3269 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
 	o.s.w.u.SwaggerWelcomeWebMvc:
 	
-2026-07-07T11:37:11.175+07:00 DEBUG 39755 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
+2026-07-08T00:33:23.523+07:00 DEBUG 3269 --- [           main] .WebSocketAnnotationMethodMessageHandler : 
 	o.s.w.u.SwaggerConfigResource:
 	
-2026-07-07T11:37:11.214+07:00 DEBUG 39755 --- [           main] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 2 ResponseBodyAdvice
-2026-07-07T11:37:11.234+07:00 DEBUG 39755 --- [           main] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 2 @ExceptionHandler, 2 ResponseBodyAdvice
-2026-07-07T11:37:11.342+07:00  INFO 39755 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 3000 (http) with context path '/'
-2026-07-07T11:37:11.343+07:00 DEBUG 39755 --- [           main] org.springframework.web.SimpLogging      : clientOutboundChannel added SubProtocolWebSocketHandler[StompSubProtocolHandler[v10.stomp, v11.stomp, v12.stomp]]
-2026-07-07T11:37:11.343+07:00 DEBUG 39755 --- [           main] org.springframework.web.SimpLogging      : clientInboundChannel added WebSocketAnnotationMethodMessageHandler[prefixes=[/app/]]
-2026-07-07T11:37:11.343+07:00  INFO 39755 --- [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Starting...
-2026-07-07T11:37:11.343+07:00 DEBUG 39755 --- [           main] org.springframework.web.SimpLogging      : clientInboundChannel added SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@4a0c3aa8]
-2026-07-07T11:37:11.343+07:00 DEBUG 39755 --- [           main] org.springframework.web.SimpLogging      : brokerChannel added SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@4a0c3aa8]
-2026-07-07T11:37:11.343+07:00  INFO 39755 --- [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@4a0c3aa8]]
-2026-07-07T11:37:11.343+07:00  INFO 39755 --- [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Started.
-2026-07-07T11:37:11.343+07:00 DEBUG 39755 --- [           main] org.springframework.web.SimpLogging      : clientInboundChannel added UserDestinationMessageHandler[DefaultUserDestinationResolver[prefix=/user/]]
-2026-07-07T11:37:11.343+07:00 DEBUG 39755 --- [           main] org.springframework.web.SimpLogging      : brokerChannel added UserDestinationMessageHandler[DefaultUserDestinationResolver[prefix=/user/]]
-2026-07-07T11:37:11.348+07:00  INFO 39755 --- [           main] v.v.backend.VuaVuiVeBackendApplication   : Started VuaVuiVeBackendApplication in 1.877 seconds (process running for 2.036)
-2026-07-07T11:37:13.150+07:00  INFO 39755 --- [           main] vn.vuavuive.backend.config.DataSeeder    : >> SEED (FORCE): Cập nhật thành công tài khoản ADMIN: admin@vuavuive.vn / Admin@123 trên Firebase RTDB
-2026-07-07T11:38:11.338+07:00  INFO 39755 --- [MessageBroker-2] o.s.w.s.c.WebSocketMessageBrokerStats    : WebSocketSession[0 current WS(0)-HttpStream(0)-HttpPoll(0), 0 total, 0 closed abnormally (0 connect failure, 0 send limit, 0 transport error)], stompSubProtocol[processed CONNECT(0)-CONNECTED(0)-DISCONNECT(0)], stompBrokerRelay[null], inboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], outboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], sockJsScheduler[pool size = 3, active threads = 1, queued tasks = 1, completed tasks = 1]
-2026-07-07T11:38:46.334+07:00  INFO 39755 --- [nio-3000-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
-2026-07-07T11:38:46.334+07:00  INFO 39755 --- [nio-3000-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
-2026-07-07T11:38:46.335+07:00 DEBUG 39755 --- [nio-3000-exec-1] o.s.web.servlet.DispatcherServlet        : Detected StandardServletMultipartResolver
-2026-07-07T11:38:46.335+07:00 DEBUG 39755 --- [nio-3000-exec-1] o.s.web.servlet.DispatcherServlet        : Detected AcceptHeaderLocaleResolver
-2026-07-07T11:38:46.335+07:00 DEBUG 39755 --- [nio-3000-exec-1] o.s.web.servlet.DispatcherServlet        : Detected FixedThemeResolver
-2026-07-07T11:38:46.337+07:00 DEBUG 39755 --- [nio-3000-exec-1] o.s.web.servlet.DispatcherServlet        : Detected org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator@6fd9dbe6
-2026-07-07T11:38:46.340+07:00 DEBUG 39755 --- [nio-3000-exec-1] o.s.web.servlet.DispatcherServlet        : Detected org.springframework.web.servlet.support.SessionFlashMapManager@61ad30f6
-2026-07-07T11:38:46.342+07:00 DEBUG 39755 --- [nio-3000-exec-1] o.s.web.servlet.DispatcherServlet        : enableLoggingRequestDetails='false': request parameters and headers will be masked to prevent unsafe logging of potentially sensitive data
-2026-07-07T11:38:46.342+07:00  INFO 39755 --- [nio-3000-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 8 ms
-2026-07-07T11:38:46.394+07:00  WARN 39755 --- [nio-3000-exec-1] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
-2026-07-07T11:38:47.002+07:00  WARN 39755 --- [nio-3000-exec-2] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
-2026-07-07T11:38:47.282+07:00 DEBUG 39755 --- [nio-3000-exec-1] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: customer@gmail.com
-2026-07-07T11:38:47.286+07:00 DEBUG 39755 --- [nio-3000-exec-1] o.s.web.servlet.DispatcherServlet        : GET "/api/recipes", parameters={}
-2026-07-07T11:38:47.287+07:00 DEBUG 39755 --- [nio-3000-exec-1] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.recipe.RecipeController#getRecipes()
-2026-07-07T11:38:47.593+07:00 DEBUG 39755 --- [nio-3000-exec-2] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: customer@gmail.com
-2026-07-07T11:38:47.593+07:00 DEBUG 39755 --- [nio-3000-exec-2] o.s.web.servlet.DispatcherServlet        : POST "/api/notifications/device-token", parameters={}
-2026-07-07T11:38:47.594+07:00 DEBUG 39755 --- [nio-3000-exec-2] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.notification.NotificationController#registerDeviceToken(DeviceTokenRequest)
-2026-07-07T11:38:47.610+07:00 DEBUG 39755 --- [nio-3000-exec-2] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [DeviceTokenRequest[token=fIqWZww6StyusZ_ijw64oO:APA91bF7gRHwAmYtp2turMaZt4c4Ah93_BbSaPwbv4oMa-XCXmPM (truncated)...]
-2026-07-07T11:38:47.635+07:00 DEBUG 39755 --- [nio-3000-exec-1] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
-2026-07-07T11:38:47.639+07:00 DEBUG 39755 --- [nio-3000-exec-1] m.m.a.RequestResponseBodyMethodProcessor : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[{difficulty=Dễ, image=http://10.0.2.2:3 (truncated)...]
-2026-07-07T11:38:47.646+07:00 DEBUG 39755 --- [nio-3000-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2026-07-07T11:38:48.528+07:00 DEBUG 39755 --- [nio-3000-exec-2] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
-2026-07-07T11:38:48.529+07:00 DEBUG 39755 --- [nio-3000-exec-2] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Da luu FCM token, data=null, pagination=null, accessToken=null, re (truncated)...]
-2026-07-07T11:38:48.529+07:00 DEBUG 39755 --- [nio-3000-exec-2] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2026-07-07T11:59:39.051+07:00  WARN 39755 --- [nio-3000-exec-7] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
-2026-07-07T11:59:39.346+07:00 DEBUG 39755 --- [nio-3000-exec-7] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: shipper@gmail.com
-2026-07-07T11:59:39.347+07:00 DEBUG 39755 --- [nio-3000-exec-7] o.s.web.servlet.DispatcherServlet        : POST "/api/notifications/device-token", parameters={}
-2026-07-07T11:59:39.347+07:00 DEBUG 39755 --- [nio-3000-exec-7] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.notification.NotificationController#registerDeviceToken(DeviceTokenRequest)
-2026-07-07T11:59:39.358+07:00 DEBUG 39755 --- [nio-3000-exec-7] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [DeviceTokenRequest[token=cw61zTC3T6eOFU36lEaidk:APA91bF8P-2gUQaewJSr3WsP4GARBcUjKZ2bFIwknYRAxbNTYj71 (truncated)...]
-2026-07-07T11:59:40.307+07:00 DEBUG 39755 --- [nio-3000-exec-7] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
-2026-07-07T11:59:40.307+07:00 DEBUG 39755 --- [nio-3000-exec-7] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Da luu FCM token, data=null, pagination=null, accessToken=null, re (truncated)...]
-2026-07-07T11:59:40.309+07:00 DEBUG 39755 --- [nio-3000-exec-7] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2026-07-07T12:00:14.974+07:00  WARN 39755 --- [nio-3000-exec-8] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
-2026-07-07T12:00:15.567+07:00 DEBUG 39755 --- [nio-3000-exec-8] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: shipper@gmail.com
-2026-07-07T12:00:15.575+07:00 DEBUG 39755 --- [nio-3000-exec-8] o.s.web.servlet.DispatcherServlet        : PUT "/api/shippers/6nc03oCQwHczeFFYo1pn4WfwBsu1/orders/6f7753b4-1b35-4291-a446-09894683868d/delivery?status=DELIVERED", parameters={masked}
-2026-07-07T12:00:15.576+07:00 DEBUG 39755 --- [nio-3000-exec-8] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.shipper.ShipperController#updateDeliveryStatus(String, String, String, String)
-2026-07-07T12:00:18.394+07:00  INFO 39755 --- [nio-3000-exec-8] v.v.b.modules.shipper.ShipperService     : Shipper 6nc03oCQwHczeFFYo1pn4WfwBsu1 cập nhật đơn 6f7753b4-1b35-4291-a446-09894683868d từ IN_TRANSIT → DELIVERED
-2026-07-07T12:00:18.403+07:00 DEBUG 39755 --- [nio-3000-exec-8] org.springframework.web.SimpLogging      : Processing MESSAGE destination=/topic/admin/orders session=null payload={"orderId":"6f7753b4-1b35-4291-a446-09894683868d","message":"Tài xế 098765432...(truncated)
-2026-07-07T12:00:18.408+07:00  INFO 39755 --- [nio-3000-exec-8] .s.a.AnnotationAsyncExecutionInterceptor : More than one TaskExecutor bean found within the context, and none is named 'taskExecutor'. Mark one of them as primary or name it 'taskExecutor' (possibly as an alias) in order to use it for async processing: [clientInboundChannelExecutor, clientOutboundChannelExecutor, brokerChannelExecutor]
-2026-07-07T12:00:18.408+07:00 DEBUG 39755 --- [nio-3000-exec-8] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
-2026-07-07T12:00:18.409+07:00 DEBUG 39755 --- [nio-3000-exec-8] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data={message=Cập nhật trạng thái giao hàng t (truncated)...]
-2026-07-07T12:00:18.410+07:00 DEBUG 39755 --- [nio-3000-exec-8] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2026-07-07T12:00:19.011+07:00  WARN 39755 --- [cTaskExecutor-1] v.v.b.m.n.NotificationService            : FCM send failed for 22f857f6-079e-44ef-b9eb-d8ec9f2c46b7: Unknown error while making a remote service call: Error getting access token for service account: 400 Bad Request
+2026-07-08T00:33:23.670+07:00 DEBUG 3269 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : 97 mappings in 'requestMappingHandlerMapping'
+2026-07-08T00:33:23.697+07:00 DEBUG 3269 --- [           main] o.s.w.s.handler.SimpleUrlHandlerMapping  : Patterns [/webjars/**, /**, /uploads/**, /swagger-ui*/*swagger-initializer.js, /swagger-ui*/**] in 'resourceHandlerMapping'
+2026-07-08T00:33:23.730+07:00  INFO 3269 --- [           main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@6cc8adff, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@6b2e9db2, org.springframework.security.web.context.SecurityContextHolderFilter@667a467f, org.springframework.security.web.header.HeaderWriterFilter@4571cebe, org.springframework.web.filter.CorsFilter@280d5a82, org.springframework.security.web.authentication.logout.LogoutFilter@342a1f84, vn.vuavuive.backend.security.JwtAuthFilter@3b35798, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@1488a861, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@1ad1be5d, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@1a34a51e, org.springframework.security.web.session.SessionManagementFilter@1fa9692b, org.springframework.security.web.access.ExceptionTranslationFilter@67dc6b48, org.springframework.security.web.access.intercept.AuthorizationFilter@f810c18]
+2026-07-08T00:33:23.789+07:00 DEBUG 3269 --- [           main] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 2 ResponseBodyAdvice
+2026-07-08T00:33:23.806+07:00 DEBUG 3269 --- [           main] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 2 @ExceptionHandler, 2 ResponseBodyAdvice
+2026-07-08T00:33:23.908+07:00  INFO 3269 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 3000 (http) with context path '/'
+2026-07-08T00:33:23.909+07:00 DEBUG 3269 --- [           main] org.springframework.web.SimpLogging      : clientOutboundChannel added SubProtocolWebSocketHandler[StompSubProtocolHandler[v10.stomp, v11.stomp, v12.stomp]]
+2026-07-08T00:33:23.909+07:00 DEBUG 3269 --- [           main] org.springframework.web.SimpLogging      : clientInboundChannel added WebSocketAnnotationMethodMessageHandler[prefixes=[/app/]]
+2026-07-08T00:33:23.909+07:00  INFO 3269 --- [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Starting...
+2026-07-08T00:33:23.910+07:00 DEBUG 3269 --- [           main] org.springframework.web.SimpLogging      : clientInboundChannel added SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@484302ee]
+2026-07-08T00:33:23.910+07:00 DEBUG 3269 --- [           main] org.springframework.web.SimpLogging      : brokerChannel added SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@484302ee]
+2026-07-08T00:33:23.910+07:00  INFO 3269 --- [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@484302ee]]
+2026-07-08T00:33:23.910+07:00  INFO 3269 --- [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Started.
+2026-07-08T00:33:23.910+07:00 DEBUG 3269 --- [           main] org.springframework.web.SimpLogging      : clientInboundChannel added UserDestinationMessageHandler[DefaultUserDestinationResolver[prefix=/user/]]
+2026-07-08T00:33:23.910+07:00 DEBUG 3269 --- [           main] org.springframework.web.SimpLogging      : brokerChannel added UserDestinationMessageHandler[DefaultUserDestinationResolver[prefix=/user/]]
+2026-07-08T00:33:23.921+07:00  INFO 3269 --- [           main] v.v.backend.VuaVuiVeBackendApplication   : Started VuaVuiVeBackendApplication in 2.215 seconds (process running for 2.527)
+2026-07-08T00:34:07.226+07:00  INFO 3269 --- [nio-3000-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-07-08T00:34:07.226+07:00  INFO 3269 --- [nio-3000-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-07-08T00:34:07.226+07:00 DEBUG 3269 --- [nio-3000-exec-1] o.s.web.servlet.DispatcherServlet        : Detected StandardServletMultipartResolver
+2026-07-08T00:34:07.227+07:00 DEBUG 3269 --- [nio-3000-exec-1] o.s.web.servlet.DispatcherServlet        : Detected AcceptHeaderLocaleResolver
+2026-07-08T00:34:07.227+07:00 DEBUG 3269 --- [nio-3000-exec-1] o.s.web.servlet.DispatcherServlet        : Detected FixedThemeResolver
+2026-07-08T00:34:07.234+07:00 DEBUG 3269 --- [nio-3000-exec-1] o.s.web.servlet.DispatcherServlet        : Detected org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator@1bc6c20d
+2026-07-08T00:34:07.234+07:00 DEBUG 3269 --- [nio-3000-exec-1] o.s.web.servlet.DispatcherServlet        : Detected org.springframework.web.servlet.support.SessionFlashMapManager@7b8b07ae
+2026-07-08T00:34:07.235+07:00 DEBUG 3269 --- [nio-3000-exec-1] o.s.web.servlet.DispatcherServlet        : enableLoggingRequestDetails='false': request parameters and headers will be masked to prevent unsafe logging of potentially sensitive data
+2026-07-08T00:34:07.235+07:00  INFO 3269 --- [nio-3000-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 9 ms
+2026-07-08T00:34:07.338+07:00  WARN 3269 --- [nio-3000-exec-1] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
+2026-07-08T00:34:08.136+07:00 DEBUG 3269 --- [nio-3000-exec-1] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: admin@vuavuive.vn
+2026-07-08T00:34:08.143+07:00 DEBUG 3269 --- [nio-3000-exec-1] o.s.web.servlet.DispatcherServlet        : POST "/api/notifications/device-token", parameters={}
+2026-07-08T00:34:08.144+07:00 DEBUG 3269 --- [nio-3000-exec-1] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.notification.NotificationController#registerDeviceToken(DeviceTokenRequest)
+2026-07-08T00:34:08.169+07:00 DEBUG 3269 --- [nio-3000-exec-1] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [DeviceTokenRequest[token=cr7NztFOTTG2bmnYEgaubh:APA91bHTMKTvFKTk6a0FlYy7N9XG3_DOrWLNgZn6SnOBii7rLr1b (truncated)...]
+2026-07-08T00:34:09.086+07:00 DEBUG 3269 --- [nio-3000-exec-1] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-08T00:34:09.090+07:00 DEBUG 3269 --- [nio-3000-exec-1] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Da luu FCM token, data=null, pagination=null, accessToken=null, re (truncated)...]
+2026-07-08T00:34:09.099+07:00 DEBUG 3269 --- [nio-3000-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-08T00:34:23.918+07:00  INFO 3269 --- [MessageBroker-2] o.s.w.s.c.WebSocketMessageBrokerStats    : WebSocketSession[0 current WS(0)-HttpStream(0)-HttpPoll(0), 0 total, 0 closed abnormally (0 connect failure, 0 send limit, 0 transport error)], stompSubProtocol[processed CONNECT(0)-CONNECTED(0)-DISCONNECT(0)], stompBrokerRelay[null], inboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], outboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], sockJsScheduler[pool size = 3, active threads = 1, queued tasks = 1, completed tasks = 1]
+2026-07-08T00:34:29.630+07:00  WARN 3269 --- [nio-3000-exec-2] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
+2026-07-08T00:34:29.904+07:00 DEBUG 3269 --- [nio-3000-exec-2] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: admin@vuavuive.vn
+2026-07-08T00:34:29.906+07:00 DEBUG 3269 --- [nio-3000-exec-2] o.s.web.servlet.DispatcherServlet        : PATCH "/api/orders/9d0218bc-2945-487f-9009-dfe49bb031d3/status", parameters={}
+2026-07-08T00:34:29.907+07:00 DEBUG 3269 --- [nio-3000-exec-2] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.order.OrderController#updateStatus(String, Map)
+2026-07-08T00:34:29.936+07:00 DEBUG 3269 --- [nio-3000-exec-2] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [{updatedBy=Admin, status=CONFIRMED}]
+2026-07-08T00:34:30.894+07:00  INFO 3269 --- [nio-3000-exec-2] .s.a.AnnotationAsyncExecutionInterceptor : More than one TaskExecutor bean found within the context, and none is named 'taskExecutor'. Mark one of them as primary or name it 'taskExecutor' (possibly as an alias) in order to use it for async processing: [clientInboundChannelExecutor, clientOutboundChannelExecutor, brokerChannelExecutor]
+2026-07-08T00:34:30.899+07:00 DEBUG 3269 --- [nio-3000-exec-2] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-08T00:34:30.921+07:00 DEBUG 3269 --- [nio-3000-exec-2] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=OrderResponse[orderId=9d0218bc-2945-487f (truncated)...]
+2026-07-08T00:34:30.942+07:00 DEBUG 3269 --- [nio-3000-exec-2] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-08T00:34:32.340+07:00  WARN 3269 --- [nio-3000-exec-3] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
+2026-07-08T00:34:32.631+07:00 DEBUG 3269 --- [nio-3000-exec-3] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: admin@vuavuive.vn
+2026-07-08T00:34:32.632+07:00 DEBUG 3269 --- [nio-3000-exec-3] o.s.web.servlet.DispatcherServlet        : POST "/api/shippers/3537fc08-2451-4ecb-a5ff-2f330551b040/assign/9d0218bc-2945-487f-9009-dfe49bb031d3", parameters={}
+2026-07-08T00:34:32.633+07:00 DEBUG 3269 --- [nio-3000-exec-3] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.shipper.ShipperController#assignOrder(String, String)
+2026-07-08T00:34:35.710+07:00  WARN 3269 --- [nio-3000-exec-4] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
+2026-07-08T00:34:35.950+07:00  INFO 3269 --- [nio-3000-exec-3] v.v.b.modules.shipper.ShipperService     : Gán shipper 3537fc08-2451-4ecb-a5ff-2f330551b040 cho đơn hàng 9d0218bc-2945-487f-9009-dfe49bb031d3 thành công
+2026-07-08T00:34:35.963+07:00 DEBUG 3269 --- [nio-3000-exec-3] org.springframework.web.SimpLogging      : Processing MESSAGE destination=/topic/admin/orders session=null payload={"orderId":"9d0218bc-2945-487f-9009-dfe49bb031d3","message":"Đã gán tài xế...(truncated)
+2026-07-08T00:34:35.970+07:00 DEBUG 3269 --- [nio-3000-exec-3] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-08T00:34:35.972+07:00 DEBUG 3269 --- [nio-3000-exec-3] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data={message=Gán shipper thành công}, pagina (truncated)...]
+2026-07-08T00:34:35.973+07:00 DEBUG 3269 --- [nio-3000-exec-3] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-08T00:34:36.258+07:00 DEBUG 3269 --- [nio-3000-exec-4] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: admin@vuavuive.vn
+2026-07-08T00:34:36.259+07:00 DEBUG 3269 --- [nio-3000-exec-4] o.s.web.servlet.DispatcherServlet        : POST "/api/shippers/3537fc08-2451-4ecb-a5ff-2f330551b040/assign/9d0218bc-2945-487f-9009-dfe49bb031d3", parameters={}
+2026-07-08T00:34:36.259+07:00 DEBUG 3269 --- [nio-3000-exec-4] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.shipper.ShipperController#assignOrder(String, String)
+2026-07-08T00:34:38.756+07:00  INFO 3269 --- [nio-3000-exec-4] v.v.b.modules.shipper.ShipperService     : Gán shipper 3537fc08-2451-4ecb-a5ff-2f330551b040 cho đơn hàng 9d0218bc-2945-487f-9009-dfe49bb031d3 thành công
+2026-07-08T00:34:38.757+07:00 DEBUG 3269 --- [nio-3000-exec-4] org.springframework.web.SimpLogging      : Processing MESSAGE destination=/topic/admin/orders session=null payload={"orderId":"9d0218bc-2945-487f-9009-dfe49bb031d3","message":"Đã gán tài xế...(truncated)
+2026-07-08T00:34:38.759+07:00 DEBUG 3269 --- [nio-3000-exec-4] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-08T00:34:38.759+07:00 DEBUG 3269 --- [nio-3000-exec-4] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data={message=Gán shipper thành công}, pagina (truncated)...]
+2026-07-08T00:34:38.761+07:00 DEBUG 3269 --- [nio-3000-exec-4] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-08T00:34:45.368+07:00  WARN 3269 --- [nio-3000-exec-8] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
+2026-07-08T00:34:45.636+07:00 DEBUG 3269 --- [nio-3000-exec-8] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: shipper@gmail.com
+2026-07-08T00:34:45.637+07:00 DEBUG 3269 --- [nio-3000-exec-8] o.s.web.servlet.DispatcherServlet        : POST "/api/notifications/device-token", parameters={}
+2026-07-08T00:34:45.642+07:00 DEBUG 3269 --- [nio-3000-exec-8] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.notification.NotificationController#registerDeviceToken(DeviceTokenRequest)
+2026-07-08T00:34:45.647+07:00 DEBUG 3269 --- [nio-3000-exec-8] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [DeviceTokenRequest[token=coU15si4TpGcze0MRy6g7a:APA91bEp9e5ulQdgS9gdkG3t1Mz2HS5ntf-yhnyah4oP9x0PlZNB (truncated)...]
+2026-07-08T00:34:46.348+07:00 DEBUG 3269 --- [nio-3000-exec-8] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-08T00:34:46.349+07:00 DEBUG 3269 --- [nio-3000-exec-8] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Da luu FCM token, data=null, pagination=null, accessToken=null, re (truncated)...]
+2026-07-08T00:34:46.350+07:00 DEBUG 3269 --- [nio-3000-exec-8] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-08T00:34:56.362+07:00  WARN 3269 --- [nio-3000-exec-9] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
+2026-07-08T00:34:56.699+07:00 DEBUG 3269 --- [nio-3000-exec-9] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: shipper@gmail.com
+2026-07-08T00:34:56.704+07:00 DEBUG 3269 --- [nio-3000-exec-9] o.s.web.servlet.DispatcherServlet        : PUT "/api/shippers/3537fc08-2451-4ecb-a5ff-2f330551b040/orders/9d0218bc-2945-487f-9009-dfe49bb031d3/delivery?status=IN_TRANSIT", parameters={masked}
+2026-07-08T00:34:56.704+07:00 DEBUG 3269 --- [nio-3000-exec-9] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.shipper.ShipperController#updateDeliveryStatus(String, String, String, String)
+2026-07-08T00:34:58.631+07:00  INFO 3269 --- [nio-3000-exec-9] v.v.b.modules.shipper.ShipperService     : Shipper 3537fc08-2451-4ecb-a5ff-2f330551b040 cập nhật đơn 9d0218bc-2945-487f-9009-dfe49bb031d3 từ CONFIRMED → IN_TRANSIT
+2026-07-08T00:34:58.633+07:00 DEBUG 3269 --- [nio-3000-exec-9] org.springframework.web.SimpLogging      : Processing MESSAGE destination=/topic/admin/orders session=null payload={"orderId":"9d0218bc-2945-487f-9009-dfe49bb031d3","message":"Tài xế 098765432...(truncated)
+2026-07-08T00:34:58.635+07:00 DEBUG 3269 --- [nio-3000-exec-9] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-08T00:34:58.636+07:00 DEBUG 3269 --- [nio-3000-exec-9] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data={message=Cập nhật trạng thái giao hàng t (truncated)...]
+2026-07-08T00:34:58.639+07:00 DEBUG 3269 --- [nio-3000-exec-9] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-08T00:35:04.693+07:00  WARN 3269 --- [io-3000-exec-10] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
+2026-07-08T00:35:04.990+07:00 DEBUG 3269 --- [io-3000-exec-10] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: shipper@gmail.com
+2026-07-08T00:35:04.999+07:00 DEBUG 3269 --- [io-3000-exec-10] o.s.web.servlet.DispatcherServlet        : PUT "/api/shippers/3537fc08-2451-4ecb-a5ff-2f330551b040/orders/9d0218bc-2945-487f-9009-dfe49bb031d3/delivery?status=DELIVERED", parameters={masked}
+2026-07-08T00:35:05.000+07:00 DEBUG 3269 --- [io-3000-exec-10] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.shipper.ShipperController#updateDeliveryStatus(String, String, String, String)
+2026-07-08T00:35:06.735+07:00  INFO 3269 --- [io-3000-exec-10] v.v.backend.modules.order.OrderService   : Awarded 30 points to user customer@gmail.com for order 9d0218bc-2945-487f-9009-dfe49bb031d3
+2026-07-08T00:35:07.681+07:00  INFO 3269 --- [io-3000-exec-10] v.v.b.modules.shipper.ShipperService     : Shipper 3537fc08-2451-4ecb-a5ff-2f330551b040 cập nhật đơn 9d0218bc-2945-487f-9009-dfe49bb031d3 từ IN_TRANSIT → DELIVERED
+2026-07-08T00:35:07.683+07:00 DEBUG 3269 --- [io-3000-exec-10] org.springframework.web.SimpLogging      : Processing MESSAGE destination=/topic/admin/orders session=null payload={"orderId":"9d0218bc-2945-487f-9009-dfe49bb031d3","message":"Tài xế 098765432...(truncated)
+2026-07-08T00:35:07.686+07:00 DEBUG 3269 --- [io-3000-exec-10] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-08T00:35:07.688+07:00 DEBUG 3269 --- [io-3000-exec-10] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data={message=Cập nhật trạng thái giao hàng t (truncated)...]
+2026-07-08T00:35:07.690+07:00 DEBUG 3269 --- [io-3000-exec-10] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-08T00:37:55.149+07:00 DEBUG 3269 --- [nio-3000-exec-3] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: 0906760495
+2026-07-08T00:37:55.152+07:00 DEBUG 3269 --- [nio-3000-exec-3] o.s.web.servlet.DispatcherServlet        : POST "/api/orders", parameters={}
+2026-07-08T00:37:55.152+07:00 DEBUG 3269 --- [nio-3000-exec-3] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.order.OrderController#createOrder(CreateOrderRequest, HttpServletRequest)
+2026-07-08T00:37:55.172+07:00 DEBUG 3269 --- [nio-3000-exec-3] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [CreateOrderRequest(items=[OrderItemRequest[productId=prod-2dfaa2a2-2439-4aea-a49c-7d36977daecc, quan (truncated)...]
+2026-07-08T00:37:56.600+07:00  INFO 3269 --- [nio-3000-exec-3] v.v.backend.modules.order.OrderService   : Đơn hàng 50ccfeeb-4916-443d-a422-55bb5761c731 đã được tạo bởi user 0906760495
+2026-07-08T00:37:56.799+07:00  WARN 3269 --- [cTaskExecutor-8] v.v.b.m.n.NotificationService            : FCM send failed for topic:admin_orders: Unknown error while making a remote service call: Error getting access token for service account: 400 Bad Request
 POST https://oauth2.googleapis.com/token
 {"error":"invalid_grant","error_description":"Invalid grant: account not found"}, iss: firebase-adminsdk-dummy@vua-vui-ve.iam.gserviceaccount.com
-2026-07-07T12:00:19.099+07:00  WARN 39755 --- [cTaskExecutor-1] v.v.b.m.n.NotificationService            : FCM send failed for 22f857f6-079e-44ef-b9eb-d8ec9f2c46b7: Unknown error while making a remote service call: Error getting access token for service account: 400 Bad Request
+2026-07-08T00:37:56.828+07:00 DEBUG 3269 --- [nio-3000-exec-3] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-08T00:37:56.828+07:00 DEBUG 3269 --- [nio-3000-exec-3] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=OrderResponse[orderId=50ccfeeb-4916-443d (truncated)...]
+2026-07-08T00:37:56.829+07:00 DEBUG 3269 --- [nio-3000-exec-3] o.s.web.servlet.DispatcherServlet        : Completed 201 CREATED
+2026-07-08T00:37:57.170+07:00  WARN 3269 --- [cTaskExecutor-9] v.v.b.m.n.NotificationService            : FCM send failed for cc618539-e7c6-4681-91f3-8bf899bbfb7a: Unknown error while making a remote service call: Error getting access token for service account: 400 Bad Request
 POST https://oauth2.googleapis.com/token
 {"error":"invalid_grant","error_description":"Invalid grant: account not found"}, iss: firebase-adminsdk-dummy@vua-vui-ve.iam.gserviceaccount.com
-2026-07-07T12:00:19.171+07:00  WARN 39755 --- [cTaskExecutor-1] v.v.b.m.n.NotificationService            : FCM send failed for 22f857f6-079e-44ef-b9eb-d8ec9f2c46b7: Unknown error while making a remote service call: Error getting access token for service account: 400 Bad Request
+2026-07-08T00:38:03.008+07:00 DEBUG 3269 --- [nio-3000-exec-4] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: 0906760495
+2026-07-08T00:38:03.010+07:00 DEBUG 3269 --- [nio-3000-exec-4] o.s.web.servlet.DispatcherServlet        : GET "/api/auth/me", parameters={}
+2026-07-08T00:38:03.011+07:00 DEBUG 3269 --- [nio-3000-exec-4] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.auth.AuthController#getMe()
+2026-07-08T00:38:03.631+07:00 DEBUG 3269 --- [nio-3000-exec-4] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-08T00:38:03.648+07:00 DEBUG 3269 --- [nio-3000-exec-4] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Lấy thông tin người dùng thành công, data=UserResponse[id=cc618539 (truncated)...]
+2026-07-08T00:38:03.651+07:00 DEBUG 3269 --- [nio-3000-exec-4] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-08T00:38:05.314+07:00 DEBUG 3269 --- [nio-3000-exec-6] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: 0906760495
+2026-07-08T00:38:05.315+07:00 DEBUG 3269 --- [nio-3000-exec-6] o.s.web.servlet.DispatcherServlet        : GET "/api/orders/me?page=1&limit=20", parameters={masked}
+2026-07-08T00:38:05.315+07:00 DEBUG 3269 --- [nio-3000-exec-6] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.order.OrderController#getMyOrders(String, int, Integer, Integer)
+2026-07-08T00:38:08.285+07:00 DEBUG 3269 --- [nio-3000-exec-6] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-08T00:38:08.289+07:00 DEBUG 3269 --- [nio-3000-exec-6] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[OrderResponse[orderId=50ccfeeb-4916-443 (truncated)...]
+2026-07-08T00:38:08.292+07:00 DEBUG 3269 --- [nio-3000-exec-6] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-08T00:38:32.729+07:00  WARN 3269 --- [nio-3000-exec-7] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
+2026-07-08T00:38:33.292+07:00 DEBUG 3269 --- [nio-3000-exec-7] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: admin@vuavuive.vn
+2026-07-08T00:38:33.300+07:00 DEBUG 3269 --- [nio-3000-exec-7] o.s.web.servlet.DispatcherServlet        : PATCH "/api/orders/50ccfeeb-4916-443d-a422-55bb5761c731/status", parameters={}
+2026-07-08T00:38:33.302+07:00 DEBUG 3269 --- [nio-3000-exec-7] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.order.OrderController#updateStatus(String, Map)
+2026-07-08T00:38:33.306+07:00 DEBUG 3269 --- [nio-3000-exec-7] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [{updatedBy=Admin, status=CONFIRMED}]
+2026-07-08T00:38:34.444+07:00  WARN 3269 --- [TaskExecutor-10] v.v.b.m.n.NotificationService            : FCM send failed for cc618539-e7c6-4681-91f3-8bf899bbfb7a: Unknown error while making a remote service call: Error getting access token for service account: 400 Bad Request
 POST https://oauth2.googleapis.com/token
 {"error":"invalid_grant","error_description":"Invalid grant: account not found"}, iss: firebase-adminsdk-dummy@vua-vui-ve.iam.gserviceaccount.com
-2026-07-07T12:00:43.892+07:00  WARN 39755 --- [io-3000-exec-10] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
-2026-07-07T12:00:44.181+07:00 DEBUG 39755 --- [io-3000-exec-10] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: customer@gmail.com
-2026-07-07T12:00:44.181+07:00 DEBUG 39755 --- [io-3000-exec-10] o.s.web.servlet.DispatcherServlet        : GET "/api/recipes", parameters={}
-2026-07-07T12:00:44.182+07:00 DEBUG 39755 --- [io-3000-exec-10] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.recipe.RecipeController#getRecipes()
-2026-07-07T12:00:44.475+07:00 DEBUG 39755 --- [io-3000-exec-10] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
-2026-07-07T12:00:44.476+07:00 DEBUG 39755 --- [io-3000-exec-10] m.m.a.RequestResponseBodyMethodProcessor : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[{difficulty=Dễ, image=http://10.0.2.2:3 (truncated)...]
-2026-07-07T12:00:44.480+07:00 DEBUG 39755 --- [io-3000-exec-10] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2026-07-07T12:00:44.960+07:00  WARN 39755 --- [nio-3000-exec-1] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
-2026-07-07T12:00:45.223+07:00 DEBUG 39755 --- [nio-3000-exec-1] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: customer@gmail.com
-2026-07-07T12:00:45.224+07:00 DEBUG 39755 --- [nio-3000-exec-1] o.s.web.servlet.DispatcherServlet        : POST "/api/notifications/device-token", parameters={}
-2026-07-07T12:00:45.224+07:00 DEBUG 39755 --- [nio-3000-exec-1] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.notification.NotificationController#registerDeviceToken(DeviceTokenRequest)
-2026-07-07T12:00:45.227+07:00 DEBUG 39755 --- [nio-3000-exec-1] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [DeviceTokenRequest[token=fIqWZww6StyusZ_ijw64oO:APA91bF7gRHwAmYtp2turMaZt4c4Ah93_BbSaPwbv4oMa-XCXmPM (truncated)...]
-2026-07-07T12:00:46.415+07:00 DEBUG 39755 --- [nio-3000-exec-1] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
-2026-07-07T12:00:46.416+07:00 DEBUG 39755 --- [nio-3000-exec-1] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Da luu FCM token, data=null, pagination=null, accessToken=null, re (truncated)...]
-2026-07-07T12:00:46.417+07:00 DEBUG 39755 --- [nio-3000-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2026-07-07T12:08:11.292+07:00  INFO 39755 --- [MessageBroker-3] o.s.w.s.c.WebSocketMessageBrokerStats    : WebSocketSession[0 current WS(0)-HttpStream(0)-HttpPoll(0), 0 total, 0 closed abnormally (0 connect failure, 0 send limit, 0 transport error)], stompSubProtocol[processed CONNECT(0)-CONNECTED(0)-DISCONNECT(0)], stompBrokerRelay[null], inboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], outboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], sockJsScheduler[pool size = 8, active threads = 1, queued tasks = 1, completed tasks = 32]
-2026-07-07T12:24:52.038+07:00  WARN 39755 --- [nio-3000-exec-5] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
-2026-07-07T12:24:52.661+07:00 DEBUG 39755 --- [nio-3000-exec-5] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: customer@gmail.com
-2026-07-07T12:24:52.667+07:00 DEBUG 39755 --- [nio-3000-exec-5] o.s.web.servlet.DispatcherServlet        : GET "/api/recipes", parameters={}
-2026-07-07T12:24:52.668+07:00 DEBUG 39755 --- [nio-3000-exec-5] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.recipe.RecipeController#getRecipes()
-2026-07-07T12:24:52.859+07:00  WARN 39755 --- [nio-3000-exec-6] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
-2026-07-07T12:24:53.044+07:00 DEBUG 39755 --- [nio-3000-exec-5] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
-2026-07-07T12:24:53.050+07:00 DEBUG 39755 --- [nio-3000-exec-5] m.m.a.RequestResponseBodyMethodProcessor : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[{difficulty=Dễ, image=http://10.0.2.2:3 (truncated)...]
-2026-07-07T12:24:53.058+07:00 DEBUG 39755 --- [nio-3000-exec-5] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2026-07-07T12:24:53.432+07:00 DEBUG 39755 --- [nio-3000-exec-6] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: customer@gmail.com
-2026-07-07T12:24:53.433+07:00 DEBUG 39755 --- [nio-3000-exec-6] o.s.web.servlet.DispatcherServlet        : POST "/api/notifications/device-token", parameters={}
-2026-07-07T12:24:53.433+07:00 DEBUG 39755 --- [nio-3000-exec-6] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.notification.NotificationController#registerDeviceToken(DeviceTokenRequest)
-2026-07-07T12:24:53.436+07:00 DEBUG 39755 --- [nio-3000-exec-6] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [DeviceTokenRequest[token=fIqWZww6StyusZ_ijw64oO:APA91bF7gRHwAmYtp2turMaZt4c4Ah93_BbSaPwbv4oMa-XCXmPM (truncated)...]
-2026-07-07T12:24:54.216+07:00 DEBUG 39755 --- [nio-3000-exec-6] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
-2026-07-07T12:24:54.217+07:00 DEBUG 39755 --- [nio-3000-exec-6] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Da luu FCM token, data=null, pagination=null, accessToken=null, re (truncated)...]
-2026-07-07T12:24:54.217+07:00 DEBUG 39755 --- [nio-3000-exec-6] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2026-07-07T12:27:21.605+07:00  WARN 39755 --- [nio-3000-exec-9] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
-2026-07-07T12:27:21.888+07:00 DEBUG 39755 --- [nio-3000-exec-9] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: customer@gmail.com
-2026-07-07T12:27:21.888+07:00 DEBUG 39755 --- [nio-3000-exec-9] o.s.web.servlet.DispatcherServlet        : GET "/api/recipes", parameters={}
-2026-07-07T12:27:21.889+07:00 DEBUG 39755 --- [nio-3000-exec-9] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.recipe.RecipeController#getRecipes()
-2026-07-07T12:27:22.203+07:00 DEBUG 39755 --- [nio-3000-exec-9] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
-2026-07-07T12:27:22.206+07:00 DEBUG 39755 --- [nio-3000-exec-9] m.m.a.RequestResponseBodyMethodProcessor : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[{difficulty=Dễ, image=http://10.0.2.2:3 (truncated)...]
-2026-07-07T12:27:22.208+07:00 DEBUG 39755 --- [nio-3000-exec-9] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2026-07-07T12:27:22.313+07:00  WARN 39755 --- [io-3000-exec-10] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
-2026-07-07T12:27:22.590+07:00 DEBUG 39755 --- [io-3000-exec-10] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: customer@gmail.com
-2026-07-07T12:27:22.590+07:00 DEBUG 39755 --- [io-3000-exec-10] o.s.web.servlet.DispatcherServlet        : POST "/api/notifications/device-token", parameters={}
-2026-07-07T12:27:22.591+07:00 DEBUG 39755 --- [io-3000-exec-10] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.notification.NotificationController#registerDeviceToken(DeviceTokenRequest)
-2026-07-07T12:27:22.591+07:00 DEBUG 39755 --- [io-3000-exec-10] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [DeviceTokenRequest[token=fIqWZww6StyusZ_ijw64oO:APA91bF7gRHwAmYtp2turMaZt4c4Ah93_BbSaPwbv4oMa-XCXmPM (truncated)...]
-2026-07-07T12:27:23.370+07:00 DEBUG 39755 --- [io-3000-exec-10] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
-2026-07-07T12:27:23.371+07:00 DEBUG 39755 --- [io-3000-exec-10] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Da luu FCM token, data=null, pagination=null, accessToken=null, re (truncated)...]
-2026-07-07T12:27:23.373+07:00 DEBUG 39755 --- [io-3000-exec-10] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2026-07-07T12:28:34.964+07:00  WARN 39755 --- [nio-3000-exec-3] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
-2026-07-07T12:28:35.576+07:00 DEBUG 39755 --- [nio-3000-exec-3] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: customer@gmail.com
-2026-07-07T12:28:35.577+07:00 DEBUG 39755 --- [nio-3000-exec-3] o.s.web.servlet.DispatcherServlet        : POST "/api/orders", parameters={}
-2026-07-07T12:28:35.577+07:00 DEBUG 39755 --- [nio-3000-exec-3] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.order.OrderController#createOrder(CreateOrderRequest, HttpServletRequest)
-2026-07-07T12:28:35.686+07:00 DEBUG 39755 --- [nio-3000-exec-3] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [CreateOrderRequest(items=[OrderItemRequest[productId=90000000-0000-0000-0000-000000000102, quantity= (truncated)...]
-2026-07-07T12:28:37.122+07:00  INFO 39755 --- [nio-3000-exec-3] v.v.backend.modules.order.OrderService   : Đơn hàng b5d24479-36f0-44f4-9071-3e71d47ae7e5 đã được tạo bởi user customer@gmail.com
-2026-07-07T12:28:37.388+07:00 DEBUG 39755 --- [nio-3000-exec-3] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
-2026-07-07T12:28:37.402+07:00 DEBUG 39755 --- [nio-3000-exec-3] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=OrderResponse[orderId=b5d24479-36f0-44f4 (truncated)...]
-2026-07-07T12:28:37.408+07:00 DEBUG 39755 --- [nio-3000-exec-3] o.s.web.servlet.DispatcherServlet        : Completed 201 CREATED
-2026-07-07T12:28:37.411+07:00  WARN 39755 --- [cTaskExecutor-2] v.v.b.m.n.NotificationService            : FCM send failed for topic:admin_orders: Unknown error while making a remote service call: Error getting access token for service account: 400 Bad Request
+2026-07-08T00:38:34.561+07:00 DEBUG 3269 --- [nio-3000-exec-7] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-08T00:38:34.563+07:00 DEBUG 3269 --- [nio-3000-exec-7] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=OrderResponse[orderId=50ccfeeb-4916-443d (truncated)...]
+2026-07-08T00:38:34.565+07:00 DEBUG 3269 --- [nio-3000-exec-7] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-08T00:38:37.802+07:00  WARN 3269 --- [nio-3000-exec-8] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
+2026-07-08T00:38:38.052+07:00 DEBUG 3269 --- [nio-3000-exec-8] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: admin@vuavuive.vn
+2026-07-08T00:38:38.052+07:00 DEBUG 3269 --- [nio-3000-exec-8] o.s.web.servlet.DispatcherServlet        : POST "/api/shippers/3537fc08-2451-4ecb-a5ff-2f330551b040/assign/50ccfeeb-4916-443d-a422-55bb5761c731", parameters={}
+2026-07-08T00:38:38.053+07:00 DEBUG 3269 --- [nio-3000-exec-8] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.shipper.ShipperController#assignOrder(String, String)
+2026-07-08T00:38:39.970+07:00  INFO 3269 --- [nio-3000-exec-8] v.v.b.modules.shipper.ShipperService     : Gán shipper 3537fc08-2451-4ecb-a5ff-2f330551b040 cho đơn hàng 50ccfeeb-4916-443d-a422-55bb5761c731 thành công
+2026-07-08T00:38:39.978+07:00 DEBUG 3269 --- [nio-3000-exec-8] org.springframework.web.SimpLogging      : Processing MESSAGE destination=/topic/admin/orders session=null payload={"orderId":"50ccfeeb-4916-443d-a422-55bb5761c731","message":"Đã gán tài xế...(truncated)
+2026-07-08T00:38:39.986+07:00 DEBUG 3269 --- [nio-3000-exec-8] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-08T00:38:39.987+07:00 DEBUG 3269 --- [nio-3000-exec-8] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data={message=Gán shipper thành công}, pagina (truncated)...]
+2026-07-08T00:38:39.988+07:00 DEBUG 3269 --- [nio-3000-exec-8] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-08T00:38:40.346+07:00  WARN 3269 --- [TaskExecutor-12] v.v.b.m.n.NotificationService            : FCM send failed for cc618539-e7c6-4681-91f3-8bf899bbfb7a: Unknown error while making a remote service call: Error getting access token for service account: 400 Bad Request
 POST https://oauth2.googleapis.com/token
 {"error":"invalid_grant","error_description":"Invalid grant: account not found"}, iss: firebase-adminsdk-dummy@vua-vui-ve.iam.gserviceaccount.com
-2026-07-07T12:28:37.773+07:00  WARN 39755 --- [cTaskExecutor-3] v.v.b.m.n.NotificationService            : FCM send failed for 22f857f6-079e-44ef-b9eb-d8ec9f2c46b7: Unknown error while making a remote service call: Error getting access token for service account: 400 Bad Request
+2026-07-08T00:38:40.345+07:00  WARN 3269 --- [TaskExecutor-11] v.v.b.m.n.NotificationService            : FCM send failed for 3537fc08-2451-4ecb-a5ff-2f330551b040: Unknown error while making a remote service call: Error getting access token for service account: 400 Bad Request
 POST https://oauth2.googleapis.com/token
 {"error":"invalid_grant","error_description":"Invalid grant: account not found"}, iss: firebase-adminsdk-dummy@vua-vui-ve.iam.gserviceaccount.com
-2026-07-07T12:28:37.846+07:00  WARN 39755 --- [cTaskExecutor-3] v.v.b.m.n.NotificationService            : FCM send failed for 22f857f6-079e-44ef-b9eb-d8ec9f2c46b7: Unknown error while making a remote service call: Error getting access token for service account: 400 Bad Request
+2026-07-08T00:38:54.231+07:00 DEBUG 3269 --- [io-3000-exec-10] o.s.web.servlet.DispatcherServlet        : GET "/uploads/products/fb947151-8317-4519-8e29-d1f3931c1663.jpg", parameters={}
+2026-07-08T00:38:54.233+07:00 DEBUG 3269 --- [io-3000-exec-10] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler [URL [file:/Users/lynhuhieu/Documents/VuaVuiVe_App/app-backend/uploads/]]
+2026-07-08T00:38:54.239+07:00 DEBUG 3269 --- [io-3000-exec-10] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-08T00:38:58.050+07:00  WARN 3269 --- [nio-3000-exec-1] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
+2026-07-08T00:38:58.312+07:00 DEBUG 3269 --- [nio-3000-exec-1] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: shipper@gmail.com
+2026-07-08T00:38:58.314+07:00 DEBUG 3269 --- [nio-3000-exec-1] o.s.web.servlet.DispatcherServlet        : PUT "/api/shippers/3537fc08-2451-4ecb-a5ff-2f330551b040/orders/50ccfeeb-4916-443d-a422-55bb5761c731/delivery?status=IN_TRANSIT", parameters={masked}
+2026-07-08T00:38:58.315+07:00 DEBUG 3269 --- [nio-3000-exec-1] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.shipper.ShipperController#updateDeliveryStatus(String, String, String, String)
+2026-07-08T00:39:00.232+07:00  INFO 3269 --- [nio-3000-exec-1] v.v.b.modules.shipper.ShipperService     : Shipper 3537fc08-2451-4ecb-a5ff-2f330551b040 cập nhật đơn 50ccfeeb-4916-443d-a422-55bb5761c731 từ CONFIRMED → IN_TRANSIT
+2026-07-08T00:39:00.234+07:00 DEBUG 3269 --- [nio-3000-exec-1] org.springframework.web.SimpLogging      : Processing MESSAGE destination=/topic/admin/orders session=null payload={"orderId":"50ccfeeb-4916-443d-a422-55bb5761c731","message":"Tài xế 098765432...(truncated)
+2026-07-08T00:39:00.236+07:00 DEBUG 3269 --- [nio-3000-exec-1] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-08T00:39:00.237+07:00 DEBUG 3269 --- [nio-3000-exec-1] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data={message=Cập nhật trạng thái giao hàng t (truncated)...]
+2026-07-08T00:39:00.238+07:00 DEBUG 3269 --- [nio-3000-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-08T00:39:00.597+07:00  WARN 3269 --- [TaskExecutor-13] v.v.b.m.n.NotificationService            : FCM send failed for cc618539-e7c6-4681-91f3-8bf899bbfb7a: Unknown error while making a remote service call: Error getting access token for service account: 400 Bad Request
 POST https://oauth2.googleapis.com/token
 {"error":"invalid_grant","error_description":"Invalid grant: account not found"}, iss: firebase-adminsdk-dummy@vua-vui-ve.iam.gserviceaccount.com
-2026-07-07T12:28:37.933+07:00  WARN 39755 --- [cTaskExecutor-3] v.v.b.m.n.NotificationService            : FCM send failed for 22f857f6-079e-44ef-b9eb-d8ec9f2c46b7: Unknown error while making a remote service call: Error getting access token for service account: 400 Bad Request
+2026-07-08T00:39:42.183+07:00 DEBUG 3269 --- [nio-3000-exec-4] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: 0906760495
+2026-07-08T00:39:42.188+07:00 DEBUG 3269 --- [nio-3000-exec-4] o.s.web.servlet.DispatcherServlet        : GET "/api/orders/00a63c89-9ad8-45b3-9b0f-cae006f69c73", parameters={}
+2026-07-08T00:39:42.189+07:00 DEBUG 3269 --- [nio-3000-exec-4] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.order.OrderController#getOrderById(String)
+2026-07-08T00:39:42.710+07:00 DEBUG 3269 --- [nio-3000-exec-4] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-08T00:39:42.711+07:00 DEBUG 3269 --- [nio-3000-exec-4] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=OrderResponse[orderId=00a63c89-9ad8-45b3 (truncated)...]
+2026-07-08T00:39:42.715+07:00 DEBUG 3269 --- [nio-3000-exec-4] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-08T00:42:19.425+07:00 DEBUG 3269 --- [nio-3000-exec-5] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: 0906760495
+2026-07-08T00:42:19.426+07:00 DEBUG 3269 --- [nio-3000-exec-5] o.s.web.servlet.DispatcherServlet        : GET "/api/auth/me", parameters={}
+2026-07-08T00:42:19.426+07:00 DEBUG 3269 --- [nio-3000-exec-5] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.auth.AuthController#getMe()
+2026-07-08T00:42:19.964+07:00 DEBUG 3269 --- [nio-3000-exec-5] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-08T00:42:19.966+07:00 DEBUG 3269 --- [nio-3000-exec-5] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Lấy thông tin người dùng thành công, data=UserResponse[id=cc618539 (truncated)...]
+2026-07-08T00:42:19.969+07:00 DEBUG 3269 --- [nio-3000-exec-5] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-08T00:42:22.593+07:00 DEBUG 3269 --- [io-3000-exec-10] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: 0906760495
+2026-07-08T00:42:22.600+07:00 DEBUG 3269 --- [io-3000-exec-10] o.s.web.servlet.DispatcherServlet        : GET "/api/auth/me", parameters={}
+2026-07-08T00:42:22.601+07:00 DEBUG 3269 --- [io-3000-exec-10] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.auth.AuthController#getMe()
+2026-07-08T00:42:22.845+07:00 DEBUG 3269 --- [nio-3000-exec-9] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: 0906760495
+2026-07-08T00:42:22.846+07:00 DEBUG 3269 --- [nio-3000-exec-9] o.s.web.servlet.DispatcherServlet        : GET "/api/auth/me", parameters={}
+2026-07-08T00:42:22.846+07:00 DEBUG 3269 --- [nio-3000-exec-9] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.auth.AuthController#getMe()
+2026-07-08T00:42:22.868+07:00 DEBUG 3269 --- [nio-3000-exec-1] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: 0906760495
+2026-07-08T00:42:22.869+07:00 DEBUG 3269 --- [nio-3000-exec-1] o.s.web.servlet.DispatcherServlet        : GET "/api/recipes", parameters={}
+2026-07-08T00:42:22.870+07:00 DEBUG 3269 --- [nio-3000-exec-1] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.recipe.RecipeController#getRecipes()
+2026-07-08T00:42:23.104+07:00 DEBUG 3269 --- [io-3000-exec-10] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-08T00:42:23.105+07:00 DEBUG 3269 --- [io-3000-exec-10] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Lấy thông tin người dùng thành công, data=UserResponse[id=cc618539 (truncated)...]
+2026-07-08T00:42:23.125+07:00 DEBUG 3269 --- [io-3000-exec-10] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-08T00:42:23.214+07:00 DEBUG 3269 --- [nio-3000-exec-1] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-08T00:42:23.216+07:00 DEBUG 3269 --- [nio-3000-exec-1] m.m.a.RequestResponseBodyMethodProcessor : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[{difficulty=Dễ, image=http://10.0.2.2:3 (truncated)...]
+2026-07-08T00:42:23.222+07:00 DEBUG 3269 --- [nio-3000-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-08T00:42:23.354+07:00 DEBUG 3269 --- [nio-3000-exec-9] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-08T00:42:23.355+07:00 DEBUG 3269 --- [nio-3000-exec-9] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Lấy thông tin người dùng thành công, data=UserResponse[id=cc618539 (truncated)...]
+2026-07-08T00:42:23.356+07:00 DEBUG 3269 --- [nio-3000-exec-9] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-08T00:42:24.396+07:00 DEBUG 3269 --- [nio-3000-exec-3] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: 0906760495
+2026-07-08T00:42:24.400+07:00 DEBUG 3269 --- [nio-3000-exec-3] o.s.web.servlet.DispatcherServlet        : POST "/api/notifications/device-token", parameters={}
+2026-07-08T00:42:24.400+07:00 DEBUG 3269 --- [nio-3000-exec-3] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.notification.NotificationController#registerDeviceToken(DeviceTokenRequest)
+2026-07-08T00:42:24.403+07:00 DEBUG 3269 --- [nio-3000-exec-3] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [DeviceTokenRequest[token=fIqWZww6StyusZ_ijw64oO:APA91bF7gRHwAmYtp2turMaZt4c4Ah93_BbSaPwbv4oMa-XCXmPM (truncated)...]
+2026-07-08T00:42:25.416+07:00 DEBUG 3269 --- [nio-3000-exec-3] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-08T00:42:25.417+07:00 DEBUG 3269 --- [nio-3000-exec-3] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Da luu FCM token, data=null, pagination=null, accessToken=null, re (truncated)...]
+2026-07-08T00:42:25.418+07:00 DEBUG 3269 --- [nio-3000-exec-3] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-08T00:42:32.358+07:00 DEBUG 3269 --- [nio-3000-exec-2] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: 0906760495
+2026-07-08T00:42:32.361+07:00 DEBUG 3269 --- [nio-3000-exec-2] o.s.web.servlet.DispatcherServlet        : GET "/api/orders/me?page=1&limit=20", parameters={masked}
+2026-07-08T00:42:32.362+07:00 DEBUG 3269 --- [nio-3000-exec-2] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.order.OrderController#getMyOrders(String, int, Integer, Integer)
+2026-07-08T00:42:35.281+07:00 DEBUG 3269 --- [nio-3000-exec-2] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-08T00:42:35.288+07:00 DEBUG 3269 --- [nio-3000-exec-2] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[OrderResponse[orderId=50ccfeeb-4916-443 (truncated)...]
+2026-07-08T00:42:35.292+07:00 DEBUG 3269 --- [nio-3000-exec-2] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-08T00:43:15.334+07:00  WARN 3269 --- [nio-3000-exec-4] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
+2026-07-08T00:43:15.913+07:00 DEBUG 3269 --- [nio-3000-exec-4] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: shipper@gmail.com
+2026-07-08T00:43:15.914+07:00 DEBUG 3269 --- [nio-3000-exec-4] o.s.web.servlet.DispatcherServlet        : PUT "/api/shippers/3537fc08-2451-4ecb-a5ff-2f330551b040/orders/50ccfeeb-4916-443d-a422-55bb5761c731/delivery?status=DELIVERED", parameters={masked}
+2026-07-08T00:43:15.915+07:00 DEBUG 3269 --- [nio-3000-exec-4] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.shipper.ShipperController#updateDeliveryStatus(String, String, String, String)
+2026-07-08T00:43:17.883+07:00  INFO 3269 --- [nio-3000-exec-4] v.v.backend.modules.order.OrderService   : Awarded 990 points to user 0906760495 for order 50ccfeeb-4916-443d-a422-55bb5761c731
+2026-07-08T00:43:19.064+07:00  INFO 3269 --- [nio-3000-exec-4] v.v.b.modules.shipper.ShipperService     : Shipper 3537fc08-2451-4ecb-a5ff-2f330551b040 cập nhật đơn 50ccfeeb-4916-443d-a422-55bb5761c731 từ IN_TRANSIT → DELIVERED
+2026-07-08T00:43:19.065+07:00 DEBUG 3269 --- [nio-3000-exec-4] org.springframework.web.SimpLogging      : Processing MESSAGE destination=/topic/admin/orders session=null payload={"orderId":"50ccfeeb-4916-443d-a422-55bb5761c731","message":"Tài xế 098765432...(truncated)
+2026-07-08T00:43:19.069+07:00 DEBUG 3269 --- [nio-3000-exec-4] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-08T00:43:19.069+07:00 DEBUG 3269 --- [nio-3000-exec-4] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data={message=Cập nhật trạng thái giao hàng t (truncated)...]
+2026-07-08T00:43:19.071+07:00 DEBUG 3269 --- [nio-3000-exec-4] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-08T00:43:19.460+07:00  WARN 3269 --- [TaskExecutor-14] v.v.b.m.n.NotificationService            : FCM send failed for cc618539-e7c6-4681-91f3-8bf899bbfb7a: Unknown error while making a remote service call: Error getting access token for service account: 400 Bad Request
 POST https://oauth2.googleapis.com/token
 {"error":"invalid_grant","error_description":"Invalid grant: account not found"}, iss: firebase-adminsdk-dummy@vua-vui-ve.iam.gserviceaccount.com
-2026-07-07T12:28:44.341+07:00  WARN 39755 --- [nio-3000-exec-4] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
-2026-07-07T12:28:44.633+07:00 DEBUG 39755 --- [nio-3000-exec-4] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: customer@gmail.com
-2026-07-07T12:28:44.634+07:00 DEBUG 39755 --- [nio-3000-exec-4] o.s.web.servlet.DispatcherServlet        : GET "/api/orders/me?page=1&limit=20", parameters={masked}
-2026-07-07T12:28:44.634+07:00 DEBUG 39755 --- [nio-3000-exec-4] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.order.OrderController#getMyOrders(String, int, Integer, Integer)
-2026-07-07T12:28:45.228+07:00  WARN 39755 --- [nio-3000-exec-5] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
-2026-07-07T12:28:45.494+07:00 DEBUG 39755 --- [nio-3000-exec-5] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: customer@gmail.com
-2026-07-07T12:28:45.494+07:00 DEBUG 39755 --- [nio-3000-exec-5] o.s.web.servlet.DispatcherServlet        : GET "/api/orders/me?page=1&limit=20", parameters={masked}
-2026-07-07T12:28:45.494+07:00 DEBUG 39755 --- [nio-3000-exec-5] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.order.OrderController#getMyOrders(String, int, Integer, Integer)
-2026-07-07T12:28:50.680+07:00 DEBUG 39755 --- [nio-3000-exec-4] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
-2026-07-07T12:28:50.683+07:00 DEBUG 39755 --- [nio-3000-exec-4] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[OrderResponse[orderId=b5d24479-36f0-44f (truncated)...]
-2026-07-07T12:28:50.684+07:00 DEBUG 39755 --- [nio-3000-exec-4] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2026-07-07T12:28:51.253+07:00 DEBUG 39755 --- [nio-3000-exec-5] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
-2026-07-07T12:28:51.255+07:00 DEBUG 39755 --- [nio-3000-exec-5] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[OrderResponse[orderId=b5d24479-36f0-44f (truncated)...]
-2026-07-07T12:28:51.256+07:00 DEBUG 39755 --- [nio-3000-exec-5] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2026-07-07T12:33:22.033+07:00  WARN 39755 --- [nio-3000-exec-8] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
-2026-07-07T12:33:22.369+07:00 DEBUG 39755 --- [nio-3000-exec-8] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: customer@gmail.com
-2026-07-07T12:33:22.370+07:00 DEBUG 39755 --- [nio-3000-exec-8] o.s.web.servlet.DispatcherServlet        : GET "/api/recipes", parameters={}
-2026-07-07T12:33:22.370+07:00 DEBUG 39755 --- [nio-3000-exec-8] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.recipe.RecipeController#getRecipes()
-2026-07-07T12:33:22.593+07:00  WARN 39755 --- [nio-3000-exec-9] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
-2026-07-07T12:33:22.679+07:00 DEBUG 39755 --- [nio-3000-exec-8] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
-2026-07-07T12:33:22.680+07:00 DEBUG 39755 --- [nio-3000-exec-8] m.m.a.RequestResponseBodyMethodProcessor : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[{difficulty=Dễ, image=http://10.0.2.2:3 (truncated)...]
-2026-07-07T12:33:22.685+07:00 DEBUG 39755 --- [nio-3000-exec-8] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2026-07-07T12:33:23.214+07:00 DEBUG 39755 --- [nio-3000-exec-9] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: customer@gmail.com
-2026-07-07T12:33:23.214+07:00 DEBUG 39755 --- [nio-3000-exec-9] o.s.web.servlet.DispatcherServlet        : POST "/api/notifications/device-token", parameters={}
-2026-07-07T12:33:23.214+07:00 DEBUG 39755 --- [nio-3000-exec-9] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.notification.NotificationController#registerDeviceToken(DeviceTokenRequest)
-2026-07-07T12:33:23.215+07:00 DEBUG 39755 --- [nio-3000-exec-9] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [DeviceTokenRequest[token=fIqWZww6StyusZ_ijw64oO:APA91bF7gRHwAmYtp2turMaZt4c4Ah93_BbSaPwbv4oMa-XCXmPM (truncated)...]
-2026-07-07T12:33:23.995+07:00 DEBUG 39755 --- [nio-3000-exec-9] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
-2026-07-07T12:33:23.997+07:00 DEBUG 39755 --- [nio-3000-exec-9] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Da luu FCM token, data=null, pagination=null, accessToken=null, re (truncated)...]
-2026-07-07T12:33:24.000+07:00 DEBUG 39755 --- [nio-3000-exec-9] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2026-07-07T12:33:42.901+07:00  WARN 39755 --- [io-3000-exec-10] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
-2026-07-07T12:33:43.480+07:00 DEBUG 39755 --- [io-3000-exec-10] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: customer@gmail.com
-2026-07-07T12:33:43.481+07:00 DEBUG 39755 --- [io-3000-exec-10] o.s.web.servlet.DispatcherServlet        : GET "/api/orders/me?page=1&limit=20", parameters={masked}
-2026-07-07T12:33:43.481+07:00 DEBUG 39755 --- [io-3000-exec-10] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.order.OrderController#getMyOrders(String, int, Integer, Integer)
-2026-07-07T12:33:43.756+07:00  WARN 39755 --- [nio-3000-exec-1] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
-2026-07-07T12:33:44.330+07:00 DEBUG 39755 --- [nio-3000-exec-1] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: customer@gmail.com
-2026-07-07T12:33:44.331+07:00 DEBUG 39755 --- [nio-3000-exec-1] o.s.web.servlet.DispatcherServlet        : GET "/api/orders/me?page=1&limit=20", parameters={masked}
-2026-07-07T12:33:44.331+07:00 DEBUG 39755 --- [nio-3000-exec-1] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.order.OrderController#getMyOrders(String, int, Integer, Integer)
-2026-07-07T12:33:49.294+07:00 DEBUG 39755 --- [io-3000-exec-10] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
-2026-07-07T12:33:49.296+07:00 DEBUG 39755 --- [io-3000-exec-10] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[OrderResponse[orderId=b5d24479-36f0-44f (truncated)...]
-2026-07-07T12:33:49.297+07:00 DEBUG 39755 --- [io-3000-exec-10] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2026-07-07T12:33:50.172+07:00 DEBUG 39755 --- [nio-3000-exec-1] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
-2026-07-07T12:33:50.173+07:00 DEBUG 39755 --- [nio-3000-exec-1] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[OrderResponse[orderId=b5d24479-36f0-44f (truncated)...]
-2026-07-07T12:33:50.174+07:00 DEBUG 39755 --- [nio-3000-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2026-07-07T12:38:11.259+07:00  INFO 39755 --- [MessageBroker-7] o.s.w.s.c.WebSocketMessageBrokerStats    : WebSocketSession[0 current WS(0)-HttpStream(0)-HttpPoll(0), 0 total, 0 closed abnormally (0 connect failure, 0 send limit, 0 transport error)], stompSubProtocol[processed CONNECT(0)-CONNECTED(0)-DISCONNECT(0)], stompBrokerRelay[null], inboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], outboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], sockJsScheduler[pool size = 8, active threads = 1, queued tasks = 1, completed tasks = 63]
-2026-07-07T12:41:29.878+07:00  WARN 39755 --- [nio-3000-exec-5] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
-2026-07-07T12:41:30.158+07:00 DEBUG 39755 --- [nio-3000-exec-5] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: customer@gmail.com
-2026-07-07T12:41:30.159+07:00 DEBUG 39755 --- [nio-3000-exec-5] o.s.web.servlet.DispatcherServlet        : GET "/api/recipes", parameters={}
-2026-07-07T12:41:30.159+07:00 DEBUG 39755 --- [nio-3000-exec-5] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.recipe.RecipeController#getRecipes()
-2026-07-07T12:41:30.452+07:00 DEBUG 39755 --- [nio-3000-exec-5] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
-2026-07-07T12:41:30.454+07:00 DEBUG 39755 --- [nio-3000-exec-5] m.m.a.RequestResponseBodyMethodProcessor : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[{difficulty=Dễ, image=http://10.0.2.2:3 (truncated)...]
-2026-07-07T12:41:30.455+07:00 DEBUG 39755 --- [nio-3000-exec-5] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2026-07-07T12:41:30.502+07:00  WARN 39755 --- [nio-3000-exec-6] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
-2026-07-07T12:41:30.761+07:00 DEBUG 39755 --- [nio-3000-exec-6] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: customer@gmail.com
-2026-07-07T12:41:30.761+07:00 DEBUG 39755 --- [nio-3000-exec-6] o.s.web.servlet.DispatcherServlet        : POST "/api/notifications/device-token", parameters={}
-2026-07-07T12:41:30.761+07:00 DEBUG 39755 --- [nio-3000-exec-6] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.notification.NotificationController#registerDeviceToken(DeviceTokenRequest)
-2026-07-07T12:41:30.763+07:00 DEBUG 39755 --- [nio-3000-exec-6] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [DeviceTokenRequest[token=fIqWZww6StyusZ_ijw64oO:APA91bF7gRHwAmYtp2turMaZt4c4Ah93_BbSaPwbv4oMa-XCXmPM (truncated)...]
-2026-07-07T12:41:31.545+07:00 DEBUG 39755 --- [nio-3000-exec-6] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
-2026-07-07T12:41:31.546+07:00 DEBUG 39755 --- [nio-3000-exec-6] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Da luu FCM token, data=null, pagination=null, accessToken=null, re (truncated)...]
-2026-07-07T12:41:31.547+07:00 DEBUG 39755 --- [nio-3000-exec-6] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2026-07-07T12:41:32.044+07:00  WARN 39755 --- [nio-3000-exec-7] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
-2026-07-07T12:41:32.316+07:00 DEBUG 39755 --- [nio-3000-exec-7] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: customer@gmail.com
-2026-07-07T12:41:32.317+07:00 DEBUG 39755 --- [nio-3000-exec-7] o.s.web.servlet.DispatcherServlet        : GET "/api/orders/me?page=1&limit=20", parameters={masked}
-2026-07-07T12:41:32.317+07:00 DEBUG 39755 --- [nio-3000-exec-7] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.order.OrderController#getMyOrders(String, int, Integer, Integer)
-2026-07-07T12:41:32.666+07:00  WARN 39755 --- [nio-3000-exec-8] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
-2026-07-07T12:41:33.265+07:00 DEBUG 39755 --- [nio-3000-exec-8] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: customer@gmail.com
-2026-07-07T12:41:33.265+07:00 DEBUG 39755 --- [nio-3000-exec-8] o.s.web.servlet.DispatcherServlet        : GET "/api/orders/me?page=1&limit=20", parameters={masked}
-2026-07-07T12:41:33.265+07:00 DEBUG 39755 --- [nio-3000-exec-8] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.order.OrderController#getMyOrders(String, int, Integer, Integer)
-2026-07-07T12:41:37.873+07:00 DEBUG 39755 --- [nio-3000-exec-7] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
-2026-07-07T12:41:37.905+07:00 DEBUG 39755 --- [nio-3000-exec-7] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[OrderResponse[orderId=b5d24479-36f0-44f (truncated)...]
-2026-07-07T12:41:37.907+07:00 DEBUG 39755 --- [nio-3000-exec-7] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2026-07-07T12:41:39.259+07:00 DEBUG 39755 --- [nio-3000-exec-8] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
-2026-07-07T12:41:39.260+07:00 DEBUG 39755 --- [nio-3000-exec-8] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[OrderResponse[orderId=b5d24479-36f0-44f (truncated)...]
-2026-07-07T12:41:39.262+07:00 DEBUG 39755 --- [nio-3000-exec-8] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2026-07-07T12:44:16.046+07:00  WARN 39755 --- [nio-3000-exec-2] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
-2026-07-07T12:44:16.330+07:00 DEBUG 39755 --- [nio-3000-exec-2] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: customer@gmail.com
-2026-07-07T12:44:16.331+07:00 DEBUG 39755 --- [nio-3000-exec-2] o.s.web.servlet.DispatcherServlet        : GET "/api/orders/me?page=1&limit=20", parameters={masked}
-2026-07-07T12:44:16.332+07:00 DEBUG 39755 --- [nio-3000-exec-2] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.order.OrderController#getMyOrders(String, int, Integer, Integer)
-2026-07-07T12:44:16.801+07:00  WARN 39755 --- [nio-3000-exec-3] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
-2026-07-07T12:44:17.369+07:00 DEBUG 39755 --- [nio-3000-exec-3] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: customer@gmail.com
-2026-07-07T12:44:17.370+07:00 DEBUG 39755 --- [nio-3000-exec-3] o.s.web.servlet.DispatcherServlet        : GET "/api/orders/me?page=1&limit=20", parameters={masked}
-2026-07-07T12:44:17.370+07:00 DEBUG 39755 --- [nio-3000-exec-3] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.order.OrderController#getMyOrders(String, int, Integer, Integer)
-2026-07-07T12:44:22.468+07:00 DEBUG 39755 --- [nio-3000-exec-2] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
-2026-07-07T12:44:22.471+07:00 DEBUG 39755 --- [nio-3000-exec-2] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[OrderResponse[orderId=b5d24479-36f0-44f (truncated)...]
-2026-07-07T12:44:22.483+07:00 DEBUG 39755 --- [nio-3000-exec-2] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2026-07-07T12:44:22.897+07:00  WARN 39755 --- [nio-3000-exec-4] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
-2026-07-07T12:44:23.165+07:00 DEBUG 39755 --- [nio-3000-exec-4] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: customer@gmail.com
-2026-07-07T12:44:23.165+07:00 DEBUG 39755 --- [nio-3000-exec-4] o.s.web.servlet.DispatcherServlet        : GET "/api/orders/me?page=1&limit=20", parameters={masked}
-2026-07-07T12:44:23.165+07:00 DEBUG 39755 --- [nio-3000-exec-4] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.order.OrderController#getMyOrders(String, int, Integer, Integer)
-2026-07-07T12:44:23.648+07:00 DEBUG 39755 --- [nio-3000-exec-3] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
-2026-07-07T12:44:23.649+07:00 DEBUG 39755 --- [nio-3000-exec-3] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[OrderResponse[orderId=b5d24479-36f0-44f (truncated)...]
-2026-07-07T12:44:23.650+07:00 DEBUG 39755 --- [nio-3000-exec-3] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2026-07-07T12:44:23.653+07:00  WARN 39755 --- [nio-3000-exec-5] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
-2026-07-07T12:44:23.932+07:00 DEBUG 39755 --- [nio-3000-exec-5] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: customer@gmail.com
-2026-07-07T12:44:23.932+07:00 DEBUG 39755 --- [nio-3000-exec-5] o.s.web.servlet.DispatcherServlet        : GET "/api/orders/me?page=1&limit=20", parameters={masked}
-2026-07-07T12:44:23.932+07:00 DEBUG 39755 --- [nio-3000-exec-5] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.order.OrderController#getMyOrders(String, int, Integer, Integer)
-2026-07-07T12:44:29.029+07:00 DEBUG 39755 --- [nio-3000-exec-4] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
-2026-07-07T12:44:29.031+07:00 DEBUG 39755 --- [nio-3000-exec-4] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[OrderResponse[orderId=b5d24479-36f0-44f (truncated)...]
-2026-07-07T12:44:29.035+07:00 DEBUG 39755 --- [nio-3000-exec-4] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2026-07-07T12:44:30.215+07:00 DEBUG 39755 --- [nio-3000-exec-5] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
-2026-07-07T12:44:30.216+07:00 DEBUG 39755 --- [nio-3000-exec-5] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[OrderResponse[orderId=b5d24479-36f0-44f (truncated)...]
-2026-07-07T12:44:30.217+07:00 DEBUG 39755 --- [nio-3000-exec-5] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2026-07-07T12:44:51.968+07:00  WARN 39755 --- [nio-3000-exec-6] vn.vuavuive.backend.security.JwtUtils    : JWT không hợp lệ: The parsed JWT indicates it was signed with the 'RS256' signature algorithm, but the provided javax.crypto.spec.SecretKeySpec key may not be used to verify RS256 signatures.  Because the specified key reflects a specific and expected algorithm, and the JWT does not reflect this algorithm, it is likely that the JWT was not expected and therefore should not be trusted.  Another possibility is that the parser was provided the incorrect signature verification key, but this cannot be assumed for security reasons.
-2026-07-07T12:44:52.537+07:00 DEBUG 39755 --- [nio-3000-exec-6] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: customer@gmail.com
-2026-07-07T12:44:52.537+07:00 DEBUG 39755 --- [nio-3000-exec-6] o.s.web.servlet.DispatcherServlet        : GET "/api/recipes", parameters={}
-2026-07-07T12:44:52.538+07:00 DEBUG 39755 --- [nio-3000-exec-6] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.recipe.RecipeController#getRecipes()
-2026-07-07T12:44:52.863+07:00 DEBUG 39755 --- [nio-3000-exec-6] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
-2026-07-07T12:44:52.863+07:00 DEBUG 39755 --- [nio-3000-exec-6] m.m.a.RequestResponseBodyMethodProcessor : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[{difficulty=Dễ, image=http://10.0.2.2:3 (truncated)...]
-2026-07-07T12:44:52.866+07:00 DEBUG 39755 --- [nio-3000-exec-6] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2026-07-07T13:08:11.253+07:00  INFO 39755 --- [MessageBroker-3] o.s.w.s.c.WebSocketMessageBrokerStats    : WebSocketSession[0 current WS(0)-HttpStream(0)-HttpPoll(0), 0 total, 0 closed abnormally (0 connect failure, 0 send limit, 0 transport error)], stompSubProtocol[processed CONNECT(0)-CONNECTED(0)-DISCONNECT(0)], stompBrokerRelay[null], inboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], outboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], sockJsScheduler[pool size = 8, active threads = 1, queued tasks = 1, completed tasks = 93]
+2026-07-08T00:43:26.795+07:00 DEBUG 3269 --- [io-3000-exec-10] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: 0906760495
+2026-07-08T00:43:26.797+07:00 DEBUG 3269 --- [io-3000-exec-10] o.s.web.servlet.DispatcherServlet        : GET "/api/orders/me?page=1&limit=20", parameters={masked}
+2026-07-08T00:43:26.798+07:00 DEBUG 3269 --- [io-3000-exec-10] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.order.OrderController#getMyOrders(String, int, Integer, Integer)
+2026-07-08T00:43:29.442+07:00 DEBUG 3269 --- [io-3000-exec-10] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-08T00:43:29.444+07:00 DEBUG 3269 --- [io-3000-exec-10] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[OrderResponse[orderId=50ccfeeb-4916-443 (truncated)...]
+2026-07-08T00:43:29.447+07:00 DEBUG 3269 --- [io-3000-exec-10] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-07-08T00:43:29.589+07:00 DEBUG 3269 --- [nio-3000-exec-1] v.v.backend.security.JwtAuthFilter       : Token hợp lệ — Đã xác thực user: 0906760495
+2026-07-08T00:43:29.590+07:00 DEBUG 3269 --- [nio-3000-exec-1] o.s.web.servlet.DispatcherServlet        : GET "/api/orders/me?page=1&limit=20", parameters={masked}
+2026-07-08T00:43:29.590+07:00 DEBUG 3269 --- [nio-3000-exec-1] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to vn.vuavuive.backend.modules.order.OrderController#getMyOrders(String, int, Integer, Integer)
+2026-07-08T00:43:31.956+07:00 DEBUG 3269 --- [nio-3000-exec-1] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-07-08T00:43:31.957+07:00 DEBUG 3269 --- [nio-3000-exec-1] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Thao tác thành công, data=[OrderResponse[orderId=50ccfeeb-4916-443 (truncated)...]
+2026-07-08T00:43:31.959+07:00 DEBUG 3269 --- [nio-3000-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 200 OK

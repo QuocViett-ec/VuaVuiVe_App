@@ -124,12 +124,15 @@
             android:id="@+id/btn_send"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:contentDescription="Gửi"
             android:src="@drawable/ic_send"
             app:backgroundTint="@color/primary"
             app:tint="@color/white"
-            app:elevation="2dp"
-            app:fabSize="normal"
-            android:layout_marginBottom="4dp" />
+            app:elevation="4dp"
+            app:fabSize="mini"
+            app:rippleColor="@color/primary_dark"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="2dp" />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

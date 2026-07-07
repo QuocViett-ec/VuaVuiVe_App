@@ -51,6 +51,12 @@ public class MainActivity extends AppCompatActivity {
         setupNavigation();
         observeCartCount();
         handleNavigateIntent(getIntent());
+
+        boolean showPopup = getIntent().getBooleanExtra("EXTRA_SHOW_POPUP", false);
+        if (showPopup) {
+            showPopupBanner();
+            getIntent().removeExtra("EXTRA_SHOW_POPUP");
+        }
     }
 
     @Override
@@ -137,6 +143,30 @@ public class MainActivity extends AppCompatActivity {
         } else {
             navigateToDestination(R.id.navigation_products);
         }
+    }
+
+    private void showPopupBanner() {
+        android.app.Dialog dialog = new android.app.Dialog(this);
+        dialog.requestWindowFeature(android.view.Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_popup_banner);
+
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawable(new android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT));
+        }
+
+        dialog.setCancelable(true);
+
+        android.view.View btnClose = dialog.findViewById(R.id.btn_close_popup);
+        if (btnClose != null) {
+            btnClose.setOnClickListener(v -> dialog.dismiss());
+        }
+
+        android.view.View ivBanner = dialog.findViewById(R.id.iv_popup_banner);
+        if (ivBanner != null) {
+            ivBanner.setOnClickListener(v -> dialog.dismiss());
+        }
+
+        dialog.show();
     }
 
 }

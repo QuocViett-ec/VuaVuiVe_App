@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.UUID;
 import java.util.Optional;
 import java.util.Random;
+import java.util.List;
 
 /**
  * AuthService — Xử lý logic đăng ký, đăng nhập và làm mới token.
@@ -295,6 +296,197 @@ public class AuthService {
 
         user.setPasswordHash(passwordEncoder.encode(newPassword));
         userRepository.save(user);
+
+        // Đồng bộ mật khẩu mới sang Firebase Authentication
+        updateFirebaseAuthPassword(user, newPassword);
+    }
+
+    @Transactional
+    public void forgotPassword(String identifier) {
+        User user = userRepository.findByEmail(identifier)
+                .or(() -> userRepository.findByPhone(identifier))
+                .orElseThrow(() -> new AppException(HttpStatus.NOT_FOUND, "Không tìm thấy người dùng với thông tin cung cấp"));
+
+        Optional<Otp> existingOtpOpt = otpRepository.findTopByPhoneAndTypeOrderByCreatedAtDesc(identifier, "FORGOT_PASSWORD");
+        if (existingOtpOpt.isPresent()) {
+            Otp existingOtp = existingOtpOpt.get();
+            if (existingOtp.getLastSentAt() != null && parseDateTime(existingOtp.getLastSentAt()).plusSeconds(60).isAfter(LocalDateTime.now())) {
+                throw new AppException(HttpStatus.TOO_MANY_REQUESTS, "Vui lòng đợi 60 giây trước khi yêu cầu gửi lại mã OTP");
+            }
+        }
+
+        // Tạo mã OTP 6 số
+        String rawOtp = String.format(java.util.Locale.getDefault(), "%06d", new Random().nextInt(1000000));
+        String codeHash = passwordEncoder.encode(rawOtp);
+
+        Otp otp = existingOtpOpt.orElse(new Otp());
+        otp.setPhone(identifier);
+        otp.setCodeHash(codeHash);
+        otp.setType("FORGOT_PASSWORD");
+        otp.setExpiresAt(LocalDateTime.now().plusMinutes(5).toString());
+        otp.setIsUsed(false);
+        otp.setAttemptCount(0);
+        otp.setLastSentAt(LocalDateTime.now().toString());
+        otpRepository.save(otp);
+
+        // Gửi qua Telegram (lấy số điện thoại của user hoặc dùng trực tiếp phone)
+        String targetPhone = user.getPhone();
+        if (targetPhone != null && !targetPhone.isEmpty()) {
+            telegramNotificationService.sendOtp(targetPhone, rawOtp, "FORGOT_PASSWORD");
+        } else {
+            telegramNotificationService.sendOtp(identifier, rawOtp, "FORGOT_PASSWORD");
+        }
+
+        // Gửi qua Email (nếu là email)
+        String targetEmail = user.getEmail();
+        if (targetEmail != null && targetEmail.contains("@")) {
+            resendEmailService.sendOtp(targetEmail, rawOtp);
+        }
+    }
+
+    @Transactional
+    public void verifyForgotPasswordOtp(String identifier, String rawOtp) {
+        Otp otp = otpRepository.findTopByPhoneAndTypeOrderByCreatedAtDesc(identifier, "FORGOT_PASSWORD")
+                .orElseThrow(() -> new AppException(HttpStatus.BAD_REQUEST, "Không tìm thấy yêu cầu xác thực OTP"));
+
+        if (otp.getIsUsed()) {
+            throw new AppException(HttpStatus.BAD_REQUEST, "Mã OTP đã được sử dụng hoặc xác thực trước đó.");
+        }
+        if (otp.getExpiresAt() != null && parseDateTime(otp.getExpiresAt()).isBefore(LocalDateTime.now())) {
+            throw new AppException(HttpStatus.BAD_REQUEST, "Mã OTP đã hết hạn. Vui lòng yêu cầu mã mới.");
+        }
+        if (otp.getAttemptCount() >= 5) {
+            throw new AppException(HttpStatus.BAD_REQUEST, "Mã OTP đã bị khóa do nhập sai quá 5 lần. Vui lòng yêu cầu mã mới.");
+        }
+
+        if (!passwordEncoder.matches(rawOtp, otp.getCodeHash())) {
+            otp.setAttemptCount(otp.getAttemptCount() + 1);
+            if (otp.getAttemptCount() >= 5) {
+                otp.setIsUsed(true); // Lock OTP
+                otpRepository.save(otp);
+                throw new AppException(HttpStatus.BAD_REQUEST, "Mã OTP đã bị khóa do nhập sai quá 5 lần.");
+            }
+            otpRepository.save(otp);
+            throw new AppException(HttpStatus.BAD_REQUEST, "Mã OTP không chính xác. Bạn còn " + (5 - otp.getAttemptCount()) + " lần thử.");
+        }
+
+        // Đánh dấu đã xác thực thành công (để dùng cho bước reset-password)
+        otp.setIsUsed(true);
+        otp.setUsedAt(LocalDateTime.now().toString());
+        otpRepository.save(otp);
+    }
+
+    @Transactional
+    public void resetPassword(String resetToken, String newPassword) {
+        // Tìm OTP record loại FORGOT_PASSWORD vừa được verify (isUsed = true, usedAt trong vòng 10 phút)
+        // mà khớp với resetToken (raw OTP)
+        List<Otp> otps = otpRepository.findAll();
+        Otp matchingOtp = null;
+
+        for (Otp otp : otps) {
+            if ("FORGOT_PASSWORD".equals(otp.getType()) && Boolean.TRUE.equals(otp.getIsUsed()) && otp.getUsedAt() != null) {
+                LocalDateTime usedAtTime = parseDateTime(otp.getUsedAt());
+                if (usedAtTime.plusMinutes(10).isAfter(LocalDateTime.now())) {
+                    if (passwordEncoder.matches(resetToken, otp.getCodeHash())) {
+                        matchingOtp = otp;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (matchingOtp == null) {
+            throw new AppException(HttpStatus.BAD_REQUEST, "Mã xác thực không hợp lệ hoặc phiên đặt lại mật khẩu đã hết hạn.");
+        }
+
+        String identifier = matchingOtp.getPhone();
+        User user = userRepository.findByEmail(identifier)
+                .or(() -> userRepository.findByPhone(identifier))
+                .orElseThrow(() -> new AppException(HttpStatus.NOT_FOUND, "Không tìm thấy người dùng cho yêu cầu này"));
+
+        user.setPasswordHash(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+
+        // Đồng bộ mật khẩu mới sang Firebase Authentication
+        updateFirebaseAuthPassword(user, newPassword);
+
+        // Xóa hoặc đổi trạng thái để không tái sử dụng
+        matchingOtp.setUsedAt(LocalDateTime.now().minusHours(1).toString()); // push it out of 10 min window
+        otpRepository.save(matchingOtp);
+    }
+
+    private void updateFirebaseAuthPassword(User user, String newPassword) {
+        try {
+            com.google.firebase.auth.UserRecord userRecord = null;
+            String emailToUse = user.getEmail();
+            String cleanPhone = null;
+            if (user.getPhone() != null && !user.getPhone().isEmpty()) {
+                cleanPhone = user.getPhone().replaceAll("[\\s\\-\\(\\)]", "");
+                if (cleanPhone.startsWith("+84")) {
+                    cleanPhone = "0" + cleanPhone.substring(3);
+                } else if (cleanPhone.startsWith("84") && cleanPhone.length() > 9) {
+                    cleanPhone = "0" + cleanPhone.substring(2);
+                }
+            }
+
+            if (emailToUse == null || emailToUse.isEmpty()) {
+                if (cleanPhone != null) {
+                    emailToUse = cleanPhone + "@vuavuive.vn";
+                }
+            }
+
+            // 1. Try look up by Email
+            if (emailToUse != null && !emailToUse.isEmpty()) {
+                try {
+                    userRecord = com.google.firebase.auth.FirebaseAuth.getInstance().getUserByEmail(emailToUse);
+                } catch (Exception e) {
+                    log.debug("Lookup by email failed: {}", e.getMessage());
+                }
+            }
+
+            // 2. Try look up by Phone Number
+            if (userRecord == null && user.getPhone() != null && !user.getPhone().isEmpty()) {
+                try {
+                    userRecord = com.google.firebase.auth.FirebaseAuth.getInstance().getUserByPhoneNumber(user.getPhone());
+                } catch (Exception e) {
+                    log.debug("Lookup by phone failed: {}", e.getMessage());
+                }
+            }
+
+            // 3. Try look up by UID
+            if (userRecord == null && user.getId() != null) {
+                try {
+                    userRecord = com.google.firebase.auth.FirebaseAuth.getInstance().getUser(user.getId());
+                } catch (Exception e) {
+                    log.debug("Lookup by UID failed: {}", e.getMessage());
+                }
+            }
+
+            if (userRecord != null) {
+                // User exists in Firebase Auth, update their password
+                com.google.firebase.auth.UserRecord.UpdateRequest updateRequest =
+                        new com.google.firebase.auth.UserRecord.UpdateRequest(userRecord.getUid())
+                                .setPassword(newPassword);
+                com.google.firebase.auth.FirebaseAuth.getInstance().updateUser(updateRequest);
+                log.info("Successfully updated password in Firebase Auth for user UID: {}", userRecord.getUid());
+            } else {
+                // User does NOT exist in Firebase Auth, create them on the fly!
+                if (emailToUse != null && !emailToUse.isEmpty() && user.getId() != null) {
+                    log.info("User not found in Firebase Auth. Creating on the fly with email: {} and UID: {}", emailToUse, user.getId());
+                    com.google.firebase.auth.UserRecord.CreateRequest createRequest =
+                            new com.google.firebase.auth.UserRecord.CreateRequest()
+                                    .setUid(user.getId())
+                                    .setEmail(emailToUse)
+                                    .setPassword(newPassword);
+                    com.google.firebase.auth.FirebaseAuth.getInstance().createUser(createRequest);
+                    log.info("Successfully created user in Firebase Auth with UID: {}", user.getId());
+                } else {
+                    log.warn("Cannot create user in Firebase Auth: missing email or ID");
+                }
+            }
+        } catch (Exception e) {
+            log.error("Failed to update/create user in Firebase Auth: {}", e.getMessage(), e);
+        }
     }
 
     private LocalDateTime parseDateTime(String dateTimeStr) {

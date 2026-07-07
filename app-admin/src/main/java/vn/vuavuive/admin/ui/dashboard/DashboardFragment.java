@@ -166,10 +166,10 @@ public class DashboardFragment extends Fragment {
     }
 
     private void bindStats(DashboardStats stats) {
-        binding.tvStatOrders.setText(stats.getTotalOrders() + " don");
+        binding.tvStatOrders.setText(stats.getTotalOrders() + " đơn");
         binding.tvStatRevenue.setText(CurrencyFormatter.formatVnd(stats.getTotalRevenue()));
         binding.tvStatUsers.setText(stats.getTotalUsers() + " users");
-        binding.tvStatPending.setText(stats.getPendingCount() + " don");
+        binding.tvStatPending.setText(stats.getPendingCount() + " đơn");
     }
 
     private boolean isUiReady() {
@@ -268,27 +268,45 @@ public class DashboardFragment extends Fragment {
                         Toast.makeText(getContext(), "Kiểm toán viên không có quyền xuất hóa đơn", Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    exportCsv("orders_export.csv", "Mã Đơn,Khách Hàng,Tổng Tiền,Trạng Thái,Ngày Tạo\n" +
-                            "ORD-9843A,Phạm Minh Huy,220000,pending,2026-05-22\n" +
-                            "ORD-1092F,Phạm Minh Huy,104000,confirmed,2026-05-21\n" +
-                            "ORD-5743D,Đặng Minh Anh,143000,delivered,2026-05-20");
+                    List<Order> list = MockRepository.getInstance().getOrders();
+                    StringBuilder csv = new StringBuilder("Mã Đơn,Khách Hàng,Tổng Tiền,Trạng Thái,Ngày Tạo\n");
+                    for (Order o : list) {
+                        String name = o.getRecipientName() != null ? o.getRecipientName() : "Không tên";
+                        name = name.replace(",", " ");
+                        String date = o.getCreatedAt() != null && o.getCreatedAt().length() >= 10 ? o.getCreatedAt().substring(0, 10) : "";
+                        csv.append(String.format(java.util.Locale.US, "%s,%s,%.0f,%s,%s\n",
+                                o.getOrderId() != null ? o.getOrderId() : o.getId(), name, o.getFinalAmount(), o.getStatus() != null ? o.getStatus() : "", date));
+                    }
+                    exportCsv("orders_export.csv", csv.toString());
                 } else if (which == 1) { // Products
                     if ("audit".equals(currentUser.getRole())) {
                         Toast.makeText(getContext(), "Kiểm toán viên không có quyền xuất sản phẩm", Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    exportCsv("products_export.csv", "Mã Sản Phẩm,Tên Sản Phẩm,Giá Bán,Tồn Kho,Danh Mục\n" +
-                            "prod-1,Cà chua bi hữu cơ Đà Lạt,35000,4,veg\n" +
-                            "prod-2,Thịt ba rọi heo thảo mộc,145000,8,meat\n" +
-                            "prod-3,Táo Envy Mỹ nhập khẩu,89000,45,fruit");
+                    List<Product> list = MockRepository.getInstance().getProducts();
+                    StringBuilder csv = new StringBuilder("Mã Sản Phẩm,Tên Sản Phẩm,Giá Bán,Tồn Kho,Danh Mục\n");
+                    for (Product p : list) {
+                        String name = p.getName() != null ? p.getName().replace(",", " ") : "Sản phẩm";
+                        String cat = p.getCategory() != null ? p.getCategory().replace(",", " ") : "";
+                        csv.append(String.format(java.util.Locale.US, "%s,%s,%.0f,%d,%s\n",
+                                p.getId(), name, p.getPrice(), p.getStock(), cat));
+                    }
+                    exportCsv("products_export.csv", csv.toString());
                 } else if (which == 2) { // Users
                     if ("staff".equals(currentUser.getRole())) {
                         Toast.makeText(getContext(), "Nhân viên không có quyền xuất thành viên", Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    exportCsv("users_export.csv", "ID,Tên,Email,Số Điện Thoại,Quyền,Hoạt Động\n" +
-                            "usr-1,Lê Hoàng Admin,admin@vuavuive.vn,0901234567,admin,true\n" +
-                            "usr-2,Trần Thị Nhân Viên,staff@vuavuive.vn,0912345678,staff,true");
+                    List<User> list = MockRepository.getInstance().getUsers();
+                    StringBuilder csv = new StringBuilder("ID,Tên,Email,Số Điện Thoại,Quyền,Hoạt Động\n");
+                    for (User u : list) {
+                        String name = u.getName() != null ? u.getName().replace(",", " ") : "Thành viên";
+                        String email = u.getEmail() != null ? u.getEmail() : "";
+                        String phone = u.getPhone() != null ? u.getPhone() : "";
+                        csv.append(String.format(java.util.Locale.US, "%s,%s,%s,%s,%s,%b\n",
+                                u.getId(), name, email, phone, u.getRole() != null ? u.getRole() : "", u.isActive()));
+                    }
+                    exportCsv("users_export.csv", csv.toString());
                 }
             }
         });
@@ -311,14 +329,52 @@ public class DashboardFragment extends Fragment {
                     if (os != null) {
                         os.write(content.getBytes(StandardCharsets.UTF_8));
                         os.flush();
-                        Toast.makeText(context, "Xuất báo cáo " + filename + " vào Downloads folder thành công!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, "Xuất báo cáo " + filename + " thành công! (đã đồng bộ vào folder exports/)", Toast.LENGTH_LONG).show();
                         MockRepository.getInstance().addAuditLog("Xuất báo cáo CSV", filename, "Xuất thành công tập tin " + filename);
                     }
                 }
             }
+            // Send to host exports/ directory via backend API
+            sendExportToBackend(filename, content);
         } catch (Exception e) {
             Toast.makeText(context, "Lỗi khi lưu báo cáo: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void sendExportToBackend(String filename, String content) {
+        new Thread(() -> {
+            try {
+                okhttp3.OkHttpClient client = new okhttp3.OkHttpClient();
+                org.json.JSONObject json = new org.json.JSONObject();
+                json.put("filename", filename);
+                json.put("content", content);
+
+                okhttp3.RequestBody body = okhttp3.RequestBody.create(
+                        json.toString(),
+                        okhttp3.MediaType.parse("application/json; charset=utf-8")
+                );
+
+                String baseUrl = vn.vuavuive.admin.BuildConfig.BASE_URL;
+                if (baseUrl.endsWith("/")) {
+                    baseUrl = baseUrl.substring(0, baseUrl.length() - 1);
+                }
+
+                okhttp3.Request request = new okhttp3.Request.Builder()
+                        .url(baseUrl + "/api/export")
+                        .post(body)
+                        .build();
+
+                try (okhttp3.Response response = client.newCall(request).execute()) {
+                    if (response.isSuccessful()) {
+                        android.util.Log.i(TAG, "Gửi báo cáo lên backend thành công: " + filename);
+                    } else {
+                        android.util.Log.e(TAG, "Gửi báo cáo lên backend thất bại: " + response.code());
+                    }
+                }
+            } catch (Exception e) {
+                android.util.Log.e(TAG, "Lỗi gửi báo cáo lên backend", e);
+            }
+        }).start();
     }
 
     @Override

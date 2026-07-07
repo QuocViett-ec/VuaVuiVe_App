@@ -66,6 +66,8 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/images/**").permitAll()
                 .requestMatchers("/api/ai/**").permitAll()
+                .requestMatchers("/api/export/**").permitAll()
+                .requestMatchers("/api/uploads/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/vision/product-search").permitAll()
                 // Webhook thanh toán từ MoMo/ZaloPay phải public (họ gọi vào, không có token)
                 .requestMatchers(HttpMethod.POST, "/api/payments/momo/ipn").permitAll()

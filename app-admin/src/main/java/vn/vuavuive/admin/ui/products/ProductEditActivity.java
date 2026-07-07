@@ -84,7 +84,7 @@ public class ProductEditActivity extends AppCompatActivity {
         if (productId != null && !productId.isEmpty()) {
             loadExistingProduct();
         } else {
-            binding.tvTitle.setText("THEM SAN PHAM MOI");
+            binding.tvTitle.setText("THÊM SẢN PHẨM MỚI");
             loadImagePreview(selectedImageUrl);
         }
         enforceRolePermissions();
@@ -168,7 +168,7 @@ public class ProductEditActivity extends AppCompatActivity {
             imageUploading = true;
             binding.btnSaveProduct.setEnabled(false);
             binding.btnChooseImage.setEnabled(false);
-            binding.btnChooseImage.setText("Dang tai anh...");
+            binding.btnChooseImage.setText("Đang tải ảnh...");
 
             String mime = getContentResolver().getType(uri);
             if (mime == null) mime = "image/jpeg";
@@ -184,7 +184,7 @@ public class ProductEditActivity extends AppCompatActivity {
                     imageUploading = false;
                     binding.btnSaveProduct.setEnabled(true);
                     binding.btnChooseImage.setEnabled(true);
-                    binding.btnChooseImage.setText("Chon anh tu Gallery");
+                    binding.btnChooseImage.setText("Chọn ảnh từ Gallery");
                     ApiResponse<UploadResponse> body = response.body();
                     if (response.isSuccessful() && body != null && body.isSuccess()
                         && body.getData() != null && body.getData().getUrl() != null) {
@@ -203,7 +203,7 @@ public class ProductEditActivity extends AppCompatActivity {
                     imageUploading = false;
                     binding.btnSaveProduct.setEnabled(true);
                     binding.btnChooseImage.setEnabled(true);
-                    binding.btnChooseImage.setText("Chon anh tu Gallery");
+                    binding.btnChooseImage.setText("Chọn ảnh từ Gallery");
                     Log.w(TAG, "Upload error", t);
                     Toast.makeText(ProductEditActivity.this, "Tải ảnh thất bại: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                 }
@@ -212,7 +212,7 @@ public class ProductEditActivity extends AppCompatActivity {
             imageUploading = false;
             binding.btnSaveProduct.setEnabled(true);
             binding.btnChooseImage.setEnabled(true);
-            binding.btnChooseImage.setText("Chon anh tu Gallery");
+            binding.btnChooseImage.setText("Chọn ảnh từ Gallery");
             Log.w(TAG, "Cannot read image", e);
             Toast.makeText(this, "Không đọc được ảnh", Toast.LENGTH_SHORT).show();
         }
@@ -237,7 +237,7 @@ public class ProductEditActivity extends AppCompatActivity {
     }
 
     private void loadExistingProduct() {
-        binding.tvTitle.setText("CHINH SUA SAN PHAM");
+        binding.tvTitle.setText("CHỈNH SỬA SẢN PHẨM");
         productApi.getProduct(productId).enqueue(new Callback<ApiResponse<Product>>() {
             @Override
             public void onResponse(Call<ApiResponse<Product>> call, Response<ApiResponse<Product>> response) {

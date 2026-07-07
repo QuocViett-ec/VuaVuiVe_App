@@ -37,6 +37,7 @@ import vn.vuavuive.shared.data.dto.CreateZaloPayPaymentResponse;
 import vn.vuavuive.shared.data.dto.DeliveryInfo;
 import vn.vuavuive.shared.data.dto.Order;
 import vn.vuavuive.shared.data.dto.request.CreateOrderRequest;
+import vn.vuavuive.shared.data.dto.Voucher;
 import vn.vuavuive.shared.data.local.CartItemEntity;
 import vn.vuavuive.shared.util.Constants;
 import vn.vuavuive.shared.util.CurrencyFormatter;
@@ -150,8 +151,19 @@ public class CheckoutActivity extends AppCompatActivity {
                 btnPlaceOrder.setEnabled(true);
             }
         } else {
+            ArrayList<String> selectedIds = getIntent().getStringArrayListExtra("EXTRA_SELECTED_PRODUCT_IDS");
             cartViewModel.getCartItems().observe(this, items -> {
-                cartItems = items != null ? items : new ArrayList<>();
+                List<CartItemEntity> allItems = items != null ? items : new ArrayList<>();
+                if (selectedIds != null) {
+                    cartItems = new ArrayList<>();
+                    for (CartItemEntity item : allItems) {
+                        if (item != null && selectedIds.contains(item.getProductId())) {
+                            cartItems.add(item);
+                        }
+                    }
+                } else {
+                    cartItems = allItems;
+                }
                 cartLoaded = true;
                 updatePriceSummary();
                 if (btnPlaceOrder != null && progressBar != null
@@ -175,18 +187,99 @@ public class CheckoutActivity extends AppCompatActivity {
             return;
         }
 
-        // Voucher client-side demo only; server rules should own final validation later.
-        if ("VUAVUIVE".equalsIgnoreCase(code)) {
-            appliedDiscount = getSubtotal() * 0.15;
-            Toast.makeText(this, "Áp dụng mã thành công! Giảm 15%", Toast.LENGTH_SHORT).show();
-        } else if ("FREESHIP24".equalsIgnoreCase(code) || "FREESHIP".equalsIgnoreCase(code)) {
-            appliedDiscount = 30_000;
-            Toast.makeText(this, "Áp dụng mã thành công! Miễn phí ship", Toast.LENGTH_SHORT).show();
-        } else {
-            appliedDiscount = 0;
-            Toast.makeText(this, "Mã không hợp lệ hoặc đã hết hạn", Toast.LENGTH_SHORT).show();
+        btnApplyVoucher.setEnabled(false);
+        orderViewModel.getAvailableVouchers().observe(this, result -> {
+            if (result == null) return;
+            if (result.status == AuthRepository.Result.Status.SUCCESS && result.data != null) {
+                btnApplyVoucher.setEnabled(true);
+                List<Voucher> vouchers = result.data;
+                Voucher match = null;
+                for (Voucher v : vouchers) {
+                    if (v.getCode() != null && v.getCode().equalsIgnoreCase(code)) {
+                        match = v;
+                        break;
+                    }
+                }
+                if (match != null) {
+                    boolean valid = true;
+                    try {
+                        java.util.Date now = new java.util.Date();
+                        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US);
+                        java.util.Date today = sdf.parse(sdf.format(now));
+
+                        if (match.getStartsAt() != null && !match.getStartsAt().isEmpty()) {
+                            java.util.Date start = parseDate(match.getStartsAt());
+                            if (start != null && today.before(start)) valid = false;
+                        }
+                        if (match.getExpiresAt() != null && !match.getExpiresAt().isEmpty()) {
+                            java.util.Date expire = parseDate(match.getExpiresAt());
+                            if (expire != null && today.after(expire)) valid = false;
+                        }
+                    } catch (Exception ignored) {}
+
+                    if (valid) {
+                        double subtotal = getSubtotal();
+                        if (subtotal < match.getMinOrderValue()) {
+                            Toast.makeText(this, "Đơn hàng tối thiểu phải từ " + String.format(java.util.Locale.US, "%,.0f", match.getMinOrderValue()) + "đ", Toast.LENGTH_LONG).show();
+                            appliedDiscount = 0;
+                        } else {
+                            double discount = 0;
+                            if (match.isShipVoucher()) {
+                                discount = match.getValue() > 0 ? match.getValue() : 30000.0;
+                                if (match.getCap() > 0 && discount > match.getCap()) {
+                                    discount = match.getCap();
+                                }
+                                appliedDiscount = discount;
+                                Toast.makeText(this, "Áp dụng mã miễn phí ship thành công!", Toast.LENGTH_SHORT).show();
+                            } else if (match.isPercentVoucher()) {
+                                discount = subtotal * (match.getValue() / 100.0);
+                                if (match.getCap() > 0 && discount > match.getCap()) {
+                                    discount = match.getCap();
+                                }
+                                appliedDiscount = discount;
+                                Toast.makeText(this, "Áp dụng mã giảm " + (int)match.getValue() + "% thành công!", Toast.LENGTH_SHORT).show();
+                            } else {
+                                discount = match.getValue();
+                                if (match.getCap() > 0 && discount > match.getCap()) {
+                                    discount = match.getCap();
+                                }
+                                appliedDiscount = discount;
+                                Toast.makeText(this, "Áp dụng mã giảm " + String.format(java.util.Locale.US, "%,.0f", discount) + "đ thành công!", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    } else {
+                        appliedDiscount = 0;
+                        Toast.makeText(this, "Mã không hợp lệ hoặc đã hết hạn", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    if ("VUAVUIVE".equalsIgnoreCase(code)) {
+                        appliedDiscount = getSubtotal() * 0.15;
+                        Toast.makeText(this, "Áp dụng mã thành công! Giảm 15%", Toast.LENGTH_SHORT).show();
+                    } else if ("FREESHIP24".equalsIgnoreCase(code) || "FREESHIP".equalsIgnoreCase(code)) {
+                        appliedDiscount = 30_000;
+                        Toast.makeText(this, "Áp dụng mã thành công! Miễn phí ship", Toast.LENGTH_SHORT).show();
+                    } else {
+                        appliedDiscount = 0;
+                        Toast.makeText(this, "Mã không hợp lệ hoặc đã hết hạn", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                updatePriceSummary();
+            } else if (result.status == AuthRepository.Result.Status.ERROR) {
+                btnApplyVoucher.setEnabled(true);
+                Toast.makeText(this, "Lỗi kết nối cơ sở dữ liệu", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private java.util.Date parseDate(String dateStr) {
+        if (dateStr == null) return null;
+        try {
+            String clean = dateStr.contains("T") ? dateStr.split("T")[0] : dateStr;
+            java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US);
+            return sdf.parse(clean);
+        } catch (Exception e) {
+            return null;
         }
-        updatePriceSummary();
     }
 
     private void placeOrder() {
@@ -267,7 +360,14 @@ public class CheckoutActivity extends AppCompatActivity {
 
                 if (Constants.PAYMENT_COD.equals(finalMethod)) {
                     if (!isBuyNow) {
-                        cartViewModel.clearCart();
+                        ArrayList<String> selectedIds = getIntent().getStringArrayListExtra("EXTRA_SELECTED_PRODUCT_IDS");
+                        if (selectedIds != null && !selectedIds.isEmpty()) {
+                            for (String pid : selectedIds) {
+                                cartViewModel.removeItem(pid);
+                            }
+                        } else {
+                            cartViewModel.clearCart();
+                        }
                     }
                     Toast.makeText(CheckoutActivity.this, "Đặt hàng thành công!", Toast.LENGTH_LONG).show();
                     finish();
@@ -369,6 +469,10 @@ public class CheckoutActivity extends AppCompatActivity {
         intent.putExtra("order_total", amount);
         intent.putExtra("provider", provider != null ? provider.toUpperCase() : "");
         intent.putExtra("EXTRA_BUY_NOW", isBuyNow);
+        ArrayList<String> selectedIds = getIntent().getStringArrayListExtra("EXTRA_SELECTED_PRODUCT_IDS");
+        if (selectedIds != null) {
+            intent.putStringArrayListExtra("EXTRA_SELECTED_PRODUCT_IDS", selectedIds);
+        }
         startActivity(intent);
     }
 

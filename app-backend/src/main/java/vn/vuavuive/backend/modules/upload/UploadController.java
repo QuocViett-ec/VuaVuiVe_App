@@ -27,7 +27,6 @@ public class UploadController {
     private static final Set<String> ALLOWED_EXTENSIONS = Set.of("jpg", "jpeg", "png", "webp", "gif");
 
     @PostMapping(value = "/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
     public ApiResponse<Map<String, String>> uploadImage(@RequestPart("file") MultipartFile file,
                                                         HttpServletRequest request) throws Exception {
         if (file == null || file.isEmpty()) {

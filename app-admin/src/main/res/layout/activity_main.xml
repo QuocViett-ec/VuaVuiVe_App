@@ -48,7 +48,7 @@
             android:id="@+id/iv_logout"
             android:layout_width="28dp"
             android:layout_height="28dp"
-            android:src="@drawable/ic_close"
+            android:src="@drawable/ic_logout"
             android:contentDescription="Đăng xuất"
             app:tint="@color/error" />
     </LinearLayout>

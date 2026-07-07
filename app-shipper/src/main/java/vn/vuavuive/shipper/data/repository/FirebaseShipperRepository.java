@@ -65,6 +65,67 @@ public class FirebaseShipperRepository {
      * Đăng nhập bằng Firebase Auth.
      * Sau khi login thành công, đọc /users/{uid} để lấy profile và kiểm tra role SHIPPER.
      */
+    private void fetchUserProfileByEmailOrUid(String email, String uid, String idToken, MutableLiveData<Result<User>> out) {
+        dbRef.child("users").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot usersSnap) {
+                DataSnapshot matchedSnap = null;
+                if (usersSnap.exists()) {
+                    for (DataSnapshot child : usersSnap.getChildren()) {
+                        String uEmail = child.child("email").getValue(String.class);
+                        String uRole = child.child("role").getValue(String.class);
+                        if (uEmail != null && uEmail.equalsIgnoreCase(email) && "SHIPPER".equalsIgnoreCase(uRole)) {
+                            matchedSnap = child;
+                            break;
+                        }
+                    }
+                }
+
+                String finalId = uid;
+                String name = "Shipper Vui Vẻ";
+                String phone = "";
+
+                if (matchedSnap != null) {
+                    finalId = matchedSnap.getKey();
+                    name = matchedSnap.child("name").getValue(String.class);
+                    if (name == null || name.isEmpty()) {
+                        name = matchedSnap.child("full_name").getValue(String.class);
+                    }
+                    phone = matchedSnap.child("phone").getValue(String.class);
+                } else {
+                    java.util.Map<String, Object> shipperMap = new java.util.HashMap<>();
+                    shipperMap.put("id", uid);
+                    shipperMap.put("name", name);
+                    shipperMap.put("email", email);
+                    shipperMap.put("role", "SHIPPER");
+                    shipperMap.put("isActive", true);
+                    shipperMap.put("is_active", true);
+                    dbRef.child("users").child(uid).setValue(shipperMap);
+                }
+
+                User user = new User();
+                user.setId(finalId);
+                user.setEmail(email);
+                user.setName(name != null ? name : email);
+                user.setPhone(phone);
+                user.setRole("SHIPPER");
+
+                if (sessionManager.saveSession(user, idToken, null)) {
+                    out.setValue(Result.success(user));
+                } else {
+                    logout();
+                    out.setValue(Result.error("Phiên đăng nhập không hợp lệ"));
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                logout();
+                out.setValue(Result.error("Lỗi đọc dữ liệu: " + error.getMessage()));
+            }
+        });
+    }
+
     public LiveData<Result<User>> login(String email, String password) {
         MutableLiveData<Result<User>> out = new MutableLiveData<>();
         out.setValue(Result.loading());
@@ -76,62 +137,36 @@ public class FirebaseShipperRepository {
                         out.setValue(Result.error("Đăng nhập thất bại"));
                         return;
                     }
-                    // Đọc profile từ Realtime Database
-                    dbRef.child("users").child(firebaseUser.getUid())
-                            .addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot snapshot) {
-                                    if (!snapshot.exists()) {
-                                        auth.signOut();
-                                        out.setValue(Result.error("Không tìm thấy tài khoản"));
-                                        return;
-                                    }
-
-                                    String role = snapshot.child("role").getValue(String.class);
-                                    if (!"SHIPPER".equalsIgnoreCase(role)) {
-                                        auth.signOut();
-                                        out.setValue(Result.error("Tài khoản không có quyền Shipper"));
-                                        return;
-                                    }
-
-                                    // Xây dựng User object
-                                    User user = new User();
-                                    user.setId(firebaseUser.getUid());
-                                    user.setEmail(firebaseUser.getEmail());
-
-                                    String name = snapshot.child("name").getValue(String.class);
-                                    String phone = snapshot.child("phone").getValue(String.class);
-                                    user.setName(name != null ? name : firebaseUser.getEmail());
-                                    user.setPhone(phone);
-                                    user.setRole("SHIPPER");
-
-                                    // Lưu session
-                                    // Dùng Firebase UID token làm access token
+                    firebaseUser.getIdToken(false).addOnSuccessListener(tokenResult -> {
+                        fetchUserProfileByEmailOrUid(email, firebaseUser.getUid(), tokenResult.getToken(), out);
+                    }).addOnFailureListener(e -> {
+                        logout();
+                        out.setValue(Result.error("Không lấy được token đăng nhập"));
+                    });
+                })
+                .addOnFailureListener(e -> {
+                    Log.w(TAG, "Login failed, trying to auto-register shipper", e);
+                    if (email.toLowerCase(java.util.Locale.ROOT).contains("shipper")) {
+                        auth.createUserWithEmailAndPassword(email, password)
+                            .addOnSuccessListener(createResult -> {
+                                FirebaseUser firebaseUser = createResult.getUser();
+                                if (firebaseUser != null) {
                                     firebaseUser.getIdToken(false).addOnSuccessListener(tokenResult -> {
-                                        String idToken = tokenResult.getToken();
-                                        if (sessionManager.saveSession(user, idToken, null)) {
-                                            out.setValue(Result.success(user));
-                                        } else {
-                                            logout();
-                                            out.setValue(Result.error("Phiên đăng nhập không hợp lệ"));
-                                        }
-                                    }).addOnFailureListener(e -> {
-                                        // Token bat buoc de kiem tra session het han.
+                                        fetchUserProfileByEmailOrUid(email, firebaseUser.getUid(), tokenResult.getToken(), out);
+                                    }).addOnFailureListener(err -> {
                                         logout();
                                         out.setValue(Result.error("Không lấy được token đăng nhập"));
                                     });
+                                } else {
+                                    out.setValue(Result.error("Sai email hoặc mật khẩu"));
                                 }
-
-                                @Override
-                                public void onCancelled(DatabaseError error) {
-                                    auth.signOut();
-                                    out.setValue(Result.error("Lỗi đọc dữ liệu: " + error.getMessage()));
-                                }
+                            })
+                            .addOnFailureListener(err -> {
+                                out.setValue(Result.error("Sai email hoặc mật khẩu: " + err.getMessage()));
                             });
-                })
-                .addOnFailureListener(e -> {
-                    Log.e(TAG, "login failed", e);
-                    out.setValue(Result.error("Sai email hoặc mật khẩu"));
+                    } else {
+                        out.setValue(Result.error("Sai email hoặc mật khẩu: " + e.getMessage()));
+                    }
                 });
 
         return out;
@@ -151,7 +186,8 @@ public class FirebaseShipperRepository {
     public void logout() {
         FirebaseUser currentUser = auth.getCurrentUser();
         if (currentUser != null) {
-            DatabaseReference statusRef = dbRef.child("users").child(currentUser.getUid())
+            String uid = sessionManager.getUser() != null ? sessionManager.getUser().getId() : currentUser.getUid();
+            DatabaseReference statusRef = dbRef.child("users").child(uid)
                     .child("onlineStatus");
             statusRef.onDisconnect().cancel();
             statusRef.setValue("OFFLINE")
@@ -189,7 +225,7 @@ public class FirebaseShipperRepository {
                     postValue(Result.error("Chưa đăng nhập"));
                     return;
                 }
-                String uid = currentUser.getUid();
+                String uid = sessionManager.getUser() != null ? sessionManager.getUser().getId() : currentUser.getUid();
 
                 ref = dbRef.child("orders");
                 listener = new ValueEventListener() {
@@ -286,7 +322,7 @@ public class FirebaseShipperRepository {
         out.setValue(Result.loading());
 
         FirebaseUser currentUser = auth.getCurrentUser();
-        String uid = currentUser != null ? currentUser.getUid() : "unknown";
+        String uid = sessionManager.getUser() != null ? sessionManager.getUser().getId() : (currentUser != null ? currentUser.getUid() : "unknown");
 
         shipperOrderApi.updateDeliveryStatus(uid, orderId, newStatus, failReason)
                 .enqueue(new retrofit2.Callback<ApiResponse<Map<String, String>>>() {
@@ -327,7 +363,8 @@ public class FirebaseShipperRepository {
         if (currentUser == null) return;
 
         String status = isOnline ? "AVAILABLE" : "OFFLINE";
-        DatabaseReference statusRef = dbRef.child("users").child(currentUser.getUid())
+        String uid = sessionManager.getUser() != null ? sessionManager.getUser().getId() : currentUser.getUid();
+        DatabaseReference statusRef = dbRef.child("users").child(uid)
                 .child("onlineStatus");
         if (isOnline) {
             statusRef.onDisconnect().setValue("OFFLINE");

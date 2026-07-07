@@ -64,6 +64,10 @@ public class ProductViewModel extends ViewModel {
         return productRepository.getProductReviews(productId);
     }
 
+    public LiveData<AuthRepository.Result<List<Review>>> getUserReviews(String userId) {
+        return productRepository.getUserReviews(userId);
+    }
+
     public LiveData<AuthRepository.Result<Review>> submitProductReview(String productId, int rating, String comment) {
         return productRepository.submitProductReview(productId, rating, comment);
     }
@@ -85,6 +89,10 @@ public class ProductViewModel extends ViewModel {
     public LiveData<AuthRepository.Result<List<Product>>> getProducts(
             String category, String search, int page, int limit, String sort) {
         return productRepository.getProducts(category, search, page, limit, sort);
+    }
+
+    public LiveData<AuthRepository.Result<List<Product>>> getAllActiveProductsOnce(int limit) {
+        return productRepository.getAllActiveProductsOnce(limit);
     }
 
     // ── Filters ────────────────────────────────────────────────────────────

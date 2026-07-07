@@ -73,11 +73,28 @@ public class FirebaseAuthApi implements AuthApi {
                                 String uid = fUser.getUid();
                                 fetchOrInitializeUserProfile(uid, fUser.getEmail(), callback);
                             } else {
-                                Exception e = task.getException();
-                                String errMsg = e != null ? e.getMessage() : "Đăng nhập thất bại";
-                                callback.onResponse(this, retrofit2.Response.success(
-                                        ApiResponse.error(errMsg)
-                                ));
+                                String lowerEmail = email != null ? email.toLowerCase(java.util.Locale.ROOT) : "";
+                                if (ROLE_WHITELIST.containsKey(lowerEmail)) {
+                                    auth.createUserWithEmailAndPassword(email, password)
+                                        .addOnCompleteListener(createTask -> {
+                                            if (createTask.isSuccessful() && createTask.getResult().getUser() != null) {
+                                                FirebaseUser fUser = createTask.getResult().getUser();
+                                                fetchOrInitializeUserProfile(fUser.getUid(), fUser.getEmail(), callback);
+                                            } else {
+                                                Exception e = task.getException();
+                                                String errMsg = e != null ? e.getMessage() : "Đăng nhập thất bại";
+                                                callback.onResponse(this, retrofit2.Response.success(
+                                                        ApiResponse.error(errMsg)
+                                                ));
+                                            }
+                                        });
+                                } else {
+                                    Exception e = task.getException();
+                                    String errMsg = e != null ? e.getMessage() : "Đăng nhập thất bại";
+                                    callback.onResponse(this, retrofit2.Response.success(
+                                            ApiResponse.error(errMsg)
+                                    ));
+                                }
                             }
                         });
                 }

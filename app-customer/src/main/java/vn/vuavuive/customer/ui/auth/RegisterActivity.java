@@ -407,6 +407,7 @@ public class RegisterActivity extends AppCompatActivity {
     private void goToMain() {
         Intent intent = new Intent(this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.putExtra("EXTRA_SHOW_POPUP", true);
         startActivity(intent);
         finish();
     }

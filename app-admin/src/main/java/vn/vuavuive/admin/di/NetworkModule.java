@@ -118,7 +118,7 @@ public class NetworkModule {
     }
 
     @Provides @Singleton
-    public AdminProductApi provideAdminProductApi(Retrofit retrofit) { return new FirebaseAdminProductApi(); }
+    public AdminProductApi provideAdminProductApi(Retrofit retrofit) { return new FirebaseAdminProductApi(retrofit); }
 
     @Provides @Singleton
     public AdminUserApi provideAdminUserApi(Retrofit retrofit) { return new FirebaseAdminUserApi(); }

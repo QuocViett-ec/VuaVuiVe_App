@@ -17,6 +17,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import vn.vuavuive.shared.util.SessionManager;
 import java.util.UUID;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -25,12 +26,14 @@ import javax.inject.Singleton;
 public class ProductRepositoryFirebase {
 
     private final DatabaseReference dbRef;
+    private final SessionManager sessionManager;
     private java.util.Map<String, String> slugToIdMap = null;
     private ValueEventListener productsListener;
 
     @Inject
-    public ProductRepositoryFirebase() {
+    public ProductRepositoryFirebase(SessionManager sessionManager) {
         this.dbRef = FirebaseDatabase.getInstance().getReference();
+        this.sessionManager = sessionManager;
     }
 
     private Double getSafeDouble(DataSnapshot childSnap) {
@@ -182,9 +185,12 @@ public class ProductRepositoryFirebase {
         r.setProductId(s.child("product_id").getValue(String.class));
         r.setUserId(s.child("user_id").getValue(String.class));
         r.setUserName(s.child("user_name").getValue(String.class));
-        r.setRating(s.child("rating").getValue(Integer.class));
+        Integer rating = s.child("rating").getValue(Integer.class);
+        r.setRating(rating != null ? rating : 5);
         r.setComment(s.child("comment").getValue(String.class));
         r.setCreatedAt(s.child("created_at").getValue(String.class));
+        r.setProductName(s.child("product_name").getValue(String.class));
+        r.setProductImage(s.child("product_image").getValue(String.class));
         return r;
     }
 
@@ -219,6 +225,40 @@ public class ProductRepositoryFirebase {
                 }
             });
         }
+
+        return result;
+    }
+
+    public LiveData<AuthRepository.Result<List<Product>>> getAllActiveProductsOnce(int limit) {
+        MutableLiveData<AuthRepository.Result<List<Product>>> result = new MutableLiveData<>();
+        result.postValue(AuthRepository.Result.loading());
+
+        dbRef.child("products").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                List<Product> products = new ArrayList<>();
+                for (DataSnapshot s : snapshot.getChildren()) {
+                    if (Boolean.TRUE.equals(s.child("deleted").getValue(Boolean.class))) continue;
+                    Product p = mapSnapshotToProduct(s);
+                    if (p.isActive()) {
+                        products.add(p);
+                    }
+                }
+                products.sort(Comparator.comparing(
+                        p -> p.getName() != null ? p.getName() : "",
+                        String.CASE_INSENSITIVE_ORDER
+                ));
+                if (limit > 0 && products.size() > limit) {
+                    products = new ArrayList<>(products.subList(0, limit));
+                }
+                result.postValue(AuthRepository.Result.success(products));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                result.postValue(AuthRepository.Result.error("Lỗi tải sản phẩm: " + error.getMessage()));
+            }
+        });
 
         return result;
     }
@@ -374,6 +414,91 @@ public class ProductRepositoryFirebase {
         return result;
     }
 
+    public LiveData<AuthRepository.Result<List<Review>>> getUserReviews(String userId) {
+        MutableLiveData<AuthRepository.Result<List<Review>>> result = new MutableLiveData<>();
+        result.postValue(AuthRepository.Result.loading());
+
+        dbRef.child("reviews").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                List<Review> reviews = new ArrayList<>();
+                for (DataSnapshot s : snapshot.getChildren()) {
+                    Review r = mapSnapshotToReview(s);
+                    if (userId != null && userId.equals(r.getUserId())) {
+                        reviews.add(r);
+                    }
+                }
+
+                // Always resolve product name & image from products node to ensure image shows
+                dbRef.child("products").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot productsSnapshot) {
+                        java.util.Map<String, DataSnapshot> productMap = new java.util.HashMap<>();
+                        for (DataSnapshot ps : productsSnapshot.getChildren()) {
+                            productMap.put(ps.getKey(), ps);
+                        }
+
+                        for (Review r : reviews) {
+                            DataSnapshot ps = productMap.get(r.getProductId());
+                            if (ps != null) {
+                                // Resolve product name if missing
+                                if (r.getProductName() == null || r.getProductName().isEmpty()) {
+                                    String name = ps.child("name").getValue(String.class);
+                                    r.setProductName(name != null ? name : "Sản phẩm");
+                                }
+                                // Always resolve image – try image_url → imageUrl → images[0]
+                                String img = ps.child("image_url").getValue(String.class);
+                                if (img == null || img.isEmpty()) {
+                                    img = ps.child("imageUrl").getValue(String.class);
+                                }
+                                if (img == null || img.isEmpty()) {
+                                    DataSnapshot imagesSnap = ps.child("images");
+                                    if (imagesSnap.exists()) {
+                                        for (DataSnapshot imgSnap : imagesSnap.getChildren()) {
+                                            String candidate = imgSnap.getValue(String.class);
+                                            if (candidate != null && !candidate.isEmpty()) {
+                                                img = candidate;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                                if (img != null && !img.isEmpty()) {
+                                    r.setProductImage(img);
+                                }
+                            } else if (r.getProductName() == null || r.getProductName().isEmpty()) {
+                                r.setProductName("Sản phẩm");
+                            }
+                        }
+
+                        // Sort by date descending
+                        java.util.Collections.sort(reviews, (r1, r2) -> {
+                            String d1 = r1.getCreatedAt();
+                            String d2 = r2.getCreatedAt();
+                            if (d1 != null && d2 != null) {
+                                return d2.compareTo(d1);
+                            }
+                            return 0;
+                        });
+                        result.postValue(AuthRepository.Result.success(reviews));
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        result.postValue(AuthRepository.Result.success(reviews));
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                result.postValue(AuthRepository.Result.success(new ArrayList<>()));
+            }
+        });
+
+        return result;
+    }
+
     // ── Get Similar Products (Mock based on Category) ────────────────────────
     public LiveData<AuthRepository.Result<List<Product>>> getSimilarProducts(String productId) {
         MutableLiveData<AuthRepository.Result<List<Product>>> result = new MutableLiveData<>();
@@ -471,8 +596,36 @@ public class ProductRepositoryFirebase {
         String uid = fbUser != null ? fbUser.getUid() : "guest_user";
         revData.put("user_id", uid);
         
-        // Fetch User profile name if available, otherwise default
-        if (fbUser != null) {
+        dbRef.child("products").child(productId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot productSnapshot) {
+                if (productSnapshot.exists()) {
+                    revData.put("product_name", productSnapshot.child("name").getValue(String.class));
+                    revData.put("product_image", productSnapshot.child("imageUrl").getValue(String.class));
+                }
+                proceedWithUserNameAndSave(reviewId, revData, fbUser, uid, result);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                proceedWithUserNameAndSave(reviewId, revData, fbUser, uid, result);
+            }
+        });
+
+        return result;
+    }
+
+    private void proceedWithUserNameAndSave(String reviewId, Map<String, Object> revData, com.google.firebase.auth.FirebaseUser fbUser, String uid, MutableLiveData<AuthRepository.Result<Review>> result) {
+        // Fetch User profile name from SessionManager if available
+        String localUserName = null;
+        if (sessionManager != null && sessionManager.getUser() != null) {
+            localUserName = sessionManager.getUser().getName();
+        }
+
+        if (localUserName != null && !localUserName.isEmpty()) {
+            revData.put("user_name", localUserName);
+            saveReviewToFirebase(reviewId, revData, result);
+        } else if (fbUser != null) {
             dbRef.child("users").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -491,8 +644,6 @@ public class ProductRepositoryFirebase {
             revData.put("user_name", "Khách");
             saveReviewToFirebase(reviewId, revData, result);
         }
-
-        return result;
     }
 
     private void saveReviewToFirebase(String id, Map<String, Object> data, MutableLiveData<AuthRepository.Result<Review>> result) {
@@ -507,6 +658,8 @@ public class ProductRepositoryFirebase {
                 r.setRating((Integer) data.get("rating"));
                 r.setComment((String) data.get("comment"));
                 r.setCreatedAt((String) data.get("created_at"));
+                r.setProductName((String) data.get("product_name"));
+                r.setProductImage((String) data.get("product_image"));
                 result.postValue(AuthRepository.Result.success(r));
             } else {
                 result.postValue(AuthRepository.Result.error(task.getException() != null ? task.getException().getMessage() : "Failed to save review"));

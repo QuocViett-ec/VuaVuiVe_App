@@ -87,7 +87,14 @@ public class PaymentResultActivity extends AppCompatActivity {
                 if ("PAID".equalsIgnoreCase(status)) {
                     boolean isBuyNow = getIntent().getBooleanExtra("EXTRA_BUY_NOW", false);
                     if (!isBuyNow) {
-                        cartViewModel.clearCart();
+                        java.util.ArrayList<String> selectedIds = getIntent().getStringArrayListExtra("EXTRA_SELECTED_PRODUCT_IDS");
+                        if (selectedIds != null && !selectedIds.isEmpty()) {
+                            for (String pid : selectedIds) {
+                                cartViewModel.removeItem(pid);
+                            }
+                        } else {
+                            cartViewModel.clearCart();
+                        }
                     }
                     Toast.makeText(this, "Thanh toan thanh cong", Toast.LENGTH_LONG).show();
                     goToOrders();

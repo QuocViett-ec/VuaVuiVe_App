@@ -203,15 +203,15 @@ public class AuthRepository {
         authApi.forgotPassword(body).enqueue(new Callback<ApiResponse<Void>>() {
             @Override
             public void onResponse(Call<ApiResponse<Void>> call, Response<ApiResponse<Void>> response) {
-                if (response.isSuccessful()) {
-                    result.postValue(Result.success("OTP đã được gửi"));
+                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                    result.postValue(Result.success(successMessage(response.body(), "OTP đã được gửi")));
                 } else {
                     result.postValue(Result.error(extractError(response)));
                 }
             }
             @Override
             public void onFailure(Call<ApiResponse<Void>> call, Throwable t) {
-                result.postValue(Result.error("Lỗi kết nối"));
+                result.postValue(Result.error("Lỗi kết nối: " + t.getMessage()));
             }
         });
         return result;
@@ -233,8 +233,7 @@ public class AuthRepository {
         authApi.verifyOtp(body).enqueue(new Callback<ApiResponse<Void>>() {
             @Override
             public void onResponse(Call<ApiResponse<Void>> call, Response<ApiResponse<Void>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    // Backend trả resetToken trong message hoặc data
+                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
                     result.postValue(Result.success("verified"));
                 } else {
                     result.postValue(Result.error(extractError(response)));
@@ -242,7 +241,7 @@ public class AuthRepository {
             }
             @Override
             public void onFailure(Call<ApiResponse<Void>> call, Throwable t) {
-                result.postValue(Result.error("Lỗi kết nối"));
+                result.postValue(Result.error("Lỗi kết nối: " + t.getMessage()));
             }
         });
         return result;
@@ -260,7 +259,7 @@ public class AuthRepository {
         authApi.resetPassword(body).enqueue(new Callback<ApiResponse<Void>>() {
             @Override
             public void onResponse(Call<ApiResponse<Void>> call, Response<ApiResponse<Void>> response) {
-                if (response.isSuccessful()) {
+                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
                     result.postValue(Result.success(null));
                 } else {
                     result.postValue(Result.error(extractError(response)));
@@ -268,7 +267,7 @@ public class AuthRepository {
             }
             @Override
             public void onFailure(Call<ApiResponse<Void>> call, Throwable t) {
-                result.postValue(Result.error("Lỗi kết nối"));
+                result.postValue(Result.error("Lỗi kết nối: " + t.getMessage()));
             }
         });
         return result;
@@ -336,6 +335,11 @@ public class AuthRepository {
     // ── Helpers ────────────────────────────────────────────────────────────
     public boolean isLoggedIn() {
         return sessionManager.isLoggedIn();
+    }
+
+    private String successMessage(ApiResponse<?> body, String fallback) {
+        String message = body != null ? body.getMessage() : null;
+        return message != null && !message.trim().isEmpty() ? message : fallback;
     }
 
     private <T> String extractError(Response<T> response) {

@@ -59,7 +59,6 @@ public class OrderListFragment extends Fragment {
         setupTabs(view);
         setupRecyclerView(view);
         setupSwipeRefresh(view);
-        loadOrders();
         setupHeaderSearch(view);
     }
 
@@ -126,16 +125,28 @@ public class OrderListFragment extends Fragment {
     private void setupSwipeRefresh(View view) {
         SwipeRefreshLayout swipe = view.findViewById(R.id.swipe_refresh);
         swipe.setColorSchemeResources(R.color.primary);
-        swipe.setOnRefreshListener(() -> swipe.setRefreshing(false));
+        swipe.setOnRefreshListener(this::loadOrders);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadOrders();
     }
 
     private void loadOrders() {
         if (progressBar == null || !isAdded() || getView() == null) return;
 
-        progressBar.setVisibility(View.VISIBLE);
+        View view = getView();
+        SwipeRefreshLayout swipe = view != null ? view.findViewById(R.id.swipe_refresh) : null;
+        if (swipe == null || !swipe.isRefreshing()) {
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
         ordersLiveData = orderViewModel.getOrders(null, 1);
         ordersLiveData.observe(getViewLifecycleOwner(), result -> {
             progressBar.setVisibility(View.GONE);
+            if (swipe != null) swipe.setRefreshing(false);
             if (result.status == AuthRepository.Result.Status.SUCCESS && result.data != null) {
                 allOrders = result.data;
                 showOrders();

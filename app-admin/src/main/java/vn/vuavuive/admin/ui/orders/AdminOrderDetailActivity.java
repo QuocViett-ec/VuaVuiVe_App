@@ -434,12 +434,14 @@ public class AdminOrderDetailActivity extends AppCompatActivity {
                     }
                 }
 
-                List<String> labels = new ArrayList<>();
+                List<String> labels = new java.util.ArrayList<>();
                 int selectedIndex = 0;
                 for (int i = 0; i < shippers.size(); i++) {
                     User shipper = shippers.get(i);
-                    String label = (shipper.getName() != null ? shipper.getName() : shipper.getEmail())
-                            + (shipper.getPhone() != null ? " - " + shipper.getPhone() : "");
+                    String namePart = shipper.getName() != null ? shipper.getName() : "";
+                    String emailPart = shipper.getEmail() != null ? " (" + shipper.getEmail() + ")" : "";
+                    String phonePart = shipper.getPhone() != null ? " - " + shipper.getPhone() : "";
+                    String label = namePart + emailPart + phonePart;
                     labels.add(label);
                     if (shipper.getId() != null && shipper.getId().equals(order.getShipperId())) {
                         selectedIndex = i;

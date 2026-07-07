@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * ChatController - API Chatbot AI tư vấn sản phẩm, món ăn, thực phẩm sạch.
  * Mọi request chat đều được bảo vệ và cần login (Cần gửi JWT).
@@ -25,14 +27,16 @@ public class ChatController {
             String message
     ) {}
 
+    /** Response gồm text reply + danh sách sản phẩm liên quan (nếu có) */
     public record ChatResponse(
-            String reply
+            String reply,
+            List<GeminiService.ProductInfo> products
     ) {}
 
     @Operation(summary = "Gửi tin nhắn hỏi trợ lý ảo Gemini AI")
     @PostMapping("/chat")
     public ResponseEntity<ChatResponse> chat(@Valid @RequestBody ChatRequest request) {
-        String reply = geminiService.chatWithBot(request.message());
-        return ResponseEntity.ok(new ChatResponse(reply));
+        ChatResponse response = geminiService.chatWithBot(request.message());
+        return ResponseEntity.ok(response);
     }
 }

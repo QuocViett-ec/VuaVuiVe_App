@@ -20,8 +20,6 @@ import vn.vuavuive.customer.R;
 import vn.vuavuive.customer.viewmodel.CartViewModel;
 import vn.vuavuive.customer.viewmodel.ProductViewModel;
 import vn.vuavuive.customer.viewmodel.RecipeViewModel;
-import vn.vuavuive.shared.data.dto.Product;
-import vn.vuavuive.shared.data.local.CartItemEntity;
 import java.util.List;
 import java.util.Map;
 
@@ -33,6 +31,7 @@ public class RecipeListFragment extends Fragment {
     private ProductViewModel productViewModel;
     private RecipeAdapter recipeAdapter;
     private EditText etSearch;
+    private RecipeIngredientCartHelper ingredientCartHelper;
 
     @Nullable @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -47,6 +46,7 @@ public class RecipeListFragment extends Fragment {
         recipeViewModel = new ViewModelProvider(requireActivity()).get(RecipeViewModel.class);
         cartViewModel = new ViewModelProvider(requireActivity()).get(CartViewModel.class);
         productViewModel = new ViewModelProvider(requireActivity()).get(ProductViewModel.class);
+        ingredientCartHelper = new RecipeIngredientCartHelper(requireContext(), getViewLifecycleOwner(), productViewModel, cartViewModel);
 
         etSearch = view.findViewById(R.id.et_search);
         RecyclerView rvRecipes = view.findViewById(R.id.rv_recipes);
@@ -63,25 +63,7 @@ public class RecipeListFragment extends Fragment {
                 for (Object ing : (List<?>) ingObj) {
                     if (ing instanceof Map) {
                         Map<String, Object> ingredient = (Map<String, Object>) ing;
-                        String name = ingredient.get("name") != null ? ingredient.get("name").toString() : "";
-                        if (!name.isEmpty()) {
-                            productViewModel.getProducts(null, name, 1, 1, null).observe(getViewLifecycleOwner(), result -> {
-                                if (result != null && result.data != null && !result.data.isEmpty()) {
-                                    Product p = result.data.get(0);
-                                    CartItemEntity item = new CartItemEntity();
-                                    item.setProductId(p.getId());
-                                    item.setProductName(p.getName());
-                                    item.setProductPrice(p.getPrice());
-                                    item.setProductImageUrl(p.getImageUrl());
-                                    item.setProductUnit(p.getUnit());
-                                    item.setProductStock(p.getStock());
-                                    item.setQuantity(1);
-                                    item.setAddedAt(System.currentTimeMillis());
-                                    item.setSavedForLater(false);
-                                    cartViewModel.addItem(item);
-                                }
-                            });
-                        }
+                        ingredientCartHelper.addIngredient(ingredient, false);
                     }
                 }
                 Toast.makeText(requireContext(), "✅ Đang thêm nguyên liệu của \"" + recipe.get("name") + "\" vào giỏ", Toast.LENGTH_SHORT).show();
