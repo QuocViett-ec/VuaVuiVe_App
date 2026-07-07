@@ -316,6 +316,50 @@ public class ProductDetailActivity extends AppCompatActivity {
         if (cardDetailImages == null || llDetailImagesContainer == null) return;
         
         llDetailImagesContainer.removeAllViews();
+        List<String> extraImages = new java.util.ArrayList<>();
+        if (product.getImages() != null) {
+            for (String image : product.getImages()) {
+                if (image != null
+                        && !image.isEmpty()
+                        && !image.equals(product.getImageUrl())
+                        && !extraImages.contains(image)) {
+                    extraImages.add(image);
+                }
+                if (extraImages.size() >= 3) break;
+            }
+        }
+        if (!extraImages.isEmpty()) {
+            cardDetailImages.setVisibility(View.VISIBLE);
+            int sizeInDp = (int) (120 * getResources().getDisplayMetrics().density);
+            int marginInDp = (int) (8 * getResources().getDisplayMetrics().density);
+            for (String imageUrl : extraImages) {
+                ImageView imageView = new ImageView(this);
+                android.widget.LinearLayout.LayoutParams lp = new android.widget.LinearLayout.LayoutParams(sizeInDp, sizeInDp);
+                lp.setMarginEnd(marginInDp);
+                imageView.setLayoutParams(lp);
+                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                imageView.setBackground(getDrawable(R.drawable.bg_rounded_card));
+                imageView.setClipToOutline(true);
+                Glide.with(this)
+                        .load(imageUrl)
+                        .placeholder(R.drawable.ic_image)
+                        .error(R.drawable.ic_image)
+                        .into(imageView);
+                imageView.setOnClickListener(v -> {
+                    android.app.Dialog dialog = new android.app.Dialog(this, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+                    dialog.setContentView(R.layout.dialog_full_screen_image);
+                    ImageView ivFull = dialog.findViewById(R.id.iv_full);
+                    View btnClose = dialog.findViewById(R.id.btn_close);
+                    Glide.with(this).load(imageUrl).into(ivFull);
+                    btnClose.setOnClickListener(v2 -> dialog.dismiss());
+                    ivFull.setOnClickListener(v2 -> dialog.dismiss());
+                    dialog.show();
+                });
+                llDetailImagesContainer.addView(imageView);
+            }
+            return;
+        }
+
         List<Integer> detailImages = new java.util.ArrayList<>();
         
         String name = product.getName() != null ? product.getName().toLowerCase() : "";
@@ -454,12 +498,22 @@ public class ProductDetailActivity extends AppCompatActivity {
         List<Object> imageList = new java.util.ArrayList<>();
         String name = product.getName() != null ? product.getName().toLowerCase() : "";
 
-        // Add the main image URL first if it exists
+        if (product.getImages() != null) {
+            for (String image : product.getImages()) {
+                if (image != null && !image.isEmpty() && !imageList.contains(image)) {
+                    imageList.add(image);
+                }
+            }
+        }
+
         if (product.getImageUrl() != null && !product.getImageUrl().isEmpty()) {
-            imageList.add(product.getImageUrl());
+            if (!imageList.contains(product.getImageUrl())) {
+                imageList.add(0, product.getImageUrl());
+            }
         }
 
         // Add additional local drawable images for the specific products
+        if (imageList.size() <= 1) {
         if (name.contains("bí đỏ") || name.contains("bi do")) {
             imageList.add(R.drawable.detail_bi_do_1);
             imageList.add(R.drawable.detail_bi_do_2);
@@ -476,6 +530,8 @@ public class ProductDetailActivity extends AppCompatActivity {
             imageList.add(R.drawable.detail_khoai_tay_1);
             imageList.add(R.drawable.detail_khoai_tay_2);
             imageList.add(R.drawable.detail_khoai_tay_3);
+        }
+
         }
 
         // If list is still empty, add default placeholder

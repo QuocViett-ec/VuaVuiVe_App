@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
+@ConditionalOnProperty(prefix = "app.seed", name = "enabled", havingValue = "true")
 public class RecipeSeeder implements CommandLineRunner {
 
     @Autowired
@@ -37,7 +39,7 @@ public class RecipeSeeder implements CommandLineRunner {
         r.setPrepTime("15 phút");
         r.setCookTime("20 phút");
         r.setDifficulty("Dễ");
-        r.setImage("http://10.0.2.2:3000/images/recipes/recipe_canh_bi_do.png");
+        r.setImage("http://127.0.0.1:3000/images/recipes/recipe_canh_bi_do.png");
         r.setIngredients("[{\"name\": \"Bí đỏ\"}, {\"name\": \"Thịt heo ba rọi\"}, {\"name\": \"Hành lá\"}, {\"name\": \"Nước mắm\"}]");
         r.setSteps("[\"Chuẩn bị và sơ chế sạch sẽ các nguyên liệu.\", \"Sơ chế các gia vị đi kèm, cắt thái nguyên liệu vừa ăn.\", \"Bắt đầu chế biến món ăn trên lửa vừa, nêm nếm gia vị cho vừa miệng.\", \"Trình bày món ăn ra đĩa, trang trí thêm và thưởng thức khi còn nóng.\"]");
         recipes.add(r);
@@ -50,7 +52,7 @@ public class RecipeSeeder implements CommandLineRunner {
         r.setPrepTime("15 phút");
         r.setCookTime("45 phút");
         r.setDifficulty("Trung bình");
-        r.setImage("http://10.0.2.2:3000/images/recipes/recipe_ca_kho_to.png");
+        r.setImage("http://127.0.0.1:3000/images/recipes/recipe_ca_kho_to.png");
         r.setIngredients("[{\"name\": \"Cá basa phi lê\"}, {\"name\": \"Nước mắm\"}, {\"name\": \"Bột ngọt\"}]");
         r.setSteps("[\"Chuẩn bị và sơ chế sạch sẽ các nguyên liệu.\", \"Sơ chế các gia vị đi kèm, cắt thái nguyên liệu vừa ăn.\", \"Bắt đầu chế biến món ăn trên lửa vừa, nêm nếm gia vị cho vừa miệng.\", \"Trình bày món ăn ra đĩa, trang trí thêm và thưởng thức khi còn nóng.\"]");
         recipes.add(r);
@@ -63,7 +65,7 @@ public class RecipeSeeder implements CommandLineRunner {
         r.setPrepTime("10 phút");
         r.setCookTime("10 phút");
         r.setDifficulty("Dễ");
-        r.setImage("http://10.0.2.2:3000/images/recipes/recipe_rau_muong_xao.png");
+        r.setImage("http://127.0.0.1:3000/images/recipes/recipe_rau_muong_xao.png");
         r.setIngredients("[{\"name\": \"Rau muống\"}, {\"name\": \"Dầu ăn\"}, {\"name\": \"Muối i-ốt\"}]");
         r.setSteps("[\"Chuẩn bị và sơ chế sạch sẽ các nguyên liệu.\", \"Sơ chế các gia vị đi kèm, cắt thái nguyên liệu vừa ăn.\", \"Bắt đầu chế biến món ăn trên lửa vừa, nêm nếm gia vị cho vừa miệng.\", \"Trình bày món ăn ra đĩa, trang trí thêm và thưởng thức khi còn nóng.\"]");
         recipes.add(r);
@@ -76,7 +78,7 @@ public class RecipeSeeder implements CommandLineRunner {
         r.setPrepTime("15 phút");
         r.setCookTime("20 phút");
         r.setDifficulty("Dễ");
-        r.setImage("http://10.0.2.2:3000/images/recipes/recipe_canh_chua.png");
+        r.setImage("http://127.0.0.1:3000/images/recipes/recipe_canh_chua.png");
         r.setIngredients("[{\"name\": \"Cá basa phi lê\"}, {\"name\": \"Cà chua bi\"}, {\"name\": \"Ngò gai\"}, {\"name\": \"Muối\"}, {\"name\": \"Nước mắm\"}]");
         r.setSteps("[\"Chuẩn bị và sơ chế sạch sẽ các nguyên liệu.\", \"Sơ chế các gia vị đi kèm, cắt thái nguyên liệu vừa ăn.\", \"Bắt đầu chế biến món ăn trên lửa vừa, nêm nếm gia vị cho vừa miệng.\", \"Trình bày món ăn ra đĩa, trang trí thêm và thưởng thức khi còn nóng.\"]");
         recipes.add(r);
@@ -89,7 +91,7 @@ public class RecipeSeeder implements CommandLineRunner {
         r.setPrepTime("15 phút");
         r.setCookTime("20 phút");
         r.setDifficulty("Dễ");
-        r.setImage("http://10.0.2.2:3000/images/recipes/recipe_canh_mong_toi.png");
+        r.setImage("http://127.0.0.1:3000/images/recipes/recipe_canh_mong_toi.png");
         r.setIngredients("[{\"name\": \"Rau mồng tơi\"}, {\"name\": \"Hành lá\"}, {\"name\": \"Muối i-ốt\"}]");
         r.setSteps("[\"Chuẩn bị và sơ chế sạch sẽ các nguyên liệu.\", \"Sơ chế các gia vị đi kèm, cắt thái nguyên liệu vừa ăn.\", \"Bắt đầu chế biến món ăn trên lửa vừa, nêm nếm gia vị cho vừa miệng.\", \"Trình bày món ăn ra đĩa, trang trí thêm và thưởng thức khi còn nóng.\"]");
         recipes.add(r);
@@ -102,7 +104,7 @@ public class RecipeSeeder implements CommandLineRunner {
         r.setPrepTime("10 phút");
         r.setCookTime("20 phút");
         r.setDifficulty("Trung bình");
-        r.setImage("http://10.0.2.2:3000/images/recipes/recipe_khoai_chien.png");
+        r.setImage("http://127.0.0.1:3000/images/recipes/recipe_khoai_chien.png");
         r.setIngredients("[{\"name\": \"Khoai tây\"}, {\"name\": \"Thịt heo ba rọi\"}, {\"name\": \"Hành lá\"}, {\"name\": \"Dầu ăn\"}, {\"name\": \"Muối\"}]");
         r.setSteps("[\"Chuẩn bị và sơ chế sạch sẽ các nguyên liệu.\", \"Sơ chế các gia vị đi kèm, cắt thái nguyên liệu vừa ăn.\", \"Bắt đầu chế biến món ăn trên lửa vừa, nêm nếm gia vị cho vừa miệng.\", \"Trình bày món ăn ra đĩa, trang trí thêm và thưởng thức khi còn nóng.\"]");
         recipes.add(r);
@@ -115,7 +117,7 @@ public class RecipeSeeder implements CommandLineRunner {
         r.setPrepTime("15 phút");
         r.setCookTime("20 phút");
         r.setDifficulty("Dễ");
-        r.setImage("http://10.0.2.2:3000/images/recipes/recipe_ca_rot_xao.png");
+        r.setImage("http://127.0.0.1:3000/images/recipes/recipe_ca_rot_xao.png");
         r.setIngredients("[{\"name\": \"Cà rốt\"}, {\"name\": \"Nấm rơm\"}, {\"name\": \"Dầu ăn\"}, {\"name\": \"Muối\"}]");
         r.setSteps("[\"Chuẩn bị và sơ chế sạch sẽ các nguyên liệu.\", \"Sơ chế các gia vị đi kèm, cắt thái nguyên liệu vừa ăn.\", \"Bắt đầu chế biến món ăn trên lửa vừa, nêm nếm gia vị cho vừa miệng.\", \"Trình bày món ăn ra đĩa, trang trí thêm và thưởng thức khi còn nóng.\"]");
         recipes.add(r);
@@ -128,7 +130,7 @@ public class RecipeSeeder implements CommandLineRunner {
         r.setPrepTime("10 phút");
         r.setCookTime("0 phút");
         r.setDifficulty("Dễ");
-        r.setImage("http://10.0.2.2:3000/images/recipes/recipe_salad_rau.png");
+        r.setImage("http://127.0.0.1:3000/images/recipes/recipe_salad_rau.png");
         r.setIngredients("[{\"name\": \"Cải ngọt\"}, {\"name\": \"Nước tương\"}, {\"name\": \"Dầu ăn\"}, {\"name\": \"Muối\"}]");
         r.setSteps("[\"Chuẩn bị và sơ chế sạch sẽ các nguyên liệu.\", \"Sơ chế các gia vị đi kèm, cắt thái nguyên liệu vừa ăn.\", \"Bắt đầu chế biến món ăn trên lửa vừa, nêm nếm gia vị cho vừa miệng.\", \"Trình bày món ăn ra đĩa, trang trí thêm và thưởng thức khi còn nóng.\"]");
         recipes.add(r);
@@ -141,7 +143,7 @@ public class RecipeSeeder implements CommandLineRunner {
         r.setPrepTime("10 phút");
         r.setCookTime("15 phút");
         r.setDifficulty("Dễ");
-        r.setImage("http://10.0.2.2:3000/images/recipes/recipe_canh_bau.png");
+        r.setImage("http://127.0.0.1:3000/images/recipes/recipe_canh_bau.png");
         r.setIngredients("[{\"name\": \"Bí xanh\"}, {\"name\": \"Thịt heo ba rọi\"}, {\"name\": \"Hành lá\"}, {\"name\": \"Muối\"}]");
         r.setSteps("[\"Chuẩn bị và sơ chế sạch sẽ các nguyên liệu.\", \"Sơ chế các gia vị đi kèm, cắt thái nguyên liệu vừa ăn.\", \"Bắt đầu chế biến món ăn trên lửa vừa, nêm nếm gia vị cho vừa miệng.\", \"Trình bày món ăn ra đĩa, trang trí thêm và thưởng thức khi còn nóng.\"]");
         recipes.add(r);
@@ -154,7 +156,7 @@ public class RecipeSeeder implements CommandLineRunner {
         r.setPrepTime("15 phút");
         r.setCookTime("20 phút");
         r.setDifficulty("Dễ");
-        r.setImage("http://10.0.2.2:3000/images/recipes/recipe_uc_ga_ap_chao.png");
+        r.setImage("http://127.0.0.1:3000/images/recipes/recipe_uc_ga_ap_chao.png");
         r.setIngredients("[{\"name\": \"Ức gà phi lê\"}, {\"name\": \"Muối\"}, {\"name\": \"Dầu ăn\"}]");
         r.setSteps("[\"Chuẩn bị và sơ chế sạch sẽ các nguyên liệu.\", \"Sơ chế các gia vị đi kèm, cắt thái nguyên liệu vừa ăn.\", \"Bắt đầu chế biến món ăn trên lửa vừa, nêm nếm gia vị cho vừa miệng.\", \"Trình bày món ăn ra đĩa, trang trí thêm và thưởng thức khi còn nóng.\"]");
         recipes.add(r);

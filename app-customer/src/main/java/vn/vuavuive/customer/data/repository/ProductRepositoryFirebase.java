@@ -111,6 +111,21 @@ public class ProductRepositoryFirebase {
             }
         }
         p.setImageUrl(imageUrl);
+
+        List<String> images = new ArrayList<>();
+        DataSnapshot imagesSnap = s.child("images");
+        if (imagesSnap.exists()) {
+            for (DataSnapshot imageSnap : imagesSnap.getChildren()) {
+                String image = imageSnap.getValue(String.class);
+                if (image != null && !image.isEmpty() && !images.contains(image)) {
+                    images.add(image);
+                }
+            }
+        }
+        if (imageUrl != null && !imageUrl.isEmpty() && !images.contains(imageUrl)) {
+            images.add(0, imageUrl);
+        }
+        p.setImages(withFallbackImages(p, images));
         
         Integer stock = getSafeInt(s.child("stock_quantity"));
         if (stock == null) {
@@ -522,5 +537,92 @@ public class ProductRepositoryFirebase {
 
     private static boolean containsNormalized(String value, String query) {
         return value != null && deAccent(value).toLowerCase().contains(query);
+    }
+
+    private static List<String> withFallbackImages(Product product, List<String> rawImages) {
+        List<String> images = new ArrayList<>();
+        if (rawImages != null) {
+            for (String image : rawImages) {
+                if (image != null && !image.isEmpty() && !images.contains(image)) {
+                    images.add(image);
+                }
+            }
+        }
+
+        String main = product.getImageUrl();
+        if (main != null && !main.isEmpty() && !images.contains(main)) {
+            images.add(0, main);
+        }
+        if (images.size() >= 4) {
+            return images;
+        }
+
+        for (String image : fallbackCandidates(product.getName())) {
+            if (!images.contains(image)) {
+                images.add(image);
+            }
+            if (images.size() >= 4) {
+                break;
+            }
+        }
+        return images;
+    }
+
+    private static List<String> fallbackCandidates(String name) {
+        String text = deAccent(name).toLowerCase(java.util.Locale.ROOT);
+        if (text.contains("ca rot") || text.contains("carrot")) {
+            return java.util.Arrays.asList(
+                    "https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?w=800",
+                    "https://images.unsplash.com/photo-1445282768818-728615cc910a?w=800",
+                    "https://images.unsplash.com/photo-1582515073490-39981397c445?w=800"
+            );
+        }
+        if (text.contains("khoai") || text.contains("potato")) {
+            return java.util.Arrays.asList(
+                    "https://images.unsplash.com/photo-1518977822534-7049a61ee0c2?w=800",
+                    "https://images.unsplash.com/photo-1590165482129-1b8b27698780?w=800",
+                    "https://images.unsplash.com/photo-1603048719539-9ecb4aa395e3?w=800"
+            );
+        }
+        if (text.contains("cam") || text.contains("orange")) {
+            return java.util.Arrays.asList(
+                    "https://images.unsplash.com/photo-1547514701-42782101795e?w=800",
+                    "https://images.unsplash.com/photo-1582979512210-99b6a53386f9?w=800",
+                    "https://images.unsplash.com/photo-1611080626919-7cf5a9dbab12?w=800"
+            );
+        }
+        if (text.contains("ca ") || text.contains("tom") || text.contains("muc") || text.contains("fish") || text.contains("shrimp")) {
+            return java.util.Arrays.asList(
+                    "https://images.unsplash.com/photo-1565680018434-b513d5e5fd47?w=800",
+                    "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=800",
+                    "https://images.unsplash.com/photo-1559737558-2f5a35f4523b?w=800"
+            );
+        }
+        if (text.contains("ga") || text.contains("chicken")) {
+            return java.util.Arrays.asList(
+                    "https://images.unsplash.com/photo-1604503468506-a8da13d82791?w=800",
+                    "https://images.unsplash.com/photo-1587593810167-a84920ea0781?w=800",
+                    "https://images.unsplash.com/photo-1610057099431-d73a1c9d2f2f?w=800"
+            );
+        }
+        if (text.contains("thit") || text.contains("bo") || text.contains("heo") || text.contains("meat")) {
+            return java.util.Arrays.asList(
+                    "https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=800",
+                    "https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?w=800",
+                    "https://images.unsplash.com/photo-1603048297172-c92544798d5a?w=800"
+            );
+        }
+        if (text.contains("gao") || text.contains("rice")) {
+            return java.util.Arrays.asList(
+                    "https://images.unsplash.com/photo-1536304993881-ff6e9eefa2a6?w=800",
+                    "https://images.unsplash.com/photo-1586201375761-83865001e31c?w=800",
+                    "https://images.unsplash.com/photo-1604329760661-e71dc83f8f26?w=800"
+            );
+        }
+        return java.util.Arrays.asList(
+                "https://images.unsplash.com/photo-1542838132-92c53300491e?w=800",
+                "https://images.unsplash.com/photo-1518843875459-f738682238a6?w=800",
+                "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=800"
+        );
     }
 }

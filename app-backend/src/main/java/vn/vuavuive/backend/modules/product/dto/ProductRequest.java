@@ -3,6 +3,7 @@ package vn.vuavuive.backend.modules.product.dto;
 import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 /** DTO tạo / cập nhật sản phẩm (Admin) */
@@ -30,6 +31,8 @@ public record ProductRequest(
         String unit,
 
         String imageUrl,
+
+        List<String> images,
 
         @NotNull(message = "Danh mục không được để trống")
         UUID categoryId,

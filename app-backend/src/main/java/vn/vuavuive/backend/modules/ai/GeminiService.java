@@ -8,6 +8,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 import vn.vuavuive.backend.exception.AppException;
 import vn.vuavuive.backend.modules.vision.VisionSearchResponse;
@@ -74,6 +75,15 @@ public class GeminiService {
             String text = callGeminiVisionApi(base64Image, mimeType);
             String json = extractJson(text);
             return MAPPER.readValue(json, VisionSearchResponse.class);
+        } catch (RestClientResponseException e) {
+            log.warn("Gemini Vision HTTP failed: {} {}", e.getRawStatusCode(), e.getResponseBodyAsString());
+            int status = e.getRawStatusCode();
+            if (status == 429) throw AppException.badRequest("Gemini dang het quota hoac bi gioi han toc do, thu lai sau");
+            if (status == 403) throw AppException.badRequest("Gemini API key khong co quyen goi model nay");
+            if (status == 404) throw AppException.badRequest("Gemini model khong ton tai, kiem tra GEMINI_MODEL");
+            throw AppException.badRequest("Gemini khong xu ly duoc anh");
+        } catch (AppException e) {
+            throw e;
         } catch (Exception e) {
             log.warn("Gemini Vision failed: {}", e.getMessage());
             throw AppException.badRequest("Khong nhan dien duoc san pham trong anh");

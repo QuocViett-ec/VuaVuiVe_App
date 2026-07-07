@@ -50,6 +50,7 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import org.json.JSONArray;
+import org.json.JSONObject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -196,7 +197,7 @@ public class SearchActivity extends AppCompatActivity {
                         etSearch.setSelection(keyword.length());
                         performSearch(keyword, true);
                     } else {
-                        Toast.makeText(SearchActivity.this, "Khong nhan dien duoc san pham", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SearchActivity.this, getErrorMessage(response), Toast.LENGTH_SHORT).show();
                     }
                 }
 
@@ -230,6 +231,18 @@ public class SearchActivity extends AppCompatActivity {
         if (data.getKeyword() != null && !data.getKeyword().isBlank()) return data.getKeyword();
         if (data.getKeywords() != null && !data.getKeywords().isEmpty()) return data.getKeywords().get(0);
         return null;
+    }
+
+    private String getErrorMessage(Response<?> response) {
+        try {
+            if (response.errorBody() != null) {
+                String raw = response.errorBody().string();
+                String message = new JSONObject(raw).optString("message");
+                if (!message.isBlank()) return message;
+            }
+        } catch (Exception ignored) {
+        }
+        return "Khong nhan dien duoc san pham";
     }
 
     private void setupRecycler() {

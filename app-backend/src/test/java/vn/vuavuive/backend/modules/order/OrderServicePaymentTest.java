@@ -10,6 +10,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import vn.vuavuive.backend.exception.AppException;
+import vn.vuavuive.backend.modules.notification.NotificationService;
 import vn.vuavuive.backend.modules.order.dto.CreateOrderRequest;
 import vn.vuavuive.backend.modules.order.dto.OrderItemRequest;
 import vn.vuavuive.backend.modules.order.dto.OrderResponse;
@@ -42,6 +43,7 @@ class OrderServicePaymentTest {
     @Mock ShipperRepository shipperRepository;
     @Mock MoMoService moMoService;
     @Mock ZaloPayService zaloPayService;
+    @Mock NotificationService notificationService;
 
     @InjectMocks OrderService orderService;
 

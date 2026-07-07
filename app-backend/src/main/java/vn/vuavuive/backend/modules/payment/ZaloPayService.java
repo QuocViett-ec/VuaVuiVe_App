@@ -53,8 +53,8 @@ public class ZaloPayService {
     @Value("${app.payment.zalopay.key2:}") private String key2;
     @Value("${app.payment.zalopay.endpoint:https://sb-openapi.zalopay.vn/v2/create}") private String endpoint;
     @Value("${app.payment.zalopay.query-endpoint:https://sb-openapi.zalopay.vn/v2/query}") private String queryEndpoint;
-    @Value("${app.payment.zalopay.callback-url:http://10.0.2.2:3000/api/payments/zalopay/callback}") private String callbackUrl;
-    @Value("${app.payment.zalopay.redirect-url:http://10.0.2.2:3000/api/payments/zalopay/return}") private String redirectUrl;
+    @Value("${app.payment.zalopay.callback-url:http://127.0.0.1:3000/api/payments/zalopay/callback}") private String callbackUrl;
+    @Value("${app.payment.zalopay.redirect-url:http://127.0.0.1:3000/api/payments/zalopay/return}") private String redirectUrl;
     @Value("${app.payment.zalopay.mock-mode:false}") private boolean mockMode;
 
     private final RestTemplate restTemplate;
@@ -88,14 +88,14 @@ public class ZaloPayService {
         if (mockMode) {
             return createMockPayment(order, user, appTransId);
         }
-        if (appId.isBlank() || key1.isBlank() || key2.isBlank()) {
+        if (!isConfigured()) {
             throw AppException.badRequest("Chua cau hinh ZaloPay sandbox");
         }
 
         long appTime = System.currentTimeMillis();
         String embedData = toJson(Map.of(
                 "redirecturl", redirectUrl + "?orderId=" + order.getId(),
-                "callback_url", callbackUrl,
+                "preferred_payment_method", List.of(),
                 "orderId", order.getId()
         ));
         String item = toJson(orderItems(order));
@@ -137,7 +137,7 @@ public class ZaloPayService {
                 .status(PaymentTransaction.Status.PENDING)
                 .payUrl(stringValue(body.get("order_url")))
                 .deeplink(stringValue(body.get("order_url")))
-                .qrCodeUrl(stringValue(body.get("order_url")))
+                .qrCodeUrl(stringValue(body.get("qr_code")))
                 .resultCode(intValue(body.get("return_code")))
                 .message(stringValue(body.get("return_message")))
                 .build();
@@ -186,6 +186,14 @@ public class ZaloPayService {
                 .orElseThrow(() -> AppException.notFound("Giao dich ZaloPay"));
         Order order = orderRepository.findById(tx.getOrderId())
                 .orElseThrow(() -> AppException.notFound("Don hang"));
+        if (!String.valueOf(payload.get("app_id")).equals(appId)) {
+            return callbackResponse(-1, "app_id not match");
+        }
+        Long paidAmount = longValue(payload.get("amount"));
+        if (paidAmount != null && tx.getAmount() != null
+                && tx.getAmount().toBigInteger().longValue() != paidAmount) {
+            return callbackResponse(-1, "amount not match");
+        }
         if (tx.getStatus() == PaymentTransaction.Status.PAID) {
             return callbackResponse(1, "success");
         }
@@ -196,23 +204,15 @@ public class ZaloPayService {
         tx.setResponseTime(System.currentTimeMillis());
         boolean success = status == null || status == 1;
 
-        if (order.getStatus() == Order.OrderStatus.CANCELLED) {
-            tx.setStatus(success ? PaymentTransaction.Status.PAID : PaymentTransaction.Status.FAILED);
-            if (success) {
-                tx.setResultCode(1);
-                tx.setMessage("ZaloPay payment successful after order was cancelled");
-                order.setPaymentMethod("ZALOPAY");
-                order.setPaymentStatus(Order.PaymentStatus.PAID);
-                appendStatusLog(order, Order.OrderStatus.CANCELLED, "ZaloPay da thanh toan sau khi don bi huy");
-            }
-        } else if (success) {
-            tx.setStatus(PaymentTransaction.Status.PAID);
-            tx.setResultCode(1);
-            tx.setMessage("ZaloPay payment successful");
-            order.setPaymentMethod("ZALOPAY");
-            order.setPaymentStatus(Order.PaymentStatus.PAID);
-            order.setStatus(Order.OrderStatus.PENDING_APPROVAL);
-            appendStatusLog(order, Order.OrderStatus.PENDING_APPROVAL, "Thanh toan ZaloPay thanh cong, cho admin duyet");
+        if (success) {
+            markPaid(
+                    order,
+                    tx,
+                    order.getStatus() == Order.OrderStatus.CANCELLED
+                            ? "ZaloPay payment successful after order was cancelled"
+                            : "ZaloPay payment successful",
+                    "Thanh toan ZaloPay thanh cong, cho admin duyet",
+                    "ZaloPay da thanh toan sau khi don bi huy");
         } else {
             markFailed(order, tx, "Thanh toan ZaloPay that bai", status);
         }
@@ -236,17 +236,12 @@ public class ZaloPayService {
 
         tx.setResponseTime(System.currentTimeMillis());
         if (success) {
-            tx.setStatus(PaymentTransaction.Status.PAID);
-            tx.setResultCode(1);
-            tx.setMessage("Mock ZaloPay success");
-            order.setPaymentMethod("ZALOPAY");
-            order.setPaymentStatus(Order.PaymentStatus.PAID);
-            if (order.getStatus() == Order.OrderStatus.CANCELLED) {
-                appendStatusLog(order, Order.OrderStatus.CANCELLED, "ZaloPay mock da thanh toan sau khi don bi huy");
-            } else {
-                order.setStatus(Order.OrderStatus.PENDING_APPROVAL);
-                appendStatusLog(order, Order.OrderStatus.PENDING_APPROVAL, "Thanh toan ZaloPay mock thanh cong, cho admin duyet");
-            }
+            markPaid(
+                    order,
+                    tx,
+                    "Mock ZaloPay success",
+                    "Thanh toan ZaloPay mock thanh cong, cho admin duyet",
+                    "ZaloPay mock da thanh toan sau khi don bi huy");
         } else {
             markFailed(order, tx, "Mock ZaloPay failed", -1);
         }
@@ -263,6 +258,9 @@ public class ZaloPayService {
         PaymentTransaction tx = transactionRepository
                 .findFirstByOrderAndProviderOrderByCreatedAtDesc(order, "ZALOPAY")
                 .orElse(null);
+        if (tx != null && tx.getStatus() == PaymentTransaction.Status.PENDING && shouldQueryGateway()) {
+            queryAndApply(order, tx);
+        }
         return new PaymentStatusResponse(
                 orderId,
                 order.getPaymentMethod(),
@@ -272,6 +270,63 @@ public class ZaloPayService {
                 tx == null ? order.getFinalAmount() : tx.getAmount(),
                 tx == null ? null : tx.getMessage()
         );
+    }
+
+    private void queryAndApply(Order order, PaymentTransaction tx) {
+        String appTransId = tx.getRequestId();
+        if (appTransId == null || appTransId.isBlank()) return;
+
+        MultiValueMap<String, String> form = new LinkedMultiValueMap<>();
+        form.add("app_id", appId);
+        form.add("app_trans_id", appTransId);
+        form.add("mac", hmacSHA256(key1, appId + "|" + appTransId + "|" + key1));
+
+        Map<String, Object> body;
+        try {
+            body = restTemplate.postForObject(queryEndpoint, new HttpEntity<>(form, formHeaders()), Map.class);
+        } catch (RestClientException e) {
+            log.warn("ZaloPay query failed orderId={}, appTransId={}", order.getId(), appTransId, e);
+            return;
+        }
+        if (body == null) return;
+
+        Integer returnCode = intValue(body.get("return_code"));
+        tx.setResultCode(returnCode);
+        tx.setMessage(stringValue(body.get("return_message")));
+        tx.setResponseTime(System.currentTimeMillis());
+
+        if (returnCode != null && returnCode == 1) {
+            Long paidAmount = longValue(body.get("amount"));
+            if (paidAmount != null && tx.getAmount() != null
+                    && tx.getAmount().toBigInteger().longValue() != paidAmount) {
+                tx.setMessage("ZaloPay amount not match");
+                transactionRepository.save(tx);
+                return;
+            }
+            tx.setTransactionId(stringValue(body.get("zp_trans_id")));
+            markPaid(order, tx, "ZaloPay query payment successful",
+                    "Thanh toan ZaloPay thanh cong, cho admin duyet",
+                    "ZaloPay da thanh toan sau khi don bi huy");
+            orderRepository.save(order);
+        } else if (returnCode != null && returnCode == 2) {
+            markFailed(order, tx, tx.getMessage() != null ? tx.getMessage() : "Thanh toan ZaloPay that bai", returnCode);
+            orderRepository.save(order);
+        }
+        transactionRepository.save(tx);
+    }
+
+    private void markPaid(Order order, PaymentTransaction tx, String message, String successNote, String cancelledNote) {
+        tx.setStatus(PaymentTransaction.Status.PAID);
+        tx.setResultCode(1);
+        tx.setMessage(message);
+        order.setPaymentMethod("ZALOPAY");
+        order.setPaymentStatus(Order.PaymentStatus.PAID);
+        if (order.getStatus() == Order.OrderStatus.CANCELLED) {
+            appendStatusLog(order, Order.OrderStatus.CANCELLED, cancelledNote);
+        } else {
+            order.setStatus(Order.OrderStatus.PENDING_APPROVAL);
+            appendStatusLog(order, Order.OrderStatus.PENDING_APPROVAL, successNote);
+        }
     }
 
     private void markFailed(Order order, PaymentTransaction tx, String message, Integer resultCode) {
@@ -327,6 +382,16 @@ public class ZaloPayService {
     private void ensureMockAllowed() {
         if (mockMode || environment.matchesProfiles("dev")) return;
         throw AppException.badRequest("ZaloPay mock result is disabled");
+    }
+
+    private boolean shouldQueryGateway() {
+        return !mockMode && isConfigured();
+    }
+
+    private boolean isConfigured() {
+        return appId != null && !appId.isBlank()
+                && key1 != null && !key1.isBlank()
+                && key2 != null && !key2.isBlank();
     }
 
     private String generateAppTransId(String orderId) {
@@ -411,6 +476,13 @@ public class ZaloPayService {
 
     private static Integer intValue(Object value) {
         if (value == null) return null;
+        if (value instanceof Number number) return number.intValue();
         return Integer.valueOf(String.valueOf(value));
+    }
+
+    private static Long longValue(Object value) {
+        if (value == null) return null;
+        if (value instanceof Number number) return number.longValue();
+        return Long.valueOf(String.valueOf(value));
     }
 }

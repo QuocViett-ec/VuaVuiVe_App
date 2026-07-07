@@ -3,11 +3,11 @@ package vn.vuavuive.backend.config;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
-import java.util.UUID;
 import vn.vuavuive.backend.modules.category.Category;
 import vn.vuavuive.backend.modules.category.CategoryRepository;
 import vn.vuavuive.backend.modules.order.Order;
@@ -27,6 +27,7 @@ import java.util.UUID;
  */
 @Slf4j
 @Component
+@ConditionalOnProperty(prefix = "app.seed", name = "enabled", havingValue = "true")
 @RequiredArgsConstructor
 public class DataSeeder implements CommandLineRunner {
 
@@ -168,6 +169,22 @@ public class DataSeeder implements CommandLineRunner {
                     .build());
 
             log.info(">> SEED: Đã tạo sản phẩm mẫu trên Firebase");
+        }
+
+        backfillProductImages();
+    }
+
+    private void backfillProductImages() {
+        int updated = 0;
+        for (Product product : productRepository.findAll()) {
+            if (vn.vuavuive.backend.modules.product.ProductImages.needsBackfill(product)) {
+                product.setImages(vn.vuavuive.backend.modules.product.ProductImages.withFallback(product));
+                productRepository.save(product);
+                updated++;
+            }
+        }
+        if (updated > 0) {
+            log.info(">> SEED: Da bo sung gallery anh cho {} san pham", updated);
         }
     }
 
