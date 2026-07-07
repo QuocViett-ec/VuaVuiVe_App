@@ -19,9 +19,9 @@ android {
 
     buildTypes {
         debug {
-            buildConfigField("String", "BASE_URL", "\"http://localhost:3000\"")
+            buildConfigField("String", "BASE_URL", "\"http://127.0.0.1:3000\"")
             buildConfigField("String", "PORTAL_SCOPE", "\"shipper\"")
-            manifestPlaceholders["vvvBaseUrl"] = "http://localhost:3000"
+            manifestPlaceholders["vvvBaseUrl"] = "http://127.0.0.1:3000"
             manifestPlaceholders["vvvPortalScope"] = "shipper"
         }
         release {

@@ -65,7 +65,7 @@ public class OrderViewModel extends ViewModel {
     }
 
     public LiveData<AuthRepository.Result<PaymentStatusResponse>> getPaymentStatus(String orderId) {
-        return firebaseOrderRepository.getPaymentStatus(orderId);
+        return backendOrderRepository.getPaymentStatus(orderId);
     }
 
     public LiveData<AuthRepository.Result<PaymentStatusResponse>> mockMomoSuccess(String orderId) {

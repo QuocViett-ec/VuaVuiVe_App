@@ -37,8 +37,8 @@ public class MoMoService {
     @Value("${app.payment.momo.access-key:}") private String accessKey;
     @Value("${app.payment.momo.secret-key:}") private String secretKey;
     @Value("${app.payment.momo.endpoint:https://test-payment.momo.vn/v2/gateway/api/create}") private String endpoint;
-    @Value("${app.payment.momo.redirect-url:http://10.0.2.2:3000/api/payments/momo/return}") private String redirectUrl;
-    @Value("${app.payment.momo.ipn-url:http://10.0.2.2:3000/api/payments/momo/ipn}") private String ipnUrl;
+    @Value("${app.payment.momo.redirect-url:http://127.0.0.1:3000/api/payments/momo/return}") private String redirectUrl;
+    @Value("${app.payment.momo.ipn-url:http://127.0.0.1:3000/api/payments/momo/ipn}") private String ipnUrl;
     @Value("${app.payment.momo.request-type:captureWallet}") private String requestType;
     @Value("${app.payment.momo.lang:vi}") private String lang;
     @Value("${app.payment.momo.mock-mode:false}") private boolean mockMode;

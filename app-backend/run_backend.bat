@@ -11,8 +11,8 @@ set "SDK_DIR=%LOCALAPPDATA%\Android\Sdk"
 set "ADB_PATH=%SDK_DIR%\platform-tools\adb.exe"
 
 if exist "%ADB_PATH%" (
-    echo [+] Dang cho emulator/thiet bi de tu dong reverse port 3000...
-    start /b powershell -NoProfile -ExecutionPolicy Bypass -Command "$adb='%ADB_PATH%'; $deadline=(Get-Date).AddSeconds(60); do { $devices=& $adb devices | Select-Object -Skip 1; $ok=$false; foreach ($line in $devices) { if ($line -match '^(\S+)\s+device$') { & $adb -s $matches[1] reverse tcp:3000 tcp:3000 | Out-Null; Write-Host ('[+][adb] Da reverse port 3000 cho ' + $matches[1]); $ok=$true } }; if ($ok) { exit 0 }; Start-Sleep -Seconds 2 } while ((Get-Date) -lt $deadline); Write-Host '[!][adb] Chua thay emulator/thiet bi sau 60s, bo qua reverse port.'"
+    echo [+] Dang giu adb reverse tcp:3000 cho emulator/thiet bi...
+    start /b powershell -NoProfile -ExecutionPolicy Bypass -Command "$adb='%ADB_PATH%'; $parent=(Get-CimInstance Win32_Process -Filter ('ProcessId=' + $PID)).ParentProcessId; $seen=@{}; while (Get-Process -Id $parent -ErrorAction SilentlyContinue) { $devices=& $adb devices | Select-Object -Skip 1; foreach ($line in $devices) { if ($line -match '^(\S+)\s+device$') { $serial=$matches[1]; & $adb -s $serial reverse tcp:3000 tcp:3000 | Out-Null; if (-not $seen.ContainsKey($serial)) { Write-Host ('[+][adb] Da reverse localhost:3000 cho ' + $serial); $seen[$serial]=$true } } }; Start-Sleep -Seconds 2 }"
 ) else (
     echo [!] Khong tim thay adb.exe tai %ADB_PATH%, bo qua phan reverse port.
 )
@@ -35,14 +35,11 @@ echo [+] Kiem tra Java:
 java -version
 echo.
 
-rem MoMo sandbox defaults. Real keys should live in app-backend\.env.
+rem MoMo config. Sandbox keys should live in app-backend\.env.
 if "%MOMO_PARTNER_CODE%"=="" set "MOMO_PARTNER_CODE=MOMO"
-if "%MOMO_ACCESS_KEY%"=="" set "MOMO_ACCESS_KEY=F8BBA842ECF85"
-if "%MOMO_SECRET_KEY%"=="" set "MOMO_SECRET_KEY=K951B6PE1waDMi640xX08PD3vg6EkVlz"
 if "%MOMO_ENDPOINT%"=="" set "MOMO_ENDPOINT=https://test-payment.momo.vn/v2/gateway/api/create"
 if "%MOMO_REQUEST_TYPE%"=="" set "MOMO_REQUEST_TYPE=captureWallet"
 if "%MOMO_LANG%"=="" set "MOMO_LANG=vi"
-if "%ZALOPAY_MOCK_MODE%"=="" set ZALOPAY_MOCK_MODE=true
 
 rem Set PUBLIC_BASE_URL to your current ngrok URL for real sandbox IPN.
 rem Example: set PUBLIC_BASE_URL=https://abc-123.ngrok-free.app
@@ -77,12 +74,32 @@ if "%PUBLIC_BASE_URL%"=="" (
 
 if "%PUBLIC_BASE_URL%"=="" (
   set MOCK_MOMO_MODE=true
-  set MOMO_REDIRECT_URL=http://10.0.2.2:3000/api/payments/momo/return
-  set MOMO_IPN_URL=http://10.0.2.2:3000/api/payments/momo/ipn
+  set MOMO_REDIRECT_URL=http://127.0.0.1:3000/api/payments/momo/return
+  set MOMO_IPN_URL=http://127.0.0.1:3000/api/payments/momo/ipn
 ) else (
-  set MOCK_MOMO_MODE=false
+  if "%MOMO_ACCESS_KEY%"=="" (
+    set MOCK_MOMO_MODE=true
+  ) else if "%MOMO_SECRET_KEY%"=="" (
+    set MOCK_MOMO_MODE=true
+  ) else (
+    set MOCK_MOMO_MODE=false
+  )
   set MOMO_REDIRECT_URL=%PUBLIC_BASE_URL%/api/payments/momo/return
   set MOMO_IPN_URL=%PUBLIC_BASE_URL%/api/payments/momo/ipn
+)
+
+if "%ZALOPAY_MOCK_MODE%"=="" (
+  if "%PUBLIC_BASE_URL%"=="" (
+    set ZALOPAY_MOCK_MODE=true
+  ) else if "%ZALOPAY_APP_ID%"=="" (
+    set ZALOPAY_MOCK_MODE=true
+  ) else if "%ZALOPAY_KEY1%"=="" (
+    set ZALOPAY_MOCK_MODE=true
+  ) else if "%ZALOPAY_KEY2%"=="" (
+    set ZALOPAY_MOCK_MODE=true
+  ) else (
+    set ZALOPAY_MOCK_MODE=false
+  )
 )
 
 echo Public base URL (ngrok): %PUBLIC_BASE_URL%

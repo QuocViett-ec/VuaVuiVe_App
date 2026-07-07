@@ -48,8 +48,8 @@ app:
       access-key: "YOUR_MOMO_ACCESS_KEY"
       secret-key: "YOUR_MOMO_SECRET_KEY"
       endpoint: "https://test-payment.momo.vn/v2/gateway/api/create"
-      redirect-url: "http://10.0.2.2:3000/api/payments/momo/return"
-      ipn-url: "http://10.0.2.2:3000/api/payments/momo/ipn"
+      redirect-url: "http://127.0.0.1:3000/api/payments/momo/return"
+      ipn-url: "http://127.0.0.1:3000/api/payments/momo/ipn"
       request-type: "captureWallet"
       lang: "vi"
       mock-mode: "true"
@@ -59,8 +59,8 @@ app:
       key2: "${ZALOPAY_KEY2:}"
       endpoint: "${ZALOPAY_ENDPOINT:https://sb-openapi.zalopay.vn/v2/create}"
       query-endpoint: "${ZALOPAY_QUERY_ENDPOINT:https://sb-openapi.zalopay.vn/v2/query}"
-      callback-url: "${PUBLIC_BASE_URL:http://10.0.2.2:3000}/api/payments/zalopay/callback"
-      redirect-url: "${PUBLIC_BASE_URL:http://10.0.2.2:3000}/api/payments/zalopay/return"
+      callback-url: "${PUBLIC_BASE_URL:http://127.0.0.1:3000}/api/payments/zalopay/callback"
+      redirect-url: "${PUBLIC_BASE_URL:http://127.0.0.1:3000}/api/payments/zalopay/return"
       mock-mode: "${ZALOPAY_MOCK_MODE:true}"
 
 # ============================================
