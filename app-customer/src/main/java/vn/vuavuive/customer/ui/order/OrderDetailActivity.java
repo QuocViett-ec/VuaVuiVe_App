@@ -19,6 +19,7 @@ import vn.vuavuive.customer.viewmodel.OrderViewModel;
 import vn.vuavuive.shared.data.dto.Order;
 import vn.vuavuive.shared.data.dto.OrderItem;
 import vn.vuavuive.shared.util.CurrencyFormatter;
+import vn.vuavuive.shared.util.OrderDateFormatter;
 
 @AndroidEntryPoint
 public class OrderDetailActivity extends AppCompatActivity {
@@ -95,9 +96,7 @@ public class OrderDetailActivity extends AppCompatActivity {
         tvStatus.setTextColor(getResources().getColor(
                 order.getReturnRequest() != null ? R.color.status_return : getStatusColor(order.getStatus()), null));
 
-        if (order.getCreatedAt() != null && order.getCreatedAt().length() >= 10) {
-            tvOrderDate.setText("Dat luc: " + order.getCreatedAt().replace("T", " ").substring(0, 16));
-        }
+        tvOrderDate.setText("Dat luc: " + OrderDateFormatter.format(order.getCreatedAt()));
 
         tvReceiverName.setText(order.getRecipientName() != null ? order.getRecipientName() : "-");
         tvReceiverPhone.setText(order.getRecipientPhone() != null ? order.getRecipientPhone() : "-");

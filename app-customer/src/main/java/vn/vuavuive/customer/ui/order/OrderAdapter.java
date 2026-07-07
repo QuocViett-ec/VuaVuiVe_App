@@ -14,6 +14,7 @@ import java.util.List;
 import vn.vuavuive.customer.R;
 import vn.vuavuive.shared.data.dto.Order;
 import vn.vuavuive.shared.util.CurrencyFormatter;
+import vn.vuavuive.shared.util.OrderDateFormatter;
 
 public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHolder> {
 
@@ -76,9 +77,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
 
             tvTotal.setText(CurrencyFormatter.format(order.getFinalAmount()));
 
-            String dateStr = order.getCreatedAt() != null && order.getCreatedAt().length() >= 10
-                    ? order.getCreatedAt().substring(0, 10) : "";
-            tvDate.setText(dateStr);
+            tvDate.setText(OrderDateFormatter.format(order.getCreatedAt()));
 
             if (order.getItems() != null && !order.getItems().isEmpty()) {
                 String firstName = order.getItems().get(0).getProductName();

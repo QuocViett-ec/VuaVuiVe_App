@@ -11,6 +11,7 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 import vn.vuavuive.shared.data.dto.ApiResponse;
 import vn.vuavuive.shared.data.dto.Order;
+import vn.vuavuive.shared.data.dto.PagedResponse;
 import vn.vuavuive.shared.data.dto.Review;
 import vn.vuavuive.shared.data.dto.Voucher;
 import vn.vuavuive.shared.data.dto.request.CreateOrderRequest;
@@ -21,7 +22,7 @@ public interface OrderApi {
     Call<ApiResponse<Order>> createOrder(@Body CreateOrderRequest body);
 
     @GET("api/orders/me")
-    Call<ApiResponse<List<Order>>> getMyOrders(
+    Call<PagedResponse<Order>> getMyOrders(
             @Query("status") String status,
             @Query("page") int page,
             @Query("limit") int limit
