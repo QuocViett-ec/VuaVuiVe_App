@@ -13,7 +13,6 @@ import vn.vuavuive.shared.data.dto.CreateMomoPaymentResponse;
 import vn.vuavuive.shared.data.dto.CreateZaloPayPaymentRequest;
 import vn.vuavuive.shared.data.dto.CreateZaloPayPaymentResponse;
 import vn.vuavuive.shared.data.dto.Order;
-import vn.vuavuive.shared.data.dto.PagedResponse;
 import vn.vuavuive.shared.data.dto.PaymentStatusResponse;
 import vn.vuavuive.shared.data.dto.Voucher;
 import vn.vuavuive.shared.data.dto.request.CreateOrderRequest;
@@ -40,17 +39,17 @@ public class OrderRepository {
         MutableLiveData<AuthRepository.Result<List<Order>>> result = new MutableLiveData<>();
         result.postValue(AuthRepository.Result.loading());
 
-        orderApi.getMyOrders(status, page, limit).enqueue(new Callback<PagedResponse<Order>>() {
+        orderApi.getMyOrders(status, page, limit).enqueue(new Callback<ApiResponse<List<Order>>>() {
             @Override
-            public void onResponse(Call<PagedResponse<Order>> call, Response<PagedResponse<Order>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    result.postValue(AuthRepository.Result.success(response.body().getContent()));
+            public void onResponse(Call<ApiResponse<List<Order>>> call, Response<ApiResponse<List<Order>>> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                    result.postValue(AuthRepository.Result.success(response.body().getData()));
                 } else {
                     result.postValue(AuthRepository.Result.error("Không thể tải danh sách đơn hàng"));
                 }
             }
             @Override
-            public void onFailure(Call<PagedResponse<Order>> call, Throwable t) {
+            public void onFailure(Call<ApiResponse<List<Order>>> call, Throwable t) {
                 result.postValue(AuthRepository.Result.error("Lỗi kết nối: " + t.getMessage()));
             }
         });
