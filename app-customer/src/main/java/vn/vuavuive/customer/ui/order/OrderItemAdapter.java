@@ -67,11 +67,18 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.Item
         }
 
         void bind(OrderItem item) {
-            Glide.with(ivProduct.getContext())
-                    .load(item.getImageUrl())
-                    .placeholder(R.drawable.ic_image)
-                    .centerCrop()
-                    .into(ivProduct);
+            String imgUrl = item.getImageUrl();
+            android.util.Log.d("OrderItemAdapter", "imageUrl = " + imgUrl + " | name = " + item.getName());
+            if (imgUrl != null && !imgUrl.isEmpty()) {
+                Glide.with(ivProduct.getContext())
+                        .load(imgUrl)
+                        .placeholder(R.drawable.ic_image)
+                        .error(R.drawable.ic_image)
+                        .centerCrop()
+                        .into(ivProduct);
+            } else {
+                ivProduct.setImageResource(R.drawable.ic_image);
+            }
             tvName.setText(item.getName());
             tvQtyPrice.setText(item.getQuantity() + " x " + CurrencyFormatter.format(item.getPrice()));
             tvTotal.setText(CurrencyFormatter.format(item.getLineTotal()));

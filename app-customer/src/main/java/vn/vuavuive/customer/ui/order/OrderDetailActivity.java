@@ -19,6 +19,11 @@ import vn.vuavuive.customer.viewmodel.OrderViewModel;
 import vn.vuavuive.shared.data.dto.Order;
 import vn.vuavuive.shared.data.dto.OrderItem;
 import vn.vuavuive.shared.util.CurrencyFormatter;
+import java.util.List;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 @AndroidEntryPoint
 public class OrderDetailActivity extends AppCompatActivity {
@@ -112,10 +117,36 @@ public class OrderDetailActivity extends AppCompatActivity {
         tvTotal.setText(CurrencyFormatter.format(order.getFinalAmount()));
 
         if (order.getItems() != null) {
-            orderItemAdapter.setItems(order.getItems());
+            List<OrderItem> items = order.getItems();
+            orderItemAdapter.setItems(items);
+            // Enrich imageUrl từ Firebase products nếu item không có ảnh
+            enrichItemImages(items);
         }
 
         updateActionButtons(order);
+    }
+
+    /** Khi item.getImageUrl() == null, đọc thêm từ Firebase products node */
+    private void enrichItemImages(List<OrderItem> items) {
+        for (OrderItem item : items) {
+            if (item.getImageUrl() != null && !item.getImageUrl().isEmpty()) continue;
+            String pid = item.getProductId();
+            if (pid == null || pid.isEmpty()) continue;
+            FirebaseDatabase.getInstance().getReference()
+                    .child("products").child(pid).child("image_url")
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot snapshot) {
+                            String url = snapshot.getValue(String.class);
+                            if (url != null && !url.isEmpty()) {
+                                item.setImageUrl(url);
+                                orderItemAdapter.notifyDataSetChanged();
+                            }
+                        }
+                        @Override
+                        public void onCancelled(DatabaseError error) {}
+                    });
+        }
     }
 
     private void updateActionButtons(Order order) {

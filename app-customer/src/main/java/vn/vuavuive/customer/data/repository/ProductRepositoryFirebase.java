@@ -97,6 +97,19 @@ public class ProductRepositoryFirebase {
         if (imageUrl == null) {
             imageUrl = s.child("imageUrl").getValue(String.class);
         }
+        // Fallback: đọc từ array images[0] nếu không có field image_url
+        if (imageUrl == null) {
+            DataSnapshot imagesSnap = s.child("images");
+            if (imagesSnap.exists()) {
+                for (DataSnapshot imgSnap : imagesSnap.getChildren()) {
+                    String candidate = imgSnap.getValue(String.class);
+                    if (candidate != null && !candidate.isEmpty()) {
+                        imageUrl = candidate;
+                        break;
+                    }
+                }
+            }
+        }
         p.setImageUrl(imageUrl);
         
         Integer stock = getSafeInt(s.child("stock_quantity"));
