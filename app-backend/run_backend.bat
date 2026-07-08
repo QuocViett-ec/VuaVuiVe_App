@@ -22,7 +22,7 @@ rem =======================================================
 rem    KHOI DONG BACKEND SPRING BOOT
 rem =======================================================
 if "%JAVA_HOME%"=="" set "JAVA_HOME=C:\Program Files\Android\Android Studio\jbr"
-set "PATH=%JAVA_HOME%\bin;%~dp0apache-maven-3.9.6\bin;%PATH%"
+set "PATH=%JAVA_HOME%\bin;%~dp0apache-maven-3.9.6\bin;%~dp0..\tools\apache-maven-3.9.6\bin;%PATH%"
 
 if exist "%~dp0.env" (
     echo [+] Dang nap cau hinh tu app-backend\.env...
@@ -46,6 +46,7 @@ rem Example: set PUBLIC_BASE_URL=https://abc-123.ngrok-free.app
 set NGROK_EXE=
 if exist "%~dp0ngrok.exe" set "NGROK_EXE=%~dp0ngrok.exe"
 if not defined NGROK_EXE if exist "%~dp0tools\ngrok.exe" set "NGROK_EXE=%~dp0tools\ngrok.exe"
+if not defined NGROK_EXE if exist "%~dp0..\tools\ngrok\ngrok.exe" set "NGROK_EXE=%~dp0..\tools\ngrok\ngrok.exe"
 if not defined NGROK_EXE (
   for /f "usebackq delims=" %%g in (`powershell -NoProfile -Command "$root = Join-Path $env:LOCALAPPDATA 'Microsoft\WinGet\Packages'; if (Test-Path $root) { Get-ChildItem $root -Filter ngrok.exe -Recurse -ErrorAction SilentlyContinue | Where-Object Length -gt 0 | Select-Object -First 1 -ExpandProperty FullName }"`) do if not defined NGROK_EXE set "NGROK_EXE=%%g"
 )
@@ -62,7 +63,7 @@ if "%PUBLIC_BASE_URL%"=="" (
       start "VuaVuiVe Ngrok" /min "%NGROK_EXE%" http 3000
       powershell -NoProfile -Command "$deadline=(Get-Date).AddSeconds(15); do { Start-Sleep -Milliseconds 500; try { $t=Invoke-RestMethod http://127.0.0.1:4040/api/tunnels -TimeoutSec 2; if ($t.tunnels | Where-Object { $_.proto -eq 'https' -and $_.config.addr -match '3000' }) { exit 0 } } catch {} } while ((Get-Date) -lt $deadline); exit 1" >nul 2>&1
     ) else (
-      echo [!] Khong tim thay ngrok.exe trong PATH, app-backend\, hoac app-backend\tools\.
+      echo [!] Khong tim thay ngrok.exe trong PATH, app-backend\, app-backend\tools\, hoac tools\ngrok\.
       echo [!] Cai ngrok va chay: ngrok config add-authtoken YOUR_TOKEN
     )
   )

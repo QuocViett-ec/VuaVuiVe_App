@@ -10,11 +10,9 @@ VuaVuiVe là đồ án bán thực phẩm gồm 1 backend Spring Boot và 3 app 
 
 ## 1. Yêu cầu môi trường
 
-- Windows 10/11.
 - Android Studio, Android SDK Platform 34, Android SDK Platform-Tools, Emulator.
 - JDK 21 để chạy backend.
 - Maven: cài Maven vào `PATH`, hoặc dùng Maven đi kèm trong `tools/apache-maven-3.9.6/bin/mvn.cmd`.
-- Internet để Gradle/Maven tải dependency lần đầu.
 
 ## 2. Cấu hình sau khi clone
 
@@ -37,10 +35,10 @@ Tạo `app-backend/.env` nếu cần override cấu hình:
 ```env
 FIREBASE_DATABASE_URL=https://vua-vui-ve-default-rtdb.firebaseio.com
 FIREBASE_CONFIG_PATH=file:./serviceAccountKey.json
-APP_SEED_ENABLED=true
+APP_SEED_ENABLED=false
 ```
 
-`APP_SEED_ENABLED=true` dùng để seed dữ liệu mẫu. Sau khi seed xong có thể đổi lại `false`; nếu để bật, mật khẩu admin demo sẽ được reset về `Admin@123` mỗi lần backend khởi động.
+Không cần bật seed nếu Firebase đã có dữ liệu realtime dùng để chấm bài. Chỉ đổi `APP_SEED_ENABLED=true` khi dùng Firebase trống hoặc muốn tạo lại dữ liệu demo ban đầu. Nếu để bật, backend sẽ reset mật khẩu `admin@vuavuive.vn` về `Admin@123` mỗi lần khởi động, đồng thời có thể tạo thêm tài khoản/demo order nếu thiếu.
 
 Ba file `google-services.json` cho Android đã nằm trong:
 

@@ -25,7 +25,25 @@ app-backend/apache-maven-*/
 
 # Backend runtime logs
 app-backend/target/backend-run.*.log
+app-backend/backend.pid
+app-backend/backend.stdout.log
+app-backend/backend.stderr.log
+app-backend/build.log
 screencap.png
+
+# Local Codex/test artifacts kept on this machine
+scratch/
+
+# Local payment SDK references, not required by the main app
+payment/payment-master/
+
+# Local IDE metadata
+.idea/
+.vscode/
+
+# Local ngrok runtime/download artifacts
+tools/ngrok/ngrok.pid
+tools/ngrok/ngrok.zip
 
 # Local secrets
 .env
