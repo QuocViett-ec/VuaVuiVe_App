@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Vựa Vui Vẻ</string>
+    <string name="app_name">VuaVuiVe</string>
 
     <!-- Auth -->
     <string name="login_title">Đăng nhập</string>

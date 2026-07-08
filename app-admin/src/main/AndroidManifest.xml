@@ -10,8 +10,10 @@
     <application
         android:name=".VuaVuiVeAdminApp"
         android:allowBackup="true"
-        android:label="VVV Admin"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
         android:networkSecurityConfig="@xml/network_security_config"
+        android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/Theme.VuaVuiVe.Admin"
         android:usesCleartextTraffic="true">

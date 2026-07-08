@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Vua Vui Vẻ Admin</string>
+    <string name="app_name">AdminVVV</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_orders">Đơn hàng</string>
     <string name="title_products">Sản phẩm</string>
