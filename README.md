@@ -54,7 +54,7 @@ Cách nhanh nhất trên Windows:
 
 ```bat
 cd app-backend
-run_backend.bat
+.\run_backend.bat
 ```
 
 Nếu máy chưa có Maven trong `PATH`, chạy trực tiếp bằng Maven đi kèm:
